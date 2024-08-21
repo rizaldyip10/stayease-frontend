@@ -8,11 +8,7 @@ const LogIn: React.FC = () => {
   const [formType, setFormType] = React.useState<FormType>("login");
   return (
     <div>
-      <AuthCard
-        userType={"user"}
-        setUserType={setUserType}
-        formType={formType}
-      />
+      <AuthCard userType={userType} setUserType={setUserType} />
     </div>
   );
 };

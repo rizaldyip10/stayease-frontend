@@ -40,8 +40,8 @@ const AuthCard: React.FC<AuthCardProps> = ({ userType, setUserType }) => {
           <span
             className={
               userType === "user"
-                ? "font-bold p-1 bg-appblue-900 text-white rounded-sm"
-                : "font-normal"
+                ? "font-bold p-1 bg-appblue-900 text-white rounded-sm cursor-pointer"
+                : "font-normal cursor-pointer"
             }
             onClick={() => setUserType("user")}
           >
@@ -51,8 +51,8 @@ const AuthCard: React.FC<AuthCardProps> = ({ userType, setUserType }) => {
           <span
             className={
               userType === "tenant"
-                ? "font-bold p-1 bg-appblue-900 text-white rounded-sm"
-                : "font-normal"
+                ? "font-bold p-1 bg-appblue-900 text-white rounded-sm cursor-pointer"
+                : "font-normal cursor-pointer"
             }
             onClick={() => setUserType("tenant")}
           >
