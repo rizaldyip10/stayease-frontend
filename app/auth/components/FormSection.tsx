@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import axios from "axios";
-import CustomAlert from "@/app/register/user/components/ui/CustomAlert";
-import RegisterCard from "@/app/register/user/components/ui/RegisterCard";
+import CustomAlert from "@/app/auth/components/ui/CustomAlert";
+import RegisterCard from "@/app/auth/components/ui/RegisterCard";
 import logo from "@/assets/images/logo_horizontal.png";
 import Image from "next/image";
 

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import googleLogo from "@/assets/icons/google-icon.png";
 import Link from "next/link";
-import RegisterForm from "@/app/register/user/components/ui/RegisterForm";
+import RegisterForm from "@/app/auth/components/ui/RegisterForm";
 import React from "react";
 import logo from "@/assets/images/logo_horizontal.png";
 
@@ -71,7 +71,7 @@ const RegisterCard: React.FC<RegisterCardProps> = ({
       </Button>
       <div className="flex items-center gap-1">
         <p className="text-sm text-gray-600">Already have an account?</p>
-        <Link href="/" className="text-sm font-bold text-blue-950">
+        <Link href="/public" className="text-sm font-bold text-blue-950">
           Login
         </Link>
       </div>
