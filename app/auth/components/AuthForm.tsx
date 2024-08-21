@@ -74,9 +74,9 @@ const AuthForm: React.FC<AuthFormProps> = ({
             >
               {isSubmitting
                 ? "Submitting..."
-                : userType === "user"
-                  ? "Create Account as a User"
-                  : "Create Account as a Tenant"}
+                : formType === "register"
+                  ? "Create Account as a " + `${userType}`
+                  : "Login to your Account"}
             </Button>
           </Form>
         )}
