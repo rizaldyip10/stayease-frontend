@@ -1,5 +1,5 @@
 import React from "react";
-import FormSection from "@/app/auth/components/FormSection";
+import FormSection from "@/app/auth/components/FormSection2";
 import SidePicture from "@/app/auth/components/SidePicture";
 
 const Register: React.FC = () => {

@@ -2,14 +2,15 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import googleLogo from "@/assets/icons/google-icon.png";
 import Link from "next/link";
-import RegisterForm from "@/app/auth/components/ui/RegisterForm";
+import RegisterForm from "@/app/auth/components/register/RegisterForm";
 import React from "react";
 import logo from "@/assets/images/logo_horizontal.png";
+import { UserType } from "@/constants/Types";
 
 interface RegisterCardProps {
   onSubmit: (value: string) => void;
   userType: "user" | "tenant";
-  setUserType: React.Dispatch<React.SetStateAction<"user" | "tenant">>;
+  setUserType: React.Dispatch<React.SetStateAction<UserType>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
 }
 
