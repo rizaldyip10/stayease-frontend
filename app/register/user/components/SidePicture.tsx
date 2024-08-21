@@ -7,9 +7,9 @@ interface PictureProps {
 
 const SidePicture: React.FC<PictureProps> = ({ alt, src }) => {
   return (
-    <div className="self-stretch max-h-screen flex-1 flex flex-col items-center justify-center p-5">
+    <div className="max-h-screen flex-1 flex flex-col items-center justify-center">
       <img
-        className="self-stretch flex-1 relative max-w-full overflow-hidden max-h-screen object-center"
+        className="flex-1 relative min-w-full overflow-hidden max-h-screen object-center py-5"
         alt={alt}
         src={src}
       />

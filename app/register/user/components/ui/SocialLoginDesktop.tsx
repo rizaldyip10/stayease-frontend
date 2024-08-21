@@ -1,6 +1,5 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { className } from "postcss-selector-parser";
 
 interface SocialProps {
   className?: string;
