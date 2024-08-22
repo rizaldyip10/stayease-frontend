@@ -52,30 +52,34 @@ const AuthCard: React.FC<AuthCardProps> = ({
         <h1 className="text-3xl font-bold text-appblue-800 md:text-left">
           {formType === "login" ? "Login" : "Register"}
         </h1>
-        <p>Choose account type:</p>
-        <p>
-          <span
-            className={
-              userType === "user"
-                ? "font-bold p-1 bg-appblue-900 text-white rounded-sm cursor-pointer"
-                : "font-normal cursor-pointer"
-            }
-            onClick={() => setUserType("user")}
-          >
-            <a>User</a>
-          </span>{" "}
-          /{" "}
-          <span
-            className={
-              userType === "tenant"
-                ? "font-bold p-1 bg-appblue-900 text-white rounded-sm cursor-pointer"
-                : "font-normal cursor-pointer"
-            }
-            onClick={() => setUserType("tenant")}
-          >
-            <a>Tenant</a>
-          </span>
-        </p>
+        {formType === "register" && (
+          <>
+            <p>Choose account type:</p>
+            <p>
+              <span
+                className={
+                  userType === "user"
+                    ? "font-bold p-1 bg-appblue-900 text-white rounded-sm cursor-pointer"
+                    : "font-normal cursor-pointer"
+                }
+                onClick={() => setUserType("user")}
+              >
+                <a>User</a>
+              </span>{" "}
+              /{" "}
+              <span
+                className={
+                  userType === "tenant"
+                    ? "font-bold p-1 bg-appblue-900 text-white rounded-sm cursor-pointer"
+                    : "font-normal cursor-pointer"
+                }
+                onClick={() => setUserType("tenant")}
+              >
+                <a>Tenant</a>
+              </span>
+            </p>
+          </>
+        )}
       </div>
       <AuthForm
         formType={formType}
