@@ -3,18 +3,21 @@ import React, { useState } from "react";
 import CustomAlert from "@/components/CustomAlert";
 import logo from "@/assets/images/logo_horizontal.png";
 import Image from "next/image";
-import { UserType } from "@/constants/Types";
+import { FormType, UserType } from "@/constants/Types";
 import useAuthForm from "@/hooks/useAuthForm";
-import AuthCard from "@/app/auth/components/AuthCard";
+import AuthCard from "@/app/(auth)/components/AuthCard";
 
-interface FormProps {
+interface AuthFormProps {
   className?: string;
+  formType: FormType;
 }
 
-const FormSection: React.FC<FormProps> = ({
+const AuthFormSection: React.FC<AuthFormProps> = ({
   className,
+  formType,
 }: {
   className?: string;
+  formType: FormType;
 }) => {
   const [userType, setUserType] = useState<UserType>("user");
 
@@ -44,7 +47,11 @@ const FormSection: React.FC<FormProps> = ({
                 onClose={() => setShowAlert(false)}
               />
             )}
-            <AuthCard userType={userType} setUserType={setUserType} />
+            <AuthCard
+              formType={formType}
+              userType={userType}
+              setUserType={setUserType}
+            />
           </div>
         </div>
         <div />
@@ -53,4 +60,4 @@ const FormSection: React.FC<FormProps> = ({
   );
 };
 
-export default FormSection;
+export default AuthFormSection;

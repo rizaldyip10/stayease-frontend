@@ -37,7 +37,7 @@ const LoginCard = () => {
         </Button>
         <div className="flex items-center gap-1">
           <p className="text-sm text-gray-600">Don&apos;t have an account?</p>
-          <Link href="/register" className="text-sm font-bold text-blue-950">
+          <Link href="/" className="text-sm font-bold text-blue-950">
             Register
           </Link>
         </div>

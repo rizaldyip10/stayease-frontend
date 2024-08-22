@@ -13,13 +13,6 @@ const UseAuthForm = ({ userType }: UseAuthFormProps) => {
   const [message, setMessage] = useState("");
   const [alertType, setAlertType] = useState<AlertType>("Success");
   const [showAlert, setShowAlert] = useState(false);
-  const [formType, setFormType] = useState<FormType>("login");
-
-  const toggleFormType = () => {
-    setFormType((prevFormType) =>
-      prevFormType === "login" ? "register" : "login",
-    );
-  };
 
   const handleSubmit = async (
     values: FormikValues,
@@ -75,9 +68,6 @@ const UseAuthForm = ({ userType }: UseAuthFormProps) => {
     setAlertType,
     showAlert,
     setShowAlert,
-    formType,
-    setFormType,
-    toggleFormType,
     handleSubmit,
   };
 };

@@ -4,17 +4,25 @@ import Image from "next/image";
 import logo from "@/assets/images/logo_horizontal.png";
 import { Button } from "@/components/ui/button";
 import googleLogo from "@/assets/icons/google-icon.png";
-import AuthForm from "@/app/auth/components/AuthForm";
+import AuthForm from "@/app/(auth)/components/AuthForm";
 import { FormikHelpers, FormikValues } from "formik";
 import useAuthForm from "@/hooks/useAuthForm";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface AuthCardProps {
+  formType: FormType;
   userType: UserType;
   setUserType: React.Dispatch<React.SetStateAction<UserType>>;
 }
 
-const AuthCard: React.FC<AuthCardProps> = ({ userType, setUserType }) => {
-  const { formType, toggleFormType, handleSubmit, error } = useAuthForm({
+const AuthCard: React.FC<AuthCardProps> = ({
+  formType,
+  userType,
+  setUserType,
+}) => {
+  const router = useRouter();
+  const { handleSubmit, error } = useAuthForm({
     userType,
   });
 
@@ -26,6 +34,15 @@ const AuthCard: React.FC<AuthCardProps> = ({ userType, setUserType }) => {
     actions: FormikHelpers<FormikValues>,
   ) => {
     handleSubmit(values, actions, formType);
+    console.log("values: ", values);
+  };
+
+  const handleNavigation = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    path: string,
+  ) => {
+    e.preventDefault();
+    router.push(path);
   };
 
   return (
@@ -88,12 +105,15 @@ const AuthCard: React.FC<AuthCardProps> = ({ userType, setUserType }) => {
             ? "Don't have an account?"
             : "Already have an account?"}
         </p>
-        <span
-          className="text-sm font-bold text-blue-950 cursor-pointer"
-          onClick={toggleFormType}
+        <Link
+          href="#"
+          className="text-sm font-bold text-blue-950"
+          onClick={(e) =>
+            handleNavigation(e, formType === "login" ? "/register" : "/login")
+          }
         >
           {formType === "login" ? "Register" : "Login"}
-        </span>
+        </Link>
       </div>
     </div>
   );
