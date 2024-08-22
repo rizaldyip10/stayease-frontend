@@ -37,7 +37,6 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
           />
         </div>
         <div className="self-stretch overflow-hidden flex flex-col items-center justify-between text-left text-sm text-gray-900">
-          <div className="self-stretch h-24 md:hidden" />
           <div className="self-stretch flex flex-col items-center justify-start py-0 md:px-8">
             {showAlert && (
               <CustomAlert
