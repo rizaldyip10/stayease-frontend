@@ -27,7 +27,7 @@ const Navbar = () => {
 
     return (
         <motion.nav
-            className="sticky top-0 w-full flex justify-between items-center h-16 border-b border-gray-200 bg-white px-5 md:px-14"
+            className="sticky top-0 w-full flex justify-between items-center h-16 border-b border-gray-200 bg-white px-5 z-50 md:px-14"
             variants={{
                 visible: { y: 0 },
                 hidden: { y: "-100%" },
@@ -36,7 +36,7 @@ const Navbar = () => {
             transition={{ duration: 0.35, ease: "easeInOut" }}
         >
             <MobileMenu />
-            <Image src={logo} alt={"logo"} height={40} />
+            <Image src={logo} alt={"logo"} height={40} className="h-10 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0" />
             <NavRoutes />
             <div className={pathname.startsWith("/book") ? "hidden" : "block"}>
                 <AuthBtn />
