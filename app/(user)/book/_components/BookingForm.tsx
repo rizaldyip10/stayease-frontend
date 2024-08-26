@@ -13,6 +13,7 @@ import {useRouter} from "next/navigation";
 
 const BookingForm = () => {
     const router = useRouter();
+
     const bookingSchema = yup.object().shape({
         checkInDate: yup.date().required("Please enter valid check-in date"),
         checkOutDate: yup.date().required("Please enter valid check-out date"),
