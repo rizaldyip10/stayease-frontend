@@ -1,25 +1,29 @@
 "use client";
 
 import * as yup from "yup";
-import {Form, Formik, FormikValues} from "formik";
-import {Button} from "@/components/ui/button";
 import UserStayingDataForm from "@/app/(user)/book/_components/UserStayingDataForm";
 import SpecialRequest from "@/app/(user)/book/_components/SpecialRequest";
-import {whiteSpaceRegex} from "@/constants/WhiteSpaceRegex";
 import PaymentMethodForm from "@/app/(user)/book/_components/PaymentMethodForm";
 import CancellationPolicy from "@/app/(user)/book/_components/CancellationPolicy";
+import axiosFn from "@/utils/AxiosFn";
+import {Form, Formik, FormikValues} from "formik";
+import {Button} from "@/components/ui/button";
+import {whiteSpaceRegex} from "@/constants/WhiteSpaceRegex";
+import {useRouter} from "next/navigation";
 
 const BookingForm = () => {
+    const router = useRouter();
+
     const bookingSchema = yup.object().shape({
         checkInDate: yup.date().required("Please enter valid check-in date"),
         checkOutDate: yup.date().required("Please enter valid check-out date"),
         totalAdults: yup.number().min(1, "There has to be a guest").required("Please enter guest number"),
-        totalChildren:  yup.number(),
-        totalInfants:  yup.number(),
+        totalChildren:  yup.number().nullable(),
+        totalInfants:  yup.number().nullable(),
         checkInTime: yup.date().nullable(),
         checkOutTime: yup.date().nullable(),
         nonSmokingRoom: yup.boolean(),
-        other: yup.string().min(3, "Please enter valid request").matches(whiteSpaceRegex, "Please enter valid request"),
+        other: yup.string().min(3, "Please enter valid request").matches(whiteSpaceRegex, "Please enter valid request").nullable(),
         paymentMethod: yup.string().required("Please select payment method"),
         bank: yup.string().nullable(),
     });
@@ -28,17 +32,47 @@ const BookingForm = () => {
         checkInDate: null,
         checkOutDate: null,
         totalAdults: 1,
-        totalChildren: 0,
-        totalInfants: 0,
+        totalChildren: null,
+        totalInfants: null,
         checkInTime: null,
         checkOutTime: null,
+        other: null,
         nonSmokingRoom: false,
         paymentMethod: "manual_transfer",
         bank: null,
     };
 
     const handleBooking = async (value: FormikValues) => {
-        console.log("handleBooking called", value);
+        try {
+            const bookingItem = {
+                checkInDate: value.checkInDate,
+                checkOutDate: value.checkOutDate,
+                totalAdults: value.totalAdults,
+                totalChildren: value?.totalChildren,
+                totalInfants: value?.totalInfants,
+            }
+
+            const bookingRequest = {
+                checkInTime: value?.checkInTime,
+                checkOutTime: value?.checkOutTime,
+                nonSmoking: value?.nonSmokingRoom,
+                other: value?.other,
+            }
+
+            const valueToSent = {
+                booking: { bookingItem, bookingRequest },
+                amount: 1500000,
+                paymentMethod: value.paymentMethod,
+                bank: value?.bank,
+            }
+
+            const { data } = await axiosFn.post("/transactions/1", valueToSent);
+            console.log(data);
+            router.push(value.paymentMethod == "manual_transfer" ? "/payment/manual-transfer" : "/payment/bank-va");
+
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
