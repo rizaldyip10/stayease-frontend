@@ -5,11 +5,14 @@ import UserStayingDataForm from "@/app/(user)/book/_components/UserStayingDataFo
 import SpecialRequest from "@/app/(user)/book/_components/SpecialRequest";
 import PaymentMethodForm from "@/app/(user)/book/_components/PaymentMethodForm";
 import CancellationPolicy from "@/app/(user)/book/_components/CancellationPolicy";
+import axiosFn from "@/utils/AxiosFn";
 import {Form, Formik, FormikValues} from "formik";
 import {Button} from "@/components/ui/button";
 import {whiteSpaceRegex} from "@/constants/WhiteSpaceRegex";
+import {useRouter} from "next/navigation";
 
 const BookingForm = () => {
+    const router = useRouter();
     const bookingSchema = yup.object().shape({
         checkInDate: yup.date().required("Please enter valid check-in date"),
         checkOutDate: yup.date().required("Please enter valid check-out date"),
@@ -61,8 +64,13 @@ const BookingForm = () => {
                 paymentMethod: value.paymentMethod,
                 bank: value?.bank,
             }
-        } catch (error) {
 
+            const { data } = await axiosFn.post("/transactions/1", valueToSent);
+            console.log(data);
+            router.push(value.paymentMethod == "manual_transfer" ? "/payment/manual-transfer" : "/payment/bank-va");
+
+        } catch (error) {
+            console.log(error);
         }
     };
 
