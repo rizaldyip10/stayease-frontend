@@ -1,4 +1,4 @@
-import {Calendar, ChartLine, LayoutGrid, LibraryBig, LucideIcon, Sofa, Star} from "lucide-react";
+import {BookOpenText, Calendar, ChartLine, LayoutGrid, LibraryBig, LucideIcon, Sofa, Star, User} from "lucide-react";
 
 export type RouteType = {
     label: string;
@@ -25,4 +25,16 @@ export const adminRoutes: SidebarRoutesType[] = [
     { label: "Booking Request", href: "/dashboard/booking-request", icon: LibraryBig },
     { label: "Reviews", href: "/dashboard/reviews", icon: Star },
     { label: "Reports", href: "/dashboard/reports", icon: ChartLine }
-]
+];
+
+export type UserMenuRoutesType = {
+    label: string;
+    href: string;
+    icon: LucideIcon;
+};
+
+export const userMenuRoutes: UserMenuRoutesType[] = [
+    { label: "My Profile", href: "/profile", icon: User },
+    { label: "My Bookings", href: "/profile/bookings", icon: BookOpenText },
+    { label: "My Reviews", href: "/profile/reviews", icon: Star }
+];
