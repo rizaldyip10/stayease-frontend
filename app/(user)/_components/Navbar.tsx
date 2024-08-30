@@ -27,7 +27,11 @@ const Navbar = () => {
 
     return (
         <motion.nav
+<<<<<<< HEAD
             className="sticky top-0 w-full flex justify-between items-center h-16 border-b border-gray-200 bg-white px-5 z-50 md:px-14"
+=======
+            className="sticky top-0 w-full flex justify-center items-center h-16 border-b border-gray-200 bg-white px-5 z-50 md:px-14"
+>>>>>>> 431ce81d2af909b7fb2735508fb4ad35f064ec26
             variants={{
                 visible: { y: 0 },
                 hidden: { y: "-100%" },
@@ -35,6 +39,7 @@ const Navbar = () => {
             animate={hidden ? "hidden" : "visible"}
             transition={{ duration: 0.35, ease: "easeInOut" }}
         >
+<<<<<<< HEAD
             <MobileMenu />
             <Image src={logo} alt={"logo"} height={40} className="h-10 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0" />
             <NavRoutes />
@@ -42,6 +47,17 @@ const Navbar = () => {
                 <AuthBtn />
                 <AuthBtnMobile />
                 {/*<ProfileBtn />*/}
+=======
+            <div className="w-full 2xl:w-[1400px] flex justify-between items-center">
+                <MobileMenu />
+                <Image src={logo} alt={"logo"} height={40} className="h-10 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0" />
+                <NavRoutes />
+                <div className={pathname.startsWith("/book") ? "hidden" : "block"}>
+                    <AuthBtn />
+                    <AuthBtnMobile />
+                    {/*<ProfileBtn />*/}
+                </div>
+>>>>>>> 431ce81d2af909b7fb2735508fb4ad35f064ec26
             </div>
         </motion.nav>
     );
