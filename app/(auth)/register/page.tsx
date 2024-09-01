@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import AuthFormSection from "@/app/(auth)/components/AuthFormSection";
-import SidePicture from "@/app/(auth)/components/SidePicture";
+import AuthFormSection from "@/app/(auth)/_components/AuthFormSection";
+import SidePicture from "@/app/(auth)/_components/SidePicture";
 import { AnimatePresence, motion } from "framer-motion";
 
 const Register: React.FC = () => {

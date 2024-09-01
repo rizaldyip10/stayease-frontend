@@ -4,7 +4,7 @@ import Image from "next/image";
 import logo from "@/assets/images/logo_horizontal.png";
 import { Button } from "@/components/ui/button";
 import googleLogo from "@/assets/icons/google-icon.png";
-import AuthForm from "@/app/(auth)/components/AuthForm";
+import AuthForm from "@/app/(auth)/_components/AuthForm";
 import { FormikHelpers, FormikValues } from "formik";
 import useAuthForm from "@/hooks/useAuthForm";
 import Link from "next/link";

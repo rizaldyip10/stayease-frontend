@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import AuthFormSection from "@/app/(auth)/components/AuthFormSection";
+import AuthFormSection from "@/app/(auth)/_components/AuthFormSection";
 import { AnimatePresence, motion } from "framer-motion";
-import SidePicture from "@/app/(auth)/components/SidePicture";
+import SidePicture from "@/app/(auth)/_components/SidePicture";
 
 const VerificationPage: React.FC = () => {
   return (

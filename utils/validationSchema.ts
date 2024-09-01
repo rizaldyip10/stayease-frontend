@@ -8,7 +8,7 @@ export const loginSchema = yup.object().shape({
     .required("Please enter your email"),
   password: yup
     .string()
-    .min(6, "Please enter a valid password")
+    .min(8, "Please enter a valid password")
     .required("Please enter your password")
     .matches(whiteSpaceRegex, "Please enter a valid password"),
 });
@@ -31,6 +31,7 @@ export const setPasswordSchema = yup.object().shape({
       /[!@#$%^&*(),.?":{}|<>]/,
       "Password must contain at least one special character",
     )
+    .matches(whiteSpaceRegex, "Please enter a valid password")
     .required("Password is required"),
   confirmPassword: yup
     .string()

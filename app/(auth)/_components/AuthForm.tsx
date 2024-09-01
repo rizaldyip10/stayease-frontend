@@ -1,12 +1,9 @@
 import React from "react";
 import { FormType, UserType } from "@/constants/Types";
 import { Form, Formik, FormikHelpers, FormikValues } from "formik";
-import * as yup from "yup";
-import { whiteSpaceRegex } from "@/constants/WhiteSpaceRegex";
-import FormikInput from "@/components/FormikInput";
 import { Button } from "@/components/ui/button";
 import { getValidationSchema } from "@/utils/validationSchema";
-import FormInputs from "@/app/(auth)/components/FormInputs";
+import FormInputs from "@/app/(auth)/_components/FormInputs";
 
 interface AuthFormProps {
   formType: FormType;

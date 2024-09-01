@@ -5,7 +5,7 @@ import logo from "@/assets/images/logo_horizontal.png";
 import Image from "next/image";
 import { FormType, UserType } from "@/constants/Types";
 import useAuthForm from "@/hooks/useAuthForm";
-import AuthCard from "@/app/(auth)/components/AuthCard";
+import AuthCard from "@/app/(auth)/_components/AuthCard";
 
 interface AuthFormProps {
   className?: string;
