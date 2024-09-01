@@ -25,7 +25,9 @@ const UseAuthForm = ({ userType }: UseAuthFormProps) => {
     const endpoint =
       formType === "login"
         ? "http://localhost:8080/api/v1/auth/login"
-        : `http://localhost:8080/api/v1/auth/register?userType?=${userType}`;
+        : formType === "register"
+          ? `http://localhost:8080/api/v1/auth/register?userType?=${userType}`
+          : "http://localhost:8080/api/v1/auth/register/verify?token=";
 
     try {
       const response = await axios.post(endpoint, values, {
