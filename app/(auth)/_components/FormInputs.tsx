@@ -1,4 +1,3 @@
-// FormInputs.tsx
 import React from "react";
 import FormikInput from "@/components/FormikInput";
 
@@ -34,25 +33,6 @@ const FormInputs: React.FC<FormInputsProps> = ({ formType }) => {
           className="w-full border py-1 px-2 rounded-md focus-visible:ring-0"
           label="Email"
         />
-      );
-    case "verify":
-      return (
-        <>
-          <FormikInput
-            as="input"
-            name="password"
-            className="w-full border py-1 px-2 rounded-md focus-visible:ring-0"
-            label="Password"
-            type="password"
-          />
-          <FormikInput
-            as="input"
-            name="confirmPassword"
-            className="w-full border py-1 px-2 rounded-md focus-visible:ring-0"
-            label="Confirm Password"
-            type="password"
-          />
-        </>
       );
     default:
       return null;

@@ -35,16 +35,14 @@ const AuthForm: React.FC<AuthFormProps> = ({
             <FormInputs formType={formType} />
             <Button
               type="submit"
-              className="bg-appblue-900 w-full"
+              className="bg-appblue-900 w-full text-white"
               disabled={!(isValid && dirty) || isSubmitting}
             >
               {isSubmitting
                 ? "Submitting..."
                 : formType === "register"
                   ? "Create Account as a " + `${userType}`
-                  : formType === "login"
-                    ? "Login to your Account"
-                    : "Set Password"}
+                  : "Login to your Account"}
             </Button>
           </Form>
         )}

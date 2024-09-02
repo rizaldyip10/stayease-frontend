@@ -6,6 +6,8 @@ import Image from "next/image";
 import { FormType, UserType } from "@/constants/Types";
 import useAuthForm from "@/hooks/useAuthForm";
 import AuthCard from "@/app/(auth)/_components/AuthCard";
+import MultiStepForm from "@/app/(auth)/_components/MultiStepForm";
+import { useSearchParams } from "next/navigation";
 
 interface AuthFormProps {
   className?: string;
@@ -20,10 +22,12 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
   formType: FormType;
 }) => {
   const [userType, setUserType] = useState<UserType>("user");
-
-  const { message, alertType, showAlert, setShowAlert } = useAuthForm({
-    userType,
-  });
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+  const { message, alertType, showAlert, setShowAlert, handleMultiStepSubmit } =
+    useAuthForm({
+      userType,
+    });
 
   return (
     <div className={className}>
@@ -46,11 +50,19 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
                 onClose={() => setShowAlert(false)}
               />
             )}
-            <AuthCard
-              formType={formType}
-              userType={userType}
-              setUserType={setUserType}
-            />
+            {formType === "verify" && token ? (
+              <MultiStepForm
+                userType="tenant"
+                onSubmit={handleMultiStepSubmit}
+                token={token}
+              />
+            ) : (
+              <AuthCard
+                formType={formType}
+                userType={userType}
+                setUserType={setUserType}
+              />
+            )}
           </div>
         </div>
         <div />

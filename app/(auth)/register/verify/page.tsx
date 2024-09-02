@@ -3,8 +3,17 @@ import React from "react";
 import AuthFormSection from "@/app/(auth)/_components/AuthFormSection";
 import { AnimatePresence, motion } from "framer-motion";
 import SidePicture from "@/app/(auth)/_components/SidePicture";
+import { notFound, useSearchParams } from "next/navigation";
 
 const VerificationPage: React.FC = () => {
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+
+  if (!token) {
+    notFound(); // This will trigger a 404 response
+    return null;
+  }
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -22,7 +31,7 @@ const VerificationPage: React.FC = () => {
           />
           <AuthFormSection
             formType="verify"
-            className="form mb-2 w-full h-full md:w-2/5"
+            className="form mb-2 max-w-full h-full md:w-2/5"
           />
         </div>
       </motion.div>

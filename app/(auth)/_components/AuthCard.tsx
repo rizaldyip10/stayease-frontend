@@ -9,6 +9,7 @@ import { FormikHelpers, FormikValues } from "formik";
 import useAuthForm from "@/hooks/useAuthForm";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { getInitialValues } from "@/utils/authInitialValues";
 
 interface AuthCardProps {
   formType: FormType;
@@ -26,8 +27,7 @@ const AuthCard: React.FC<AuthCardProps> = ({
     userType,
   });
 
-  const initialValues =
-    formType === "login" ? { email: "", password: "" } : { email: "" };
+  const initialValues = getInitialValues(formType);
 
   const onSubmit = (
     values: FormikValues,
