@@ -10,19 +10,13 @@ import {Form, Formik, FormikValues} from "formik";
 import {Button} from "@/components/ui/button";
 import {whiteSpaceRegex} from "@/constants/WhiteSpaceRegex";
 import {useRouter} from "next/navigation";
+import {useBookingValues} from "@/hooks/useBookingValues";
 
 const BookingForm = () => {
     const router = useRouter();
-<<<<<<< HEAD
-=======
+    const { bookingValues } = useBookingValues();
 
->>>>>>> 431ce81d2af909b7fb2735508fb4ad35f064ec26
     const bookingSchema = yup.object().shape({
-        checkInDate: yup.date().required("Please enter valid check-in date"),
-        checkOutDate: yup.date().required("Please enter valid check-out date"),
-        totalAdults: yup.number().min(1, "There has to be a guest").required("Please enter guest number"),
-        totalChildren:  yup.number().nullable(),
-        totalInfants:  yup.number().nullable(),
         checkInTime: yup.date().nullable(),
         checkOutTime: yup.date().nullable(),
         nonSmokingRoom: yup.boolean(),
@@ -32,34 +26,35 @@ const BookingForm = () => {
     });
 
     const initialValues: FormikValues = {
-        checkInDate: null,
-        checkOutDate: null,
-        totalAdults: 1,
-        totalChildren: null,
-        totalInfants: null,
-        checkInTime: null,
-        checkOutTime: null,
-        other: null,
+        checkInTime: "",
+        checkOutTime: "",
+        other: "",
         nonSmokingRoom: false,
         paymentMethod: "manual_transfer",
-        bank: null,
+        bank: "",
     };
 
     const handleBooking = async (value: FormikValues) => {
         try {
             const bookingItem = {
-                checkInDate: value.checkInDate,
-                checkOutDate: value.checkOutDate,
-                totalAdults: value.totalAdults,
-                totalChildren: value?.totalChildren,
-                totalInfants: value?.totalInfants,
-            }
+                checkInDate: bookingValues.checkInDate,
+                checkOutDate: bookingValues.checkOutDate,
+                totalAdults: bookingValues.totalAdults,
+                totalChildren: bookingValues?.totalChildren,
+                totalInfants: bookingValues?.totalInfants,
+            };
 
             const bookingRequest = {
                 checkInTime: value?.checkInTime,
                 checkOutTime: value?.checkOutTime,
                 nonSmoking: value?.nonSmokingRoom,
                 other: value?.other,
+            };
+
+            const expiryTimeInfo = {
+                order_time: new Date(),
+                expiry_duration: 30,
+                unit: "minute"
             }
 
             const valueToSent = {
@@ -67,11 +62,16 @@ const BookingForm = () => {
                 amount: 1500000,
                 paymentMethod: value.paymentMethod,
                 bank: value?.bank,
-            }
+                custom_expiry: expiryTimeInfo,
+            };
 
-            const { data } = await axiosFn.post("/transactions/1", valueToSent);
+            const { data } = await axiosFn.post(`/transactions/${bookingValues.roomId}`, valueToSent, {
+                headers: {
+                    Authorization: `Bearer token`
+                }
+            });
             console.log(data);
-            router.push(value.paymentMethod == "manual_transfer" ? "/payment/manual-transfer" : "/payment/bank-va");
+            router.push(value.paymentMethod == "manual_transfer" ? "/payment?id=paymentId&bank=atm" : `/payment?id=paymentId&bank=${value?.bank}`);
 
         } catch (error) {
             console.log(error);
