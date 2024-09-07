@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { FormType, UserType } from "@/constants/Types";
 import Image from "next/image";
@@ -10,6 +11,7 @@ import useAuthForm from "@/hooks/useAuthForm";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getInitialValues } from "@/utils/authInitialValues";
+import { useAuth } from "@/hooks/useAuth";
 
 interface AuthCardProps {
   formType: FormType;
@@ -23,9 +25,11 @@ const AuthCard: React.FC<AuthCardProps> = ({
   setUserType,
 }) => {
   const router = useRouter();
-  const { handleSubmit, error } = useAuthForm({
-    userType,
-  });
+  const { handleSubmit, error, loading, message, alertType, showAlert } =
+    useAuthForm({
+      userType,
+    });
+  const { initiateGoogleLogin, login } = useAuth();
 
   const initialValues = getInitialValues(formType);
 
@@ -34,6 +38,7 @@ const AuthCard: React.FC<AuthCardProps> = ({
     actions: FormikHelpers<FormikValues>,
   ) => {
     handleSubmit(values, actions, formType);
+    // login({ values });
     console.log("values: ", values);
   };
 
@@ -50,13 +55,9 @@ const AuthCard: React.FC<AuthCardProps> = ({
       <div className="w-full flex flex-col items-center md:gap-3 gap-2 md:mb-5">
         <Image src={logo} alt="logo" height={50} className="md:hidden mb-10" />
         <h1 className="text-3xl font-bold text-appblue-800 md:text-left">
-          {formType === "login"
-            ? "Login"
-            : formType === "register"
-              ? "Register"
-              : "Verify Account"}
+          {formType === "login" ? "Login" : "Register"}
         </h1>
-        {(formType === "register" || formType === "login") && (
+        {formType === "register" && (
           <>
             <p>Choose account type:</p>
             <p>
@@ -93,42 +94,47 @@ const AuthCard: React.FC<AuthCardProps> = ({
       />
 
       {error && <p className="text-red-500">{error}</p>}
-      {(formType === "login" || formType === "register") && (
-        <>
-          <div className="w-full relative mt-2">
-            <hr className="bg-neutral-500 w-full relative" />
-            <h1
-              className="absolute right-1/2 translate-x-1/2 -translate-y-1/2 bg-white
-                    text-neutral-500 text-sm"
-            >
-              OR
-            </h1>
-          </div>
-          <Button variant="outline" className="w-full flex items-center gap-2">
-            <Image src={googleLogo} alt={"google"} height={20} />
-            Continue with Google
-          </Button>
-          <div className="flex items-center gap-1">
-            <p className="text-sm text-gray-600">
-              {formType === "login"
-                ? "Don't have an account?"
-                : "Already have an account?"}
-            </p>
-            <Link
-              href="#"
-              className="text-sm font-bold text-blue-950"
-              onClick={(e) =>
-                handleNavigation(
-                  e,
-                  formType === "login" ? "/register" : "/login",
-                )
-              }
-            >
-              {formType === "login" ? "Register" : "Login"}
-            </Link>
-          </div>
-        </>
+      {showAlert && (
+        <div
+          className={`text-${alertType === "Success" ? "green" : "red"}-500`}
+        >
+          {message}
+        </div>
       )}
+
+      <div className="w-full relative mt-2">
+        <hr className="bg-neutral-500 w-full relative" />
+        <h1
+          className="absolute right-1/2 translate-x-1/2 -translate-y-1/2 bg-white
+                    text-neutral-500 text-sm"
+        >
+          OR
+        </h1>
+      </div>
+      <Button
+        variant="outline"
+        className="w-full flex items-center gap-2"
+        onClick={initiateGoogleLogin}
+      >
+        <Image src={googleLogo} alt={"google"} height={20} />
+        Continue with Google
+      </Button>
+      <div className="flex items-center gap-1">
+        <p className="text-sm text-gray-600">
+          {formType === "login"
+            ? "Don't have an account?"
+            : "Already have an account?"}
+        </p>
+        <Link
+          href="#"
+          className="text-sm font-bold text-blue-950"
+          onClick={(e) =>
+            handleNavigation(e, formType === "login" ? "/register" : "/login")
+          }
+        >
+          {formType === "login" ? "Register" : "Login"}
+        </Link>
+      </div>
     </div>
   );
 };
