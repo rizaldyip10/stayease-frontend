@@ -1,8 +1,7 @@
 "use client";
 import * as React from "react";
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-
-import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { CaretSortIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -17,7 +16,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useState } from "react";
 
 interface ComboboxProps {
   choices: {
@@ -45,7 +43,7 @@ const Combobox: React.FC<ComboboxProps> = ({ choices, onSelect }) => {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="text-left font-normal flex justify-between"
+          className="w-full text-left font-normal flex justify-between"
         >
           {value
             ? choices.find((choice) => choice.value === value)?.label

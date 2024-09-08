@@ -31,20 +31,43 @@ const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
   return (
     <div className={`property-search-bar ${className}`}>
       <h2 className="text-xl font-semibold mb-4">Search for available rooms</h2>
-      <div className="grid grid-cols-[2fr_2fr_2fr_1fr] gap-4 sm:grid-cols-1">
-        <Combobox choices={choices} onSelect={handleSelect} />
-        <Input
-          type="number"
-          placeholder="Budget"
-          className="p-2 border rounded-lg"
-        />
-        <DatePickerDemo />
-        <Button
-          type="submit"
-          className="bg-appblue-900 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
-        >
-          Search
-        </Button>
+      {/*<div className="grid grid-cols-[2fr_2fr_2fr_1fr] gap-4 sm:grid-cols-1">*/}
+      {/*  <Combobox choices={choices} onSelect={handleSelect} />*/}
+      {/*  <Input*/}
+      {/*    type="number"*/}
+      {/*    placeholder="Budget"*/}
+      {/*    className="p-2 border rounded-lg"*/}
+      {/*  />*/}
+      {/*  <DatePickerDemo />*/}
+      {/*  <Button*/}
+      {/*    type="submit"*/}
+      {/*    className="bg-appblue-900 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"*/}
+      {/*  >*/}
+      {/*    Search*/}
+      {/*  </Button>*/}
+      {/*</div>*/}
+      <div className="flex gap-4 w-full">
+        <div style={{ flex: "2 1 0%" }}>
+          <Combobox choices={choices} onSelect={handleSelect} />
+        </div>
+        <div style={{ flex: "2 1 0%" }}>
+          <Input
+            type="number"
+            placeholder="Budget"
+            className="p-2 border rounded-lg"
+          />
+        </div>
+        <div style={{ flex: "2 1 0%" }}>
+          <DatePickerDemo />
+        </div>
+        <div style={{ flex: "1 1 0%" }}>
+          <Button
+            type="submit"
+            className="bg-appblue-900 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
+          >
+            Search
+          </Button>
+        </div>
       </div>
     </div>
   );
