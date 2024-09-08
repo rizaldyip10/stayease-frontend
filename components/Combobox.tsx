@@ -45,7 +45,7 @@ const Combobox: React.FC<ComboboxProps> = ({ choices, onSelect }) => {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full text-left font-normal flex justify-between"
+          className="text-left font-normal flex justify-between"
         >
           {value
             ? choices.find((choice) => choice.value === value)?.label
