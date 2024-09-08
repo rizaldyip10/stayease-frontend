@@ -3,11 +3,6 @@ import { config } from "@/constants/url";
 import { UserType } from "@/constants/Types";
 import { FormikValues } from "formik";
 
-export interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
 export interface AuthResponse {
   id: string;
   email: string;
@@ -25,6 +20,14 @@ export interface AuthResponse {
 export interface RegisterResponse {
   message: string;
   verificationLink: string;
+}
+
+export interface TokenCheckResponse {
+  statusCode: number;
+  statusMessage: string;
+  data: {
+    isValid: boolean;
+  };
 }
 
 export interface SSOResponse {
@@ -74,6 +77,25 @@ export const authService = {
       message: res.data.message,
       verificationLink: res.data.verificationLink,
     };
+  },
+
+  checkToken: async (token: string): Promise<TokenCheckResponse> => {
+    const response = await axiosInterceptor.post(
+      config.endpoints.registration.checkToken,
+      { token },
+    );
+    console.log(response);
+    return response.data;
+  },
+
+  verify: async (values: FormikValues, token: string): Promise<any> => {
+    const response = await axiosInterceptor.post(
+      config.endpoints.registration.verify,
+      values,
+      { params: { token }, headers: { "Content-Type": "application/json" } },
+    );
+    console.log(response);
+    return response.data;
   },
 
   exchangeCodeForTokens: async (code: string): Promise<AuthResponse> => {

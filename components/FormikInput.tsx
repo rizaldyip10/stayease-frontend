@@ -2,6 +2,7 @@ import { Field, useField } from "formik";
 import { FC, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface FormikInputProps {
   label?: string;
@@ -35,17 +36,18 @@ const FormikInput: FC<FormikInputProps> = ({ label, ...props }) => {
           placeholder={placeholder}
         />
         {isPassword && (
-          <button
+          <Button
+            variant="ghost"
             type="button"
-            className="absolute h-full right-0 inset-x-3 pr-3"
+            className="absolute h-full right-0 pr-3"
             onClick={() => setVisible(!isVisible)}
           >
             {isVisible ? (
-              <EyeOff className="w-4 h-4" />
+              <EyeOff className="h-4 w-4" />
             ) : (
-              <Eye className="w-4 h-4" />
+              <Eye className="h-4 w-4" />
             )}
-          </button>
+          </Button>
         )}
       </div>
       {meta.error && meta.touched && (

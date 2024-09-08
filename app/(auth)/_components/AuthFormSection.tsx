@@ -52,7 +52,7 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
             )}
             {formType === "verify" && token ? (
               <MultiStepForm
-                userType="tenant"
+                userType={userType}
                 onSubmit={handleMultiStepSubmit}
                 token={token}
               />
