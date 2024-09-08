@@ -61,7 +61,7 @@ export const authService = {
     userType: UserType,
   ): Promise<RegisterResponse> => {
     const response = await axiosInterceptor.post(
-      config.endpoints.auth.register,
+      config.endpoints.registration.register,
       {
         email,
       },
@@ -76,7 +76,7 @@ export const authService = {
 
   exchangeCodeForTokens: async (code: string): Promise<AuthResponse> => {
     const response = await axiosInterceptor.post(
-      config.endpoints.auth.exchangeCode,
+      config.endpoints.oauth2.exchangeCode,
       { code },
     );
     console.log(response);
@@ -87,7 +87,7 @@ export const authService = {
 
   selectUserType: async (userType: UserType): Promise<AuthResponse> => {
     const response = await axiosInterceptor.post(
-      config.endpoints.auth.socialUserSelect,
+      config.endpoints.oauth2.socialUserSelect,
       { userType },
     );
     console.log(response);
