@@ -18,6 +18,7 @@ export const config = {
     },
     registration: {
       register: "/register",
+      checkToken: "/register/check-token",
       verify: "/register/verify",
     },
   },
