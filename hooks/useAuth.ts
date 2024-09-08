@@ -124,8 +124,10 @@ export function useAuth() {
           id: auth.id,
           email: auth.email,
           userType: auth.userType,
+          isVerified: auth.isVerified,
           firstName: auth.firstName,
           lastName: auth.lastName,
+          isOAuth2: auth.isOAuth2,
           // Omit token from the returned object
         }
       : null,

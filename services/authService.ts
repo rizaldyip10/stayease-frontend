@@ -12,8 +12,10 @@ export interface AuthResponse {
   id: string;
   email: string;
   userType: string;
+  isVerified: boolean;
   firstName: string;
   lastName: string;
+  isOAuth2: boolean;
   token: {
     accessToken: string;
     refreshToken: string;
@@ -126,8 +128,10 @@ export const authService = {
           id: res.data.id,
           email: res.data.email,
           userType: res.data.userType,
+          isVerified: res.data.isVerified,
           firstName: res.data.firstName,
           lastName: res.data.lastName,
+          isOAuth2: res.data.isOAuth2,
           token: {
             accessToken: res.data.token.accessToken,
             refreshToken: res.data.token.refreshToken,
@@ -149,12 +153,15 @@ export const authService = {
     }
     const response = await axiosInterceptor.get(config.endpoints.auth.status);
     const res = response.data;
+    console.log("Auth status response:", res);
     return {
       id: res.data.id,
       email: res.data.email,
       userType: res.data.userType,
+      isVerified: res.data.isVerified,
       firstName: res.data.firstName,
       lastName: res.data.lastName,
+      isOAuth2: res.data.isOAuth2,
       token: {
         accessToken: res.data.token.accessToken,
         refreshToken: res.data.token.refreshToken,
