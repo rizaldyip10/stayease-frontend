@@ -32,7 +32,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ className }) => {
           <HeroDescription className="md:min-h-[390px]" />
           <div></div>
         </div>
-        <div className="w-1/2">
+        <div className="md:w-1/2">
           <CarouselPlugin images={images} />
         </div>
       </div>

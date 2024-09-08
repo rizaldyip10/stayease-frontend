@@ -5,7 +5,7 @@ import PropertySearchBar from "@/components/PropertySearchBar";
 export default function Home() {
   return (
     <main className="">
-      <HeroSection className="flex flex-col items-center justify-between p-6 md:min-h-[695px] md:max-h-[695px] max-h-[300px]" />
+      <HeroSection className="flex flex-col items-center justify-between md:p-6 md:min-h-[695px] md:max-h-[695px] max-h-screen" />
     </main>
   );
 }

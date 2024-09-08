@@ -31,7 +31,7 @@ const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
   return (
     <div className={`property-search-bar ${className}`}>
       <h2 className="text-xl font-semibold mb-4">Search for available rooms</h2>
-      <div className="grid grid-cols-[2fr_2fr_2fr_1fr] gap-4">
+      <div className="grid grid-cols-[2fr_2fr_2fr_1fr] gap-4 sm:grid-cols-1">
         <Combobox choices={choices} onSelect={handleSelect} />
         <Input
           type="number"
