@@ -1,28 +1,41 @@
-import Image from "next/image";
-import {CircleUserRound, LogOut, Settings} from "lucide-react";
+"use client";
+import { CircleUserRound, LogOut, Settings } from "lucide-react";
 import {
-    DropdownMenu,
-    DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import React from "react";
+import Link from "next/link";
+import { useAuth } from "@/hooks/useAuth";
 
 const ProfileBtn = () => {
-    return (
-        <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center lg:hidden">
-                <CircleUserRound className="w-7 h-7 rounded-full" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-                <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
-                    Login
-                </DropdownMenuItem>
-                <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
-                    Register
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
-    );
+  const { auth, logout } = useAuth();
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger className="flex items-center lg:hidden">
+        <CircleUserRound className="w-7 h-7 rounded-full" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
+          {auth ? (
+            <Link href="/" onClick={() => logout()}>
+              Logout
+            </Link>
+          ) : (
+            <Link href="/login">Login/Register</Link>
+          )}
+        </DropdownMenuItem>
+        {/*<DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">*/}
+        {/*  <Link href="/register">Register</Link>*/}
+        {/*</DropdownMenuItem>*/}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 };
 
 export default ProfileBtn;
