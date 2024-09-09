@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import {ClientWrapper} from "@/components/ClientWrapper";
+import React, { Suspense } from "react";
+import { ClientWrapper } from "@/components/ClientWrapper";
+import { AuthProvider } from "@/components/AuthProvider";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +22,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ClientWrapper>
-            {children}
+          <AuthProvider>
+            <Suspense fallback={<Skeleton />}>{children}</Suspense>
+          </AuthProvider>
         </ClientWrapper>
       </body>
     </html>

@@ -5,7 +5,7 @@ import { queryClient } from "@/lib/queryClient";
 import React from "react";
 
 export function ClientWrapper({ children }: { children: React.ReactNode }) {
-    return (
-        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    );
+  return (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
 }
