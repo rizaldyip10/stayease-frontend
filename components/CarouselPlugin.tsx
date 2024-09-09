@@ -1,13 +1,11 @@
 "use client";
 import * as React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Autoplay from "embla-carousel-autoplay";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 import Image from "next/image";
 
@@ -23,14 +21,30 @@ export function CarouselPlugin({ className, images }: CarouselPluginProps) {
   const plugin = useRef(Autoplay({ delay: 2000, stopOnInteraction: true }));
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const handleSlideChange = (index: number) => {
-    setActiveIndex(index);
-  };
+  // const handleSlideChange = () => {
+  //   if (emblaApi) {
+  //     setActiveIndex(emblaApi.selectedScrollSnap());
+  //     console.log("index:" + index);
+  //   }
+  // };
+  //
+  // useEffect(() => {
+  //   if (emblaApi) {
+  //     emblaApi.on("select", handleSlideChange);
+  //     // Add event listener for slide change
+  //   }
+  //
+  //   return () => {
+  //     if (emblaApi) {
+  //       emblaApi.off("select", handleSlideChange); // Cleanup event listener
+  //     }
+  //   };
+  // }, [emblaApi]);
 
   return (
     <Carousel
       plugins={[plugin.current]}
-      className={`carousel relative w-full max-w-xs h-full ${className}`}
+      className={`carousel relative w-full h-full ${className}`}
       onMouseEnter={plugin.current.stop}
       onMouseLeave={plugin.current.reset}
     >
@@ -49,14 +63,16 @@ export function CarouselPlugin({ className, images }: CarouselPluginProps) {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <div className="absolute  z-20 bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-        {images.map((_, index) => (
-          <div
-            key={index}
-            className={`w-5 h-5 rounded-full ${index === activeIndex ? "bg-appblue-900" : "bg-gray-300"}`}
-          />
-        ))}
-      </div>
+
+      {/*TODO :indicators?*/}
+      {/*<div className="absolute z-20 top-1/2 right-4 transform -translate-y-1/2 flex flex-col space-y-2">*/}
+      {/*  {images.map((_, index) => (*/}
+      {/*    <div*/}
+      {/*      key={index}*/}
+      {/*      className={`w-3 h-3 rounded-full ${index === activeIndex ? "bg-appblue-900" : "bg-gray-300"}`}*/}
+      {/*    />*/}
+      {/*  ))}*/}
+      {/*</div>*/}
     </Carousel>
   );
 }

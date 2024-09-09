@@ -16,11 +16,8 @@ const MobileMenu = () => {
   const router = useRouter();
   return (
     <Sheet>
-      <SheetTrigger
-        className="lg:hidden"
-        onClick={() => console.log("Trigger clicked")}
-      >
-        <Menu className="w-4 h-4 text-blue-950" />
+      <SheetTrigger className="lg:hidden">
+        <Menu className="w-4 h-4 text-appblue-900 text-center" />
       </SheetTrigger>
       <SheetContent
         side="left"
