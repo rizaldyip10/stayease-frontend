@@ -1,7 +1,7 @@
 "use client";
 
 import {ColumnDef, getCoreRowModel, getPaginationRowModel, getSortedRowModel, SortingState} from "@tanstack/table-core";
-import {BookingDataType, tenantDummyData} from "@/constants/Booking";
+import {BookingDataType} from "@/constants/Booking";
 import {Button} from "@/components/ui/button";
 import {ArrowDownIcon, EllipsisVertical} from "lucide-react";
 import {useState} from "react";
@@ -34,7 +34,7 @@ const columns: ColumnDef<BookingDataType>[] = [
                 <ArrowDownIcon className="ml-2 w-4 h-4" />
             </Button>
         ),
-        accessorFn: (row) => row.bookingItem.room.name,
+        accessorFn: (row) => row.bookingItems.map(i => i.room.name),
         cell: ({ row }) => <div>{row.getValue("room")}</div>
     },
     {
@@ -48,7 +48,7 @@ const columns: ColumnDef<BookingDataType>[] = [
                 <ArrowDownIcon className="ml-2 w-4 h-4" />
             </Button>
         ),
-        accessorFn: (row) => row.property.name,
+        accessorFn: (row) => row.property.propertyName,
         cell: ({ row }) => <div>{row.getValue("property")}</div>
     },
     {
@@ -62,7 +62,7 @@ const columns: ColumnDef<BookingDataType>[] = [
                 <ArrowDownIcon className="ml-2 w-4 h-4" />
             </Button>
         ),
-        accessorFn: (row) => row.bookingItem.checkInDate,
+        accessorFn: (row) => row.checkInDate,
         cell: ({ row }) => <div>{row.getValue("checkInDate")}</div>
     },
     {
@@ -76,7 +76,7 @@ const columns: ColumnDef<BookingDataType>[] = [
                 <ArrowDownIcon className="ml-2 w-4 h-4" />
             </Button>
         ),
-        accessorFn: (row) => row.bookingItem.checkOutDate,
+        accessorFn: (row) => row.checkOutDate,
         cell: ({ row }) => <div>{row.getValue("checkOutDate")}</div>
     },
     {

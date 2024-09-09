@@ -1,8 +1,11 @@
 import {BookingType} from "@/constants/Booking";
 
-export type Payment = {
+export type PaymentType = {
+    id: number;
     amount: number;
-    bankVa: string;
+    paymentMethod: string;
+    paymentStatus: string;
+    paymentProof: string | null;
+    bankVa: string | null;
     paymentExpirationAt: string;
-    booking: BookingType;
 };

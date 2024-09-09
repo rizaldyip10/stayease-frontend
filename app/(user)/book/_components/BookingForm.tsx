@@ -5,7 +5,7 @@ import UserStayingDataForm from "@/app/(user)/book/_components/UserStayingDataFo
 import SpecialRequest from "@/app/(user)/book/_components/SpecialRequest";
 import PaymentMethodForm from "@/app/(user)/book/_components/PaymentMethodForm";
 import CancellationPolicy from "@/app/(user)/book/_components/CancellationPolicy";
-import axiosFn from "@/utils/AxiosFn";
+import axiosInterceptor from "@/utils/axiosInterceptor";
 import {Form, Formik, FormikValues} from "formik";
 import {Button} from "@/components/ui/button";
 import {whiteSpaceRegex} from "@/constants/WhiteSpaceRegex";
@@ -65,7 +65,7 @@ const BookingForm = () => {
                 custom_expiry: expiryTimeInfo,
             };
 
-            const { data } = await axiosFn.post(`/transactions/${bookingValues.roomId}`, valueToSent, {
+            const { data } = await axiosInterceptor.post(`/transactions/${bookingValues.roomId}`, valueToSent, {
                 headers: {
                     Authorization: `Bearer token`
                 }

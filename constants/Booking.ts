@@ -1,3 +1,7 @@
+import {TenantType, UserType} from "@/constants/Users";
+import {PaymentType} from "@/constants/Payment";
+import {PropertyType, RoomType} from "@/constants/Property";
+
 export type BookingValueType = {
     checkInDate: string | null;
     checkOutDate: string | null;
@@ -32,350 +36,31 @@ export type BookingType = {
 };
 
 export type BookingItemsDataType = {
-    id: number;
-    checkInDate: string;
-    checkOutDate: string;
-    price: number;
-    room: {
-        id: number;
-        name: string;
-    };
     isExtending: boolean | null;
-    totalAdults: number;
-    totalChildren?: number | null;
-    totalInfants?: number | null;
+    room: RoomType;
+}
+
+export type BookingRequestType = {
+    checkInTime: string | null;
+    checkOutTime: string | null;
+    nonSmoking: boolean | null;
+    other: string | null;
 }
 
 export type BookingDataType = {
     id: string;
-    user: {
-        profileImg: string | null;
-        firstName: string;
-        lastName: string;
-    };
-    status: string;
-    tenant: {
-        profileImg: string | null;
-        name: string;
-    };
-    bookingItem: BookingItemsDataType;
+    user: UserType;
+    tenant: TenantType;
+    property: PropertyType;
     totalPrice: number;
+    status: string;
+    bookingItems: BookingItemsDataType[];
+    bookingRequest: BookingRequestType;
+    payment: PaymentType;
     createdAt: string;
-    property: {
-        image: string | null;
-        name: string;
-    }
+    checkInDate: string;
+    checkOutDate: string;
+    totalAdults: number;
+    totalChildren: number | null;
+    totalInfants: number | null;
 };
-
-export const tenantDummyData: BookingDataType[] = [
-    {
-        id: "531haei-355-13faf",
-        property: {
-            image: null,
-            name: "Villa Ubud"
-        },
-        user: {
-            profileImg: null,
-            firstName: "John",
-            lastName: "Doe"
-        },
-        status: "paid",
-        tenant: {
-            profileImg: null,
-            name: "Villa Bali"
-        },
-        bookingItem: {
-            id: 1,
-            checkInDate: "2024-10-10 07:00:00.000",
-            checkOutDate: "2024-10-12 07:00:00.000",
-            isExtending: false,
-            price: 250000,
-            room: {
-                name: "Deluxe Bedroom",
-                id: 1
-            },
-            totalAdults: 1,
-        },
-        totalPrice: 750000,
-        createdAt: "2024-09-10 07:00:00.000",
-    },
-    {
-        id: "531haei-355-13faf",
-        property: {
-            image: null,
-            name: "Villa Lovina"
-        },
-        user: {
-            profileImg: null,
-            firstName: "John",
-            lastName: "Doe"
-        },
-        status: "paid",
-        tenant: {
-            profileImg: null,
-            name: "Villa Bali"
-        },
-        bookingItem: {
-            id: 1,
-            checkInDate: "2024-10-10 07:00:00.000",
-            checkOutDate: "2024-10-12 07:00:00.000",
-            isExtending: false,
-            price: 250000,
-            room: {
-                name: "Studio One Bedroom",
-                id: 1
-            },
-            totalAdults: 1,
-        },
-        totalPrice: 750000,
-        createdAt: "2024-09-10 07:00:00.000",
-    },
-    {
-        id: "531haei-355-13faf",
-        property: {
-            image: null,
-            name: "Villa Nusa Dua"
-        },
-        user: {
-            profileImg: null,
-            firstName: "John",
-            lastName: "Doe"
-        },
-        status: "paid",
-        tenant: {
-            profileImg: null,
-            name: "Villa Bali"
-        },
-        bookingItem: {
-            id: 1,
-            checkInDate: "2024-10-10 07:00:00.000",
-            checkOutDate: "2024-10-12 07:00:00.000",
-            isExtending: false,
-            price: 250000,
-            room: {
-                name: "Executive Bedroom",
-                id: 1
-            },
-            totalAdults: 1,
-        },
-        totalPrice: 750000,
-        createdAt: "2024-09-10 07:00:00.000",
-    },
-    {
-        id: "531haei-355-13faf",
-        property: {
-            image: null,
-            name: "Villa Nusa Dua"
-        },
-        user: {
-            profileImg: null,
-            firstName: "John",
-            lastName: "Doe"
-        },
-        status: "paid",
-        tenant: {
-            profileImg: null,
-            name: "Villa Bali"
-        },
-        bookingItem: {
-            id: 1,
-            checkInDate: "2024-10-10 07:00:00.000",
-            checkOutDate: "2024-10-12 07:00:00.000",
-            isExtending: false,
-            price: 250000,
-            room: {
-                name: "Studio One Bedroom",
-                id: 1
-            },
-            totalAdults: 1,
-        },
-        totalPrice: 750000,
-        createdAt: "2024-09-10 07:00:00.000",
-    },
-    {
-        id: "531haei-355-13faf",
-        property: {
-            image: null,
-            name: "Villa Nusa Dua"
-        },
-        user: {
-            profileImg: null,
-            firstName: "John",
-            lastName: "Doe"
-        },
-        status: "paid",
-        tenant: {
-            profileImg: null,
-            name: "Villa Bali"
-        },
-        bookingItem: {
-            id: 1,
-            checkInDate: "2024-10-10 07:00:00.000",
-            checkOutDate: "2024-10-12 07:00:00.000",
-            isExtending: false,
-            price: 250000,
-            room: {
-                name: "Studio One Bedroom",
-                id: 1
-            },
-            totalAdults: 1,
-        },
-        totalPrice: 750000,
-        createdAt: "2024-09-10 07:00:00.000",
-    },
-    {
-        id: "531haei-355-13faf",
-        property: {
-            image: null,
-            name: "Villa Nusa Dua"
-        },
-        user: {
-            profileImg: null,
-            firstName: "John",
-            lastName: "Doe"
-        },
-        status: "paid",
-        tenant: {
-            profileImg: null,
-            name: "Villa Bali"
-        },
-        bookingItem: {
-            id: 1,
-            checkInDate: "2024-10-10 07:00:00.000",
-            checkOutDate: "2024-10-12 07:00:00.000",
-            isExtending: false,
-            price: 250000,
-            room: {
-                name: "Studio One Bedroom",
-                id: 1
-            },
-            totalAdults: 1,
-        },
-        totalPrice: 750000,
-        createdAt: "2024-09-10 07:00:00.000",
-    },
-    {
-        id: "531haei-355-13faf",
-        property: {
-            image: null,
-            name: "Villa Nusa Dua"
-        },
-        user: {
-            profileImg: null,
-            firstName: "John",
-            lastName: "Doe"
-        },
-        status: "paid",
-        tenant: {
-            profileImg: null,
-            name: "Villa Bali"
-        },
-        bookingItem: {
-            id: 1,
-            checkInDate: "2024-10-10 07:00:00.000",
-            checkOutDate: "2024-10-12 07:00:00.000",
-            isExtending: false,
-            price: 250000,
-            room: {
-                name: "Studio One Bedroom",
-                id: 1
-            },
-            totalAdults: 1,
-        },
-        totalPrice: 750000,
-        createdAt: "2024-09-10 07:00:00.000",
-    },
-    {
-        id: "531haei-355-13faf",
-        property: {
-            image: null,
-            name: "Villa Nusa Dua"
-        },
-        user: {
-            profileImg: null,
-            firstName: "John",
-            lastName: "Doe"
-        },
-        status: "paid",
-        tenant: {
-            profileImg: null,
-            name: "Villa Bali"
-        },
-        bookingItem: {
-            id: 1,
-            checkInDate: "2024-10-10 07:00:00.000",
-            checkOutDate: "2024-10-12 07:00:00.000",
-            isExtending: false,
-            price: 250000,
-            room: {
-                name: "Studio One Bedroom",
-                id: 1
-            },
-            totalAdults: 1,
-        },
-        totalPrice: 750000,
-        createdAt: "2024-09-10 07:00:00.000",
-    },
-    {
-        id: "531haei-355-13faf",
-        property: {
-            image: null,
-            name: "Villa Nusa Dua"
-        },
-        user: {
-            profileImg: null,
-            firstName: "John",
-            lastName: "Doe"
-        },
-        status: "paid",
-        tenant: {
-            profileImg: null,
-            name: "Villa Bali"
-        },
-        bookingItem: {
-            id: 1,
-            checkInDate: "2024-10-10 07:00:00.000",
-            checkOutDate: "2024-10-12 07:00:00.000",
-            isExtending: false,
-            price: 250000,
-            room: {
-                name: "Studio One Bedroom",
-                id: 1
-            },
-            totalAdults: 1,
-        },
-        totalPrice: 750000,
-        createdAt: "2024-09-10 07:00:00.000",
-    },
-    {
-        id: "531haei-355-13faf",
-        property: {
-            image: null,
-            name: "Villa Nusa Dua"
-        },
-        user: {
-            profileImg: null,
-            firstName: "John",
-            lastName: "Doe"
-        },
-        status: "paid",
-        tenant: {
-            profileImg: null,
-            name: "Villa Bali"
-        },
-        bookingItem: {
-            id: 1,
-            checkInDate: "2024-10-10 07:00:00.000",
-            checkOutDate: "2024-10-12 07:00:00.000",
-            isExtending: false,
-            price: 250000,
-            room: {
-                name: "Studio One Bedroom",
-                id: 1
-            },
-            totalAdults: 1,
-        },
-        totalPrice: 750000,
-        createdAt: "2024-09-10 07:00:00.000",
-    },
-]
