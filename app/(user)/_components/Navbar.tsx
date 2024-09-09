@@ -10,6 +10,7 @@ import ProfileBtn from "@/app/(user)/_components/ProfileBtn";
 import MobileMenu from "@/app/(user)/_components/MobileMenu";
 import AuthBtnMobile from "@/app/(user)/_components/AuthBtnMobile";
 import {usePathname} from "next/navigation";
+import Link from "next/link";
 
 const Navbar = () => {
     const { scrollY } = useScroll();
@@ -37,7 +38,9 @@ const Navbar = () => {
         >
             <div className="w-full 2xl:w-[1400px] flex justify-between items-center">
                 <MobileMenu />
-                <Image src={logo} alt={"logo"} height={40} className="h-10 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0" />
+                <Link href={"/"}>
+                    <Image src={logo} alt={"logo"} height={40} className="lg:h-10 absolute left-1/2 -translate-y-1/2 -translate-x-1/2 lg:static lg:translate-x-0 lg:translate-y-0" />
+                </Link>
                 <NavRoutes />
                 <div className={pathname.startsWith("/book") ? "hidden" : "block"}>
                     <AuthBtn />
