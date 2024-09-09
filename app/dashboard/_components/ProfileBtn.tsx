@@ -13,7 +13,7 @@ const ProfileBtn = () => {
             <DropdownMenuTrigger className="flex items-center">
                 <Image src="https://ui-avatars.com/api/?name=Rizaldy+Putra" alt="pp" className="w-6 h-6 rounded-full" width={24} height={24} />
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent align="end">
                 <DropdownMenuLabel className="text-xs text-blue-950">My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">

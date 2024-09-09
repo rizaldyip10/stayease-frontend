@@ -21,7 +21,7 @@ const Navbar = () => {
     });
     return (
         <motion.div
-            className="sticky top-0 w-full flex justify-between items-center h-16 border-b border-gray-200 bg-white px-3 md:px-7"
+            className="sticky top-0 w-full flex justify-between z-50 items-center h-16 border-b border-gray-200 bg-white px-3 md:px-7"
             variants={{
                 visible: { y: 0 },
                 hidden: { y: "-100%" },

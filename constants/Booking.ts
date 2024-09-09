@@ -64,3 +64,12 @@ export type BookingDataType = {
     totalChildren: number | null;
     totalInfants: number | null;
 };
+
+export type TenantBookingsType = {
+    page: number | null;
+    size: number | null;
+    direction: string | null;
+};
+
+export const rejectedBookings = ["payment failed", "expired", "cancelled"];
+export const pendingBookings = ["pending", "waiting for confirmation"];
