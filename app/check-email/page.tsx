@@ -17,6 +17,8 @@ const AuthStatusPage: React.FC = () => {
         <div>
           <p className="mb-2">Logged in as: {auth.email}</p>
           <p className="mb-2">User Type: {auth.userType}</p>
+          <p className="mb-2">Verified: {auth.isVerified.toString()}</p>
+          <p className="mb-2">OAuth2: {auth.isOAuth2.toString()}</p>
           <p className="mb-2">
             Name: {auth.firstName} {auth.lastName}
           </p>

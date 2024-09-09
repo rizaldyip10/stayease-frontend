@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { withRoleAccess } from "@/components/withRoleAccess";
+import { withRoleAccess } from "@/components/hoc/withRoleAccess";
 
 const TenantTest = () => {
   return <div>Welcome to the Tenant Test!</div>;

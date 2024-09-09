@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import * as yup from "yup";
 import { whiteSpaceRegex } from "@/constants/WhiteSpaceRegex";
 import { UserType } from "@/constants/Types";
-import { Form, Formik, FormikHelpers, FormikValues } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import FormikInput from "@/components/FormikInput";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -62,7 +62,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
     }),
     userType === "tenant"
       ? yup.object({
-          businessName: yup.string(),
+          businessName: yup.string().required("Required"),
           taxId: yup.string(),
         })
       : yup.object({}),
@@ -82,7 +82,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
     values: MultiStepFormValues,
     actions: FormikHelpers<MultiStepFormValues>,
   ) => {
-    if (step < (userType === "tenant" ? 3 : 2)) {
+    if (step < (userType === "tenant" ? 4 : 3)) {
       setStep(step + 1);
       console.log("values: ", values);
       actions.setSubmitting(false);
@@ -96,7 +96,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
     }
   };
 
-  const renderStep = () => {
+  const renderStep = (values: MultiStepFormValues) => {
     switch (step) {
       case 1:
         return (
@@ -148,7 +148,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
                 as="input"
                 name="businessName"
                 className="w-full border py-1 px-2 rounded-md focus-visible:ring-0"
-                label="Business Name (optional)"
+                label="Business Name"
               />
               <FormikInput
                 as="input"
@@ -159,7 +159,38 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
             </>
           );
         }
-        return null;
+      // If not tenant, fall through to summary page
+      case 4:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold">Summary</h2>
+            <p>
+              <strong>First Name:</strong> {values.firstName}
+            </p>
+            <p>
+              <strong>Last Name:</strong> {values.lastName}
+            </p>
+            <p>
+              <strong>Phone Number:</strong>{" "}
+              {values.phoneNumber || "Not provided"}
+            </p>
+            {userType === "tenant" && (
+              <>
+                <p>
+                  <strong>Business Name:</strong>{" "}
+                  {values.businessName || "Not provided"}
+                </p>
+                <p>
+                  <strong>Tax ID:</strong> {values.taxId || "Not provided"}
+                </p>
+              </>
+            )}
+            <p className="text-sm text-gray-500">
+              Please review your information. If everything is correct, click
+              &apos;Submit&apos; to complete your registration.
+            </p>
+          </div>
+        );
       default:
         return null;
     }
@@ -171,32 +202,25 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
       validationSchema={validationSchema[step - 1]}
       onSubmit={handleSubmit}
     >
-      {({ isValid, dirty, isSubmitting }) => (
+      {({ isValid, dirty, isSubmitting, values }) => (
         <Form className="space-y-4 min-w-lg">
           <div className="flex justify-center gap-7 mb-4">
-            {[1, 2].map((stepNumber) => (
-              <div
-                key={stepNumber}
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  step === stepNumber
-                    ? "bg-appblue-900 text-white"
-                    : "bg-gray-200"
-                }`}
-              >
-                {stepNumber}
-              </div>
-            ))}
-            {userType === "tenant" && (
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  step < 3 ? "bg-gray-200" : "bg-appblue-900 text-white"
-                }`}
-              >
-                3
-              </div>
-            )}
+            {[1, 2, 3, 4]
+              .slice(0, userType === "tenant" ? 4 : 3)
+              .map((stepNumber) => (
+                <div
+                  key={stepNumber}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    step === stepNumber
+                      ? "bg-appblue-900 text-white"
+                      : "bg-gray-200"
+                  }`}
+                >
+                  {stepNumber}
+                </div>
+              ))}
           </div>
-          <div className="w-full flex flex-col gap-4">{renderStep()}</div>
+          <div className="w-full flex flex-col gap-4">{renderStep(values)}</div>
           <div className="flex justify-between mt-6">
             {step > 1 && (
               <Button
@@ -214,7 +238,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
               className="bg-appblue-900 w-1/2 text-white mx-auto"
               disabled={!(isValid && dirty) || isSubmitting}
             >
-              {step === (userType === "tenant" ? 3 : 2) ? "Submit" : "Next"}
+              {step === (userType === "tenant" ? 4 : 3) ? "Submit" : "Next"}
             </Button>
           </div>
         </Form>

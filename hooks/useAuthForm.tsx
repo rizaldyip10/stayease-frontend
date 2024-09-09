@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { AlertType, FormType, UserType } from "@/constants/Types";
 import { FormikHelpers, FormikValues } from "formik";
-import axios from "axios";
 import { MultiStepFormValues } from "@/app/(auth)/_components/MultiStepForm";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import { authService } from "@/services/authService";
 
 interface UseAuthFormProps {
   userType: UserType;
@@ -64,29 +64,29 @@ const UseAuthForm = ({ userType }: UseAuthFormProps) => {
     token: string,
     actions: FormikHelpers<MultiStepFormValues>,
   ) => {
-    setLoading(false);
+    setLoading(true);
     setError(null);
 
-    const endpoint = `http://localhost:8080/api/v1/auth/register/verify?token=${token}`;
-
     try {
-      const response = await axios.post(endpoint, values, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await authService.verify(values, token);
 
-      const data = response.data;
+      console.log(response);
       // TODO handle success (store token, redirect, etc)
 
       if (response.status == 200) {
-        setMessage(data.data.message || "Registration completed successfully");
+        setMessage(
+          response.statusMessage || "Registration completed successfully",
+        );
         setAlertType("Success");
         setShowAlert(true);
-        // TODO: handle success registration: redirect to home page
-        // router.push("/").then(r => )
+        // TODO: handle success verification: redirect to login page
+        // alert("Registration completed successfully. Please login.");
+        router.push("/login");
       } else {
-        setMessage(data.message || "Something went wrong");
+        setMessage(response.statusMessage || "Something went wrong");
         setAlertType("Error");
         setShowAlert(true);
+        actions.setSubmitting(false);
       }
     } catch (error: any) {
       const errorMessage =

@@ -72,6 +72,26 @@ export function useAuth() {
     },
   });
 
+  const verifyMutation = useMutation<
+    any,
+    Error,
+    { token: string; values: FormikValues }
+  >({
+    mutationFn: ({ values, token }) => authService.verify(values, token),
+    onSuccess: (data) => {
+      // Show success message
+      alert(data.statusMessage);
+      // TODO clear form
+      // Redirect to login page to login
+      router.push("/login");
+    },
+    onError: (error) => {
+      // Handle error (show error message, etc.)
+      console.error("Verification failed:", error.message);
+      alert("Verification failed. Please try again.");
+    },
+  });
+
   const loginMutation = useMutation<
     AuthResponse,
     Error,
@@ -124,8 +144,10 @@ export function useAuth() {
           id: auth.id,
           email: auth.email,
           userType: auth.userType,
+          isVerified: auth.isVerified,
           firstName: auth.firstName,
           lastName: auth.lastName,
+          isOAuth2: auth.isOAuth2,
           // Omit token from the returned object
         }
       : null,
@@ -134,6 +156,7 @@ export function useAuth() {
     error: error ? error.message : null,
     login: loginMutation.mutateAsync,
     register: registerMutation.mutate,
+    verify: verifyMutation.mutate,
     logout: logoutMutation.mutate,
     initiateGoogleLogin,
   };

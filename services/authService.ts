@@ -3,17 +3,14 @@ import { config } from "@/constants/url";
 import { UserType } from "@/constants/Types";
 import { FormikValues } from "formik";
 
-export interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
 export interface AuthResponse {
   id: string;
   email: string;
   userType: string;
+  isVerified: boolean;
   firstName: string;
   lastName: string;
+  isOAuth2: boolean;
   token: {
     accessToken: string;
     refreshToken: string;
@@ -23,6 +20,14 @@ export interface AuthResponse {
 export interface RegisterResponse {
   message: string;
   verificationLink: string;
+}
+
+export interface TokenCheckResponse {
+  statusCode: number;
+  statusMessage: string;
+  data: {
+    isValid: boolean;
+  };
 }
 
 export interface SSOResponse {
@@ -61,7 +66,7 @@ export const authService = {
     userType: UserType,
   ): Promise<RegisterResponse> => {
     const response = await axiosInterceptor.post(
-      config.endpoints.auth.register,
+      config.endpoints.registration.register,
       {
         email,
       },
@@ -74,9 +79,28 @@ export const authService = {
     };
   },
 
+  checkToken: async (token: string): Promise<TokenCheckResponse> => {
+    const response = await axiosInterceptor.post(
+      config.endpoints.registration.checkToken,
+      { token },
+    );
+    console.log(response);
+    return response.data;
+  },
+
+  verify: async (values: FormikValues, token: string): Promise<any> => {
+    const response = await axiosInterceptor.post(
+      config.endpoints.registration.verify,
+      values,
+      { params: { token }, headers: { "Content-Type": "application/json" } },
+    );
+    console.log(response);
+    return response.data;
+  },
+
   exchangeCodeForTokens: async (code: string): Promise<AuthResponse> => {
     const response = await axiosInterceptor.post(
-      config.endpoints.auth.exchangeCode,
+      config.endpoints.oauth2.exchangeCode,
       { code },
     );
     console.log(response);
@@ -87,7 +111,7 @@ export const authService = {
 
   selectUserType: async (userType: UserType): Promise<AuthResponse> => {
     const response = await axiosInterceptor.post(
-      config.endpoints.auth.socialUserSelect,
+      config.endpoints.oauth2.socialUserSelect,
       { userType },
     );
     console.log(response);
@@ -126,8 +150,10 @@ export const authService = {
           id: res.data.id,
           email: res.data.email,
           userType: res.data.userType,
+          isVerified: res.data.isVerified,
           firstName: res.data.firstName,
           lastName: res.data.lastName,
+          isOAuth2: res.data.isOAuth2,
           token: {
             accessToken: res.data.token.accessToken,
             refreshToken: res.data.token.refreshToken,
@@ -149,12 +175,15 @@ export const authService = {
     }
     const response = await axiosInterceptor.get(config.endpoints.auth.status);
     const res = response.data;
+    console.log("Auth status response:", res);
     return {
       id: res.data.id,
       email: res.data.email,
       userType: res.data.userType,
+      isVerified: res.data.isVerified,
       firstName: res.data.firstName,
       lastName: res.data.lastName,
+      isOAuth2: res.data.isOAuth2,
       token: {
         accessToken: res.data.token.accessToken,
         refreshToken: res.data.token.refreshToken,

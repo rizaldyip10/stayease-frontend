@@ -4,13 +4,22 @@ export const config = {
   endpoints: {
     auth: {
       status: "/auth/status",
-      exchangeCode: "/auth/exchange-code",
-      socialUserSelect: "/auth/user-select",
       login: "/auth/login",
-      register: "/auth/register",
-      verify: "/auth/register/verify",
-      refreshToken: "/auth/refresh",
       logout: "/auth/logout",
+      refreshToken: "/auth/refresh",
+    },
+    oauth2: {
+      exchangeCode: "/oauth2/exchange-code",
+      socialUserSelect: "/oauth2/user-select",
+    },
+    password: {
+      forgot: "/password/forgot",
+      reset: "/password/reset",
+    },
+    registration: {
+      register: "/register",
+      checkToken: "/register/check-token",
+      verify: "/register/verify",
     },
   },
 };
