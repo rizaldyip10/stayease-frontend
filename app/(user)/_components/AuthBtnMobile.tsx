@@ -25,6 +25,9 @@ const ProfileBtn = () => {
         {auth ? (
           <>
             <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
+              <Link href="/dashboard">Dashboard</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
               <Link href="/profile">Profile</Link>
             </DropdownMenuItem>
             <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">

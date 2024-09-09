@@ -12,13 +12,14 @@ import {
 import Image from "next/image";
 
 interface CarouselPluginProps {
+  className?: string;
   images: {
     src: string;
     alt: string;
   }[];
 }
 
-export function CarouselPlugin({ images }: CarouselPluginProps) {
+export function CarouselPlugin({ className, images }: CarouselPluginProps) {
   const plugin = useRef(Autoplay({ delay: 2000, stopOnInteraction: true }));
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -29,7 +30,7 @@ export function CarouselPlugin({ images }: CarouselPluginProps) {
   return (
     <Carousel
       plugins={[plugin.current]}
-      className="relative w-full max-w-xs md:h-full"
+      className={`carousel relative w-full max-w-xs h-full ${className}`}
       onMouseEnter={plugin.current.stop}
       onMouseLeave={plugin.current.reset}
     >
@@ -48,7 +49,7 @@ export function CarouselPlugin({ images }: CarouselPluginProps) {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <div className="absolute bottom-4 z-20 bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+      <div className="absolute  z-20 bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
         {images.map((_, index) => (
           <div
             key={index}
