@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import CustomAlert from "@/components/CustomAlert";
-import logo from "@/assets/images/logo_horizontal.png";
 import Image from "next/image";
 import { FormType, UserType } from "@/constants/Types";
 import useAuthForm from "@/hooks/useAuthForm";
@@ -22,26 +21,35 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
   formType: FormType;
 }) => {
   const [userType, setUserType] = useState<UserType>("user");
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
   const { message, alertType, showAlert, setShowAlert, handleMultiStepSubmit } =
     useAuthForm({
       userType,
     });
 
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+
   return (
     <div className={className}>
-      <div className="md:grid grid-rows-[1fr_4fr_1fr] shrink-0 max-h-svh">
-        <div>
+      <div className="md:grid grid-rows-[1fr_4fr_1fr] gap-5 shrink-0 max-h-svh">
+        <div className="md:mb-0">
           <Image
-            src={logo}
+            src="/stayease-logo.webp"
             alt="logo"
             height={50}
-            className="hidden md:flex mx-auto shrink-0"
+            width={150}
+            className="hidden md:block mx-auto shrink-0"
           />
+          {formType === "verify" && (
+            <div>
+              <p className="font-semibold text-appblue-900 text-xl text-center md:hidden">
+                Complete your registration!
+              </p>
+            </div>
+          )}
         </div>
-        <div className="self-stretch overflow-hidden flex flex-col items-center justify-between text-left text-sm text-gray-900">
-          <div className="self-stretch flex flex-col items-center justify-start py-0 md:px-8">
+        <div className="overflow-hidden flex flex-col items-center justify-between text-left text-sm text-gray-900">
+          <div className="flex flex-col items-center justify-start py-0 md:px-8">
             {showAlert && (
               <CustomAlert
                 className={`z-50 top-1/2 -translate-y-full md:max-w-[500px] max-w-[300px] bg-white fixed left-1/2 transform -translate-x-1/2`}

@@ -24,7 +24,7 @@ const FormikInput: FC<FormikInputProps> = ({ label, ...props }) => {
   const passwordType = isVisible ? "text" : "password";
 
   return (
-    <div className="w-full flex flex-col gap-1">
+    <div className="form-input w-full flex flex-col gap-1">
       {label && <p>{label}</p>}
       <div className="relative">
         <Field
@@ -51,7 +51,9 @@ const FormikInput: FC<FormikInputProps> = ({ label, ...props }) => {
         )}
       </div>
       {meta.error && meta.touched && (
-        <p className="text-red-500 text-xs">{meta.error}</p>
+        <div className="error-container max-w-[200px] min-h-[20px]">
+          <p className="text-red-500 text-xs break-words">{meta.error}</p>
+        </div>
       )}
     </div>
   );

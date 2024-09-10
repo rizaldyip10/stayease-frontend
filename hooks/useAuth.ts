@@ -63,7 +63,7 @@ export function useAuth() {
       alert(data.message);
       // TODO clear form
       // TODO: Redirect to a "Check your email" page
-      router.push("/login");
+      router.push("/");
     },
     onError: (error) => {
       // Handle error (show error message, etc.)
@@ -81,8 +81,7 @@ export function useAuth() {
     onSuccess: (data) => {
       // Show success message
       alert(data.statusMessage);
-      // TODO clear form
-      // Redirect to login page to login
+      // Redirect to login page
       router.push("/login");
     },
     onError: (error) => {
