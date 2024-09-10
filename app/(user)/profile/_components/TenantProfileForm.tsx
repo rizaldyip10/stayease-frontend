@@ -48,14 +48,14 @@ const TenantProfileForm: React.FC<TenantProfileFormProps> = ({
             <button
               type="button"
               onClick={toggleEditing}
-              className={`${isEditing ? "bg-appcancel" : "bg-blue-950"} hover:bg-appblue-900 text-white px-4 py-2 rounded`}
+              className={`${isEditing ? "bg-appcancel hover:text-appcancel hover:bg-[#FAFAFA]" : "bg-blue-950"} hover:bg-[#FAFAFA] hover:text-blue-950 text-white font-bold px-4 py-2 rounded`}
             >
               {isEditing ? "Cancel" : "Edit"}
             </button>
             {isEditing && (
               <button
                 type="submit"
-                className="bg-green-800 text-white px-4 py-2 rounded"
+                className="bg-green-800 hover:bg-[#FAFAFA] hover:text-green-800 font-bold text-white px-4 py-2 rounded"
               >
                 Save Changes
               </button>
