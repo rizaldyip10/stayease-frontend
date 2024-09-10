@@ -37,14 +37,14 @@ const FormikInput: FC<FormikInputProps> = ({ name, label, id, ...props }) => {
                     />
                     {
                         isPassword &&
-                            <Button
-                                variant="ghost"
-                                type="button"
-                                className="absolute h-full right-0 pr-3"
-                                onClick={() => setVisible(!isVisible)}
-                            >
-                                { isVisible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" /> }
-                            </Button>
+                        <Button
+                            variant="ghost"
+                            type="button"
+                            className="absolute h-full right-0 pr-3"
+                            onClick={() => setVisible(!isVisible)}
+                        >
+                            { isVisible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" /> }
+                        </Button>
                     }
                 </div>
                 {meta.touched && meta.error ? (
