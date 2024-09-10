@@ -58,7 +58,9 @@ const config = {
         appblue: {
           900: "#25409C",
           800: "#3951A5",
+          600: "#6074B7",
         },
+        appcancel: "#AA2117",
         apptext: "#A1A7B0",
       },
       borderRadius: {

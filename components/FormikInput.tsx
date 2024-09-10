@@ -37,7 +37,7 @@ const FormikInput: FC<FormikInputProps> = ({ label, ...props }) => {
         {isPassword && (
           <button
             type="button"
-            className="absolute h-full right-0 inset-x-3 pr-3"
+            className="absolute h-full pr-3"
             onClick={() => setVisible(!isVisible)}
           >
             {isVisible ? (
