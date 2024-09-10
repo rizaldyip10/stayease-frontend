@@ -10,12 +10,14 @@ import useMediaQuery from "@/hooks/useMediaQuery";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-gray-100 md:min-h-[283px] min-h-[180px] md:grid md:grid-cols-4 flex flex-col gap-2 justify-center items-center">
-      <FooterLogo />
-      <FooterNav title="NAVIGATIONS" items={routes} />
-      <FooterNav title="SERVICES" items={footerServicesItems} />
-      <FooterResources />
-      <SocialIcons className="md:hidden" />
+    <footer className="bg-gray-100 md:min-h-[283px] min-h-[180px] flex justify-center">
+      <div className="md:grid md:grid-cols-4 flex flex-col md:gap-32 gap-2 justify-center items-center">
+        <FooterLogo />
+        <FooterNav title="NAVIGATIONS" items={routes} />
+        <FooterNav title="SERVICES" items={footerServicesItems} />
+        <FooterResources />
+        <SocialIcons className="md:hidden" />
+      </div>
     </footer>
   );
 };

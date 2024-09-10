@@ -2,7 +2,7 @@
 
 import { useMotionValueEvent, useScroll, motion } from "framer-motion";
 import { useState } from "react";
-import logo from "@/assets/images/logo_horizontal.png";
+import logo from "@/public/stayease-logo.webp";
 import Image from "next/image";
 import AuthBtn from "@/app/(user)/_components/AuthBtn";
 import NavRoutes from "@/app/(user)/_components/NavRoutes";

@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import logo from "@/assets/images/logo_horizontal.png";
+import logo from "@/public/stayease-logo.webp";
 import SocialIcons from "@/app/(user)/_components/footer/SocialIcons";
 
 const FooterLogo: React.FC = () => {
