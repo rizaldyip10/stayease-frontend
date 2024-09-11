@@ -5,16 +5,21 @@ import UserStayingDataForm from "@/app/(user)/book/_components/UserStayingDataFo
 import SpecialRequest from "@/app/(user)/book/_components/SpecialRequest";
 import PaymentMethodForm from "@/app/(user)/book/_components/PaymentMethodForm";
 import CancellationPolicy from "@/app/(user)/book/_components/CancellationPolicy";
-import axiosInterceptor from "@/utils/axiosInterceptor";
 import {Form, Formik, FormikValues} from "formik";
 import {Button} from "@/components/ui/button";
 import {whiteSpaceRegex} from "@/constants/WhiteSpaceRegex";
 import {useRouter} from "next/navigation";
 import {useBookingValues} from "@/hooks/useBookingValues";
+import axiosInterceptor, {authService} from "@/services/authService";
+import {useEffect, useState} from "react";
 
 const BookingForm = () => {
     const router = useRouter();
     const { bookingValues } = useBookingValues();
+    const [token, setToken] = useState<string | null>();
+    useEffect(() => {
+        setToken(authService.getAccessToken);
+    }, []);
 
     const bookingSchema = yup.object().shape({
         checkInTime: yup.date().nullable(),
@@ -37,13 +42,8 @@ const BookingForm = () => {
     const handleBooking = async (value: FormikValues) => {
         try {
             const bookingItem = {
-                checkInDate: bookingValues.checkInDate,
-                checkOutDate: bookingValues.checkOutDate,
-                totalAdults: bookingValues.totalAdults,
-                totalChildren: bookingValues?.totalChildren,
-                totalInfants: bookingValues?.totalInfants,
+                extendingUntil: null
             };
-
             const bookingRequest = {
                 checkInTime: value?.checkInTime,
                 checkOutTime: value?.checkOutTime,
@@ -53,26 +53,34 @@ const BookingForm = () => {
 
             const expiryTimeInfo = {
                 order_time: new Date(),
-                expiry_duration: 30,
+                expiry_duration: value?.bank === "bank_transfer" ? 30 : 60,
                 unit: "minute"
             }
 
             const valueToSent = {
-                booking: { bookingItem, bookingRequest },
-                amount: 1500000,
+                booking: {
+                    bookingItem,
+                    bookingRequest,
+                    checkInDate: bookingValues.checkInDate,
+                    checkOutDate: bookingValues.checkOutDate,
+                    totalAdults: bookingValues.totalAdults,
+                    totalChildren: bookingValues?.totalChildren,
+                    totalInfants: bookingValues?.totalInfants,
+                },
+                amount: 2400000,
                 paymentMethod: value.paymentMethod,
                 bank: value?.bank,
                 custom_expiry: expiryTimeInfo,
             };
 
-            const { data } = await axiosInterceptor.post(`/transactions/${bookingValues.roomId}`, valueToSent, {
-                headers: {
-                    Authorization: `Bearer token`
-                }
-            });
-            console.log(data);
-            router.push(value.paymentMethod == "manual_transfer" ? "/payment?id=paymentId&bank=atm" : `/payment?id=paymentId&bank=${value?.bank}`);
+            console.log(valueToSent);
+            console.log(token);
 
+            const { data } = await axiosInterceptor.post(`/transactions/${bookingValues.roomId}`, valueToSent, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            router.push(value.paymentMethod == "manual_transfer" ? `/payment?id=${data.data.bookingId}&bank=atm` : `/payment?id=${data.data.bookingId}&bank=${value?.bank}`);
         } catch (error) {
             console.log(error);
         }

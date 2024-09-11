@@ -22,10 +22,14 @@ export const config = {
             verify: "/register/verify",
         },
         bookings: {
-            tenantBookings: "/bookings/tenant"
+            tenantBookings: "/bookings/tenant",
+            userBookings: "/bookings/user"
         },
         transactions: {
             tenant: "/transactions"
+        },
+        payments: {
+            paymentInfo: "/payments"
         }
     },
 };

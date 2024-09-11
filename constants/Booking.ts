@@ -65,10 +65,11 @@ export type BookingDataType = {
     totalInfants: number | null;
 };
 
-export type TenantBookingsType = {
-    page: number | null;
-    size: number | null;
+export type UserBookingsType = {
+    page: number;
+    size: number;
     direction: string | null;
+    search: string | null;
 };
 
 export const rejectedBookings = ["payment failed", "expired", "cancelled"];

@@ -2,15 +2,16 @@
 
 import {useRouter, useSearchParams} from "next/navigation";
 import {useCallback, useEffect, useState} from "react";
-import {TenantBookingsType} from "@/constants/Booking";
+import {UserBookingsType} from "@/constants/Booking";
 
-export const useTenantBookingsFilter = () => {
+export const useUserBookingsFilter = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const [queries, setQueries] = useState<TenantBookingsType>({
-        page: null,
-        size: null,
+    const [queries, setQueries] = useState<UserBookingsType>({
+        page: 0,
+        size: 5,
         direction: null,
+        search: null
     });
 
     useEffect(() => {
@@ -18,16 +19,18 @@ export const useTenantBookingsFilter = () => {
         const page = params.get("page");
         const size = params.get("size");
         const direction = params.get("direction");
+        const search = params.get("search");
 
         setQueries(prev => ({
             ...prev,
             page: page ? +page : 0,
-            size: size ? +size : 10,
-            direction: direction ? direction : "DESC"
+            size: size ? +size : 5,
+            direction: direction ? direction : "DESC",
+            search: search
         }));
     }, [searchParams]);
 
-    const setQuery = useCallback((newQuery: Partial<TenantBookingsType>) => {
+    const setQuery = useCallback((newQuery: Partial<UserBookingsType>) => {
         setQueries((prev) => {
             const updatedQueries= { ...prev, ...newQuery };
             const newParams = new URLSearchParams();
