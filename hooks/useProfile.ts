@@ -6,6 +6,7 @@ import {
   TenantProfile,
   UpdateProfile,
   UserProfile,
+  UserImage,
 } from "@/services/profileService";
 
 export const useProfile = () => {
@@ -52,6 +53,43 @@ export const useProfile = () => {
     },
   });
 
+  const uploadAvatarMutation = useMutation<UserImage, Error, File>({
+    mutationFn: (file: File) => profileService.uploadAvatar(file),
+  });
+
+  const setAvatarMutation = useMutation<UserImage, Error, UserImage | null>({
+    mutationFn: (userImage: UserImage | null) =>
+      profileService.setOrRemoveAvatar(userImage),
+    onSuccess: (data) => {
+      queryClient.setQueryData(
+        ["profile"],
+        (oldData: UserProfile | undefined) => {
+          if (oldData) {
+            console.log("showing oldData:", oldData);
+            return { ...oldData, avatar: data ? data.avatarUrl : null };
+          }
+          return oldData;
+        },
+      );
+      alert("Avatar updated successfully!");
+    },
+  });
+
+  const uploadAvatar = async (file: File): Promise<UserImage> => {
+    const result = await uploadAvatarMutation.mutateAsync(file);
+    console.log("result:", result);
+    if (!result || !result.avatarUrl) {
+      throw new Error("Failed to get avatar URL after upload");
+    }
+    return result;
+  };
+
+  const setOrRemoveAvatar = async (
+    userImage: UserImage | null,
+  ): Promise<UserImage | null> => {
+    return setAvatarMutation.mutateAsync(userImage);
+  };
+
   const toggleEditing = () => setIsEditing(!isEditing);
   const toggleTenantEditing = () => setIsTenantEditing(!isTenantEditing);
 
@@ -69,5 +107,7 @@ export const useProfile = () => {
     toggleTenantEditing,
     updateProfile: updateProfileMutation.mutate,
     updateTenantProfile: updateTenantProfileMutation.mutate,
+    uploadAvatar,
+    setOrRemoveAvatar,
   };
 };

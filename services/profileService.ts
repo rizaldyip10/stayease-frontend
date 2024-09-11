@@ -7,7 +7,7 @@ export interface UserProfile {
   firstName: string;
   lastName: string;
   phoneNumber?: string;
-  avatar?: string;
+  avatarUrl?: string;
   joinedAt: Date;
   userType: string;
   tenantInfo?: {
@@ -23,7 +23,7 @@ export interface TenantProfile {
   registeredDate: Date;
 }
 
-export interface UsersImage {
+export interface UserImage {
   avatarUrl: string;
 }
 
@@ -40,7 +40,7 @@ const transformUserProfile = (res: any): UserProfile => ({
   firstName: res.data.firstName,
   lastName: res.data.lastName,
   phoneNumber: res.data.phoneNumber ?? "",
-  avatar: res.data.avatar ?? "",
+  avatarUrl: res.data.avatarUrl ?? "",
   joinedAt: new Date(res.data.joinedAt),
   userType: res.data.userType,
   tenantInfo: res.data.tenantInfo && {
@@ -55,6 +55,7 @@ export const profileService = {
     const response = await axiosInterceptor.get<UserProfile>(
       config.endpoints.users.profile,
     );
+    console.log("fetching profile:", response.data);
     return transformUserProfile(response.data);
   },
 
@@ -78,10 +79,10 @@ export const profileService = {
     return transformUserProfile(response.data);
   },
 
-  uploadAvatar: async (file: File): Promise<UsersImage> => {
+  uploadAvatar: async (file: File): Promise<UserImage> => {
     const formData = new FormData();
     formData.append("image", file);
-    const response = await axiosInterceptor.post<UsersImage>(
+    const response = await axiosInterceptor.post<UserImage>(
       config.endpoints.users.avatar,
       formData,
       {
@@ -90,8 +91,33 @@ export const profileService = {
         },
       },
     );
+    console.log("response from profileService.uploadAvatar:", response);
     return {
-      avatarUrl: response.data.avatarUrl,
+      // this is actually correct, the API returns avatarUrl
+      avatarUrl: response.data.data.avatarUrl,
     };
+  },
+
+  setOrRemoveAvatar: async (
+    userImage: UserImage | null,
+  ): Promise<UserImage> => {
+    if (userImage === null) {
+      // If userImage is null, send a request to remove the avatar
+
+      await axiosInterceptor.put(config.endpoints.users.avatar);
+      return { avatarUrl: "" };
+    } else {
+      // If userImage is not null, send a request to set the new avatar
+      const response = await axiosInterceptor.put<UserImage>(
+        config.endpoints.users.avatar,
+        userImage,
+      );
+      if (!response.data || !response.data.data.avatarUrl) {
+        throw new Error("Failed to set avatar");
+      }
+      return {
+        avatarUrl: response.data.data.avatarUrl,
+      };
+    }
   },
 };
