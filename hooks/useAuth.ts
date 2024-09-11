@@ -34,14 +34,23 @@ export function useAuth() {
   });
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      authService.setAccessToken(token);
-      refetch();
-    } else {
+    const cachedAuth = queryClient.getQueryData(["auth"]);
+    if (cachedAuth) {
+      console.log("Cached auth:", cachedAuth);
       setIsLoading(false);
+    } else {
+      console.log("No cached auth");
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        authService.setAccessToken(token);
+        refetch().finally(() => {
+          setIsLoading(false);
+        });
+      } else {
+        setIsLoading(false);
+      }
     }
-  }, [refetch]);
+  }, [refetch, queryClient]);
 
   useEffect(() => {
     if (isError) {
@@ -63,7 +72,7 @@ export function useAuth() {
       alert(data.message);
       // TODO clear form
       // TODO: Redirect to a "Check your email" page
-      router.push("/login");
+      router.push("/");
     },
     onError: (error) => {
       // Handle error (show error message, etc.)
@@ -81,8 +90,7 @@ export function useAuth() {
     onSuccess: (data) => {
       // Show success message
       alert(data.statusMessage);
-      // TODO clear form
-      // Redirect to login page to login
+      // Redirect to login page
       router.push("/login");
     },
     onError: (error) => {
@@ -106,6 +114,8 @@ export function useAuth() {
         userType: data.userType,
         firstName: data.firstName,
         lastName: data.lastName,
+        isVerified: data.isVerified,
+        isOAuth2: data.isOAuth2,
         // Omit token for security reasons
       };
       localStorage.setItem("accessToken", data.token.accessToken);

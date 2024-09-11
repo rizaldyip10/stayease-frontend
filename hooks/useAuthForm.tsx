@@ -35,7 +35,7 @@ const UseAuthForm = ({ userType }: UseAuthFormProps) => {
         console.log(values);
         setMessage("Login successful!");
         setAlertType("Success");
-        router.push("/check-email");
+        router.push("/");
         setLoading(false);
       } else {
         await register({ email: values.email, userType });
@@ -46,13 +46,12 @@ const UseAuthForm = ({ userType }: UseAuthFormProps) => {
         setLoading(false);
       }
     } catch (error: any) {
-      const errorMessage =
-        error?.response?.data?.message || "An error occurred";
+      const errorMessage = "An error occurred";
       setError(errorMessage);
       setMessage(errorMessage);
       setAlertType("Error");
       setShowAlert(true);
-      console.error("Error details:", error);
+      console.error("Error details:", error?.response?.data?.message);
     } finally {
       setLoading(false);
       actions.setSubmitting(false);
@@ -66,6 +65,7 @@ const UseAuthForm = ({ userType }: UseAuthFormProps) => {
   ) => {
     setLoading(true);
     setError(null);
+    setAlertType("Success");
 
     try {
       const response = await authService.verify(values, token);
@@ -73,24 +73,23 @@ const UseAuthForm = ({ userType }: UseAuthFormProps) => {
       console.log(response);
       // TODO handle success (store token, redirect, etc)
 
-      if (response.status == 200) {
-        setMessage(
-          response.statusMessage || "Registration completed successfully",
-        );
-        setAlertType("Success");
-        setShowAlert(true);
-        // TODO: handle success verification: redirect to login page
-        // alert("Registration completed successfully. Please login.");
-        router.push("/login");
-      } else {
-        setMessage(response.statusMessage || "Something went wrong");
-        setAlertType("Error");
-        setShowAlert(true);
-        actions.setSubmitting(false);
-      }
+      setMessage(
+        response.statusMessage || "Registration completed successfully",
+      );
+      // TODO : ALerts
+      // setAlertType("Success");
+      // setShowAlert(true);
+      // TODO: handle success verification: redirect to login page
+      alert(
+        "Registration completed successfully. Please login. This is from FE",
+      );
+      router.push("/login");
     } catch (error: any) {
-      const errorMessage =
-        error?.response?.data?.message || "An error occurred";
+      const errorMessage = "An error occurred";
+      console.log(
+        "Error during registration verification:",
+        error?.response?.data?.message,
+      );
       setError(errorMessage);
       setMessage(errorMessage);
       setAlertType("Error");

@@ -30,9 +30,6 @@ const ProfileBtn = () => {
             <Link href="/login">Login/Register</Link>
           )}
         </DropdownMenuItem>
-        {/*<DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">*/}
-        {/*  <Link href="/register">Register</Link>*/}
-        {/*</DropdownMenuItem>*/}
       </DropdownMenuContent>
     </DropdownMenu>
   );

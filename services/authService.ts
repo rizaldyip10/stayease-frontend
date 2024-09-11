@@ -2,6 +2,7 @@ import axios, { InternalAxiosRequestConfig } from "axios";
 import { config } from "@/constants/url";
 import { UserType } from "@/constants/Types";
 import { FormikValues } from "formik";
+import { queryClient } from "@/lib/queryClient";
 
 export interface AuthResponse {
   id: string;
@@ -72,6 +73,7 @@ export const authService = {
       },
       { params: { userType } },
     );
+    console.log("Calling register endpoint");
     const res = response.data;
     return {
       message: res.data.message,
@@ -84,7 +86,7 @@ export const authService = {
       config.endpoints.registration.checkToken,
       { token },
     );
-    console.log(response);
+    console.log("Calling check token endpoint, token: ", token);
     return response.data;
   },
 
@@ -94,7 +96,7 @@ export const authService = {
       values,
       { params: { token }, headers: { "Content-Type": "application/json" } },
     );
-    console.log(response);
+    console.log("Calling verify endpoint, response: ", response);
     return response.data;
   },
 
@@ -103,7 +105,7 @@ export const authService = {
       config.endpoints.oauth2.exchangeCode,
       { code },
     );
-    console.log(response);
+    console.log("Exchanging code for tokens: ", response);
     const res = response.data;
     authService.setAccessToken(res.data.accessToken);
     return res;
@@ -114,7 +116,7 @@ export const authService = {
       config.endpoints.oauth2.socialUserSelect,
       { userType },
     );
-    console.log(response);
+    console.log("Selecting user type: ", response);
     const res = response.data;
     authService.setAccessToken(res.data.accessToken);
     return res;
@@ -129,8 +131,10 @@ export const authService = {
     try {
       if (isOAuth) {
         res = await authService.exchangeCodeForTokens(values.code);
+        console.log("OAuth2 Login flow initiated");
       } else if (isNew) {
         res = await authService.selectUserType(values.userType);
+        console.log("New user login flow initiated");
       } else {
         const response = await axiosInterceptor.post(
           config.endpoints.auth.login,
@@ -142,6 +146,7 @@ export const authService = {
           },
         );
         res = response.data;
+        console.log("Normal login flow initiated");
       }
       console.log("Login response:", res);
       if (res.data && res.data.token && res.data.token.accessToken) {
@@ -169,12 +174,34 @@ export const authService = {
   },
 
   checkAuthStatus: async (): Promise<AuthResponse> => {
+    console.log("Checking auth status", Math.random().toFixed(5));
     const token = authService.getAccessToken();
-    if (token) {
+    if (token && !accessToken) {
       authService.setAccessToken(token);
+      console.log("Checking auth status with token:", token);
     }
     const response = await axiosInterceptor.get(config.endpoints.auth.status);
+    console.log("Calling auth status endpoint");
     const res = response.data;
+    const serializableData = {
+      id: res.data.id,
+      email: res.data.email,
+      userType: res.data.userType,
+      firstName: res.data.firstName,
+      lastName: res.data.lastName,
+      isOAuth2: res.data.isOAuth2,
+      isVerified: res.data.isVerified,
+    };
+    queryClient.setQueryData(["auth"], serializableData);
+    if (queryClient.getQueryData(["auth"]) == serializableData) {
+      console.log("Auth status set in query client");
+    } else {
+      console.log("????????");
+    }
+    console.log(
+      "Set auth status in query client:",
+      queryClient.getQueryData(["auth"]),
+    );
     console.log("Auth status response:", res);
     return {
       id: res.data.id,
