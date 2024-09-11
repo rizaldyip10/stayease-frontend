@@ -13,7 +13,7 @@ const SidePicture: React.FC<PictureProps> = ({ className, alt, src }) => {
       className={`max-h-screen flex-1 flex flex-col items-center justify-center ${className}`}
     >
       <Image
-        className="flex-1 relative min-w-full overflow-hidden max-h-screen object-center py-5"
+        className="flex-1 relative min-w-full min-h-full overflow-hidden object-center py-5"
         alt={alt}
         src={src}
         width={680}

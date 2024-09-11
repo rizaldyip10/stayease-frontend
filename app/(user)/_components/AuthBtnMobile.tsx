@@ -8,9 +8,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
+import { any } from "prop-types";
 
 const ProfileBtn = () => {
   const { auth, logout } = useAuth();
@@ -21,18 +22,28 @@ const ProfileBtn = () => {
         <CircleUserRound className="w-7 h-7 rounded-full" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
-          {auth ? (
-            <Link href="/" onClick={() => logout()}>
-              Logout
-            </Link>
-          ) : (
+        {auth ? (
+          <>
+            <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
+              <Link href="/dashboard">Dashboard</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
+              <Link href="/profile">Profile</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
+              <Link href="/settings">Settings</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
+              <Link href="/" onClick={() => logout()}>
+                Logout
+              </Link>
+            </DropdownMenuItem>
+          </>
+        ) : (
+          <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
             <Link href="/login">Login/Register</Link>
-          )}
-        </DropdownMenuItem>
-        {/*<DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">*/}
-        {/*  <Link href="/register">Register</Link>*/}
-        {/*</DropdownMenuItem>*/}
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
