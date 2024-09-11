@@ -108,8 +108,8 @@ const AvatarUploadModal: React.FC<AvatarUploadModalProps> = ({
         <DialogHeader>
           <DialogTitle>Upload Avatar</DialogTitle>
         </DialogHeader>
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-32 h-32 rounded-full overflow-hidden">
+        <div className="flex flex-col items-center gap-5">
+          <div className="w-32 h-32 relative rounded-full overflow-hidden">
             {/*// TODO : placeholder?*/}
             <Image
               src={previewUrl || currentAvatar || ""}
@@ -118,12 +118,14 @@ const AvatarUploadModal: React.FC<AvatarUploadModalProps> = ({
               alt="Avatar preview"
             />
           </div>
-          <input
-            type="file"
-            accept="image/jpeg, image/png, image/jpg, image/gif"
-            onChange={handleFileChange}
-            className="w-full"
-          />
+          <div className="flex justify-center items-center">
+            <input
+              type="file"
+              accept="image/jpeg, image/png, image/jpg, image/gif"
+              onChange={handleFileChange}
+              className="border border-gray-100 rounded-md p-1 w-4/5"
+            />
+          </div>
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <div className="flex gap-2">
             <Button

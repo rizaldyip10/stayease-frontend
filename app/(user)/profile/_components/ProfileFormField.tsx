@@ -20,6 +20,13 @@ const ProfileFormField: React.FC<FormFieldProps> = ({
   onClick,
   values,
 }) => {
+  const handleClick = (e: React.MouseEvent<HTMLInputElement>) => {
+    if (disabled && onClick) {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   return (
     <div className="mb-4">
       <label htmlFor={id} className="block mb-2">
@@ -31,7 +38,7 @@ const ProfileFormField: React.FC<FormFieldProps> = ({
         name={name}
         disabled={disabled}
         className="w-full p-2 border rounded"
-        onClick={onClick}
+        onClick={handleClick}
       />
     </div>
   );

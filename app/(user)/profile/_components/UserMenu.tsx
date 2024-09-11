@@ -25,19 +25,22 @@ const UserMenu = () => {
     <div className="w-64 absolute bg-white hidden lg:flex flex-col gap-3 p-5 border border-gray-200 rounded-md">
       <h1 className="text-blue-950 font-semibold mb-4">My Profile</h1>
       <div className="flex flex-col items-center gap-3 w-full border-b border-gray-200 pb-5">
-        <div className="relative w-[150px] h-[150px] rounded-full flex items-center justify-center border border-gray-200 bg-white">
+        <div className="relative w-[150px] h-[150px] rounded-full flex items-center justify-center border border-gray-300 bg-white">
           {/*// TODO : placeholder?*/}
-          <Image
-            src={`${profile?.avatarUrl}`}
-            width={140}
-            height={140}
-            alt="avatar"
-          />
+          <div className="overflow-hidden w-[150px] h-[150px] rounded-full flex items-center justify-center">
+            <Image
+              src={`${profile?.avatarUrl}`}
+              width={150}
+              height={150}
+              alt="avatar"
+              className="object-over"
+            />
+          </div>
           <Button
-            className="absolute bottom-2 right-1 bg-white p-2 rounded-full shadow-md"
+            className="w-7 h-7 absolute bottom-2 right-1 hover:bg-blue-950 p-2 bg-[#FAFAFA] rounded-full shadow-md"
             onClick={() => setIsModalOpen(true)}
           >
-            <Pencil size={16} />
+            <Pencil size={16} className="text-blue-950 hover:text-gray-200" />
           </Button>
         </div>
         <div className="flex flex-col items-center gap-1">

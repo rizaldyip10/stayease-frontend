@@ -1,7 +1,7 @@
 import axios, { InternalAxiosRequestConfig } from "axios";
 import { config } from "@/constants/url";
 
-export const axiosInstance = axios.create({
+export const axiosInterceptor = axios.create({
   baseURL: config.BASE_URL,
   withCredentials: true,
 });
@@ -13,11 +13,12 @@ export const setAccessToken = (token: string | null) => {
   accessToken = token;
   if (token) {
     localStorage.setItem("accessToken", token);
-    axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    axiosInterceptor.defaults.headers.common["Authorization"] =
+      `Bearer ${token}`;
     console.log("Token set in axios and localStorage");
   } else {
     localStorage.removeItem("accessToken");
-    delete axiosInstance.defaults.headers.common["Authorization"];
+    delete axiosInterceptor.defaults.headers.common["Authorization"];
     console.log("Token removed from axios and localStorage");
   }
 };
@@ -25,7 +26,7 @@ export const setAccessToken = (token: string | null) => {
 export const getAccessToken = () => localStorage.getItem("accessToken");
 
 // interceptor to add access token to request header
-axiosInstance.interceptors.request.use(
+axiosInterceptor.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
     const token = getAccessToken();
     console.log("Interceptor: Using token:", token);
@@ -39,19 +40,23 @@ axiosInstance.interceptors.request.use(
 );
 
 // interceptor to handle refresh token
-axiosInstance.interceptors.response.use(
+axiosInterceptor.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        // You might need to adjust this part depending on how you want to handle token refresh
-        const response = await axiosInstance.get(config.endpoints.auth.status);
+        const response = await axiosInterceptor.get(
+          config.endpoints.auth.status,
+        );
         const newToken = response.data.token.accessToken;
         setAccessToken(newToken);
         originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
-        return axiosInstance(originalRequest);
+        console.log(
+          "header in response: " + originalRequest.headers["Authorization"],
+        );
+        return axiosInterceptor(originalRequest);
       } catch (refreshError) {
         return Promise.reject(refreshError);
       }
@@ -60,4 +65,4 @@ axiosInstance.interceptors.response.use(
   },
 );
 
-export default axiosInstance;
+export default axiosInterceptor;

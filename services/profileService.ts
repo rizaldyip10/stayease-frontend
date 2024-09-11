@@ -116,6 +116,7 @@ export const profileService = {
         config.endpoints.users.avatar,
         userImage,
       );
+      console.log("response from profileService.setOrRemoveAvatar:", response);
       if (!response.data || !response.data.data.avatarUrl) {
         throw new Error("Failed to set avatar");
       }

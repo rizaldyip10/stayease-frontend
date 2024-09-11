@@ -16,6 +16,10 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
   toggleEditing,
   updateProfile,
 }) => {
+  const handleEmailClick = () => {
+    alert("Please go to the settings page to request an email change.");
+  };
+
   return (
     <Formik
       initialValues={profile}
@@ -32,7 +36,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
               key === "joinedAt" ||
               key === "userType" ||
               key === "tenantInfo" ||
-              key === "avatar"
+              key === "avatarUrl"
             )
               return null;
 
@@ -49,14 +53,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 name={key}
                 disabled={key === "email" || !isEditing}
                 values={values}
-                onClick={
-                  key === "email"
-                    ? () =>
-                        alert(
-                          "Please go to the settings page to request an email change.",
-                        )
-                    : undefined
-                }
+                onClick={key === "email" ? handleEmailClick : undefined}
               />
             );
           })}
