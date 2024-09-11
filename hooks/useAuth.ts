@@ -34,14 +34,23 @@ export function useAuth() {
   });
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      authService.setAccessToken(token);
-      refetch();
-    } else {
+    const cachedAuth = queryClient.getQueryData(["auth"]);
+    if (cachedAuth) {
+      console.log("Cached auth:", cachedAuth);
       setIsLoading(false);
+    } else {
+      console.log("No cached auth");
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        authService.setAccessToken(token);
+        refetch().finally(() => {
+          setIsLoading(false);
+        });
+      } else {
+        setIsLoading(false);
+      }
     }
-  }, [refetch]);
+  }, [refetch, queryClient]);
 
   useEffect(() => {
     if (isError) {
@@ -105,6 +114,8 @@ export function useAuth() {
         userType: data.userType,
         firstName: data.firstName,
         lastName: data.lastName,
+        isVerified: data.isVerified,
+        isOAuth2: data.isOAuth2,
         // Omit token for security reasons
       };
       localStorage.setItem("accessToken", data.token.accessToken);
