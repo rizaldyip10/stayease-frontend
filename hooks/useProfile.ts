@@ -66,7 +66,7 @@ export const useProfile = () => {
         (oldData: UserProfile | undefined) => {
           if (oldData) {
             console.log("showing oldData:", oldData);
-            return { ...oldData, avatar: data ? data.avatarUrl : null };
+            return { ...oldData, avatarUrl: data ? data.avatarUrl : null };
           }
           return oldData;
         },

@@ -28,7 +28,7 @@ const UserMenu = () => {
         <div className="relative w-[150px] h-[150px] rounded-full flex items-center justify-center border border-gray-200 bg-white">
           {/*// TODO : placeholder?*/}
           <Image
-            src={`${profile.avatarUrl}`}
+            src={`${profile?.avatarUrl}`}
             width={140}
             height={140}
             alt="avatar"
@@ -51,7 +51,7 @@ const UserMenu = () => {
       <AvatarUploadModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        currentAvatar={profile.avatarUrl}
+        currentAvatar={profile?.avatarUrl}
       />
     </div>
   );

@@ -27,6 +27,10 @@ export interface UserImage {
   avatarUrl: string;
 }
 
+export interface UserImageResponse {
+  data: UserImage;
+}
+
 export interface UpdateProfile {
   firstName: string;
   lastName: string;
@@ -82,7 +86,7 @@ export const profileService = {
   uploadAvatar: async (file: File): Promise<UserImage> => {
     const formData = new FormData();
     formData.append("image", file);
-    const response = await axiosInterceptor.post<UserImage>(
+    const response = await axiosInterceptor.post<UserImageResponse>(
       config.endpoints.users.avatar,
       formData,
       {
@@ -108,7 +112,7 @@ export const profileService = {
       return { avatarUrl: "" };
     } else {
       // If userImage is not null, send a request to set the new avatar
-      const response = await axiosInterceptor.put<UserImage>(
+      const response = await axiosInterceptor.put<UserImageResponse>(
         config.endpoints.users.avatar,
         userImage,
       );
