@@ -62,6 +62,7 @@ const config = {
         },
         appcancel: "#AA2117",
         apptext: "#A1A7B0",
+        appgray: "#FAFAFA",
       },
       borderRadius: {
         lg: "var(--radius)",

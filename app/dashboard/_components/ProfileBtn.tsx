@@ -39,8 +39,10 @@ const ProfileBtn = () => {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
-          <Settings className="w-4 h-4 text-blue-950" />
-          Settings
+          <Link href="/profile/settings" className="flex gap-1">
+            <Settings className="w-4 h-4 text-blue-950" />
+            Settings
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="text-xs flex items-center text-red-700 gap-1">
           <Link href="/" onClick={() => logout()} className="flex gap-1">
