@@ -1,6 +1,6 @@
 import React from "react";
-import UserDashboard from "@/app/dashboard/(user)/page";
-import TenantDashboard from "@/app/dashboard/(tenant)/page";
+import UserDashboard from "@/app/dashboard/(user)/UserDashboard";
+import TenantDashboard from "@/app/dashboard/(tenant)/TenantDashboard";
 
 const DashboardHomePage = () => {
   return (

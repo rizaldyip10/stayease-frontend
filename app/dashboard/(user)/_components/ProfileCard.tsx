@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 
 interface ProfileCardProps {
+  className?: string;
   user: {
     name: string;
     email: string;
@@ -12,9 +13,9 @@ interface ProfileCardProps {
   };
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ className, user }) => {
   return (
-    <Card className="col-span-1">
+    <Card className={className}>
       <CardHeader>
         <CardTitle className="text-blue-950">My Profile</CardTitle>
       </CardHeader>

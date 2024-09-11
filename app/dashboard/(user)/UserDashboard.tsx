@@ -51,11 +51,11 @@ const UserDashboard: React.FC = () => {
         My Travel Dashboard
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <ProfileCard user={user} />
-        <StatusGrid stats={stats} />
-        <UpcomingTrips />
-        <QuickActions actions={actions} />
-        <RecentActivity />
+        <ProfileCard user={user} className="col-span-1 md:col-span-3" />
+        <StatusGrid stats={stats} className="col-span-1 md:col-span-3" />
+        <UpcomingTrips className="col-span-1 md:col-span-2" />
+        <QuickActions actions={actions} className="col-span-1 md:col-span-2" />
+        <RecentActivity className="col-span-1 md:col-span-3" />
       </div>
     </div>
   );

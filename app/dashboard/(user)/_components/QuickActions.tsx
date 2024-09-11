@@ -4,12 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 interface QuickActionsProps {
+  className?: string;
   actions: { icon: React.ReactNode; label: string }[];
 }
 
-const QuickActions: React.FC<QuickActionsProps> = ({ actions }) => {
+const QuickActions: React.FC<QuickActionsProps> = ({ className, actions }) => {
   return (
-    <Card className="col-span-1">
+    <Card className={className}>
       <CardHeader>
         <CardTitle className="text-blue-950">Quick Actions</CardTitle>
       </CardHeader>

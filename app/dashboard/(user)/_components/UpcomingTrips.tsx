@@ -2,7 +2,11 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-const UpcomingTrips: React.FC = () => {
+interface UpcomingTripProps {
+  className?: string;
+}
+
+const UpcomingTrips: React.FC<UpcomingTripProps> = ({ className }) => {
   // !! TODO: Replace with real data
   const upcomingTrips = [
     {
@@ -18,7 +22,7 @@ const UpcomingTrips: React.FC = () => {
   ];
 
   return (
-    <Card className="col-span-1 md:col-span-2">
+    <Card>
       <CardHeader>
         <CardTitle className="text-blue-950">Upcoming Trips</CardTitle>
       </CardHeader>

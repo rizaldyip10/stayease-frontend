@@ -9,6 +9,7 @@ import {
 import { CalendarDays, Home, MessageSquare, Star } from "lucide-react";
 
 interface StatusGridProps {
+  className?: string;
   stats: {
     icon: React.ReactNode;
     label: string;
@@ -16,9 +17,9 @@ interface StatusGridProps {
   }[];
 }
 
-const StatusGrid: React.FC<StatusGridProps> = ({ stats }) => {
+const StatusGrid: React.FC<StatusGridProps> = ({ className, stats }) => {
   return (
-    <Card className="col-span-1 md:col-span-2">
+    <Card className={className}>
       <CardHeader>
         <CardTitle className="text-blue-950">Travel Overview</CardTitle>
         <CardDescription>Your activity on the platform</CardDescription>
