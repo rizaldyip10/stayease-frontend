@@ -26,9 +26,6 @@ const AuthBtn = () => {
           </Button>
         </Link>
       )}
-      {/*<Link href="/register">*/}
-      {/*  <Button className="text-white bg-blue-950">Register</Button>*/}
-      {/*</Link>*/}
     </div>
   );
 };
