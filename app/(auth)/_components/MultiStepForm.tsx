@@ -162,7 +162,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
       // If not tenant, fall through to summary page
       case 4:
         return (
-          <div className="space-y-4">
+          <div className="max-w-full space-y-4">
             <h2 className="text-xl font-bold">Summary</h2>
             <p>
               <strong>First Name:</strong> {values.firstName}
@@ -185,7 +185,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
                 </p>
               </>
             )}
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 text-center">
               Please review your information. If everything is correct, click
               &apos;Submit&apos; to complete your registration.
             </p>
@@ -203,7 +203,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
       onSubmit={handleSubmit}
     >
       {({ isValid, dirty, isSubmitting, values }) => (
-        <Form className="space-y-4 min-w-lg">
+        <Form className="space-y-7 min-w-lg">
           <div className="flex justify-center gap-7 mb-4">
             {[1, 2, 3, 4]
               .slice(0, userType === "tenant" ? 4 : 3)
