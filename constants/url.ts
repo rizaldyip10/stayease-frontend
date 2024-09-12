@@ -46,6 +46,7 @@ export const config = {
       updateCategory: "/properties/categories/{categoryId}",
       deleteCategory: "/properties/categories/{categoryId}",
       getAllCities: "/properties/cities",
+      getAllImages: "/properties/images",
     },
   },
 };

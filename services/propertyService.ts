@@ -160,6 +160,13 @@ const propertyService = {
     return response.data.data;
   },
 
+  getAllImages: async (): Promise<string[]> => {
+    const response = await axiosInterceptor.get(
+      config.endpoints.propertiesUtils.getAllImages,
+    );
+    return response.data.data;
+  },
+
   // Add other methods as needed (create, update, delete)
 };
 

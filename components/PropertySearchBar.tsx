@@ -22,10 +22,11 @@ const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
     console.log("selectedValue: ", value);
   };
 
-  const choices = cities.map((city) => ({
-    value: city,
-    label: city,
-  }));
+  const choices: { value: string; label: string }[] =
+    cities?.map((city) => ({
+      value: city,
+      label: city,
+    })) || [];
 
   return (
     <div className={`property-search-bar ${className}`}>

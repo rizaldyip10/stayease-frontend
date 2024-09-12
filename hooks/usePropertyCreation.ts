@@ -68,8 +68,6 @@ export const usePropertyCreation = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { refetchCities, refetchCategories, refetchProperties } =
-    usePropertyUtils();
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -132,9 +130,6 @@ export const usePropertyCreation = () => {
       formikHelpers.setSubmitting(false);
     } finally {
       setIsLoading(false);
-      refetchProperties();
-      refetchCategories();
-      refetchCities();
     }
   };
 

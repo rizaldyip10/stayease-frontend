@@ -33,6 +33,7 @@ export const usePropertyUtils = () => {
   const [properties, setProperties] = useState<PropertyAndRoomType[]>([]);
   const [cities, setCities] = useState<string[]>([]);
   const [categories, setCategories] = useState<CategoryType[]>([]);
+  const [images, setImages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -72,16 +73,31 @@ export const usePropertyUtils = () => {
     }
   };
 
+  const fetchImages = async () => {
+    setIsLoading(true);
+    try {
+      const data = await propertyService.getAllImages();
+      console.log("data", data);
+      setImages(data);
+    } catch (error) {
+      setError("Error fetching images");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchProperties();
     fetchCities();
     fetchCategories();
+    fetchImages();
   }, []);
 
   return {
     properties,
     cities,
     categories,
+    images,
     isLoading,
     error,
   };

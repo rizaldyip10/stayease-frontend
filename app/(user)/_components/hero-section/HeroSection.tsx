@@ -4,28 +4,28 @@ import HeroDescription from "@/app/(user)/_components/hero-section/HeroDescripti
 import PropertySearchBar from "@/components/PropertySearchBar";
 import { CarouselPlugin } from "@/components/CarouselPlugin";
 import useMediaQuery from "@/hooks/useMediaQuery";
+import { usePropertyUtils } from "@/hooks/usePropertyUtils";
 
 interface HeroSectionProps {
   className?: string;
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({ className }) => {
+  // const { images } = usePropertyUtils();
   const isDesktop: boolean = useMediaQuery("(min-width: 768px)");
 
-  const images = [
-    {
-      src: "/sign-up-side-pic.webp",
-      alt: "Hero Image 1",
-    },
-    {
-      src: "/verify.webp",
-      alt: "Hero Image 2",
-    },
-    {
-      src: "/login-pic.webp",
-      alt: "Hero Image 3",
-    },
+  // fall
+
+  const fallbackImages = [
+    "/sign-up-side-pic.webp",
+    "/verify.webp",
+    "/login-pic.webp",
   ];
+
+  const imagesAlt = fallbackImages.map((image) => ({
+    src: image,
+    alt: image,
+  }));
 
   return (
     <div className={`hero-section md:relative ${className}`}>
@@ -38,13 +38,16 @@ const HeroSection: React.FC<HeroSectionProps> = ({ className }) => {
               <div></div>
             </div>
             <div className="right-hero md:w-1/2">
-              <CarouselPlugin images={images} />
+              <CarouselPlugin images={imagesAlt} />
             </div>
           </>
         ) : (
           <div className="left-hero relative min-h-full h-full">
             <div className="absolute inset-0 opacity-40 md:opacity-100 min-h-full h-full">
-              <CarouselPlugin images={images} className="h-full rounded-2xl" />
+              <CarouselPlugin
+                images={imagesAlt}
+                className="h-full rounded-2xl"
+              />
             </div>
             <div className="relative z-10 p-5 flex items-center">
               <HeroDescription className="min-h-full bg-slate-50 bg-opacity-20 p-2" />
