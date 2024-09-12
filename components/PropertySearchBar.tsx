@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Combobox from "@/components/Combobox";
 import { Input } from "@/components/ui/input";
-import { DatePickerDemo } from "@/components/ui/date-picker";
+import { CustomDatePicker } from "@/components/ui/date-picker";
 import { Button } from "@/components/ui/button";
 import useMediaQuery from "@/hooks/useMediaQuery";
 
@@ -48,7 +48,7 @@ const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
               />
             </div>
             <div style={{ flex: "2 1 0%" }}>
-              <DatePickerDemo />
+              <CustomDatePicker title="Pick a date" />
             </div>
             <div style={{ flex: "1 1 0%" }}>
               <Button
@@ -72,7 +72,7 @@ const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
               />
             </div>
             <div>
-              <DatePickerDemo />
+              <CustomDatePicker title="Pick a date" />
             </div>
             <div>
               <Button
