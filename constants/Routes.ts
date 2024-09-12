@@ -5,6 +5,7 @@ import {
   LayoutGrid,
   LibraryBig,
   LucideIcon,
+  Settings,
   Sofa,
   Star,
   User,
@@ -55,6 +56,7 @@ export const userMenuRoutes: UserMenuRoutesType[] = [
   { label: "My Profile", href: "/profile", icon: User },
   { label: "My Bookings", href: "/profile/bookings", icon: BookOpenText },
   { label: "My Reviews", href: "/profile/reviews", icon: Star },
+  { label: "Settings", href: "/profile/settings", icon: Settings },
 ];
 
 export const footerNavigationItems = [
