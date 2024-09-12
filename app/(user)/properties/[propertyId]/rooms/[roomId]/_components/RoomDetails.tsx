@@ -77,7 +77,7 @@ const RoomDetailsComponent: React.FC<RoomDetailsProps> = ({ room }) => {
           <Card>
             <CardContent className="p-4">
               <h2 className="text-2xl font-bold mb-2">
-                €{room.basePrice} / night
+                IDR{room.basePrice} / night
               </h2>
               <div className="flex flex-col space-y-4 mb-4">
                 <Popover>

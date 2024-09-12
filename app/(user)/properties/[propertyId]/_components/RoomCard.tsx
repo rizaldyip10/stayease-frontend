@@ -19,7 +19,7 @@ const RoomCard: React.FC<RoomCardProps> = ({ room, bookingValues }) => {
         <p className="text-sm text-gray-600 mb-2">
           Capacity: {room.capacity} persons
         </p>
-        <p className="text-lg font-bold mb-2">€{room.basePrice} / night</p>
+        <p className="text-lg font-bold mb-2">IDR{room.basePrice} / night</p>
         <Link href={roomDetailsUrl} passHref>
           <Button className="w-full">View Details</Button>
         </Link>

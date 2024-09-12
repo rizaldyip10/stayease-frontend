@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import CustomCheckbox from "@/app/(user)/properties/_components/CustomCheckbox";
@@ -14,11 +15,30 @@ import { CustomDatePicker } from "@/components/ui/date-picker";
 import CustomSelect from "@/app/(user)/properties/_components/CustomSelect";
 import FormikDatePicker from "@/components/DatePicker";
 import DatePicker from "@/components/DatePicker";
+import { usePropertyUtils } from "@/hooks/usePropertyUtils";
+import Combobox from "@/components/Combobox";
 
 const SearchFilterCard: React.FC = () => {
+  const [selectedValue, setSelectedValue] = React.useState<string>("");
+
   // !! TODO: dummy datas, replace with actual data from API
-  const locations = ["Bali", "Jakarta", "Yogyakarta"];
-  const categories = ["Apartment", "House", "Villa", "Hotel"];
+  // TODO : replace cities with dropdown instead?
+  const { cities, categories, isLoading, error } = usePropertyUtils();
+
+  const cityChoices = cities.map((city) => ({
+    value: city,
+    label: city,
+  }));
+
+  const categoryChoices = categories.map((category) => ({
+    value: category.name,
+    label: category.name[0].toUpperCase() + category.name.slice(1),
+  }));
+
+  const handleSelect = (value: string) => {
+    setSelectedValue(value);
+    console.log("selectedValue: ", value);
+  };
 
   return (
     <div>
@@ -30,9 +50,10 @@ const SearchFilterCard: React.FC = () => {
             <h3 className="font-semibold mb-2 text-blue-950">Location</h3>
             <div className="space-y-2">
               {/*// TODO : call locations from API*/}
-              {locations.map((location) => (
-                <CustomCheckbox key={location} label={location} />
-              ))}
+              {/*{cities.map((city) => (*/}
+              {/*  <CustomCheckbox key={city} label={city} />*/}
+              {/*))}*/}
+              <Combobox choices={cityChoices} onSelect={handleSelect} />
             </div>
           </div>
 
@@ -69,7 +90,9 @@ const SearchFilterCard: React.FC = () => {
           <div className="mb-4">
             <h3 className="font-semibold mb-2 text-blue-950">Category</h3>
             {/*// TODO: Call categories from API*/}
-            <CustomSelect category={categories} />
+            {/*<CustomSelect category={categories} />*/}
+
+            <Combobox choices={categoryChoices} onSelect={handleSelect} />
           </div>
         </CardContent>
       </Card>

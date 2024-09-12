@@ -6,6 +6,13 @@ import {
   RoomType,
 } from "@/constants/Property";
 
+const formatPrice = (price: number) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+  }).format(price);
+};
+
 const propertyService = {
   getAllProperties: async (): Promise<PropertyAndRoomType[]> => {
     const response = await axiosInterceptor.get(
@@ -112,14 +119,14 @@ const propertyService = {
 
   getAllCategory: async (): Promise<CategoryType[]> => {
     const response = await axiosInterceptor.get(
-      config.endpoints.properties.getAllCategories,
+      config.endpoints.propertiesUtils.getAllCategories,
     );
     return response.data.data;
   },
 
   createCategory: async (data: any): Promise<CategoryType> => {
     const response = await axiosInterceptor.post(
-      config.endpoints.properties.createCategory,
+      config.endpoints.propertiesUtils.createCategory,
       data,
     );
     return response.data.data;
@@ -129,7 +136,7 @@ const propertyService = {
     categoryId: number,
     data: any,
   ): Promise<CategoryType> => {
-    const url = config.endpoints.properties.updateCategory.replace(
+    const url = config.endpoints.propertiesUtils.updateCategory.replace(
       "{categoryId}",
       categoryId.toString(),
     );
@@ -138,11 +145,18 @@ const propertyService = {
   },
 
   deleteCategory: async (categoryId: number): Promise<CategoryType> => {
-    const url = config.endpoints.properties.deleteCategory.replace(
+    const url = config.endpoints.propertiesUtils.deleteCategory.replace(
       "{categoryId}",
       categoryId.toString(),
     );
     const response = await axiosInterceptor.delete(url);
+    return response.data.data;
+  },
+
+  getAllCities: async (): Promise<string[]> => {
+    const response = await axiosInterceptor.get(
+      config.endpoints.propertiesUtils.getAllCities,
+    );
     return response.data.data;
   },
 

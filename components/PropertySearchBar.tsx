@@ -1,10 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Combobox from "@/components/Combobox";
 import { Input } from "@/components/ui/input";
 import { CustomDatePicker } from "@/components/ui/date-picker";
 import { Button } from "@/components/ui/button";
 import useMediaQuery from "@/hooks/useMediaQuery";
+import propertyService from "@/services/propertyService";
+import { usePropertyUtils } from "@/hooks/usePropertyUtils";
 
 interface HeroSearchBarProps {
   className?: string;
@@ -12,6 +14,7 @@ interface HeroSearchBarProps {
 
 const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
   const [selectedValue, setSelectedValue] = useState<string>("");
+  const { cities, categories, isLoading, error } = usePropertyUtils();
   const isDesktop: boolean = useMediaQuery("(min-width: 768px)");
 
   const handleSelect = (value: string) => {
@@ -19,17 +22,10 @@ const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
     console.log("selectedValue: ", value);
   };
 
-  // !! TODO : just example data, replace when API is ready
-  const choices = [
-    {
-      value: "jakarta",
-      label: "Jakarta",
-    },
-    {
-      value: "bali",
-      label: "Bali",
-    },
-  ];
+  const choices = cities.map((city) => ({
+    value: city,
+    label: city,
+  }));
 
   return (
     <div className={`property-search-bar ${className}`}>
@@ -88,5 +84,4 @@ const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
     </div>
   );
 };
-
 export default PropertySearchBar;

@@ -4,7 +4,7 @@ import SearchFilterCard from "@/app/(user)/properties/_components/SearchFilterCa
 import PropertyListingCard from "@/app/(user)/properties/_components/PropertyListingCard";
 import { PropertyAndRoomType } from "@/constants/Property";
 import { config } from "@/constants/url";
-import { useProperties } from "@/hooks/useProperty";
+import { usePropertyUtils } from "@/hooks/usePropertyUtils";
 
 const PropertiesPage: React.FC = () => {
   // !! TODO: dummy datas, replace with actual data from API
@@ -117,7 +117,7 @@ const PropertiesPage: React.FC = () => {
   //   },
   // ];
 
-  const { properties, loading, error } = useProperties();
+  const { properties, loading, error } = usePropertyUtils();
 
   console.log("Rendering component, properties:", properties);
 

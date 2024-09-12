@@ -3,6 +3,7 @@ import { useState, useCallback } from "react";
 import { FormikHelpers } from "formik";
 import axios from "axios";
 import propertyService from "@/services/propertyService";
+import { usePropertyUtils } from "@/hooks/usePropertyUtils";
 
 interface Category {
   id: number;
@@ -67,6 +68,8 @@ export const usePropertyCreation = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { refetchCities, refetchCategories, refetchProperties } =
+    usePropertyUtils();
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -129,6 +132,9 @@ export const usePropertyCreation = () => {
       formikHelpers.setSubmitting(false);
     } finally {
       setIsLoading(false);
+      refetchProperties();
+      refetchCategories();
+      refetchCities();
     }
   };
 

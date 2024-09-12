@@ -39,10 +39,13 @@ export const config = {
       createRoom: "/properties/{propertyId}/rooms",
       updateRoom: "/properties/{propertyId}/rooms/{roomId}",
       deleteRoom: "/properties/{propertyId}/rooms/{roomId}",
+    },
+    propertiesUtils: {
       getAllCategories: "/properties/categories",
       createCategory: "/properties/categories",
       updateCategory: "/properties/categories/{categoryId}",
       deleteCategory: "/properties/categories/{categoryId}",
+      getAllCities: "/properties/cities",
     },
   },
 };
