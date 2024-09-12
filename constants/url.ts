@@ -21,5 +21,18 @@ export const config = {
       checkToken: "/register/check-token",
       verify: "/register/verify",
     },
+    properties: {
+      getAllProperties: "/properties",
+      getProperty: "/properties/{propertyId}",
+      getTenantProperties: "/properties/tenant",
+      createProperty: "/properties",
+      updateProperty: "/properties/{propertyId}",
+      deleteProperty: "/properties/{propertyId}",
+      getRooms: "/properties/{propertyId}/rooms",
+      getRoom: "/properties/{propertyId}/rooms/{roomId}",
+      createRoom: "/properties/{propertyId}/rooms",
+      updateRoom: "/properties/{propertyId}/rooms/{roomId}",
+      deleteRoom: "/properties/{propertyId}/rooms/{roomId}",
+    },
   },
 };
