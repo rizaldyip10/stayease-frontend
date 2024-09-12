@@ -21,5 +21,11 @@ export const config = {
       checkToken: "/register/check-token",
       verify: "/register/verify",
     },
+    users: {
+      profile: "/users/profile",
+      tenant: "/users/profile/tenant",
+      avatar: "/users/profile/avatar",
+      email: "/users/profile/email",
+    },
   },
 };
