@@ -5,11 +5,11 @@ import axios from "axios";
 
 async function getPropertyDetails(propertyId: number) {
   // TODO : fetch property details from API
-  const res = await axios.get(`http://your-api-url/properties/${propertyId}`, {
-    next: { revalidate: 60 },
-  });
-  if (!res.ok) return undefined;
-  return res.json();
+  // const res = await fetch(`http://your-api-url/properties/${propertyId}`, {
+  //   next: { revalidate: 60 },
+  // });
+  // if (!res.ok) return undefined;
+  // return res.json();
 
   // !! MOCK DATA TODO: Replace this with actual API call
   return {
