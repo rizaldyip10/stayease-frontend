@@ -14,6 +14,7 @@ import {
 import CategoryDropdown from "@/app/dashboard/properties/create/_components/CategoryDropdown";
 import propertyService from "@/services/propertyService";
 import { CategoryType } from "@/constants/Property";
+import MapComponent from "@/app/dashboard/properties/create/_components/MapComponent";
 
 interface PropertyFormValues {
   property: {
@@ -44,6 +45,10 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
 }) => {
   const { values, setFieldValue } = useFormikContext<PropertyFormValues>();
   const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
+  const [location, setLocation] = useState({ lat: 0, lng: 0 });
+  const [searchBox, setSearchBox] =
+    useState<google.maps.places.Autocomplete | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
   const propertyFields = [
     { name: "name", label: "Name", type: "text" },
@@ -54,10 +59,11 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
     // { name: "categoryId", label: "Category", type: "text" },
   ];
 
-  const [location, setLocation] = useState({ lat: 0, lng: 0 });
-  const [searchBox, setSearchBox] =
-    useState<google.maps.places.Autocomplete | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const handleLocationChange = (lat: number, lng: number) => {
+    setFieldValue("property.latitude", lat);
+    setFieldValue("property.longitude", lng);
+    console.log("Location changed to:", lat, lng);
+  };
 
   const handleCategorySelect = (categoryId: string | number) => {
     setSelectedCategory(Number(categoryId));
@@ -145,40 +151,47 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
       <div className="mt-4">
         <Label>Location</Label>
         <div style={{ height: "400px", width: "100%" }}>
-          <LoadScript
-            googleMapsApiKey={`${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
-            libraries={libraries}
-          >
-            <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-              <input
-                type="text"
-                placeholder="Search for a location"
-                style={{
-                  boxSizing: `border-box`,
-                  border: `1px solid transparent`,
-                  width: `240px`,
-                  height: `32px`,
-                  padding: `0 12px`,
-                  borderRadius: `3px`,
-                  boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-                  fontSize: `14px`,
-                  outline: `none`,
-                  textOverflow: `ellipses`,
-                  marginBottom: "10px",
-                }}
-              />
-            </Autocomplete>
-            <div style={{ height: "400px", width: "100%" }}>
-              <GoogleMap
-                mapContainerStyle={{ height: "100%", width: "100%" }}
-                center={location}
-                zoom={10}
-                onClick={handleMapClick}
-              >
-                <Marker position={location} />
-              </GoogleMap>
-            </div>
-          </LoadScript>
+          {/*<LoadScript*/}
+          {/*  googleMapsApiKey={`${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}*/}
+          {/*  libraries={libraries}*/}
+          {/*>*/}
+          {/*  <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>*/}
+          {/*    <input*/}
+          {/*      type="text"*/}
+          {/*      placeholder="Search for a location"*/}
+          {/*      style={{*/}
+          {/*        boxSizing: `border-box`,*/}
+          {/*        border: `1px solid transparent`,*/}
+          {/*        width: `240px`,*/}
+          {/*        height: `32px`,*/}
+          {/*        padding: `0 12px`,*/}
+          {/*        borderRadius: `3px`,*/}
+          {/*        boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,*/}
+          {/*        fontSize: `14px`,*/}
+          {/*        outline: `none`,*/}
+          {/*        textOverflow: `ellipses`,*/}
+          {/*        marginBottom: "10px",*/}
+          {/*      }}*/}
+          {/*    />*/}
+          {/*  </Autocomplete>*/}
+          {/*  <div style={{ height: "400px", width: "100%" }}>*/}
+          {/*    <GoogleMap*/}
+          {/*      mapContainerStyle={{ height: "100%", width: "100%" }}*/}
+          {/*      center={location}*/}
+          {/*      zoom={10}*/}
+          {/*      onClick={handleMapClick}*/}
+          {/*    >*/}
+          {/*      <Marker position={location} />*/}
+          {/*    </GoogleMap>*/}
+          {/*  </div>*/}
+          {/*</LoadScript>*/}
+          <MapComponent
+            initialCenter={{
+              lat: values.property.latitude || 0,
+              lng: values.property.longitude || 0,
+            }}
+            onLocationChange={handleLocationChange}
+          />
         </div>
         <ErrorMessage
           name="property.latitude"

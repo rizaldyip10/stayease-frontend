@@ -55,9 +55,11 @@ const RoomForm: React.FC<RoomFormProps> = ({
           name={`rooms.${index}.imageUrl`}
           onImageUpload={onImageUpload}
         />
-        <Button type="button" onClick={onRemove} className="mt-2">
-          Remove Room
-        </Button>
+        {index > 0 && (
+          <Button type="button" onClick={onRemove} className="mt-2">
+            Remove Room
+          </Button>
+        )}
       </div>
     </div>
   );
