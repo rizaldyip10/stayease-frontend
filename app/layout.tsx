@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "leaflet/dist/leaflet.css";
 import React, { Suspense } from "react";
 import { ClientWrapper } from "@/components/ClientWrapper";
 import { AuthProvider } from "@/components/AuthProvider";

@@ -28,7 +28,7 @@ export function useAuth() {
     error,
   } = useQuery<AuthResponse, Error>({
     queryKey: ["auth"],
-    queryFn: authService.checkAuthStatus,
+    // queryFn: authService.checkAuthStatus,
     retry: false,
     enabled: false,
   });
