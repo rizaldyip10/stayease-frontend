@@ -31,3 +31,33 @@ export const getValidationSchema = (formType: FormType) => {
       return registerSchema;
   }
 };
+
+export const createPropValidationSchema = yup.object().shape({
+  property: yup.object().shape({
+    name: yup.string().required("Required"),
+    description: yup.string().required("Required"),
+    imageUrl: yup.string().required("Required"),
+    address: yup.string().required("Required"),
+    city: yup.string().required("Required"),
+    country: yup.string().required("Required"),
+    longitude: yup.number().required("Required"),
+    latitude: yup.number().required("Required"),
+    categoryId: yup.string().required("Required"),
+  }),
+  rooms: yup.array().of(
+    yup.object().shape({
+      name: yup.string().required("Required"),
+      description: yup.string().required("Required"),
+      basePrice: yup.number().required("Required").positive("Must be positive"),
+      capacity: yup
+        .number()
+        .required("Required")
+        .positive("Must be positive")
+        .integer("Must be an integer"),
+      imageUrl: yup.string().required("Required"),
+    }),
+  ),
+  category: yup.object().shape({
+    name: yup.string(),
+  }),
+});

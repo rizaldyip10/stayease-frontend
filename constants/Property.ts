@@ -25,7 +25,7 @@ export type PropertyAndRoomType = {
   country: string;
   latitude: number;
   longitude: number;
-  rooms: RoomType[];
+  rooms?: RoomType[] | null;
 };
 
 export type RoomType = {
@@ -36,4 +36,9 @@ export type RoomType = {
   basePrice: number;
   capacity: number;
   propertySummary: { propertyId: number; propertyName: string };
+};
+
+export type CategoryType = {
+  id: number;
+  name: string;
 };
