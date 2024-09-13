@@ -42,3 +42,37 @@ export type CategoryType = {
   id: number;
   name: string;
 };
+
+export type AdjustedRatesType = {
+  propertyId: number;
+  propertyName: string;
+  roomId: number;
+  roomName: string;
+  basePrice: number;
+  adjustedPrice: number;
+  date: Date;
+};
+
+export type LowestDailyRateType = {
+  date: Date;
+  lowestPrice: number;
+  hasAdjustment: boolean;
+};
+
+export type PropertyListingType = {
+  totalPages: number;
+  currentPage: number;
+  totalElements: number;
+  content: {
+    propertyId: number;
+    propertyName: string;
+    description: string;
+    imageUrl: string;
+    city: string;
+    categoryName: string;
+    longitude: number;
+    latitude: number;
+    lowestBasePrice: number;
+    lowestAdjustedPrice: number;
+  }[];
+};

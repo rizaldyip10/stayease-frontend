@@ -14,6 +14,7 @@ import {
 import { format, isValid, parseISO } from "date-fns";
 import { useBookingValues } from "@/hooks/useBookingValues";
 import RoomCard from "@/app/(user)/properties/[propertyId]/_components/RoomCard";
+import AvailabilityCalendar from "@/components/AvailabilityCalendar";
 
 interface PropertyDetailsProps {
   property: PropertyAndRoomType;
@@ -93,15 +94,14 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
+                    <AvailabilityCalendar
+                      propertyId={property.id}
+                      onSelect={handleDateSelect("checkInDate")}
                       selected={
                         bookingValues.checkInDate
                           ? parseISO(bookingValues.checkInDate)
                           : undefined
                       }
-                      onSelect={handleDateSelect("checkInDate")}
-                      initialFocus
                     />
                   </PopoverContent>
                 </Popover>
@@ -113,15 +113,14 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
+                    <AvailabilityCalendar
+                      propertyId={property.id}
+                      onSelect={handleDateSelect("checkOutDate")}
                       selected={
                         bookingValues.checkOutDate
                           ? parseISO(bookingValues.checkOutDate)
                           : undefined
                       }
-                      onSelect={handleDateSelect("checkOutDate")}
-                      initialFocus
                     />
                   </PopoverContent>
                 </Popover>
@@ -133,12 +132,11 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
       </div>
 
       <div className="mt-8">
-        <h2 className="text-2xl font-semibold mb-4">Available Rooms</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <Card>
             <CardContent className="p-4">
               <h2 className="text-2xl font-semibold mb-4">Available Rooms</h2>
-              {property.rooms.map((room) => (
+              {property?.rooms?.map((room) => (
                 <RoomCard
                   key={room.id}
                   room={room}

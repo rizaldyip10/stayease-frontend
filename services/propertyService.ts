@@ -1,21 +1,25 @@
 import { config } from "@/constants/url";
 import axiosInterceptor from "@/utils/axiosInterceptor";
 import {
+  AdjustedRatesType,
   CategoryType,
+  LowestDailyRateType,
   PropertyAndRoomType,
+  PropertyListingType,
   RoomType,
 } from "@/constants/Property";
+import { format } from "date-fns";
 
 const propertyService = {
   getAllProperties: async (): Promise<PropertyAndRoomType[]> => {
     const response = await axiosInterceptor.get(
-      config.endpoints.properties.getAllProperties,
+      config.endpoints.propertyUtils.getAllProperties,
     );
     return response.data.data;
   },
 
   getPropertyById: async (propertyId: number): Promise<PropertyAndRoomType> => {
-    const url = config.endpoints.properties.getProperty.replace(
+    const url = config.endpoints.propertyUtils.getProperty.replace(
       "{propertyId}",
       propertyId.toString(),
     );
@@ -24,7 +28,7 @@ const propertyService = {
   },
 
   getRoomsByPropertyId: async (propertyId: number): Promise<RoomType[]> => {
-    const url = config.endpoints.properties.getRooms.replace(
+    const url = config.endpoints.propertyUtils.getRooms.replace(
       "{propertyId}",
       propertyId.toString(),
     );
@@ -74,7 +78,7 @@ const propertyService = {
     propertyId: number,
     roomId: number,
   ): Promise<RoomType> => {
-    const url = config.endpoints.properties.getRoom
+    const url = config.endpoints.propertyUtils.getRoom
       .replace("{propertyId}", propertyId.toString())
       .replace("{roomId}", roomId.toString());
     const response = await axiosInterceptor.get(url);
@@ -112,7 +116,7 @@ const propertyService = {
 
   getAllCategory: async (): Promise<CategoryType[]> => {
     const response = await axiosInterceptor.get(
-      config.endpoints.properties.getAllCategories,
+      config.endpoints.propertyUtils.getAllCategories,
     );
     return response.data.data;
   },
@@ -143,6 +147,52 @@ const propertyService = {
       categoryId.toString(),
     );
     const response = await axiosInterceptor.delete(url);
+    return response.data.data;
+  },
+
+  getAdjustedRates: async ({
+    propertyId,
+    date,
+  }: {
+    propertyId: number;
+    date: Date;
+  }): Promise<AdjustedRatesType> => {
+    const url = `${config.endpoints.propertyUtils.getAdjustedRates.replace(
+      "{propertyId}",
+      propertyId.toString(),
+    )}?date=${date.toISOString()}`;
+    const response = await axiosInterceptor.get(url);
+    return response.data.data;
+  },
+
+  getLowestDailyRate: async (
+    propertyId: number,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<LowestDailyRateType[]> => {
+    const formattedStartDate = format(startDate, "yyyy-MM-dd");
+    const formattedEndDate = format(endDate, "yyyy-MM-dd");
+    const url = `${config.endpoints.propertyUtils.getLowestDailyRate.replace(
+      "{propertyId}",
+      propertyId.toString(),
+    )}?startDate=${formattedStartDate}&endDate=${formattedEndDate}`;
+    const response = await axiosInterceptor.get(url);
+    return response.data.data;
+  },
+
+  sortAndFilter: async (
+    startDate?: Date,
+    endDate?: Date,
+    city?: string,
+    categoryId?: number,
+    page?: number,
+    size?: number,
+    sortBy?: string,
+    sortDirection?: string,
+    searchTerm?: string,
+  ): Promise<PropertyListingType> => {
+    const url = `${config.endpoints.propertyListings.sortAndFilter}?startDate=${startDate}&endDate=${endDate}&city=${city}&categoryId=${categoryId}&page=${page}&size=${size}&sortBy=${sortBy}&sortDirection=${sortDirection}&searchTerm=${searchTerm}`;
+    const response = await axiosInterceptor.get(url);
     return response.data.data;
   },
 

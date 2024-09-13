@@ -11,46 +11,15 @@ async function getPropertyDetails(propertyId: number) {
   // if (!res.ok) return undefined;
   // return res.json();
 
-  // !! MOCK DATA TODO: Replace this with actual API call
-  return {
-    id: 1,
-    tenant: "John Doe",
-    category: "Apartment",
-    propertyName: "Ocean Breeze Apartment",
-    description: "A cozy apartment with a beautiful ocean view.",
-    imageUrl: "https://example.com/ocean-breeze.jpg",
-    address: "123 Beach Road",
-    city: "Miami",
-    country: "USA",
-    latitude: 25.7617,
-    longitude: -80.1918,
-    rooms: [
-      {
-        id: 1,
-        name: "Ocean View Suite",
-        description: "Spacious suite with a stunning view of the ocean.",
-        imageUrl: "https://example.com/ocean-view-suite.jpg",
-        basePrice: 200,
-        capacity: 2,
-        propertySummary: {
-          propertyId: 1,
-          propertyName: "Ocean Breeze Apartment",
-        },
-      },
-      {
-        id: 2,
-        name: "Sunset Suite",
-        description: "Suite with a perfect view of the sunset over the beach.",
-        imageUrl: "https://example.com/sunset-suite.jpg",
-        basePrice: 180,
-        capacity: 2,
-        propertySummary: {
-          propertyId: 1,
-          propertyName: "Ocean Breeze Apartment",
-        },
-      },
-    ],
-  };
+  try {
+    const res = await axios.get(
+      `http://localhost:8080/api/v1/properties/${propertyId}`,
+    );
+    return res.data.data;
+  } catch (error) {
+    console.error("Error fetching property details:", error);
+    return undefined;
+  }
 }
 
 export default async function PropertyDetailsPage({
@@ -60,10 +29,8 @@ export default async function PropertyDetailsPage({
 }) {
   const propertyId = parseInt(params.propertyId, 10);
   const propertyDetails = await getPropertyDetails(propertyId);
-
-  if (!propertyDetails) {
-    notFound();
-  }
+  console.log("propertyId", propertyId);
+  console.log("propertyDetails", propertyDetails);
 
   return <PropertyDetails property={propertyDetails} />;
 }
