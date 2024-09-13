@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {
     Dialog,
     DialogClose,
@@ -9,7 +9,8 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { tenantApproveTrx, tenantRejectTrx } from '@/services/tenantTransactionService';
+import {transactionService} from "@/services/transactionService";
+import {getAccessToken, setAccessToken} from "@/utils/axiosInterceptor";
 
 interface PaymentActionDialogProps {
     bookingId: string;
@@ -17,19 +18,21 @@ interface PaymentActionDialogProps {
 }
 
 const PaymentActionDialog: FC<PaymentActionDialogProps> = ({ bookingId, isApproval }) => {
-    const token = 'giewowgh'; // Replace with your actual token
-
     const handleAction = async () => {
         try {
             if (isApproval) {
-                await tenantApproveTrx(token, bookingId);
+                await transactionService.tenantApproveTrx(bookingId);
             } else {
-                await tenantRejectTrx(token, bookingId);
+                await transactionService.tenantRejectTrx(bookingId);
             }
         } catch (error) {
             console.log(error);
         }
     };
+
+    useEffect(() => {
+        setAccessToken(getAccessToken());
+    }, []);
 
     return (
         <Dialog>

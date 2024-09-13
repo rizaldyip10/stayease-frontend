@@ -94,13 +94,13 @@ const AuthCard: React.FC<AuthCardProps> = ({
       />
 
       {error && <p className="text-red-500">{error}</p>}
-      {showAlert && (
-        <div
-          className={`text-${alertType === "Success" ? "green" : "red"}-500`}
-        >
-          {message}
-        </div>
-      )}
+      {/*{showAlert && (*/}
+      {/*  <div*/}
+      {/*    className={`text-${alertType === "Success" ? "green" : "red"}-500`}*/}
+      {/*  >*/}
+      {/*    {message}*/}
+      {/*  </div>*/}
+      {/*)}*/}
 
       <div className="w-full relative mt-2">
         <hr className="bg-neutral-500 w-full relative" />

@@ -1,6 +1,6 @@
 import {useInfiniteQuery} from "@tanstack/react-query";
 import {UserBookingsType} from "@/constants/Booking";
-import {getUserBookings} from "@/services/bookingsService";
+import {bookingsService} from "@/services/bookingsService";
 
 export const useUserBookingList = (filters?: Partial<UserBookingsType>) => {
     const {
@@ -13,7 +13,7 @@ export const useUserBookingList = (filters?: Partial<UserBookingsType>) => {
     } = useInfiniteQuery({
         queryKey: ['get-user-bookings', filters],
         queryFn: async ({ pageParam }) => {
-            const response = await getUserBookings({...filters, page: pageParam});
+            const response = await bookingsService.getUserBookings({...filters, page: pageParam});
             return {
                 bookings: response.content,
                 totalPages: response.totalPages,

@@ -11,8 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import {useRouter, useSearchParams} from "next/navigation";
-import axiosInterceptor from "@/services/authService";
-import {config} from "@/constants/url";
+import {paymentService} from "@/services/paymentService";
 
 const MAX_FILE_SIZE = 1024 * 1024; // 1MB in bytes
 
@@ -57,11 +56,7 @@ const UploadProofDialog = () => {
         formData.append('file', file);
 
         try {
-            await axiosInterceptor.post(`${config.endpoints.payments.uploadPayment}/${bookingId}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
+            await paymentService.uploadPayment(bookingId!, formData);
             console.log('File uploaded successfully');
             setError(null);
             router.push("/profile/bookings")

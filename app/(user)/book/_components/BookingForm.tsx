@@ -10,18 +10,15 @@ import {Button} from "@/components/ui/button";
 import {whiteSpaceRegex} from "@/constants/WhiteSpaceRegex";
 import {useRouter} from "next/navigation";
 import {useBookingValues} from "@/hooks/useBookingValues";
-import axiosInterceptor, {authService} from "@/services/authService";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {calculateDaysBetweenDates} from "@/utils/datesDifference";
 import {useRoomDetail} from "@/hooks/useRoomDetail";
+import {transactionService} from "@/services/transactionService";
+import {getAccessToken, setAccessToken} from "@/utils/axiosInterceptor";
 
 const BookingForm = () => {
     const router = useRouter();
     const { bookingValues } = useBookingValues();
-    const [token, setToken] = useState<string | null>();
-    useEffect(() => {
-        setToken(authService.getAccessToken);
-    }, []);
 
     const roomId = bookingValues.roomId;
     const propertyId = bookingValues.propertyId;
@@ -83,18 +80,17 @@ const BookingForm = () => {
                 custom_expiry: expiryTimeInfo,
             };
 
-            console.log(valueToSent);
-            console.log(token);
+            const data = await transactionService.newReservation(valueToSent, bookingValues.roomId!)
 
-            const { data } = await axiosInterceptor.post(`/transactions/${bookingValues.roomId}`, valueToSent, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-
-            router.push(value.paymentMethod == "manual_transfer" ? `/payment?id=${data.data.bookingId}&bank=atm` : `/payment?id=${data.data.bookingId}&bank=${value?.bank}`);
+            router.push(value.paymentMethod == "manual_transfer" ? `/payment?id=${data.bookingId}&bank=atm` : `/payment?id=${data.bookingId}&bank=${value?.bank}`);
         } catch (error) {
             console.log(error);
         }
     };
+
+    useEffect(() => {
+        setAccessToken(getAccessToken());
+    }, []);
 
     return (
         <div className="w-full flex flex-col gap-3">

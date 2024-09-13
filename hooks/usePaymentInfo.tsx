@@ -1,6 +1,6 @@
 import {useQuery} from "@tanstack/react-query";
-import {getPaymentInfo} from "@/services/paymentService";
 import {PaymentType} from "@/constants/Payment";
+import {paymentService} from "@/services/paymentService";
 
 export const usePaymentInfo = (bookingId: string) => {
     const {
@@ -9,7 +9,7 @@ export const usePaymentInfo = (bookingId: string) => {
         error
     } = useQuery({
         queryKey: ["get-payment-info"],
-        queryFn: async () => getPaymentInfo(bookingId),
+        queryFn: async () => paymentService.getPaymentInfo(bookingId),
     });
 
     return { paymentInfo: data as PaymentType, isLoading, error }

@@ -1,7 +1,7 @@
 "use client";
 
 import {useQuery} from "@tanstack/react-query";
-import {getTenantBookings} from "@/services/bookingsService";
+import {bookingsService} from "@/services/bookingsService";
 
 export const useTenantBookings = () => {
     const {
@@ -10,7 +10,7 @@ export const useTenantBookings = () => {
         error
     } = useQuery({
         queryKey: ["get-tenant-bookings"],
-        queryFn: async () => await getTenantBookings()
+        queryFn: async () => await bookingsService.getTenantBookings(),
         }
     );
 
