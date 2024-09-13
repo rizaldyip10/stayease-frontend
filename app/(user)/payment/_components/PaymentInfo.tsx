@@ -8,6 +8,7 @@ import atm from "@/assets/images/atm-logo.png";
 import {usePaymentQuery} from "@/hooks/usePaymentQuery";
 import {Button} from "@/components/ui/button";
 import {usePaymentInfo} from "@/hooks/usePaymentInfo";
+import UploadProofDialog from "@/app/(user)/payment/_components/UploadProofDialog";
 
 const PaymentInfo = () => {
     const { bank, id } = usePaymentQuery();
@@ -41,7 +42,7 @@ const PaymentInfo = () => {
             <div className="flex flex-col gap-2 w-full">
                 <h1 className="text-xs mb-2">Please do the payment within the time given. If you did not do the payment this transaction will be automatically cancelled</h1>
                 {
-                    bank && bankName !== "atm" ?
+                    !bank || bank !== "atm" ?
                         <>
                             <p className="font-medium">Bank: {bankName}</p>
                             <p className="font-medium">VA Number: {paymentInfo?.bankVa}</p>
@@ -52,11 +53,7 @@ const PaymentInfo = () => {
                             <p className="text-sm">Account number: 7387582758247</p>
                             <p className="text-sm">Account holder&apos;s name: Stay Ease Property Rental </p>
                             <div className="w-full flex md:justify-end">
-                                <Button
-                                    className="bg-blue-950"
-                                >
-                                    <h1>Upload Payment Proof</h1>
-                                </Button>
+                                <UploadProofDialog />
                             </div>
                         </>
                 }

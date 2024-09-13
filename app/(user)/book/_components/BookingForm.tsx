@@ -12,6 +12,8 @@ import {useRouter} from "next/navigation";
 import {useBookingValues} from "@/hooks/useBookingValues";
 import axiosInterceptor, {authService} from "@/services/authService";
 import {useEffect, useState} from "react";
+import {calculateDaysBetweenDates} from "@/utils/datesDifference";
+import {useRoomDetail} from "@/hooks/useRoomDetail";
 
 const BookingForm = () => {
     const router = useRouter();
@@ -20,6 +22,14 @@ const BookingForm = () => {
     useEffect(() => {
         setToken(authService.getAccessToken);
     }, []);
+
+    const roomId = bookingValues.roomId;
+    const propertyId = bookingValues.propertyId;
+    const checkInDate = bookingValues.checkInDate;
+    const checkOutDate = bookingValues.checkOutDate;
+
+    const daysDiff = calculateDaysBetweenDates(checkInDate!, checkOutDate!)
+    const { room } = useRoomDetail(propertyId!, roomId!);
 
     const bookingSchema = yup.object().shape({
         checkInTime: yup.date().nullable(),
@@ -53,7 +63,7 @@ const BookingForm = () => {
 
             const expiryTimeInfo = {
                 order_time: new Date(),
-                expiry_duration: value?.bank === "bank_transfer" ? 30 : 60,
+                expiry_duration: 30,
                 unit: "minute"
             }
 
@@ -67,7 +77,7 @@ const BookingForm = () => {
                     totalChildren: bookingValues?.totalChildren,
                     totalInfants: bookingValues?.totalInfants,
                 },
-                amount: 2400000,
+                amount: room?.basePrice * daysDiff,
                 paymentMethod: value.paymentMethod,
                 bank: value?.bank,
                 custom_expiry: expiryTimeInfo,

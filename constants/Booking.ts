@@ -18,6 +18,7 @@ export type BookingQueries = {
     totalChildren: number | null;
     totalInfants: number | null;
     roomId: number | null;
+    propertyId: number | null;
 };
 
 export type BookingType = {

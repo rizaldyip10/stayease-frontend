@@ -29,7 +29,8 @@ export const config = {
             tenant: "/transactions"
         },
         payments: {
-            paymentInfo: "/payments"
+            paymentInfo: "/payments",
+            uploadPayment: "/payments/payment-proof"
         }
     },
 };

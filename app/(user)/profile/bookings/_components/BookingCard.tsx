@@ -4,15 +4,25 @@ import imageEx from "@/assets/images/template_property.jpg";
 import Tag from "@/components/ui/tag";
 import {Button} from "@/components/ui/button";
 import {EllipsisVertical} from "lucide-react";
-import {BookingDataType} from "@/constants/Booking";
+import {BookingDataType, pendingBookings, rejectedBookings} from "@/constants/Booking";
 import {currencyFormatter} from "@/utils/CurrencyFormatter";
 import {dateFormater} from "@/utils/dateFormatter";
+import {cn} from "@/lib/utils";
 
 interface BookingCardProps {
     booking: BookingDataType;
 }
 
 const BookingCard: FC<BookingCardProps> = ({ booking }) => {
+    const status = booking.status || "";
+    let color;
+    if (rejectedBookings.includes(status)) {
+        color = "bg-red-400 text-red-800";
+    } else if (pendingBookings.includes(status)) {
+        color = "bg-yellow-500 text-yellow-800";
+    } else {
+        color = "bg-green-400 text-green-800";
+    }
     return (
         <div className="w-full flex flex-col lg:flex-row gap-3 border border-gray-200 p-5 rounded-md">
             <Image src={imageEx} alt={"image"} height={120} className="h-32 object-cover rounded-md"/>
@@ -20,7 +30,7 @@ const BookingCard: FC<BookingCardProps> = ({ booking }) => {
                 <div className="w-full flex items-center justify-between">
                     <div className="w-full flex flex-col md:flex-row lg:flex-col xl:flex-row md:items-center lg:items-start xl:items-center gap-2">
                         <p className="text-xs text-blue-950 text-opacity-50">Booking ID: { booking.id }</p>
-                        <Tag className="text-xs py-1 px-2 uppercase">{ booking.status }</Tag>
+                        <Tag className={cn("text-xs py-1 px-2 uppercase", color)}>{ booking.status }</Tag>
                     </div>
                     <Button
                         variant="ghost"

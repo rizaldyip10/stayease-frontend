@@ -17,5 +17,5 @@ export type RoomType = {
     description: string;
     basePrice: number;
     capacity: number;
-    propertySummary: { propertyId: number; propertyName: string; }
+    propertySummary: { propertyId: number; propertyName: string; imageUrl: string; }
 }

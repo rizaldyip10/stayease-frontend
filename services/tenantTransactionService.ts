@@ -1,5 +1,5 @@
-import axiosInterceptor from "@/utils/axiosInterceptor";
 import {config} from "@/constants/url";
+import axiosInterceptor from "@/services/authService";
 
 export const tenantApproveTrx = async (token: string, bookingId: string) => {
     try {

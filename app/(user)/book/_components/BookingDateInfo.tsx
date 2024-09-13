@@ -7,8 +7,17 @@ import DatePicker from "@/components/DatePicker";
 
 const BookingDateInfo = () => {
     const [edit, setEdit] = useState<boolean>(false);
-    const { bookingValues, setBookingInfo } = useBookingValues();
+    const { bookingValues, setBookingInfo, save } = useBookingValues();
     const { checkInDate, checkOutDate } = bookingValues;
+
+    const handleClick = () => {
+        if (edit) {
+            save();
+            setEdit(false);
+        } else {
+            setEdit(true);
+        }
+    }
     return (
         <div className="w-full flex flex-col gap-2">
             <h1 className="text-blue-950 text-sm">Dates</h1>
@@ -21,7 +30,7 @@ const BookingDateInfo = () => {
                 <Button
                     type="button"
                     variant="link"
-                    onClick={() => setEdit(!edit)}
+                    onClick={handleClick}
                     className="text-blue-950"
                 >
                     {edit ? "Save" : "Edit"}
