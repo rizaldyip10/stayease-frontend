@@ -52,8 +52,8 @@ export const useAvailabilityCalendar = (
   });
 
   const formatPrice = (price: number) => {
-    const thousands = Math.floor(price / 1000);
-    return `${thousands}k`;
+    const thousands = Math.round(price / 1000);
+    return `${thousands}`;
   };
 
   const renderDay = (day: Date) => {

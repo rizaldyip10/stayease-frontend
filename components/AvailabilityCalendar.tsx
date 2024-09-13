@@ -1,21 +1,24 @@
 import React from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { useAvailabilityCalendar } from "@/hooks/useAvailabilityCalendar";
+import { isSameDay, isAfter, isBefore, addDays } from "date-fns";
 
 interface AvailabilityCalendarProps {
   propertyId: number;
-  onSelect?: (date: Date | undefined) => void;
+  onSelect: (date: Date | undefined) => void;
   selected?: Date | undefined;
-  isCheckOut?: boolean;
-  checkInDate?: Date;
+  isCheckOut: boolean;
+  checkInDate: Date | null;
+  checkOutDate: Date | null;
 }
 
 const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
   propertyId,
   onSelect,
   selected,
-  isCheckOut = false,
+  isCheckOut,
   checkInDate,
+  checkOutDate,
 }) => {
   const { currentMonth, setCurrentMonth, renderDay, isLoading, error } =
     useAvailabilityCalendar(propertyId, isCheckOut, checkInDate);
@@ -23,38 +26,46 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading availability data</div>;
 
-  // const handleSelect = (date: Date | undefined) => {
-  //   console.log("AvailabilityCalendar: Selected date:", date);
-  //   onSelect(date);
-  // };
-
   const handleSelect = (date: Date | undefined) => {
     console.log("AvailabilityCalendar: Selected date:", date);
-    if (onSelect) {
-      onSelect(date);
-    }
-  };
-
-  const handleCalendarClick = () => {
-    console.log("Calendar clicked");
+    onSelect(date);
   };
 
   return (
-    <div onClick={handleCalendarClick}>
+    <div>
       <Calendar
         mode="single"
         onMonthChange={setCurrentMonth}
         numberOfMonths={1}
-        fromDate={isCheckOut && checkInDate ? checkInDate : new Date()}
-        defaultMonth={isCheckOut && checkInDate ? checkInDate : new Date()}
+        fromDate={new Date()}
+        defaultMonth={checkInDate || new Date()}
         selected={selected}
         onSelect={handleSelect}
+        disabled={(date) => {
+          if (isCheckOut && checkInDate) {
+            return isBefore(date, checkInDate) || isSameDay(date, checkInDate);
+          }
+          return isBefore(date, new Date());
+        }}
         components={{
           Day: ({ date, ...props }) => {
             const { className, content, disabled } = renderDay(date);
+            const isSelected = checkInDate && isSameDay(date, checkInDate);
+            const isInRange =
+              checkInDate &&
+              checkOutDate &&
+              isAfter(date, checkInDate) &&
+              isBefore(date, checkOutDate);
+
+            let dayClassName = className;
+            if (isSelected)
+              dayClassName += " bg-primary text-primary-foreground";
+            if (isInRange)
+              dayClassName += " bg-primary/50 text-primary-foreground";
+
             return (
               <div
-                className={className}
+                className={dayClassName}
                 {...props}
                 aria-disabled={disabled}
                 onClick={(e) => {
@@ -69,25 +80,6 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
               </div>
             );
           },
-          // Day: ({ date, ...props }) => {
-          //   const { className, content, disabled } = renderDay(date);
-          //   return (
-          //     <div className={className} {...props} aria-disabled={disabled}>
-          //       {content}
-          //     </div>
-          //   );
-          // },
-          // Day: ({ date, ...props }) => (
-          //   <div
-          //     onClick={() => {
-          //       console.log("Day clicked:", date);
-          //       handleSelect(date);
-          //     }}
-          //     {...props}
-          //   >
-          //     {date.getDate()}
-          //   </div>
-          // ),
         }}
       />
       <div className="text-xs text-gray-500 mt-2">

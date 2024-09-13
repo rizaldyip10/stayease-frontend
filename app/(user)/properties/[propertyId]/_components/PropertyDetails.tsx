@@ -21,18 +21,53 @@ interface PropertyDetailsProps {
 }
 
 const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
+  const [checkInDate, setCheckInDate] = useState<Date | undefined>(undefined);
+  const [checkOutDate, setCheckOutDate] = useState<Date | null>(null);
+  const [isSelectingCheckOut, setIsSelectingCheckOut] = useState(false);
+
   const { propertyName, description, address, imageUrl, city, country, rooms } =
     property;
   const { bookingValues, setBookingInfo } = useBookingValues();
 
-  const handleDateSelect =
-    (field: "checkInDate" | "checkOutDate") => (date: Date | undefined) => {
+  // const handleDateSelect =
+  //   (field: "checkInDate" | "checkOutDate") => (date: Date | undefined) => {
+  //     if (date && isValid(date)) {
+  //       const formattedDate = format(date, "yyyy-MM-dd");
+  //       console.log(`Formatted ${field}:`, formattedDate);
+  //       setBookingInfo({ [field]: format(date, "yyyy-MM-dd") });
+  //     }
+  //   };
+
+  const handleDateSelect = (date: Date | undefined) => {
+    if (!isSelectingCheckOut) {
+      // Selecting check-in date
+      if (date && checkInDate && date.getTime() === checkInDate.getTime()) {
+        // Clicked on the same check-in date, reset
+        setCheckInDate(undefined);
+        setCheckOutDate(null);
+        setIsSelectingCheckOut(false);
+        setBookingInfo({ checkInDate: null, checkOutDate: null });
+      } else {
+        setCheckInDate(date);
+        setCheckOutDate(null);
+        setIsSelectingCheckOut(true);
+        if (date && isValid(date)) {
+          const formattedDate = format(date, "yyyy-MM-dd");
+          console.log(`Formatted checkInDate:`, formattedDate);
+          setBookingInfo({ checkInDate: formattedDate, checkOutDate: null });
+        }
+      }
+    } else {
+      // Selecting check-out date
+      setCheckOutDate(date || null);
+      setIsSelectingCheckOut(false);
       if (date && isValid(date)) {
         const formattedDate = format(date, "yyyy-MM-dd");
-        console.log(`Formatted ${field}:`, formattedDate);
-        setBookingInfo({ [field]: format(date, "yyyy-MM-dd") });
+        console.log(`Formatted checkOutDate:`, formattedDate);
+        setBookingInfo({ checkOutDate: formattedDate });
       }
-    };
+    }
+  };
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return null;
@@ -92,46 +127,45 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline">
-                      {formatDate(bookingValues.checkInDate) || "Check-in Date"}
+                      {formatDate(bookingValues.checkInDate) || "Select Dates"}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
                     <AvailabilityCalendar
                       propertyId={property.id}
-                      onSelect={handleDateSelect("checkInDate")}
-                      selected={
-                        bookingValues.checkInDate
-                          ? parseISO(bookingValues.checkInDate)
-                          : undefined
-                      }
+                      onSelect={handleDateSelect}
+                      selected={checkInDate}
+                      isCheckOut={isSelectingCheckOut}
+                      checkInDate={checkInDate}
+                      checkOutDate={checkOutDate}
                     />
                   </PopoverContent>
                 </Popover>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline">
-                      {formatDate(bookingValues.checkOutDate) ||
-                        "Check-out Date"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <AvailabilityCalendar
-                      propertyId={property.id}
-                      onSelect={handleDateSelect("checkOutDate")}
-                      selected={
-                        bookingValues.checkOutDate
-                          ? parseISO(bookingValues.checkOutDate)
-                          : undefined
-                      }
-                      isCheckOut={true}
-                      checkInDate={
-                        bookingValues.checkInDate
-                          ? parseISO(bookingValues.checkInDate)
-                          : undefined
-                      }
-                    />
-                  </PopoverContent>
-                </Popover>
+                {/*<Popover>*/}
+                {/*  <PopoverTrigger asChild>*/}
+                {/*    <Button variant="outline">*/}
+                {/*      {formatDate(bookingValues.checkOutDate) ||*/}
+                {/*        "Check-out Date"}*/}
+                {/*    </Button>*/}
+                {/*  </PopoverTrigger>*/}
+                {/*  <PopoverContent className="w-auto p-0">*/}
+                {/*    <AvailabilityCalendar*/}
+                {/*      propertyId={property.id}*/}
+                {/*      onSelect={handleDateSelect("checkOutDate")}*/}
+                {/*      selected={*/}
+                {/*        bookingValues.checkOutDate*/}
+                {/*          ? parseISO(bookingValues.checkOutDate)*/}
+                {/*          : undefined*/}
+                {/*      }*/}
+                {/*      isCheckOut={true}*/}
+                {/*      checkInDate={*/}
+                {/*        bookingValues.checkInDate*/}
+                {/*          ? parseISO(bookingValues.checkInDate)*/}
+                {/*          : undefined*/}
+                {/*      }*/}
+                {/*    />*/}
+                {/*  </PopoverContent>*/}
+                {/*</Popover>*/}
               </div>
               <Button className="w-full">Check Availability</Button>
             </CardContent>
