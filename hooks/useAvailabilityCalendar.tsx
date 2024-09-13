@@ -9,23 +9,46 @@ import {
   endOfDay,
   isSameMonth,
   isBefore,
+  isAfter,
 } from "date-fns";
 
-export const useAvailabilityCalendar = (propertyId: number) => {
+export const useAvailabilityCalendar = (
+  propertyId: number,
+  isCheckOut: boolean = false,
+  checkInDate?: Date,
+) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  const startDate = format(startOfDay(currentMonth), "yyyy-MM-dd");
+  const startDate =
+    isCheckOut && checkInDate
+      ? format(checkInDate, "yyyy-MM-dd")
+      : format(startOfDay(currentMonth), "yyyy-MM-dd");
   const endDate = format(endOfDay(addMonths(currentMonth, 1)), "yyyy-MM-dd");
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ["availabilityCalendar", propertyId, startDate, endDate],
+    queryKey: [
+      "availabilityCalendar",
+      propertyId,
+      startDate,
+      endDate,
+      isCheckOut,
+    ],
     queryFn: async () => {
-      return await propertyService.getLowestDailyRate(
-        propertyId,
-        new Date(startDate),
-        new Date(endDate),
-      );
+      if (isCheckOut && checkInDate) {
+        return await propertyService.getLowestDailyCumulativeRate(
+          propertyId,
+          checkInDate,
+          new Date(endDate),
+        );
+      } else {
+        return await propertyService.getLowestDailyRate(
+          propertyId,
+          new Date(startDate),
+          new Date(endDate),
+        );
+      }
     },
+    enabled: !isCheckOut || (isCheckOut && !!checkInDate),
   });
 
   const formatPrice = (price: number) => {
@@ -38,9 +61,11 @@ export const useAvailabilityCalendar = (propertyId: number) => {
     const dayData = data?.find((a: any) => a.date === dateString);
     const isCurrentMonth = isSameMonth(day, currentMonth);
     const isPastDate = isBefore(day, startOfDay(new Date()));
+    const isBeforeCheckIn =
+      isCheckOut && checkInDate && isBefore(day, checkInDate);
 
     let className = "w-full h-full flex flex-col items-center justify-center";
-    if (!isCurrentMonth || isPastDate) {
+    if (!isCurrentMonth || isPastDate || isBeforeCheckIn) {
       className += " text-gray-300";
     } else if (dayData) {
       className += " font-bold";
@@ -54,11 +79,12 @@ export const useAvailabilityCalendar = (propertyId: number) => {
       content: (
         <>
           <div>{format(day, "d")}</div>
-          {dayData && isCurrentMonth && !isPastDate && (
+          {dayData && isCurrentMonth && !isPastDate && !isBeforeCheckIn && (
             <div className="text-xs">{formatPrice(dayData.lowestPrice)}</div>
           )}
         </>
       ),
+      disabled: isPastDate || isBeforeCheckIn,
     };
   };
 

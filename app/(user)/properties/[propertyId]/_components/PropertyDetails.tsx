@@ -28,6 +28,8 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
   const handleDateSelect =
     (field: "checkInDate" | "checkOutDate") => (date: Date | undefined) => {
       if (date && isValid(date)) {
+        const formattedDate = format(date, "yyyy-MM-dd");
+        console.log(`Formatted ${field}:`, formattedDate);
         setBookingInfo({ [field]: format(date, "yyyy-MM-dd") });
       }
     };
@@ -119,6 +121,12 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
                       selected={
                         bookingValues.checkOutDate
                           ? parseISO(bookingValues.checkOutDate)
+                          : undefined
+                      }
+                      isCheckOut={true}
+                      checkInDate={
+                        bookingValues.checkInDate
+                          ? parseISO(bookingValues.checkInDate)
                           : undefined
                       }
                     />

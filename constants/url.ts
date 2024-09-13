@@ -47,6 +47,8 @@ export const config = {
       getAllCategories: "/properties/categories",
       getAdjustedRates: "/properties/{propertyId}/rates",
       getLowestDailyRate: "/properties/{propertyId}/rates/daily",
+      getLowestDailyCumulativeRate:
+        "/properties/{propertyId}/rates/daily/cumulative",
     },
     propertyListings: {
       sortAndFilter: "/properties/available",

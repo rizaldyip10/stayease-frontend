@@ -180,6 +180,21 @@ const propertyService = {
     return response.data.data;
   },
 
+  getLowestDailyCumulativeRate: async (
+    propertyId: number,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<LowestDailyRateType[]> => {
+    const formattedStartDate = format(startDate, "yyyy-MM-dd");
+    const formattedEndDate = format(endDate, "yyyy-MM-dd");
+    const url = `${config.endpoints.propertyUtils.getLowestDailyCumulativeRate.replace(
+      "{propertyId}",
+      propertyId.toString(),
+    )}?startDate=${formattedStartDate}&endDate=${formattedEndDate}`;
+    const response = await axiosInterceptor.get(url);
+    return response.data.data;
+  },
+
   sortAndFilter: async (
     startDate?: Date,
     endDate?: Date,
@@ -191,7 +206,13 @@ const propertyService = {
     sortDirection?: string,
     searchTerm?: string,
   ): Promise<PropertyListingType> => {
-    const url = `${config.endpoints.propertyListings.sortAndFilter}?startDate=${startDate}&endDate=${endDate}&city=${city}&categoryId=${categoryId}&page=${page}&size=${size}&sortBy=${sortBy}&sortDirection=${sortDirection}&searchTerm=${searchTerm}`;
+    let formattedStartDate;
+    let formattedEndDate;
+    startDate
+      ? (formattedStartDate = format(startDate, "yyyy-MM-dd"))
+      : startDate;
+    endDate ? (formattedEndDate = format(endDate, "yyyy-MM-dd")) : endDate;
+    const url = `${config.endpoints.propertyListings.sortAndFilter}?startDate=${formattedStartDate}&endDate=${formattedEndDate}&city=${city}&categoryId=${categoryId}&page=${page}&size=${size}&sortBy=${sortBy}&sortDirection=${sortDirection}&searchTerm=${searchTerm}`;
     const response = await axiosInterceptor.get(url);
     return response.data.data;
   },
