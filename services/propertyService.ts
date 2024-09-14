@@ -188,6 +188,20 @@ const propertyService = {
     return response.data.data;
   },
 
+  getCurrentRoom: async (
+    propertyId: number,
+    roomId: number,
+    date: Date,
+  ): Promise<AdjustedRatesType> => {
+    const url = config.endpoints.propertyUtils.getCurrentRoom
+      .replace("{propertyId}", propertyId.toString())
+      .replace("{roomId}", roomId.toString());
+    const response = await axiosInterceptor.get(url, {
+      params: { date: formatDate(date) },
+    });
+    return response.data.data;
+  },
+
   getLowestDailyRate: async (
     propertyId: number,
     startDate: Date,

@@ -30,7 +30,7 @@ const RoomCard: React.FC<RoomCardProps> = ({
         />
         <h3 className="text-lg font-semibold mb-2">{room.roomName}</h3>
         <p className="text-sm text-gray-600 mb-2">
-          Capacity: {room.capacity} persons
+          Capacity: {room.roomCapacity} persons
         </p>
         <div className="text-lg font-bold mb-2 flex-col">
           <span className="text-xs font-light">

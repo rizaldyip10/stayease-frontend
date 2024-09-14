@@ -44,6 +44,7 @@ export const config = {
       getProperty: "/properties/{propertyId}",
       getRooms: "/properties/{propertyId}/rooms",
       getRoom: "/properties/{propertyId}/rooms/{roomId}",
+      getCurrentRoom: "/properties/{propertyId}/rooms/{roomId}/available",
       getAllCategories: "/properties/categories",
       getAdjustedRates: "/properties/{propertyId}/rates",
       getCurrentAvailableProperty: "/properties/{propertyId}/available",

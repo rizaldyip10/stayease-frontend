@@ -141,7 +141,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
                 <li>
                   Total capacity:{" "}
                   {property?.rooms?.reduce(
-                    (acc, room) => acc + room.capacity,
+                    (acc, room) => acc + room.roomCapacity,
                     0,
                   )}
                 </li>

@@ -65,10 +65,12 @@ export type AdjustedRatesType = {
   roomId: number;
   roomName: string;
   imageUrl: string;
-  capacity: number;
+  roomCapacity: number;
+  roomDescription: string;
   basePrice: number;
   adjustedPrice: number;
   date: Date;
+  isAvailable: boolean;
 };
 
 export type UnavailableRoomType = {
@@ -76,7 +78,7 @@ export type UnavailableRoomType = {
   roomId: number;
   roomName: string;
   imageUrl: string;
-  capacity: number;
+  roomCapacity: number;
   basePrice: number;
 };
 

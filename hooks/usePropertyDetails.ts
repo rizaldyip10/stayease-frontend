@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import propertyService from "@/services/propertyService";
 import {
+  AdjustedRatesType,
   CurrentAvailablePropertyType,
   LowestDailyRateType,
   RoomType,
@@ -31,9 +32,9 @@ export const usePropertyDetails = (
     data: room,
     error: roomError,
     isLoading: roomIsLoading,
-  } = useQuery<RoomType, Error>({
-    queryKey: ["room", propertyId, roomId],
-    queryFn: () => propertyService.getRoomById(propertyId, roomId!),
+  } = useQuery<AdjustedRatesType, Error>({
+    queryKey: ["room", propertyId, roomId, memoizedDate],
+    queryFn: () => propertyService.getCurrentRoom(propertyId, roomId!, date),
     enabled: !!roomId,
     staleTime: 1000 * 60 * 5, // 5 mins
     gcTime: 1000 * 60 * 10, // 10 mins
