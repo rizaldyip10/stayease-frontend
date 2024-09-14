@@ -3,12 +3,15 @@ import axiosInterceptor from "@/utils/axiosInterceptor";
 import {
   AdjustedRatesType,
   CategoryType,
+  CurrentAvailablePropertyType,
   LowestDailyRateType,
   PropertyAndRoomType,
   PropertyListingType,
   RoomType,
 } from "@/constants/Property";
 import { format } from "date-fns";
+
+const formatDate = (date: Date): string => format(date, "yyyy-MM-dd");
 
 const propertyService = {
   getAllProperties: async (): Promise<PropertyAndRoomType[]> => {
@@ -157,11 +160,31 @@ const propertyService = {
     propertyId: number;
     date: Date;
   }): Promise<AdjustedRatesType> => {
-    const url = `${config.endpoints.propertyUtils.getAdjustedRates.replace(
+    const url = config.endpoints.propertyUtils.getAdjustedRates.replace(
       "{propertyId}",
       propertyId.toString(),
-    )}?date=${date.toISOString()}`;
-    const response = await axiosInterceptor.get(url);
+    );
+    const response = await axiosInterceptor.get(url, {
+      params: { date: formatDate(date) },
+    });
+    return response.data.data;
+  },
+
+  getCurrentAvailableProperty: async ({
+    propertyId,
+    date,
+  }: {
+    propertyId: number;
+    date: Date;
+  }): Promise<CurrentAvailablePropertyType> => {
+    const url =
+      config.endpoints.propertyUtils.getCurrentAvailableProperty.replace(
+        "{propertyId}",
+        propertyId.toString(),
+      );
+    const response = await axiosInterceptor.get(url, {
+      params: { date: formatDate(date) },
+    });
     return response.data.data;
   },
 
@@ -172,11 +195,13 @@ const propertyService = {
   ): Promise<LowestDailyRateType[]> => {
     const formattedStartDate = format(startDate, "yyyy-MM-dd");
     const formattedEndDate = format(endDate, "yyyy-MM-dd");
-    const url = `${config.endpoints.propertyUtils.getLowestDailyRate.replace(
+    const url = config.endpoints.propertyUtils.getLowestDailyRate.replace(
       "{propertyId}",
       propertyId.toString(),
-    )}?startDate=${formattedStartDate}&endDate=${formattedEndDate}`;
-    const response = await axiosInterceptor.get(url);
+    );
+    const response = await axiosInterceptor.get(url, {
+      params: { startDate: formattedStartDate, endDate: formattedEndDate },
+    });
     return response.data.data;
   },
 
@@ -187,11 +212,14 @@ const propertyService = {
   ): Promise<LowestDailyRateType[]> => {
     const formattedStartDate = format(startDate, "yyyy-MM-dd");
     const formattedEndDate = format(endDate, "yyyy-MM-dd");
-    const url = `${config.endpoints.propertyUtils.getLowestDailyCumulativeRate.replace(
-      "{propertyId}",
-      propertyId.toString(),
-    )}?startDate=${formattedStartDate}&endDate=${formattedEndDate}`;
-    const response = await axiosInterceptor.get(url);
+    const url =
+      config.endpoints.propertyUtils.getLowestDailyCumulativeRate.replace(
+        "{propertyId}",
+        propertyId.toString(),
+      );
+    const response = await axiosInterceptor.get(url, {
+      params: { startDate: formattedStartDate, endDate: formattedEndDate },
+    });
     return response.data.data;
   },
 
