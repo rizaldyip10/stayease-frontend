@@ -1,35 +1,48 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { useAvailabilityCalendar } from "@/hooks/useAvailabilityCalendar";
 import { isSameDay, isAfter, isBefore, addDays } from "date-fns";
+import { Button } from "@/components/ui/button"; // Import your Button component
 
 interface AvailabilityCalendarProps {
   propertyId: number;
   onSelect: (date: Date | undefined) => void;
+  onReset: () => void;
+  onConfirm: () => void;
   selected?: Date | undefined;
   isCheckOut: boolean;
-  checkInDate: Date | null;
-  checkOutDate: Date | null;
+  checkInDate: Date | undefined;
+  checkOutDate: Date | undefined;
+  onDateChange: (date: Date) => void;
 }
 
 const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
   propertyId,
   onSelect,
+  onReset,
+  onConfirm,
   selected,
   isCheckOut,
   checkInDate,
   checkOutDate,
+  onDateChange,
 }) => {
   const { currentMonth, setCurrentMonth, renderDay, isLoading, error } =
     useAvailabilityCalendar(propertyId, isCheckOut, checkInDate);
 
+  const handleSelect = useCallback(
+    (date: Date | undefined) => {
+      console.log("AvailabilityCalendar: Selected date:", date);
+      onSelect(date);
+      if (date) {
+        onDateChange(date);
+      }
+    },
+    [onSelect, onDateChange],
+  );
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading availability data</div>;
-
-  const handleSelect = (date: Date | undefined) => {
-    console.log("AvailabilityCalendar: Selected date:", date);
-    onSelect(date);
-  };
 
   return (
     <div>
@@ -55,7 +68,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
               checkInDate &&
               checkOutDate &&
               isAfter(date, checkInDate) &&
-              isBefore(date, checkOutDate);
+              isBefore(date, addDays(checkOutDate, 1));
 
             let dayClassName = className;
             if (isSelected)
@@ -82,6 +95,14 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
           },
         }}
       />
+      {checkOutDate && (
+        <div className="flex justify-between">
+          <Button onClick={onConfirm} className="bg-green-800">
+            Confirm
+          </Button>
+          <Button onClick={onReset}>Reset</Button>
+        </div>
+      )}
       <div className="text-xs text-gray-500 mt-2">
         <p>* Bold dates have available prices</p>
         <p>* Red dates indicate adjusted rates</p>

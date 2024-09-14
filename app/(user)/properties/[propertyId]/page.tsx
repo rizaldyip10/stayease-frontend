@@ -1,19 +1,13 @@
 import React from "react";
-import { notFound } from "next/navigation";
 import PropertyDetails from "@/app/(user)/properties/[propertyId]/_components/PropertyDetails";
 import axios from "axios";
+import { format } from "date-fns";
 
-async function getPropertyDetails(propertyId: number) {
-  // TODO : fetch property details from API
-  // const res = await fetch(`http://your-api-url/properties/${propertyId}`, {
-  //   next: { revalidate: 60 },
-  // });
-  // if (!res.ok) return undefined;
-  // return res.json();
-
+async function getPropertyDetails(propertyId: number, date: Date) {
   try {
+    const formattedDate = format(date, "yyyy-MM-dd");
     const res = await axios.get(
-      `http://localhost:8080/api/v1/properties/${propertyId}`,
+      `http://localhost:8080/api/v1/properties/${propertyId}/available?date=${formattedDate}`,
     );
     return res.data.data;
   } catch (error) {
@@ -27,8 +21,9 @@ export default async function PropertyDetailsPage({
 }: {
   params: { propertyId: string };
 }) {
+  const date = new Date();
   const propertyId = parseInt(params.propertyId, 10);
-  const propertyDetails = await getPropertyDetails(propertyId);
+  const propertyDetails = await getPropertyDetails(propertyId, date);
   console.log("propertyId", propertyId);
   console.log("propertyDetails", propertyDetails);
 

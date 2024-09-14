@@ -1,6 +1,12 @@
 "use client";
-import React, { useState } from "react";
-import { PropertyAndRoomType, PropertyType } from "@/constants/Property";
+import React, { useEffect, useState } from "react";
+import {
+  AdjustedRatesType,
+  CurrentAvailablePropertyType,
+  PropertyAndRoomType,
+  PropertyType,
+  UnavailableRoomType,
+} from "@/constants/Property";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Heart, Share2 } from "lucide-react";
@@ -15,28 +21,64 @@ import { format, isValid, parseISO } from "date-fns";
 import { useBookingValues } from "@/hooks/useBookingValues";
 import RoomCard from "@/app/(user)/properties/[propertyId]/_components/RoomCard";
 import AvailabilityCalendar from "@/components/AvailabilityCalendar";
+import axios from "axios";
 
 interface PropertyDetailsProps {
-  property: PropertyAndRoomType;
+  property: CurrentAvailablePropertyType;
 }
 
 const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
   const [checkInDate, setCheckInDate] = useState<Date | undefined>(undefined);
-  const [checkOutDate, setCheckOutDate] = useState<Date | null>(null);
+  const [checkOutDate, setCheckOutDate] = useState<Date | undefined>(undefined);
   const [isSelectingCheckOut, setIsSelectingCheckOut] = useState(false);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
-  const { propertyName, description, address, imageUrl, city, country, rooms } =
-    property;
   const { bookingValues, setBookingInfo } = useBookingValues();
 
-  // const handleDateSelect =
-  //   (field: "checkInDate" | "checkOutDate") => (date: Date | undefined) => {
-  //     if (date && isValid(date)) {
-  //       const formattedDate = format(date, "yyyy-MM-dd");
-  //       console.log(`Formatted ${field}:`, formattedDate);
-  //       setBookingInfo({ [field]: format(date, "yyyy-MM-dd") });
-  //     }
-  //   };
+  const [availableRooms, setAvailableRooms] = useState<AdjustedRatesType[]>(
+    property.rooms || [],
+  );
+  const [unavailableRooms, setUnavailableRooms] = useState<
+    UnavailableRoomType[]
+  >(property.unavailableRooms || []);
+
+  useEffect(() => {
+    fetchRoomsForDate(new Date());
+  }, []);
+
+  const fetchRoomsForDate = async (date: Date) => {
+    try {
+      const propertyId = property.id;
+      console.log("Fetching rooms for id:", propertyId);
+      const formattedDate = format(date, "yyyy-MM-dd");
+      const response = await axios.get(
+        `http://localhost:8080/api/v1/properties/${propertyId}/available`,
+        {
+          params: { date: formattedDate }, // This ensures cookies are sent with the request
+        },
+      );
+
+      console.log("Fetched rooms for date:", response.data);
+
+      if (response.data && response.data.data) {
+        setAvailableRooms(response.data.data.rooms || []);
+        setUnavailableRooms(response.data.data.unavailableRooms || []);
+        console.log("Available rooms:", availableRooms);
+        console.log("Unavailable rooms:", unavailableRooms);
+      } else {
+        console.error("Unexpected data structure:", response.data);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "Error fetching rooms:",
+          error.response?.data || error.message,
+        );
+      } else {
+        console.error("Error fetching rooms:", error);
+      }
+    }
+  };
 
   const handleDateSelect = (date: Date | undefined) => {
     if (!isSelectingCheckOut) {
@@ -44,22 +86,26 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
       if (date && checkInDate && date.getTime() === checkInDate.getTime()) {
         // Clicked on the same check-in date, reset
         setCheckInDate(undefined);
-        setCheckOutDate(null);
+        setCheckOutDate(undefined);
         setIsSelectingCheckOut(false);
-        setBookingInfo({ checkInDate: null, checkOutDate: null });
+        setBookingInfo({ checkInDate: null, checkOutDate: undefined });
       } else {
         setCheckInDate(date);
-        setCheckOutDate(null);
+        setCheckOutDate(undefined);
         setIsSelectingCheckOut(true);
         if (date && isValid(date)) {
           const formattedDate = format(date, "yyyy-MM-dd");
           console.log(`Formatted checkInDate:`, formattedDate);
-          setBookingInfo({ checkInDate: formattedDate, checkOutDate: null });
+          setBookingInfo({
+            checkInDate: formattedDate,
+            checkOutDate: undefined,
+          });
+          fetchRoomsForDate(date);
         }
       }
     } else {
       // Selecting check-out date
-      setCheckOutDate(date || null);
+      setCheckOutDate(date);
       setIsSelectingCheckOut(false);
       if (date && isValid(date)) {
         const formattedDate = format(date, "yyyy-MM-dd");
@@ -69,10 +115,20 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
     }
   };
 
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return null;
-    const date = parseISO(dateString);
-    return isValid(date) ? format(date, "PPP") : null;
+  const handleDateChange = (date: Date) => {
+    fetchRoomsForDate(date);
+  };
+
+  const handleReset = () => {
+    setCheckInDate(undefined);
+    setCheckOutDate(undefined);
+    setIsSelectingCheckOut(false);
+    setBookingInfo({ checkInDate: null, checkOutDate: undefined });
+    fetchRoomsForDate(new Date());
+  };
+
+  const handleConfirm = () => {
+    setIsCalendarOpen(false);
   };
 
   return (
@@ -82,12 +138,12 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
           <h1 className="text-3xl font-bold mb-4">{property.propertyName}</h1>
           <div className="flex items-center mb-4">
             <p className="text-sm text-gray-600 mr-4">{property.address}</p>
-            <Button variant="outline" size="sm" className="mr-2">
-              <Heart className="mr-2 h-4 w-4" /> Save
-            </Button>
-            <Button variant="outline" size="sm">
-              <Share2 className="mr-2 h-4 w-4" /> Share
-            </Button>
+            {/*<Button variant="outline" size="sm" className="mr-2">*/}
+            {/*  <Heart className="mr-2 h-4 w-4" /> Save*/}
+            {/*</Button>*/}
+            {/*<Button variant="outline" size="sm">*/}
+            {/*  <Share2 className="mr-2 h-4 w-4" /> Share*/}
+            {/*</Button>*/}
           </div>
           <img
             src={property.imageUrl || "/api/placeholder/800/400"}
@@ -98,13 +154,25 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
           <Tabs defaultValue="description">
             <TabsList>
               <TabsTrigger value="description">Description</TabsTrigger>
-              <TabsTrigger value="facilities">Facilities</TabsTrigger>
+              <TabsTrigger value="facilities">Info</TabsTrigger>
             </TabsList>
             <TabsContent value="description">
               <p>{property.description}</p>
             </TabsContent>
             <TabsContent value="facilities">
-              <ul>{/* Add facilities here based on your data structure */}</ul>
+              <ul>
+                <li>Address: {property.address}</li>
+                <li>City: {property.city}</li>
+                <li>Country: {property.country}</li>
+                <li>Rooms: {property?.rooms?.length}</li>
+                <li>
+                  Total capacity:{" "}
+                  {property?.rooms?.reduce(
+                    (acc, room) => acc + room.capacity,
+                    0,
+                  )}
+                </li>
+              </ul>
             </TabsContent>
           </Tabs>
 
@@ -121,51 +189,48 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
           <Card>
             <CardContent className="p-4">
               <h2 className="text-2xl font-semibold mb-4">
-                Check Availability
+                Available Rooms for{" "}
+                {checkInDate ? format(checkInDate, "dd MMM yyyy") : "Today"}
               </h2>
               <div className="flex space-x-4 mb-4">
-                <Popover>
+                <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
                   <PopoverTrigger asChild>
                     <Button variant="outline">
-                      {formatDate(bookingValues.checkInDate) || "Select Dates"}
+                      {checkInDate
+                        ? `${format(checkInDate, "dd MMM yyyy")} - ${checkOutDate ? format(checkOutDate, "dd MMM yyyy") : "Select check-out"}`
+                        : "Select dates"}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
                     <AvailabilityCalendar
                       propertyId={property.id}
                       onSelect={handleDateSelect}
-                      selected={checkInDate}
+                      onReset={handleReset}
+                      onConfirm={handleConfirm}
+                      selected={
+                        isSelectingCheckOut ? checkOutDate : checkInDate
+                      }
                       isCheckOut={isSelectingCheckOut}
                       checkInDate={checkInDate}
                       checkOutDate={checkOutDate}
+                      onDateChange={handleDateChange}
                     />
                   </PopoverContent>
                 </Popover>
-                {/*<Popover>*/}
-                {/*  <PopoverTrigger asChild>*/}
-                {/*    <Button variant="outline">*/}
-                {/*      {formatDate(bookingValues.checkOutDate) ||*/}
-                {/*        "Check-out Date"}*/}
-                {/*    </Button>*/}
-                {/*  </PopoverTrigger>*/}
-                {/*  <PopoverContent className="w-auto p-0">*/}
-                {/*    <AvailabilityCalendar*/}
-                {/*      propertyId={property.id}*/}
-                {/*      onSelect={handleDateSelect("checkOutDate")}*/}
-                {/*      selected={*/}
-                {/*        bookingValues.checkOutDate*/}
-                {/*          ? parseISO(bookingValues.checkOutDate)*/}
-                {/*          : undefined*/}
-                {/*      }*/}
-                {/*      isCheckOut={true}*/}
-                {/*      checkInDate={*/}
-                {/*        bookingValues.checkInDate*/}
-                {/*          ? parseISO(bookingValues.checkInDate)*/}
-                {/*          : undefined*/}
-                {/*      }*/}
-                {/*    />*/}
-                {/*  </PopoverContent>*/}
-                {/*</Popover>*/}
+              </div>
+              <div className="mb-3">
+                <p>
+                  Check-in:{" "}
+                  {checkInDate
+                    ? format(checkInDate, "dd MMM yyyy")
+                    : "Not selected"}
+                </p>
+                <p>
+                  Check-out:{" "}
+                  {checkOutDate
+                    ? format(checkOutDate, "dd MMM yyyy")
+                    : "Not selected"}
+                </p>
               </div>
               <Button className="w-full">Check Availability</Button>
             </CardContent>
@@ -175,18 +240,35 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
 
       <div className="mt-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Card>
-            <CardContent className="p-4">
-              <h2 className="text-2xl font-semibold mb-4">Available Rooms</h2>
-              {property?.rooms?.map((room) => (
+          <div className="md:col-span-2">
+            <h2 className="text-2xl font-semibold mb-4">Available Rooms</h2>
+            {availableRooms
+              ?.sort((a, b) => a.basePrice - b.basePrice)
+              .map((room) => (
                 <RoomCard
-                  key={room.id}
+                  key={room.roomId}
                   room={room}
                   bookingValues={bookingValues}
+                  isAvailable={true}
                 />
               ))}
-            </CardContent>
-          </Card>
+            {unavailableRooms.length > 0 && (
+              <>
+                <h2 className="text-2xl font-semibold mb-4">
+                  Unavailable Rooms
+                </h2>
+
+                {unavailableRooms?.map((room) => (
+                  <RoomCard
+                    key={room.roomId}
+                    room={room}
+                    bookingValues={bookingValues}
+                    isAvailable={false}
+                  />
+                ))}
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>

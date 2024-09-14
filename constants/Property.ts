@@ -43,14 +43,41 @@ export type CategoryType = {
   name: string;
 };
 
+export type CurrentAvailablePropertyType = {
+  id: number;
+  tenant: string;
+  category: string;
+  propertyName: string;
+  description: string;
+  imageUrl: string;
+  address: string;
+  city: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  rooms?: AdjustedRatesType[] | null;
+  unavailableRooms?: UnavailableRoomType[] | null;
+};
+
 export type AdjustedRatesType = {
   propertyId: number;
   propertyName: string;
   roomId: number;
   roomName: string;
+  imageUrl: string;
+  capacity: number;
   basePrice: number;
   adjustedPrice: number;
   date: Date;
+};
+
+export type UnavailableRoomType = {
+  propertyId: number;
+  roomId: number;
+  roomName: string;
+  imageUrl: string;
+  capacity: number;
+  basePrice: number;
 };
 
 export type LowestDailyRateType = {

@@ -4,30 +4,16 @@ import RoomDetails from "@/app/(user)/properties/[propertyId]/rooms/[roomId]/_co
 
 async function getRoomDetails(propertyId: number, roomId: number) {
   // TODO : fetch room details from API
-  // const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/${propertyId}/rooms/${roomId}`, {
-  //   next: { revalidate: 60 },
-  // });
-  //
-  // if (!res.ok) {
-  //   if (res.status === 404) {
-  //     return null; // Room not found
-  //   }
-  //   throw new Error('Failed to fetch room details');
-  // }
-  //
-  // return res.json();
-  return {
-    id: 1,
-    name: "Ocean View Suite",
-    description: "Spacious suite with a stunning view of the ocean.",
-    imageUrl: "https://example.com/ocean-view-suite.jpg",
-    basePrice: 200,
-    capacity: 2,
-    propertySummary: {
-      propertyId: 1,
-      propertyName: "Ocean Breeze Apartment",
-    },
-  };
+  try {
+    const res = await fetch(
+      `http://localhost:8080/api/v1/properties/${propertyId}/rooms/${roomId}`,
+    );
+    const data = await res.json();
+    console.log("data", data.data);
+    return data.data;
+  } catch {
+    return undefined;
+  }
 }
 
 export default async function RoomDetailsPage({

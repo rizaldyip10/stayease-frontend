@@ -48,7 +48,8 @@ export const useAvailabilityCalendar = (
         );
       }
     },
-    enabled: !isCheckOut || (isCheckOut && !!checkInDate),
+    enabled: (!isCheckOut || (isCheckOut && !!checkInDate)) && !!currentMonth,
+    staleTime: 1000 * 60 * 5, // 5 mins
   });
 
   const formatPrice = (price: number) => {
@@ -71,6 +72,8 @@ export const useAvailabilityCalendar = (
       className += " font-bold";
       if (dayData.hasAdjustment) {
         className += " text-red-500";
+      } else {
+        className += " text-primary";
       }
     }
 
