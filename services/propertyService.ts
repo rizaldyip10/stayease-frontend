@@ -56,6 +56,15 @@ const propertyService = {
     return response.data.data;
   },
 
+  uploadImage: async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append("image", file);
+    const url = config.endpoints.properties.uploadImage;
+    const response = await axiosInterceptor.post(url, formData);
+    console.log("Image uploaded successfully, response: ", response);
+    return response.data.data.imageUrl;
+  },
+
   updateProperty: async (
     propertyId: number,
     data: any,

@@ -8,7 +8,11 @@ import { Button } from "@/components/ui/button";
 
 interface RoomFormProps {
   index: number;
-  onImageUpload: (file: File) => Promise<string>;
+  onImageUpload: (
+    file: File,
+    fieldName: string,
+    setFieldValue: (field: string, value: any) => void,
+  ) => Promise<void>;
   onRemove: () => void;
 }
 

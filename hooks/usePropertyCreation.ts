@@ -1,43 +1,12 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 import { FormikHelpers } from "formik";
-import axios from "axios";
 import propertyService from "@/services/propertyService";
 
 interface Category {
   id: number;
   name: string;
 }
-
-interface PropertyFormData {
-  name: string;
-  description: string;
-  imageUrl: string;
-  address: string;
-  city: string;
-  country: string;
-  longitude: number;
-  latitude: number;
-  categoryId: number;
-}
-
-interface RoomFormData {
-  name: string;
-  description: string;
-  basePrice: number;
-  capacity: number;
-  imageUrl: string;
-}
-
-interface CategoryFormData {
-  name: string;
-}
-
-// interface FormValues {
-//   property: PropertyFormData;
-//   rooms: RoomFormData[];
-//   category: CategoryFormData;
-// }
 
 type FormValues = {
   property: {
@@ -78,6 +47,24 @@ export const usePropertyCreation = () => {
     }
   }, []);
 
+  const handleImageUpload = useCallback(
+    async (
+      file: File,
+      fieldName: string,
+      setFieldValue: (field: string, value: any) => void,
+    ): Promise<void> => {
+      try {
+        const imageUrl = await propertyService.uploadImage(file);
+        console.log("Image uploaded successfully, url:", imageUrl);
+        setFieldValue(fieldName, imageUrl);
+      } catch (error) {
+        console.error("Error uploading image: ", error);
+        throw error;
+      }
+    },
+    [],
+  );
+
   const handleSubmit = async (
     values: FormValues,
     formikHelpers: FormikHelpers<FormValues>,
@@ -86,7 +73,6 @@ export const usePropertyCreation = () => {
     setError(null);
     try {
       // Step 1: Create new category if needed
-      console.log("Form values:", values);
       let categoryId: number | string = values.property.categoryId;
       if (values.category.name) {
         const response = await propertyService.createCategory({
@@ -96,7 +82,7 @@ export const usePropertyCreation = () => {
         categoryId = response.id;
       }
 
-      // Step 2: Create property
+      // Step 2: Create property (image already uploaded)
       const propertyData = {
         ...values.property,
         categoryId,
@@ -105,10 +91,10 @@ export const usePropertyCreation = () => {
       };
       const propertyResponse =
         await propertyService.createProperty(propertyData);
-      console.log("New property created:", propertyResponse);
       const newPropertyId = propertyResponse.id;
+      console.log("Property created successfully:", propertyResponse);
 
-      // Step 3: Create rooms
+      // Step 3: Create rooms (images already uploaded)
       for (const room of values.rooms) {
         try {
           await propertyService.createRoom(newPropertyId, room);
@@ -118,7 +104,6 @@ export const usePropertyCreation = () => {
         }
       }
 
-      // Success
       console.log("Property and rooms created successfully");
       formikHelpers.setSubmitting(false);
       alert("Property and rooms created successfully");
@@ -131,21 +116,6 @@ export const usePropertyCreation = () => {
       setIsLoading(false);
     }
   };
-
-  const handleImageUpload = useCallback((file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (event.target) {
-          resolve(event.target.result as string);
-        } else {
-          reject(new Error("Failed to read file"));
-        }
-      };
-      reader.onerror = (error) => reject(error);
-      reader.readAsDataURL(file);
-    });
-  }, []);
 
   return {
     categories,

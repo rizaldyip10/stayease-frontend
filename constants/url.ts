@@ -38,6 +38,7 @@ export const config = {
       createCategory: "/properties/categories",
       updateCategory: "/properties/categories/{categoryId}",
       deleteCategory: "/properties/categories/{categoryId}",
+      uploadImage: "/properties/upload-image",
     },
     propertyUtils: {
       getAllProperties: "/properties",

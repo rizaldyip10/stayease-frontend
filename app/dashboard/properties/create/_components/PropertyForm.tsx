@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ErrorMessage, Field, useFormikContext } from "formik";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,7 +31,11 @@ interface PropertyFormValues {
 }
 
 interface PropertyFormProps {
-  onImageUpload: (file: File) => Promise<string>;
+  onImageUpload: (
+    file: File,
+    fieldName: string,
+    setFieldValue: (field: string, value: any) => void,
+  ) => Promise<void>;
   setCategories: React.Dispatch<React.SetStateAction<CategoryType[]>>;
   categories: CategoryType[];
 }
@@ -121,6 +125,10 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
       console.log("Autocomplete is not loaded yet!");
     }
   };
+
+  useEffect(() => {
+    console.log("Field values:", values);
+  }, [setFieldValue, values]);
 
   return (
     <div className="mb-4">
