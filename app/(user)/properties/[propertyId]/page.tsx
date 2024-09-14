@@ -1,31 +1,33 @@
-import React from "react";
+"use client";
+import React, { useMemo } from "react";
 import PropertyDetails from "@/app/(user)/properties/[propertyId]/_components/PropertyDetails";
-import axios from "axios";
-import { format } from "date-fns";
+import { usePropertyDetails } from "@/hooks/usePropertyDetails";
+import { notFound } from "next/navigation";
 
-async function getPropertyDetails(propertyId: number, date: Date) {
-  try {
-    const formattedDate = format(date, "yyyy-MM-dd");
-    const res = await axios.get(
-      `http://localhost:8080/api/v1/properties/${propertyId}/available?date=${formattedDate}`,
-    );
-    return res.data.data;
-  } catch (error) {
-    console.error("Error fetching property details:", error);
-    return undefined;
-  }
-}
-
-export default async function PropertyDetailsPage({
+export default function PropertyDetailsPage({
   params,
 }: {
   params: { propertyId: string };
 }) {
-  const date = new Date();
-  const propertyId = parseInt(params.propertyId, 10);
-  const propertyDetails = await getPropertyDetails(propertyId, date);
-  console.log("propertyId", propertyId);
-  console.log("propertyDetails", propertyDetails);
+  const propertyId = useMemo(
+    () => parseInt(params.propertyId, 10),
+    [params.propertyId],
+  );
+  const date = useMemo(() => new Date(), []); // This ensures the date doesn't change on every render
+  const { currentProperty, error, isLoading } = usePropertyDetails(
+    propertyId,
+    date,
+  );
 
-  return <PropertyDetails property={propertyDetails} />;
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+  if (!currentProperty) {
+    return notFound();
+  }
+
+  return <PropertyDetails property={currentProperty} propertyId={propertyId} />;
 }

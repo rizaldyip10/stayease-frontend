@@ -1,15 +1,7 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import {
-  AdjustedRatesType,
-  CurrentAvailablePropertyType,
-  PropertyAndRoomType,
-  PropertyType,
-  UnavailableRoomType,
-} from "@/constants/Property";
+import React, { useState, useCallback, useMemo } from "react";
+import { format, isValid } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Heart, Share2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -17,17 +9,22 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { format, isValid, parseISO } from "date-fns";
 import { useBookingValues } from "@/hooks/useBookingValues";
 import RoomCard from "@/app/(user)/properties/[propertyId]/_components/RoomCard";
 import AvailabilityCalendar from "@/components/AvailabilityCalendar";
-import axios from "axios";
+import { CurrentAvailablePropertyType } from "@/constants/Property";
+import { usePropertyDetails } from "@/hooks/usePropertyDetails";
 
 interface PropertyDetailsProps {
   property: CurrentAvailablePropertyType;
+  propertyId: number;
 }
 
-const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
+const PropertyDetails: React.FC<PropertyDetailsProps> = ({
+  property,
+  propertyId,
+}) => {
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [checkInDate, setCheckInDate] = useState<Date | undefined>(undefined);
   const [checkOutDate, setCheckOutDate] = useState<Date | undefined>(undefined);
   const [isSelectingCheckOut, setIsSelectingCheckOut] = useState(false);
@@ -35,109 +32,85 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
 
   const { bookingValues, setBookingInfo } = useBookingValues();
 
-  const [availableRooms, setAvailableRooms] = useState<AdjustedRatesType[]>(
-    property.rooms || [],
+  // Use the hook to refetch data when selectedDate changes
+  const { currentProperty, isLoading, error } = usePropertyDetails(
+    propertyId,
+    selectedDate,
   );
-  const [unavailableRooms, setUnavailableRooms] = useState<
-    UnavailableRoomType[]
-  >(property.unavailableRooms || []);
 
-  useEffect(() => {
-    fetchRoomsForDate(new Date());
-  }, []);
-
-  const fetchRoomsForDate = async (date: Date) => {
-    try {
-      const propertyId = property.id;
-      console.log("Fetching rooms for id:", propertyId);
-      const formattedDate = format(date, "yyyy-MM-dd");
-      const response = await axios.get(
-        `http://localhost:8080/api/v1/properties/${propertyId}/available`,
-        {
-          params: { date: formattedDate }, // This ensures cookies are sent with the request
-        },
-      );
-
-      console.log("Fetched rooms for date:", response.data);
-
-      if (response.data && response.data.data) {
-        setAvailableRooms(response.data.data.rooms || []);
-        setUnavailableRooms(response.data.data.unavailableRooms || []);
-        console.log("Available rooms:", availableRooms);
-        console.log("Unavailable rooms:", unavailableRooms);
+  const handleDateSelect = useCallback(
+    (date: Date | undefined) => {
+      if (!isSelectingCheckOut) {
+        if (date && checkInDate && date.getTime() === checkInDate.getTime()) {
+          setCheckInDate(undefined);
+          setCheckOutDate(undefined);
+          setIsSelectingCheckOut(false);
+          setBookingInfo({ checkInDate: null, checkOutDate: undefined });
+        } else {
+          setCheckInDate(date);
+          setCheckOutDate(undefined);
+          setIsSelectingCheckOut(true);
+          if (date && isValid(date)) {
+            const formattedDate = format(date, "yyyy-MM-dd");
+            setBookingInfo({
+              checkInDate: formattedDate,
+              checkOutDate: undefined,
+            });
+            setSelectedDate(date); // Update selected date to fetch new data
+          }
+        }
       } else {
-        console.error("Unexpected data structure:", response.data);
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error(
-          "Error fetching rooms:",
-          error.response?.data || error.message,
-        );
-      } else {
-        console.error("Error fetching rooms:", error);
-      }
-    }
-  };
-
-  const handleDateSelect = (date: Date | undefined) => {
-    if (!isSelectingCheckOut) {
-      // Selecting check-in date
-      if (date && checkInDate && date.getTime() === checkInDate.getTime()) {
-        // Clicked on the same check-in date, reset
-        setCheckInDate(undefined);
-        setCheckOutDate(undefined);
+        setCheckOutDate(date);
         setIsSelectingCheckOut(false);
-        setBookingInfo({ checkInDate: null, checkOutDate: undefined });
-      } else {
-        setCheckInDate(date);
-        setCheckOutDate(undefined);
-        setIsSelectingCheckOut(true);
         if (date && isValid(date)) {
           const formattedDate = format(date, "yyyy-MM-dd");
-          console.log(`Formatted checkInDate:`, formattedDate);
-          setBookingInfo({
-            checkInDate: formattedDate,
-            checkOutDate: undefined,
-          });
-          fetchRoomsForDate(date);
+          setBookingInfo({ checkOutDate: formattedDate });
         }
       }
-    } else {
-      // Selecting check-out date
-      setCheckOutDate(date);
-      setIsSelectingCheckOut(false);
-      if (date && isValid(date)) {
-        const formattedDate = format(date, "yyyy-MM-dd");
-        console.log(`Formatted checkOutDate:`, formattedDate);
-        setBookingInfo({ checkOutDate: formattedDate });
-      }
-    }
-  };
+    },
+    [isSelectingCheckOut, checkInDate, setBookingInfo],
+  );
 
-  const handleDateChange = (date: Date) => {
-    fetchRoomsForDate(date);
-  };
+  const handleDateChange = useCallback((date: Date) => {
+    setSelectedDate(date);
+  }, []);
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setCheckInDate(undefined);
     setCheckOutDate(undefined);
     setIsSelectingCheckOut(false);
     setBookingInfo({ checkInDate: null, checkOutDate: undefined });
-    fetchRoomsForDate(new Date());
-  };
+    setSelectedDate(new Date());
+  }, [setBookingInfo]);
 
-  const handleConfirm = () => {
+  const handleConfirm = useCallback(() => {
     setIsCalendarOpen(false);
-  };
+  }, []);
+
+  const displayProperty = currentProperty || property;
+  const availableRooms = useMemo(
+    () => displayProperty?.rooms || [],
+    [displayProperty],
+  );
+  const unavailableRooms = useMemo(
+    () => displayProperty?.unavailableRooms || [],
+    [displayProperty],
+  );
+
+  if (isLoading) return <div>Updating...</div>;
+  if (error) return <div>Error updating: {error.message}</div>;
 
   return (
     <div className="container mx-auto p-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2">
-          <h1 className="text-3xl font-bold mb-4">{property.propertyName}</h1>
+          <h1 className="text-3xl font-bold mb-4">
+            {displayProperty.propertyName}
+          </h1>
           <div className="flex items-center mb-4">
-            <p className="text-sm text-gray-600 mr-4">{property.address}</p>
+            <p className="text-sm text-gray-600 mr-4">
+              {displayProperty.address}
+            </p>
             {/*<Button variant="outline" size="sm" className="mr-2">*/}
             {/*  <Heart className="mr-2 h-4 w-4" /> Save*/}
             {/*</Button>*/}
@@ -146,8 +119,8 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
             {/*</Button>*/}
           </div>
           <img
-            src={property.imageUrl || "/api/placeholder/800/400"}
-            alt={property.propertyName}
+            src={displayProperty.imageUrl || "/api/placeholder/800/400"}
+            alt={displayProperty.propertyName}
             className="w-full h-64 object-cover mb-4 rounded"
           />
 
@@ -157,13 +130,13 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
               <TabsTrigger value="facilities">Info</TabsTrigger>
             </TabsList>
             <TabsContent value="description">
-              <p>{property.description}</p>
+              <p>{displayProperty.description}</p>
             </TabsContent>
             <TabsContent value="facilities">
               <ul>
-                <li>Address: {property.address}</li>
-                <li>City: {property.city}</li>
-                <li>Country: {property.country}</li>
+                <li>Address: {displayProperty.address}</li>
+                <li>City: {displayProperty.city}</li>
+                <li>Country: {displayProperty.country}</li>
                 <li>Rooms: {property?.rooms?.length}</li>
                 <li>
                   Total capacity:{" "}
@@ -180,7 +153,8 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
             <h2 className="text-2xl font-semibold mb-4">Location</h2>
             <div id="map" className="w-full h-64 bg-gray-200 mb-4"></div>
             <p>
-              {property.address}, {property.city}, {property.country}
+              {displayProperty.address}, {displayProperty.city},{" "}
+              {displayProperty.country}
             </p>
           </div>
         </div>
@@ -203,7 +177,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
                     <AvailabilityCalendar
-                      propertyId={property.id}
+                      propertyId={displayProperty.id}
                       onSelect={handleDateSelect}
                       onReset={handleReset}
                       onConfirm={handleConfirm}
