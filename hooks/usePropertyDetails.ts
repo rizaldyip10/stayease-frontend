@@ -23,7 +23,10 @@ export const usePropertyDetails = (
   } = useQuery<CurrentAvailablePropertyType, Error>({
     queryKey: ["currentProperty", propertyId, memoizedDate],
     queryFn: () =>
-      propertyService.getCurrentAvailableProperty({ propertyId, date }),
+      propertyService.getCurrentAvailableProperty({
+        propertyId,
+        date,
+      }),
     staleTime: 1000 * 60 * 5, // 5 mins
     gcTime: 1000 * 60 * 10, // 10 mins
   });

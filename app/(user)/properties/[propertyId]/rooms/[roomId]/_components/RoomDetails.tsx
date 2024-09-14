@@ -122,6 +122,7 @@ const RoomDetailsComponent: React.FC<RoomDetailsProps> = ({ room }) => {
                       }
                       onSelect={handleDateSelect("checkInDate")}
                       initialFocus
+                      disabled={(date) => date < new Date()}
                     />
                   </PopoverContent>
                 </Popover>
@@ -142,6 +143,7 @@ const RoomDetailsComponent: React.FC<RoomDetailsProps> = ({ room }) => {
                       }
                       onSelect={handleDateSelect("checkOutDate")}
                       initialFocus
+                      disabled={(date) => date < new Date()}
                     />
                   </PopoverContent>
                 </Popover>

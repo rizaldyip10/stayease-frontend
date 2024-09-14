@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { format, isValid } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -37,6 +37,12 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
     propertyId,
     selectedDate,
   );
+
+  useEffect(() => {
+    setBookingInfo({ checkInDate: null, checkOutDate: undefined });
+  }, []);
+
+  console.log("booking info", bookingValues);
 
   const handleDateSelect = useCallback(
     (date: Date | undefined) => {
