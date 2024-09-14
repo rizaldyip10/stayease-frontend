@@ -18,14 +18,42 @@ export const useGoogleMaps = (
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
   const libraries: "places"[] = ["places"];
 
+  const setUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          setMapCenter(userLocation);
+          if (mapRef.current) {
+            mapRef.current.setCenter(userLocation);
+            if (markerRef.current) {
+              markerRef.current.setPosition(userLocation);
+            }
+          }
+        },
+        () => {
+          console.error("Error fetching user location");
+        },
+      );
+    }
+  };
+
+  useEffect(() => {
+    setUserLocation();
+  }, []);
+
   const initMap = useCallback(
     (mapElement: HTMLElement) => {
       if (window.google && mapElement) {
         const map = new window.google.maps.Map(mapElement, {
           center: mapCenter,
           zoom: 15,
-          disableDefaultUI: true, // Disable all default UI
+          disableDefaultUI: true,
           zoomControl: true,
+          fullscreenControl: true,
         });
         mapRef.current = map;
 
@@ -83,45 +111,6 @@ export const useGoogleMaps = (
       }
     }
   }, [mapCenter]);
-
-  // const render = (status: Status): React.ReactElement => {
-  //   switch (status) {
-  //     case Status.LOADING:
-  //       return <div>Loading...</div>;
-  //     case Status.FAILURE:
-  //       return <div>Error loading Google Maps</div>;
-  //     case Status.SUCCESS:
-  //       return (
-  //         <div style={{ height: "400px", width: "100%", position: "relative" }}>
-  //           <input
-  //             id="pac-input"
-  //             type="text"
-  //             placeholder="Search for a location"
-  //             style={{
-  //               position: "absolute",
-  //               top: "10px",
-  //               left: "10px",
-  //               zIndex: 1,
-  //               width: "240px",
-  //               height: "32px",
-  //               padding: "0 12px",
-  //               borderRadius: "3px",
-  //               boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
-  //               fontSize: "14px",
-  //               outline: "none",
-  //               textOverflow: "ellipses",
-  //             }}
-  //           />
-  //           <div
-  //             ref={(el) => {
-  //               if (el) initMap(el);
-  //             }}
-  //             style={{ height: "100%", width: "100%" }}
-  //           />
-  //         </div>
-  //       );
-  //   }
-  // };
 
   const render = useMemo(() => {
     return (status: Status): React.ReactElement => {
