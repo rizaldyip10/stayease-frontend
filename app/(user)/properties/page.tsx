@@ -1,16 +1,21 @@
 // app/(user)/properties/page.tsx
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import SearchFilterCard from "./_components/SearchFilterCard";
 import PropertyListingCard from "./_components/PropertyListingCard";
 import SortSelect from "./_components/SortSelect";
 import CustomPagination from "./_components/CustomPagination";
-import { usePropertyListings } from "@/hooks/usePropertyListings";
+import {
+  FilterOptions,
+  usePropertyListings,
+} from "@/hooks/usePropertyListings";
 import { usePropertyUtils } from "@/hooks/usePropertyUtils";
 import PropertyListingSkeleton from "./_components/PropertyListingSkeleton";
 import NoResultsFound from "./_components/NoResultsFound";
 import { Button } from "@/components/ui/button";
 import { FilterIcon } from "lucide-react";
+import { useBookingValues } from "@/hooks/useBookingValues";
+import { format } from "date-fns";
 
 const PropertiesPage: React.FC = () => {
   const { categories, cities } = usePropertyUtils();
@@ -27,7 +32,32 @@ const PropertiesPage: React.FC = () => {
     resetFilters,
   } = usePropertyListings();
 
+  const { bookingValues, setBookingInfo } = useBookingValues();
+
   const [showFilters, setShowFilters] = useState(false);
+
+  const handleFilterChange = useCallback(
+    (newFilters: Partial<FilterOptions>) => {
+      updateFilters(newFilters);
+
+      if (newFilters.startDate) {
+        setBookingInfo({
+          checkInDate: format(newFilters.startDate, "yyyy-MM-dd"),
+        });
+      }
+      if (newFilters.endDate) {
+        setBookingInfo({
+          checkOutDate: format(newFilters.endDate, "yyyy-MM-dd"),
+        });
+      }
+    },
+    [updateFilters, setBookingInfo],
+  );
+
+  const handleResetFilters = useCallback(() => {
+    resetFilters();
+    setBookingInfo({ checkInDate: null, checkOutDate: null });
+  }, [resetFilters, setBookingInfo]);
 
   if (error) return <div>Error: {error}</div>;
 
@@ -43,8 +73,8 @@ const PropertiesPage: React.FC = () => {
             cities={cities}
             categories={categories}
             filters={filters}
-            onFilterChange={updateFilters}
-            onResetFilters={resetFilters}
+            onFilterChange={handleFilterChange}
+            onResetFilters={handleResetFilters}
           />
         </div>
 

@@ -2,18 +2,24 @@
 import React, { useMemo } from "react";
 import PropertyDetails from "@/app/(user)/properties/[propertyId]/_components/PropertyDetails";
 import { usePropertyDetails } from "@/hooks/usePropertyDetails";
-import { notFound } from "next/navigation";
+import { notFound, useSearchParams } from "next/navigation";
 
 export default function PropertyDetailsPage({
   params,
 }: {
   params: { propertyId: string };
 }) {
+  const searchParams = useSearchParams();
+  const checkInDate = searchParams.get("checkInDate");
+  const date = useMemo(
+    () => (checkInDate ? new Date(checkInDate) : new Date()),
+    [checkInDate],
+  );
+
   const propertyId = useMemo(
     () => parseInt(params.propertyId, 10),
     [params.propertyId],
   );
-  const date = useMemo(() => new Date(), []); // This ensures the date doesn't change on every render
   const { currentProperty, error, isLoading } = usePropertyDetails(
     propertyId,
     date,

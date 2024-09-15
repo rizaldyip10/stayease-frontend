@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { AvailablePropertyType } from "@/constants/Property";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useBookingValues } from "@/hooks/useBookingValues";
 
 interface PropertyCardProps {
   property: AvailablePropertyType;
@@ -18,7 +18,8 @@ const PropertyListingCard: React.FC<PropertyCardProps> = (property) => {
     tenant,
     lowestAdjustedPrice,
   } = property.property;
-  const searchParams = useSearchParams();
+
+  const { bookingValues } = useBookingValues();
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("id-ID", {
@@ -29,12 +30,8 @@ const PropertyListingCard: React.FC<PropertyCardProps> = (property) => {
     }).format(price);
   };
 
-  // Get the current date range from the search params
-  const checkInDate = searchParams.get("checkInDate");
-  const checkOutDate = searchParams.get("checkOutDate");
-
   // Construct the URL with the date range
-  const propertyUrl = `/properties/${propertyId}${checkInDate ? `?checkInDate=${checkInDate}` : ""}${checkInDate && checkOutDate ? `&checkOutDate=${checkOutDate}` : ""}`;
+  const propertyUrl = `/properties/${propertyId}?${new URLSearchParams(bookingValues as Record<string, string>).toString()}`;
 
   return (
     <Link href={propertyUrl} passHref>
