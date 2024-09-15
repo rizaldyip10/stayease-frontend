@@ -16,6 +16,8 @@ import { CurrentAvailablePropertyType } from "@/constants/Property";
 import { usePropertyDetails } from "@/hooks/usePropertyDetails";
 import { MapPin } from "lucide-react";
 import Image from "next/image";
+import PropertyHeader from "@/app/(user)/properties/[propertyId]/_components/PropertyHeader";
+import { useDateSelection } from "@/hooks/useDateSelection";
 
 interface PropertyDetailsProps {
   property: CurrentAvailablePropertyType;
@@ -27,22 +29,18 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
   propertyId,
 }) => {
   const { bookingValues, setBookingInfo } = useBookingValues();
-  const [selectedDate, setSelectedDate] = useState<Date>(
-    bookingValues.checkInDate
-      ? new Date(bookingValues.checkInDate)
-      : new Date(),
-  );
-  const [checkInDate, setCheckInDate] = useState<Date | undefined>(
-    bookingValues.checkInDate ? new Date(bookingValues.checkInDate) : undefined,
-  );
-  const [checkOutDate, setCheckOutDate] = useState<Date | undefined>(
-    bookingValues.checkOutDate
-      ? new Date(bookingValues.checkOutDate)
-      : undefined,
-  );
-
-  const [isSelectingCheckOut, setIsSelectingCheckOut] = useState(false);
-  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const {
+    selectedDate,
+    checkInDate,
+    checkOutDate,
+    isSelectingCheckOut,
+    isCalendarOpen,
+    handleDateSelect,
+    handleDateChange,
+    handleReset,
+    handleConfirm,
+    setIsCalendarOpen,
+  } = useDateSelection();
 
   // Use the hook to refetch data when selectedDate changes
   const { currentProperty, isLoading, error } = usePropertyDetails(
@@ -50,76 +48,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
     selectedDate,
   );
 
-  useEffect(() => {
-    if (bookingValues.checkInDate) {
-      setCheckInDate(new Date(bookingValues.checkInDate));
-      setSelectedDate(new Date(bookingValues.checkInDate));
-    }
-    if (bookingValues.checkOutDate) {
-      setCheckOutDate(new Date(bookingValues.checkOutDate));
-    }
-  }, [bookingValues.checkInDate, bookingValues.checkOutDate]);
-
   console.log("booking info", bookingValues);
-
-  useEffect(() => {
-    if (bookingValues.checkInDate) {
-      setCheckInDate(new Date(bookingValues.checkInDate));
-      setSelectedDate(new Date(bookingValues.checkInDate));
-    }
-    if (bookingValues.checkOutDate) {
-      setCheckOutDate(new Date(bookingValues.checkOutDate));
-    }
-  }, [bookingValues.checkInDate, bookingValues.checkOutDate]);
-
-  const handleDateSelect = useCallback(
-    (date: Date | undefined) => {
-      if (!isSelectingCheckOut) {
-        if (date && checkInDate && date.getTime() === checkInDate.getTime()) {
-          setCheckInDate(undefined);
-          setCheckOutDate(undefined);
-          setIsSelectingCheckOut(false);
-          setBookingInfo({ checkInDate: null, checkOutDate: undefined });
-        } else {
-          setCheckInDate(date);
-          setCheckOutDate(undefined);
-          setIsSelectingCheckOut(true);
-          if (date && isValid(date)) {
-            const formattedDate = format(date, "yyyy-MM-dd");
-            setBookingInfo({
-              checkInDate: formattedDate,
-              checkOutDate: undefined,
-            });
-            setSelectedDate(date); // Update selected date to fetch new data
-          }
-        }
-      } else {
-        setCheckOutDate(date);
-        setIsSelectingCheckOut(false);
-        if (date && isValid(date)) {
-          const formattedDate = format(date, "yyyy-MM-dd");
-          setBookingInfo({ checkOutDate: formattedDate });
-        }
-      }
-    },
-    [isSelectingCheckOut, checkInDate, setBookingInfo],
-  );
-
-  const handleDateChange = useCallback((date: Date) => {
-    setSelectedDate(date);
-  }, []);
-
-  const handleReset = useCallback(() => {
-    setCheckInDate(undefined);
-    setCheckOutDate(undefined);
-    setIsSelectingCheckOut(false);
-    setBookingInfo({ checkInDate: null, checkOutDate: undefined });
-    setSelectedDate(new Date());
-  }, [setBookingInfo]);
-
-  const handleConfirm = useCallback(() => {
-    setIsCalendarOpen(false);
-  }, []);
 
   const displayProperty = currentProperty || property;
   const availableRooms = useMemo(
@@ -131,6 +60,13 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
     [displayProperty],
   );
 
+  useEffect(() => {
+    setBookingInfo({
+      checkInDate: undefined,
+      checkOutDate: undefined,
+    });
+  }, []);
+
   if (isLoading) return <div>Updating...</div>;
   if (error) return <div>Error updating: {error.message}</div>;
 
@@ -138,25 +74,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
     <div className="container md:relative mx-auto p-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2">
-          <h1 className="text-3xl font-bold mb-4">
-            {displayProperty.propertyName}
-          </h1>
-          <div className="flex items-center mb-4">
-            <div className="flex items-center mb-2 text-sm text-gray-500">
-              <MapPin className="mr-2" size={16} />
-              <span>
-                {displayProperty.address}, {displayProperty.city},{" "}
-                {displayProperty.country}
-              </span>
-            </div>
-          </div>
-          <Image
-            src={displayProperty.imageUrl || "/api/placeholder/800/400"}
-            alt={displayProperty.propertyName}
-            width={800}
-            height={400}
-            className="w-full h-64 object-cover mb-4 rounded"
-          />
+          <PropertyHeader property={displayProperty} />
 
           <Tabs defaultValue="description">
             <TabsList>

@@ -31,7 +31,13 @@ const PropertyListingCard: React.FC<PropertyCardProps> = (property) => {
   };
 
   // Construct the URL with the date range
-  const propertyUrl = `/properties/${propertyId}?${new URLSearchParams(bookingValues as Record<string, string>).toString()}`;
+  const propertyUrl = `/properties/${propertyId}?${new URLSearchParams(
+    Object.fromEntries(
+      Object.entries(bookingValues).filter(
+        ([key, value]) => value !== null && value !== undefined,
+      ),
+    ),
+  ).toString()}`;
 
   return (
     <Link href={propertyUrl} passHref>

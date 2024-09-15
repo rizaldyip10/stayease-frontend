@@ -16,7 +16,13 @@ const RoomCard: React.FC<RoomCardProps> = ({
   bookingValues,
   isAvailable,
 }) => {
-  const roomDetailsUrl = `/properties/${room.propertyId}/rooms/${room.roomId}?${new URLSearchParams(bookingValues as Record<string, string>).toString()}`;
+  const roomDetailsUrl = `/properties/${room.propertyId}/rooms/${room.roomId}?${new URLSearchParams(
+    Object.fromEntries(
+      Object.entries(bookingValues).filter(
+        ([key, value]) => value !== null && value !== undefined,
+      ),
+    ),
+  ).toString()}`;
 
   return (
     <Card className={`mb-4 ${!isAvailable ? "opacity-50" : ""}`}>

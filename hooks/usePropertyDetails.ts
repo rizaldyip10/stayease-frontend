@@ -12,7 +12,13 @@ export const usePropertyDetails = (
   roomId?: number,
 ) => {
   // Memoize the date to prevent unnecessary re-renders
-  const memoizedDate = useMemo(() => date.toISOString().split("T")[0], [date]);
+  const memoizedDate = useMemo(() => {
+    if (!date || isNaN(date.getTime())) {
+      // If date is null or invalid, use today's date
+      return new Date().toISOString().split("T")[0];
+    }
+    return date.toISOString().split("T")[0];
+  }, [date]);
 
   const {
     data: currentProperty,

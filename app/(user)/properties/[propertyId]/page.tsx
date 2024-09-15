@@ -11,10 +11,16 @@ export default function PropertyDetailsPage({
 }) {
   const searchParams = useSearchParams();
   const checkInDate = searchParams.get("checkInDate");
-  const date = useMemo(
-    () => (checkInDate ? new Date(checkInDate) : new Date()),
-    [checkInDate],
-  );
+
+  let date = new Date();
+  const timezoneOffset = date.getTimezoneOffset();
+  date = new Date(date.getTime() - timezoneOffset * 60 * 1000);
+  if (checkInDate !== null) {
+    date = new Date(checkInDate);
+  }
+
+  const timezone = date.getTimezoneOffset();
+  console.log("timezone", timezone);
 
   const propertyId = useMemo(
     () => parseInt(params.propertyId, 10),
