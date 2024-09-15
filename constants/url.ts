@@ -54,7 +54,7 @@ export const config = {
         "/properties/{propertyId}/rates/daily/cumulative",
     },
     propertyListings: {
-      sortAndFilter: "/properties/available",
+      sortAndFilter: "/properties/listings",
     },
   },
 };

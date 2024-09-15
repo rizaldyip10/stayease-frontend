@@ -263,8 +263,20 @@ const propertyService = {
       ? (formattedStartDate = format(startDate, "yyyy-MM-dd"))
       : startDate;
     endDate ? (formattedEndDate = format(endDate, "yyyy-MM-dd")) : endDate;
-    const url = `${config.endpoints.propertyListings.sortAndFilter}?startDate=${formattedStartDate}&endDate=${formattedEndDate}&city=${city}&categoryId=${categoryId}&page=${page}&size=${size}&sortBy=${sortBy}&sortDirection=${sortDirection}&searchTerm=${searchTerm}`;
-    const response = await axiosInterceptor.get(url);
+    const url = config.endpoints.propertyListings.sortAndFilter;
+    const response = await axiosInterceptor.get(url, {
+      params: {
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+        city,
+        categoryId,
+        page,
+        size,
+        sortBy,
+        sortDirection,
+        searchTerm,
+      },
+    });
     return response.data.data;
   },
 
