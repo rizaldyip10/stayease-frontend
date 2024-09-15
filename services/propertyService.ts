@@ -245,30 +245,34 @@ const propertyService = {
     endDate?: Date,
     city?: string,
     categoryId?: number,
+    searchTerm?: string,
+    minPrice?: number,
+    maxPrice?: number,
     page?: number,
     size?: number,
     sortBy?: string,
     sortDirection?: string,
-    searchTerm?: string,
   ): Promise<PropertyListingType> => {
-    let formattedStartDate;
-    let formattedEndDate;
-    startDate
-      ? (formattedStartDate = format(startDate, "yyyy-MM-dd"))
-      : startDate;
-    endDate ? (formattedEndDate = format(endDate, "yyyy-MM-dd")) : endDate;
+    const formattedStartDate = startDate ? formatDate(startDate) : undefined;
+    const formattedEndDate = endDate ? formatDate(endDate) : undefined;
+    const formattedCity = city ? city.replace(/ /g, "%") : undefined;
+    const formattedSearchTerm = searchTerm
+      ? searchTerm.replace(/ /g, "%")
+      : undefined;
     const url = config.endpoints.propertyListings.sortAndFilter;
     const response = await axiosInterceptor.get(url, {
       params: {
         startDate: formattedStartDate,
         endDate: formattedEndDate,
-        city,
+        city: formattedCity,
         categoryId,
+        searchTerm: formattedSearchTerm,
+        minPrice,
+        maxPrice,
         page,
         size,
         sortBy,
         sortDirection,
-        searchTerm,
       },
     });
     return response.data.data;

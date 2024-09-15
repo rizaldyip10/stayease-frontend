@@ -89,11 +89,11 @@ export type LowestDailyRateType = {
 };
 
 export type AvailablePropertyType = {
-  id: number;
+  propertyId: number;
   tenant: string;
   propertyName: string;
-  category: string;
   description: string;
+  category: string;
   imageUrl: string;
   address: string;
   city: string;
@@ -108,16 +108,19 @@ export type PropertyListingType = {
   totalPages: number;
   currentPage: number;
   totalElements: number;
-  content: {
-    propertyId: number;
-    propertyName: string;
-    description: string;
-    imageUrl: string;
-    city: string;
-    categoryName: string;
-    longitude: number;
-    latitude: number;
-    lowestBasePrice: number;
-    lowestAdjustedPrice: number;
-  }[];
+  content: AvailablePropertyType[];
+  //   {
+  //   propertyId: number;
+  //   tenant: string;
+  //   propertyName: string;
+  //   description: string;
+  //   imageUrl: string;
+  //   city: string;
+  //   country: string;
+  //   categoryName: string;
+  //   longitude: number;
+  //   latitude: number;
+  //   lowestBasePrice: number;
+  //   lowestAdjustedPrice: number;
+  // }[];
 };

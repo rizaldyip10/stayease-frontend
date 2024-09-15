@@ -24,7 +24,7 @@ const CustomPagination: React.FC<PaginationProps> = ({
         <ChevronLeft className="h-4 w-4" />
       </Button>
       <span className="text-sm">
-        Page {currentPage + 1} of {totalPages}
+        Page {totalPages === 0 ? 0 : currentPage + 1} of {totalPages}
       </span>
       <Button
         variant="outline"

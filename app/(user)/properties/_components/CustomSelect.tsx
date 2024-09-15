@@ -7,14 +7,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface CustomSelectProps {
-  category: string[] | undefined;
+interface SelectOption {
   value: string;
+  label: string;
+}
+
+interface CustomSelectProps {
+  options: SelectOption[] | undefined;
+  value?: string;
   onChange: (value: string) => void;
 }
 
 const CustomSelect: React.FC<CustomSelectProps> = ({
-  category,
+  options,
   value,
   onChange,
 }) => {
@@ -24,9 +29,9 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
         <SelectValue placeholder="Select category" />
       </SelectTrigger>
       <SelectContent>
-        {category?.map((item) => (
-          <SelectItem key={item} value={item}>
-            {item}
+        {options?.map((option) => (
+          <SelectItem key={option.value} value={option.value}>
+            {option.label}
           </SelectItem>
         ))}
       </SelectContent>

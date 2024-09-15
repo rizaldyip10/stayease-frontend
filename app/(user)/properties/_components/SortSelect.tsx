@@ -6,13 +6,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-export type SortOption = {
-  sortBy: string;
-  sortDirection: string;
-};
+import { SortOption } from "@/hooks/usePropertyListings";
 
 interface SortSelectProps {
+  sort: SortOption;
   onSortChange: (sort: SortOption) => void;
 }
 

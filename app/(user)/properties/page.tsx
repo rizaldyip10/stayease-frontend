@@ -1,130 +1,95 @@
+// app/(user)/properties/page.tsx
 "use client";
 import React, { useState } from "react";
-import SearchFilterCard, {
-  FilterOptions,
-} from "@/app/(user)/properties/_components/SearchFilterCard";
-import PropertyListingCard from "@/app/(user)/properties/_components/PropertyListingCard";
-import { PropertyAndRoomType } from "@/constants/Property";
+import SearchFilterCard from "./_components/SearchFilterCard";
+import PropertyListingCard from "./_components/PropertyListingCard";
+import SortSelect from "./_components/SortSelect";
+import CustomPagination from "./_components/CustomPagination";
+import { usePropertyListings } from "@/hooks/usePropertyListings";
 import { usePropertyUtils } from "@/hooks/usePropertyUtils";
-import SortSelect, {
-  SortOption,
-} from "@/app/(user)/properties/_components/SortSelect";
-import CustomPagination from "@/app/(user)/properties/_components/CustomPagination";
-
-interface PaginationInfo {
-  totalPages: number;
-  currentPage: number;
-  totalElements: number;
-}
+import PropertyListingSkeleton from "./_components/PropertyListingSkeleton";
+import NoResultsFound from "./_components/NoResultsFound";
+import { Button } from "@/components/ui/button";
+import { FilterIcon } from "lucide-react";
 
 const PropertiesPage: React.FC = () => {
-  const { properties, categories, cities, isLoading, error } =
-    usePropertyUtils();
-  const [sortParams, setSortParams] = useState<SortOption>({
-    sortBy: "",
-    sortDirection: "",
-  });
-  const [filterParams, setFilterParams] = useState<FilterOptions>({
-    city: "",
-    minPrice: 0,
-    maxPrice: 5000000,
-    startDate: null,
-    endDate: null,
-    category: "",
-    searchTerm: "",
-  });
-  const [paginationInfo, setPaginationInfo] = useState<PaginationInfo>({
-    totalPages: 1,
-    currentPage: 0,
-    totalElements: 0,
-  });
+  const { categories, cities } = usePropertyUtils();
+  const {
+    properties,
+    isLoading,
+    error,
+    filters,
+    sort,
+    pagination,
+    updateFilters,
+    updateSort,
+    updatePage,
+    resetFilters,
+  } = usePropertyListings();
 
-  const handleSortChange = (sort: SortOption) => {
-    setSortParams(sort);
-    console.log(sort);
-    // fetchProperties(0, sort, filterParams);
-  };
+  const [showFilters, setShowFilters] = useState(false);
 
-  const handleFilterChange = (filters: FilterOptions) => {
-    setFilterParams(filters);
-    console.log(filters);
-    // fetchProperties(0, sortParams, filters);
-  };
+  if (error) return <div>Error: {error}</div>;
 
-  const handlePageChange = (page: number) => {
-    console.log(page);
-    // fetchProperties(page, sortParams, filterParams);
-  };
-
-  // const fetchProperties = async (
-  //   page: number,
-  //   sort: SortOption,
-  //   filters: FilterOptions,
-  // ) => {
-  //   try {
-  //     const response = await sortAndFilter(
-  //       filters.startDate,
-  //       filters.endDate,
-  //       filters.city,
-  //       categories?.find((cat) => cat.name === filters.category)?.id,
-  //       page,
-  //       10, // size
-  //       sort.sortBy,
-  //       sort.sortDirection,
-  //       filters.searchTerm,
-  //     );
-  //
-  //     // Assuming the response structure matches what you provided
-  //     setPaginationInfo({
-  //       totalPages: response.totalPages,
-  //       currentPage: response.currentPage,
-  //       totalElements: response.totalElements,
-  //     });
-  //
-  //     // Update properties state (this should be handled in your usePropertyUtils hook)
-  //   } catch (error) {
-  //     console.error("Error fetching properties:", error);
-  //   }
-  // };
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  const hasResults = properties && properties.length > 0;
 
   return (
     <div className="container mx-auto p-4">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="md:col-span-1">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+        <div
+          className={`lg:col-span-1 ${showFilters ? "block" : "hidden lg:block"}`}
+        >
           <SearchFilterCard
             cities={cities}
             categories={categories}
-            onFilterChange={handleFilterChange}
+            filters={filters}
+            onFilterChange={updateFilters}
+            onResetFilters={resetFilters}
           />
         </div>
 
-        <div className="md:col-span-3">
+        <div className="lg:col-span-3">
           <div className="mb-4">
             <div id="map" className="w-full h-64 bg-gray-200"></div>
           </div>
-
-          <div className="flex justify-end mb-4">
-            <SortSelect onSortChange={handleSortChange} />
+          <div className="mb-4 flex justify-between items-center">
+            <Button
+              variant="outline"
+              onClick={() => setShowFilters(!showFilters)}
+              className="lg:hidden"
+            >
+              <FilterIcon className="mr-2 h-4 w-4" /> Filters
+            </Button>
+            <SortSelect sort={sort} onSortChange={updateSort} />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {Array.isArray(properties) ? (
-              properties.map((property: PropertyAndRoomType) => (
-                <PropertyListingCard key={property.id} property={property} />
-              ))
-            ) : (
-              <p>No properties found</p>
-            )}
-          </div>
-
-          <CustomPagination
-            currentPage={paginationInfo.currentPage}
-            totalPages={paginationInfo.totalPages}
-            onPageChange={handlePageChange}
-          />
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {Array(pagination.size)
+                .fill(0)
+                .map((_, index) => (
+                  <PropertyListingSkeleton key={index} />
+                ))}
+            </div>
+          ) : hasResults ? (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {properties.map((property) => (
+                  <PropertyListingCard
+                    key={property.propertyId}
+                    property={property}
+                  />
+                ))}
+              </div>
+              <CustomPagination
+                currentPage={pagination.currentPage}
+                totalPages={pagination.totalPages}
+                onPageChange={updatePage}
+              />
+            </>
+          ) : (
+            <NoResultsFound />
+          )}
         </div>
       </div>
     </div>
