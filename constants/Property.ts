@@ -88,6 +88,22 @@ export type LowestDailyRateType = {
   hasAdjustment: boolean;
 };
 
+export type AvailablePropertyType = {
+  id: number;
+  tenant: string;
+  propertyName: string;
+  category: string;
+  description: string;
+  imageUrl: string;
+  address: string;
+  city: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  lowestBasePrice: number;
+  lowestAdjustedPrice: number;
+};
+
 export type PropertyListingType = {
   totalPages: number;
   currentPage: number;

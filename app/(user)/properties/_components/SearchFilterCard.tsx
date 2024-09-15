@@ -1,79 +1,122 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import CustomCheckbox from "@/app/(user)/properties/_components/CustomCheckbox";
-import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { CustomDatePicker } from "@/components/ui/date-picker";
 import CustomSelect from "@/app/(user)/properties/_components/CustomSelect";
-import FormikDatePicker from "@/components/DatePicker";
-import DatePicker from "@/components/DatePicker";
+import { CategoryType } from "@/constants/Property";
+import { useDebounce } from "use-debounce";
+import BudgetInput from "@/app/(user)/properties/_components/BudgetInput";
+import { CustomDatePicker } from "@/app/(user)/properties/_components/CustomDatePicker";
 
-const SearchFilterCard: React.FC = () => {
-  // !! TODO: dummy datas, replace with actual data from API
-  const locations = ["Bali", "Jakarta", "Yogyakarta"];
-  const categories = ["Apartment", "House", "Villa", "Hotel"];
+interface SearchFilterCardProps {
+  cities: string[] | undefined;
+  categories: CategoryType[] | undefined;
+  onFilterChange: (filters: FilterOptions) => void;
+}
+
+export interface FilterOptions {
+  city: string;
+  minPrice: number;
+  maxPrice: number;
+  startDate: Date | null;
+  endDate: Date | null;
+  category: string;
+  searchTerm: string;
+}
+
+const SearchFilterCard: React.FC<SearchFilterCardProps> = ({
+  cities,
+  categories,
+  onFilterChange,
+}) => {
+  const [filters, setFilters] = useState<FilterOptions>({
+    city: "",
+    minPrice: 0,
+    maxPrice: 0,
+    startDate: null,
+    endDate: null,
+    category: "",
+    searchTerm: "",
+  });
+
+  const [debouncedFilters] = useDebounce(filters, 1000);
+
+  useEffect(() => {
+    console.log("Filters changed:", debouncedFilters);
+    onFilterChange(debouncedFilters);
+  }, [debouncedFilters, onFilterChange]);
+
+  const handleInputChange = useCallback(
+    (field: keyof FilterOptions, value: any) => {
+      setFilters((prev) => ({ ...prev, [field]: value }));
+    },
+    [],
+  );
+
+  const handleBudgetChange = useCallback(
+    (minPrice: number, maxPrice: number) => {
+      setFilters((prev) => ({ ...prev, minPrice, maxPrice }));
+    },
+    [],
+  );
 
   return (
-    <div>
-      <Card className="mb-4">
-        <CardContent className="p-4">
-          <h2 className="text-lg font-semibold mb-4 text-blue-950">Filters</h2>
+    <Card className="mb-4">
+      <CardContent className="p-4">
+        <h2 className="text-lg font-semibold mb-4 text-blue-950">Filters</h2>
 
-          <div className="mb-4">
-            <h3 className="font-semibold mb-2 text-blue-950">Location</h3>
-            <div className="space-y-2">
-              {/*// TODO : call locations from API*/}
-              {locations.map((location) => (
-                <CustomCheckbox key={location} label={location} />
-              ))}
-            </div>
-          </div>
+        <div className="mb-4">
+          <Input
+            placeholder="Search properties..."
+            value={filters.searchTerm}
+            onChange={(e) => handleInputChange("searchTerm", e.target.value)}
+            className="mb-2"
+          />
+        </div>
 
-          <div className="mb-4 flex flex-col gap-2">
-            <h3 className="font-semibold mb-2 text-blue-950">Budget</h3>
-            <Slider defaultValue={[0]} max={5000000} step={10000} />
-            <div className="flex justify-between mt-2">
-              <Input placeholder="Min" className="w-20" />
-              <Input placeholder="Max" className="w-20" />
-            </div>
-          </div>
+        <div className="mb-4">
+          <h3 className="font-semibold mb-2 text-blue-950">Location</h3>
+          <CustomSelect
+            category={cities}
+            value={filters.city}
+            onChange={(value) => handleInputChange("city", value)}
+          />
+        </div>
 
-          <div className="mb-4 flex flex-col gap-2">
-            <h3 className="font-semibold mb-2 text-blue-950">Dates</h3>
-            <CustomDatePicker title="From" />
-            <CustomDatePicker title="To" />
-            {/*<DatePicker*/}
-            {/*  name="checkInDate"*/}
-            {/*  label="Check-in"*/}
-            {/*  value={checkInDate}*/}
-            {/*  onChange={setBookingInfo}*/}
-            {/*  isEditing={edit}*/}
-            {/*/>*/}
-            {/*-*/}
-            {/*<DatePicker*/}
-            {/*  name="checkOutDate"*/}
-            {/*  label="Check-in"*/}
-            {/*  value={checkOutDate}*/}
-            {/*  onChange={setBookingInfo}*/}
-            {/*  isEditing={edit}*/}
-            {/*/>*/}
-          </div>
+        <div className="mb-4">
+          <h3 className="font-semibold mb-2 text-blue-950">Budget</h3>
+          <BudgetInput
+            minPrice={filters.minPrice}
+            maxPrice={filters.maxPrice}
+            onChange={handleBudgetChange}
+          />
+        </div>
 
-          <div className="mb-4">
-            <h3 className="font-semibold mb-2 text-blue-950">Category</h3>
-            {/*// TODO: Call categories from API*/}
-            <CustomSelect category={categories} />
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+        <div className="mb-4">
+          <h3 className="font-semibold mb-2 text-blue-950">Dates</h3>
+          <CustomDatePicker
+            title="From"
+            date={filters.startDate}
+            onDateChange={(date) => handleInputChange("startDate", date)}
+          />
+          <CustomDatePicker
+            title="To"
+            date={filters.endDate}
+            onDateChange={(date) => handleInputChange("endDate", date)}
+          />
+        </div>
+
+        <div className="mb-4">
+          <h3 className="font-semibold mb-2 text-blue-950">Category</h3>
+          <CustomSelect
+            category={categories?.map(
+              (cat) => cat.name.charAt(0).toUpperCase() + cat.name.slice(1),
+            )}
+            value={filters.category}
+            onChange={(value) => handleInputChange("category", value)}
+          />
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

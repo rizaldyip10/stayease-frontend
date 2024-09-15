@@ -8,19 +8,25 @@ import {
 } from "@/components/ui/select";
 
 interface CustomSelectProps {
-  category: string[];
+  category: string[] | undefined;
+  value: string;
+  onChange: (value: string) => void;
 }
 
-const CustomSelect: React.FC<CustomSelectProps> = ({ category }) => {
+const CustomSelect: React.FC<CustomSelectProps> = ({
+  category,
+  value,
+  onChange,
+}) => {
   return (
-    <Select>
+    <Select value={value} onValueChange={onChange}>
       <SelectTrigger>
         <SelectValue placeholder="Select category" />
       </SelectTrigger>
       <SelectContent>
-        {category.map((category) => (
-          <SelectItem key={category} value={category}>
-            {category}
+        {category?.map((item) => (
+          <SelectItem key={item} value={item}>
+            {item}
           </SelectItem>
         ))}
       </SelectContent>

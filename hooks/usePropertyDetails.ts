@@ -3,8 +3,6 @@ import propertyService from "@/services/propertyService";
 import {
   AdjustedRatesType,
   CurrentAvailablePropertyType,
-  LowestDailyRateType,
-  RoomType,
 } from "@/constants/Property";
 import { useMemo } from "react";
 
