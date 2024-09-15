@@ -1,7 +1,6 @@
 import HeroSection from "@/app/(user)/_components/hero-section/HeroSection";
 import React from "react";
 import PropertyDetailsPage from "@/app/(user)/_components/landing-page-listing/PropertyDetailsPage";
-import AvailabilityCalendar from "@/components/AvailabilityCalendar";
 
 export default function Home() {
   return (
