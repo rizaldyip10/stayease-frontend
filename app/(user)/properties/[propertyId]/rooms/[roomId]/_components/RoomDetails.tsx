@@ -13,6 +13,8 @@ import { Calendar } from "@/components/ui/calendar";
 import { format, isValid, parseISO } from "date-fns";
 import { useBookingValues } from "@/hooks/useBookingValues";
 import { AdjustedRatesType, UnavailableRoomType } from "@/constants/Property";
+import Image from "next/image";
+import AvatarUploadModal from "@/app/(user)/profile/_components/AvatarUploadModal";
 
 interface RoomDetailsProps {
   room: AdjustedRatesType;
@@ -60,56 +62,68 @@ const RoomDetailsComponent: React.FC<RoomDetailsProps> = ({ room }) => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">{room.roomName}</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2">
-          <img
-            src={room.imageUrl || "/api/placeholder/800/400"}
-            alt={room.roomName}
-            className="w-full h-64 object-cover mb-4 rounded"
-          />
+      <h1 className="text-3xl font-bold mb-6">{room.roomName}</h1>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
+          <div className="relative w-full h-64 md:h-96 mb-6">
+            <Image
+              src={room.imageUrl || "/api/placeholder/800/400"}
+              alt={room.roomName}
+              layout="fill"
+              objectFit="cover"
+              className="rounded-lg"
+            />
+          </div>
 
-          <Tabs defaultValue="description">
-            <TabsList>
+          <Tabs defaultValue="description" className="mb-8">
+            <TabsList className="mb-4">
               <TabsTrigger value="description">Description</TabsTrigger>
               <TabsTrigger value="amenities">Amenities</TabsTrigger>
             </TabsList>
             <TabsContent value="description">
-              <p>{room.roomDescription}</p>
+              <p className="text-gray-700">{room.roomDescription}</p>
             </TabsContent>
             <TabsContent value="amenities">
-              <ul>
+              <ul className="list-disc pl-5 text-gray-700">
                 <li>Capacity: {room.roomCapacity} persons</li>
+                {/* Add more amenities here */}
               </ul>
             </TabsContent>
           </Tabs>
         </div>
 
         <div>
-          <Card>
-            <CardContent className="p-4">
-              <p className="text-sm font-light">Price per night:</p>
-              <h2 className="text-2xl font-bold mb-2">
-                {formatPrice(room.adjustedPrice)}
-              </h2>
-              {priceChange !== 0 && (
-                <div className="mb-2">
-                  <p className="text-sm text-gray-500 line-through">
-                    {formatPrice(room.basePrice)}
-                  </p>
-                  <p
-                    className={`text-sm ${isIncrease ? "text-red-600" : "text-green-600"}`}
-                  >
-                    {isIncrease ? "Increased" : "Decreased"} by{" "}
-                    {Math.abs(Number(percentageChange))}%
-                  </p>
-                </div>
-              )}
-              <div className="flex flex-col space-y-4 mb-4">
+          <Card className="sticky top-4">
+            <CardContent className="p-6">
+              <div className="mb-4">
+                <p className="text-sm font-light text-gray-500">
+                  Estimated price per night:
+                </p>
+                <h2 className="text-3xl font-bold mb-2">
+                  {formatPrice(room.adjustedPrice)}
+                </h2>
+                {priceChange !== 0 && (
+                  <div>
+                    <p className="text-sm text-gray-500 line-through">
+                      {formatPrice(room.basePrice)}
+                    </p>
+                    <p
+                      className={`text-sm ${isIncrease ? "text-red-600" : "text-green-600"}`}
+                    >
+                      {isIncrease ? "Increased" : "Decreased"} by{" "}
+                      {Math.abs(Number(percentageChange))}%
+                    </p>
+                  </div>
+                )}
+              </div>
+              <div className="space-y-4 mb-6">
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="outline">
-                      {formatDate(bookingValues.checkInDate) || "Check-in Date"}
+                    <Button variant="outline" className="w-full justify-start">
+                      <span className="mr-auto">
+                        {formatDate(bookingValues.checkInDate) ||
+                          "Check-in Date"}
+                      </span>
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
@@ -128,9 +142,11 @@ const RoomDetailsComponent: React.FC<RoomDetailsProps> = ({ room }) => {
                 </Popover>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="outline">
-                      {formatDate(bookingValues.checkOutDate) ||
-                        "Check-out Date"}
+                    <Button variant="outline" className="w-full justify-start">
+                      <span className="mr-auto">
+                        {formatDate(bookingValues.checkOutDate) ||
+                          "Check-out Date"}
+                      </span>
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
@@ -156,7 +172,7 @@ const RoomDetailsComponent: React.FC<RoomDetailsProps> = ({ room }) => {
                 {room.isAvailable ? "Book Now" : "Not Available"}
               </Button>
               {!room.isAvailable && (
-                <p className="text-red-500 mt-2 text-sm">
+                <p className="text-red-500 mt-2 text-sm text-center">
                   This room is not available for the selected date.
                 </p>
               )}

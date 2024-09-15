@@ -39,7 +39,7 @@ export const usePropertyCreation = () => {
 
   const fetchCategories = useCallback(async () => {
     try {
-      const response = await propertyService.getAllCategory();
+      const response = await propertyService.getAllCategories();
       setCategories(response);
     } catch (error) {
       setError("Failed to fetch categories");
