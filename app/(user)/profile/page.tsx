@@ -1,11 +1,13 @@
-import React from 'react';
+"use client";
+import React from "react";
+import ProfileData from "@/app/(user)/profile/_components/ProfileData";
 
 const ProfilePage = () => {
-    return (
-        <div>
-            Profile Page
-        </div>
-    );
+  return (
+    <div>
+      <ProfileData />
+    </div>
+  );
 };
 
 export default ProfilePage;
