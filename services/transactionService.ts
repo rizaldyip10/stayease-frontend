@@ -34,5 +34,16 @@ export const transactionService = {
             console.log(error);
             throw error;
         }
+    },
+    userCancelTrx: async (bookingId: string, token?: string) => {
+        try {
+            const { data } = await axiosInterceptor.put(`${config.endpoints.transactions.user}/${bookingId}`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return data;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
     }
 };

@@ -119,6 +119,7 @@ export const columns: ColumnDef<BookingDataType>[] = [
             const paymentProof = row.original.payment?.paymentProof || "https://res.cloudinary.com/duxay6ujg/image/upload/v1724836498/Payment%20Proof/odablihssogwvqisthlv.jpg";
             const totalAmount = row.original.totalPrice;
             const bookingId = row.original.id;
+            const paymentStatus = row.original.status;
 
             return (
                 <DropdownMenu>
@@ -134,11 +135,15 @@ export const columns: ColumnDef<BookingDataType>[] = [
                             <DetailButton bookingId={bookingId} />
                         </DropdownMenuItem>
                         {
-                            paymentMethod === "manual_transfer" &&
+                            paymentMethod === "manual_transfer" && paymentStatus === "pending" ?
                                 <div className="w-full flex flex-col gap-2">
-                                    <PaymentProofDialog paymentProof={paymentProof} totalAmount={totalAmount} />
-                                    <PaymentActionDialog bookingId={bookingId} isApproval />
-                                    <PaymentActionDialog bookingId={bookingId} isApproval={false} />
+                                    <PaymentActionDialog bookingId={bookingId} isApproval/>
+                                    <PaymentActionDialog bookingId={bookingId} isApproval={false}/>
+                                </div> :
+                                <div className="w-full flex flex-col gap-2">
+                                    <PaymentProofDialog paymentProof={paymentProof} totalAmount={totalAmount}/>
+                                    <PaymentActionDialog bookingId={bookingId} isApproval/>
+                                    <PaymentActionDialog bookingId={bookingId} isApproval={false}/>
                                 </div>
                         }
                     </DropdownMenuContent>

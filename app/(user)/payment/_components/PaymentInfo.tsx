@@ -5,10 +5,9 @@ import bca from "@/assets/images/bca.png";
 import bni from "@/assets/images/bni.png";
 import cimb from "@/assets/images/cimb.png";
 import atm from "@/assets/images/atm-logo.png";
+import UploadProofDialog from "@/components/UploadProofDialog";
 import {usePaymentQuery} from "@/hooks/usePaymentQuery";
-import {Button} from "@/components/ui/button";
 import {usePaymentInfo} from "@/hooks/usePaymentInfo";
-import UploadProofDialog from "@/app/(user)/payment/_components/UploadProofDialog";
 
 const PaymentInfo = () => {
     const { bank, id } = usePaymentQuery();
@@ -51,7 +50,7 @@ const PaymentInfo = () => {
                             <h1 className="font-medium">Please transfer to bank account below</h1>
                             <p className="text-sm">Bank: BCA</p>
                             <p className="text-sm">Account number: 7387582758247</p>
-                            <p className="text-sm">Account holder&apos;s name: Stay Ease Property Rental </p>
+                            <p className="text-sm">Account holder&apos;s name: Stay Ease Property Rental</p>
                             <div className="w-full flex md:justify-end">
                                 <UploadProofDialog />
                             </div>

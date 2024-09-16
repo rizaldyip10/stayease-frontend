@@ -8,6 +8,7 @@ import {BookingDataType, pendingBookings, rejectedBookings} from "@/constants/Bo
 import {currencyFormatter} from "@/utils/CurrencyFormatter";
 import {dateFormater} from "@/utils/dateFormatter";
 import {cn} from "@/lib/utils";
+import BookingCardOption from "@/app/(user)/profile/bookings/_components/BookingCardOption";
 
 interface BookingCardProps {
     booking: BookingDataType;
@@ -32,12 +33,7 @@ const BookingCard: FC<BookingCardProps> = ({ booking }) => {
                         <p className="text-xs text-blue-950 text-opacity-50">Booking ID: { booking.id }</p>
                         <Tag className={cn("text-xs py-1 px-2 uppercase", color)}>{ booking.status }</Tag>
                     </div>
-                    <Button
-                        variant="ghost"
-                        className="p-1 h-max"
-                    >
-                        <EllipsisVertical className="w-4 h-4"/>
-                    </Button>
+                    <BookingCardOption bookingId={booking.id} status={booking.status} />
                 </div>
                 <div className="w-full flex flex-col xl:flex-row gap-3 lg:gap-1">
                     <div className="w-full xl:w-1/2 flex flex-col gap-2">

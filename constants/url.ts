@@ -44,16 +44,17 @@ export const config = {
       updateCategory: "/properties/categories/{categoryId}",
       deleteCategory: "/properties/categories/{categoryId}",
     },
-      bookings: {
-          tenantBookings: "/bookings/tenant",
-          userBookings: "/bookings/user"
-      },
-      transactions: {
-          tenant: "/transactions"
-      },
-      payments: {
-          paymentInfo: "/payments",
-          uploadPayment: "/payments/payment-proof"
-      }
+    bookings: {
+      tenantBookings: "/bookings/tenant",
+      userBookings: "/bookings/user"
+    },
+    transactions: {
+      tenant: "/transactions",
+      user: "/transactions/user",
+    },
+    payments: {
+      paymentInfo: "/payments",
+      uploadPayment: "/payments/payment-proof"
+    }
   },
 };
