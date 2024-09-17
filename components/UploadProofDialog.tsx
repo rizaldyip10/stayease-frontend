@@ -63,7 +63,10 @@ const UploadProofDialog: FC<UploadProofDialogProps> = ({ bookingId: propBookingI
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className="bg-blue-950">
+                <Button
+                    className="text-blue-950"
+                    variant="ghost"
+                >
                     <h1>Upload Payment Proof</h1>
                 </Button>
             </DialogTrigger>

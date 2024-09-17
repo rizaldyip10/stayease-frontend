@@ -15,7 +15,7 @@ const ProfileLayout = ({ children }: { children: ReactNode }) => {
           {children}
         </div>
       </div>
-    // </ProtectedRoute>
+    // {/*</ProtectedRoute>*/}
   );
 };
 
