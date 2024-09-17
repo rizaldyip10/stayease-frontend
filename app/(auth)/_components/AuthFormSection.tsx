@@ -20,7 +20,7 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
   className?: string;
   formType: FormType;
 }) => {
-  const [userType, setUserType] = useState<UserType>("user");
+  const [userType, setUserType] = useState<UserType>("USER");
   const { message, alertType, showAlert, setShowAlert, handleMultiStepSubmit } =
     useAuthForm({
       userType,

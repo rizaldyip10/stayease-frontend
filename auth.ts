@@ -93,7 +93,9 @@ const nextAuthConfig: NextAuthConfig = {
   },
   pages: {
     newUser: "/register/select-user-type",
+    signIn: "/login",
     signOut: "/",
+    error: "/login",
   },
   session: {
     strategy: "jwt" as const,

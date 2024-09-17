@@ -2,17 +2,17 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { signIn } from "next-auth/react";
 
 export default function SelectUserType() {
   const [userType, setUserType] = useState("");
   const router = useRouter();
-  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      await login({ values: { userType }, isNew: true });
+      await signIn("credentials", { values: { userType }, isNew: true });
       router.push("/check-email"); // TODO : redirect to dashboard
     } catch (error) {
       console.error("Failed to set user type:", error);

@@ -10,6 +10,8 @@ interface RouteConfig {
   handler: RouteHandler;
 }
 
+export const publicRoutes = ["/login", "/register", "/forgot-password"];
+
 const dashboardHandlers: RouteConfig[] = [
   {
     route: "/dashboard/user",

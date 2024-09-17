@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { auth } from "./auth";
-import { routeHandlers } from "./utils/routeHandlers";
+import { publicRoutes, routeHandlers } from "./utils/routeHandlers";
 
 export type RouteHandler = (
   session: any,
@@ -13,13 +13,18 @@ export interface RouteConfig {
   handler: RouteHandler;
 }
 export default async function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname;
+
+  // Public routes access
+  if (publicRoutes.some((route) => path === route)) {
+    return NextResponse.next();
+  }
   const session = await auth();
 
   if (!session) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  const path = request.nextUrl.pathname;
   const handler = findMatchingHandler(path);
 
   if (handler) {

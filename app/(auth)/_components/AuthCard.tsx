@@ -30,6 +30,9 @@ const AuthCard: React.FC<AuthCardProps> = ({
       userType,
     });
 
+  console.log("usertype:", userType);
+  console.log("formType:", formType);
+
   const { googleLogin } = useAuth();
 
   const initialValues = getInitialValues(formType);
@@ -64,22 +67,22 @@ const AuthCard: React.FC<AuthCardProps> = ({
             <p>
               <span
                 className={
-                  userType === "user"
+                  userType === "USER"
                     ? "font-bold p-1 bg-appblue-900 text-white rounded-sm cursor-pointer"
                     : "font-normal cursor-pointer"
                 }
-                onClick={() => setUserType("user")}
+                onClick={() => setUserType("USER")}
               >
                 <a>User</a>
               </span>{" "}
               /{" "}
               <span
                 className={
-                  userType === "tenant"
+                  userType === "TENANT"
                     ? "font-bold p-1 bg-appblue-900 text-white rounded-sm cursor-pointer"
                     : "font-normal cursor-pointer"
                 }
-                onClick={() => setUserType("tenant")}
+                onClick={() => setUserType("TENANT")}
               >
                 <a>Tenant</a>
               </span>
