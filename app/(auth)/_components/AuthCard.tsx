@@ -29,7 +29,8 @@ const AuthCard: React.FC<AuthCardProps> = ({
     useAuthForm({
       userType,
     });
-  const { initiateGoogleLogin, login } = useAuth();
+
+  const { googleLogin } = useAuth();
 
   const initialValues = getInitialValues(formType);
 
@@ -114,7 +115,7 @@ const AuthCard: React.FC<AuthCardProps> = ({
       <Button
         variant="outline"
         className="w-full flex items-center gap-2"
-        onClick={initiateGoogleLogin}
+        onClick={googleLogin}
       >
         <Image src={googleLogo} alt={"google"} height={20} />
         Continue with Google

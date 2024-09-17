@@ -5,16 +5,15 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import {
-  AuthResponse,
-  authService,
-  RegisterResponse,
-} from "@/services/authService";
+import { authService } from "@/services/authService";
 import { useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useEffect, useState } from "react";
 import { UserType } from "@/constants/Types";
 import { FormikValues } from "formik";
+import { AuthResponse, RegisterResponse } from "@/constants/Auth";
+import { MultiStepFormValues } from "@/app/(auth)/_components/MultiStepForm";
+import { signIn as nextAuthSignIn } from "next-auth/react";
 
 export function useAuth() {
   const queryClient: QueryClient = useQueryClient();
@@ -32,25 +31,6 @@ export function useAuth() {
     retry: false,
     enabled: false,
   });
-
-  useEffect(() => {
-    const cachedAuth = queryClient.getQueryData(["auth"]);
-    if (cachedAuth) {
-      console.log("Cached auth:", cachedAuth);
-      setIsLoading(false);
-    } else {
-      console.log("No cached auth");
-      const token = localStorage.getItem("accessToken");
-      if (token) {
-        authService.setAccessToken(token);
-        refetch().finally(() => {
-          setIsLoading(false);
-        });
-      } else {
-        setIsLoading(false);
-      }
-    }
-  }, [refetch, queryClient]);
 
   useEffect(() => {
     if (isError) {
@@ -84,7 +64,7 @@ export function useAuth() {
   const verifyMutation = useMutation<
     any,
     Error,
-    { token: string; values: FormikValues }
+    { token: string; values: MultiStepFormValues }
   >({
     mutationFn: ({ values, token }) => authService.verify(values, token),
     onSuccess: (data) => {
@@ -100,52 +80,12 @@ export function useAuth() {
     },
   });
 
-  const loginMutation = useMutation<
-    AuthResponse,
-    Error,
-    { values: FormikValues; isOAuth?: boolean; isNew?: boolean }
-  >({
-    mutationFn: ({ values, isOAuth = false, isNew = false }) =>
-      authService.login(values, isOAuth, isNew),
-    onSuccess: (data, isOAuth) => {
-      const serializableData = {
-        id: data.id,
-        email: data.email,
-        userType: data.userType,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        isVerified: data.isVerified,
-        isOAuth2: data.isOAuth2,
-        // Omit token for security reasons
-      };
-      localStorage.setItem("accessToken", data.token.accessToken);
-      authService.setAccessToken(data.token.accessToken);
-      queryClient.setQueryData(["auth"], serializableData);
-      // Store only non-sensitive user info
-      localStorage.setItem("userId", data.id);
-      // TODO change
-      if (!isOAuth) {
-        router.push("/check-email");
-      }
-    },
-    onError: (error) => {
-      console.error("Login failed:", error.message);
-    },
-  });
-
-  const logoutMutation = useMutation({
-    mutationFn: () => authService.logout(),
-    onSuccess: () => {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("userId");
-      authService.setAccessToken(null);
-      queryClient.setQueryData(["auth"], null);
-      router.push("/");
-    },
-  });
-
-  const initiateGoogleLogin = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}/oauth2/authorization/google`;
+  const handleGoogleLogin = async () => {
+    try {
+      await nextAuthSignIn("google", { callbackUrl: "/dashboard" });
+    } catch (error) {
+      console.error("Google login failed:", error);
+    }
   };
 
   return {
@@ -164,10 +104,8 @@ export function useAuth() {
     isLoading,
     isError,
     error: error ? error.message : null,
-    login: loginMutation.mutateAsync,
     register: registerMutation.mutate,
     verify: verifyMutation.mutate,
-    logout: logoutMutation.mutate,
-    initiateGoogleLogin,
+    googleLogin: handleGoogleLogin,
   };
 }

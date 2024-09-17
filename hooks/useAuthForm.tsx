@@ -4,7 +4,7 @@ import { FormikHelpers, FormikValues } from "formik";
 import { MultiStepFormValues } from "@/app/(auth)/_components/MultiStepForm";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { authService } from "@/services/authService";
+import { signIn } from "next-auth/react";
 
 interface UseAuthFormProps {
   userType: UserType;
@@ -17,7 +17,7 @@ const UseAuthForm = ({ userType }: UseAuthFormProps) => {
   const [alertType, setAlertType] = useState<AlertType>("Success");
   const [showAlert, setShowAlert] = useState(false);
 
-  const { login, register } = useAuth();
+  const { register, verify } = useAuth();
 
   const router = useRouter();
 
@@ -31,12 +31,18 @@ const UseAuthForm = ({ userType }: UseAuthFormProps) => {
 
     try {
       if (formType === "login") {
-        await login({ values });
-        console.log(values);
+        const result = await signIn("credentials", {
+          redirect: false,
+          email: values.email,
+          password: values.password,
+        });
+
+        if (result?.error) {
+          throw new Error(result.error);
+        }
+
         setMessage("Login successful!");
         setAlertType("Success");
-        router.push("/");
-        setLoading(false);
       } else {
         await register({ email: values.email, userType });
         setMessage(
@@ -68,14 +74,12 @@ const UseAuthForm = ({ userType }: UseAuthFormProps) => {
     setAlertType("Success");
 
     try {
-      const response = await authService.verify(values, token);
+      const response = await verify({ token, values });
 
       console.log(response);
       // TODO handle success (store token, redirect, etc)
 
-      setMessage(
-        response.statusMessage || "Registration completed successfully",
-      );
+      setMessage("Registration completed successfully, please sign in!");
       // TODO : ALerts
       // setAlertType("Success");
       // setShowAlert(true);
