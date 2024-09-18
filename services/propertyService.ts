@@ -32,9 +32,16 @@ const propertyService = {
     return response.data.data;
   },
 
-  getTenantProperties: async (): Promise<PropertyAndRoomType> => {
+  getTenantProperties: async (): Promise<PropertyAndRoomType[]> => {
     const response = await axiosInterceptor.get(
       config.endpoints.properties.getTenantProperties,
+    );
+    return response.data.data;
+  },
+
+  getTenantRooms: async (): Promise<RoomType[]> => {
+    const response = await axiosInterceptor.get(
+        config.endpoints.properties.getTenantRooms,
     );
     return response.data.data;
   },

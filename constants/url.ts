@@ -31,6 +31,7 @@ export const config = {
       getAllProperties: "/properties",
       getProperty: "/properties/{propertyId}",
       getTenantProperties: "/properties/tenant",
+      getTenantRooms: "/properties/tenant/rooms",
       createProperty: "/properties",
       updateProperty: "/properties/{propertyId}",
       deleteProperty: "/properties/{propertyId}",

@@ -42,3 +42,11 @@ export type CategoryType = {
   id: number;
   name: string;
 };
+
+export type RoomAvailabilityType = {
+  id: number;
+  room: RoomType;
+  startDate: string;
+  endDate: string;
+  isAvailable: boolean;
+};

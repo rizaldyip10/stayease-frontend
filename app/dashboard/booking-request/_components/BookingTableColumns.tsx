@@ -135,11 +135,7 @@ export const columns: ColumnDef<BookingDataType>[] = [
                             <DetailButton bookingId={bookingId} />
                         </DropdownMenuItem>
                         {
-                            paymentMethod === "manual_transfer" && paymentStatus === "pending" ?
-                                <div className="w-full flex flex-col gap-2">
-                                    <PaymentActionDialog bookingId={bookingId} isApproval/>
-                                    <PaymentActionDialog bookingId={bookingId} isApproval={false}/>
-                                </div> :
+                            paymentMethod === "manual_transfer" && paymentStatus === "waiting for confirmation" &&
                                 <div className="w-full flex flex-col gap-2">
                                     <PaymentProofDialog paymentProof={paymentProof} totalAmount={totalAmount}/>
                                     <PaymentActionDialog bookingId={bookingId} isApproval/>
