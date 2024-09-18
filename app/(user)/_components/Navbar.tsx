@@ -43,7 +43,7 @@ const Navbar = () => {
             src={logo}
             alt={"logo"}
             height={40}
-            className="h-10 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0"
+            className="h-10 absolute left-1/2 -translate-x-1/2 -translate-y-1/2 lg:static lg:translate-x-0 lg:translate-y-0"
           />
         </Link>
         <NavRoutes />

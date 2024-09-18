@@ -5,7 +5,7 @@ import BankVaSelection from "@/app/(user)/book/_components/BankVASelection";
 
 const options = [
     { label: "ATM/Bank Transfer", value: "manual_transfer" },
-    { label: "Bank VA", value: "bank_va" },
+    { label: "Bank VA", value: "bank_transfer" },
 ]
 
 const PaymentSelection = () => {
