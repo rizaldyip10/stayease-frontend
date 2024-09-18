@@ -34,6 +34,23 @@ const FormInputs: React.FC<FormInputsProps> = ({ formType }) => {
           label="Email"
         />
       );
+    case "select-user-type":
+      return (
+        <>
+          <FormikInput
+            name="businessName"
+            label="Business Name"
+            placeholder="Enter your business name"
+            className="w-full border py-1 px-2 rounded-md focus-visible:ring-0"
+          />
+          <FormikInput
+            name="taxId"
+            label="Tax ID (optional)"
+            placeholder="Enter your tax ID"
+            className="w-full border py-1 px-2 rounded-md focus-visible:ring-0"
+          />
+        </>
+      );
     default:
       return null;
   }

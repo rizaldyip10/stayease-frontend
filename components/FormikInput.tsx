@@ -17,10 +17,10 @@ interface FormikInputProps {
 const FormikInput: FC<FormikInputProps> = ({ label, ...props }) => {
   const [isVisible, setVisible] = useState<boolean>(false);
 
-  const [, meta] = useField(props.name);
+  const [field, meta] = useField(props.name);
   const { as, className, disabled, type, name, placeholder } = props;
 
-  const isPassword = type == "password";
+  const isPassword = type === "password";
   const passwordType = isVisible ? "text" : "password";
 
   return (
@@ -29,9 +29,9 @@ const FormikInput: FC<FormikInputProps> = ({ label, ...props }) => {
       <div className="relative">
         <Field
           as={as}
-          className={cn(className, isPassword ? "relative" : "")}
+          className={cn(className, isPassword ? "pr-10" : "", "w-full")}
           disabled={disabled}
-          type={type == "password" ? passwordType : type}
+          type={isPassword ? passwordType : type}
           name={name}
           placeholder={placeholder}
         />
@@ -39,8 +39,9 @@ const FormikInput: FC<FormikInputProps> = ({ label, ...props }) => {
           <Button
             variant="ghost"
             type="button"
-            className="absolute h-full pr-3"
+            className="absolute h-full inset-y-0 right-0 px-3 flex items-center"
             onClick={() => setVisible(!isVisible)}
+            tabIndex={-1}
           >
             {isVisible ? (
               <EyeOff className="h-4 w-4" />
