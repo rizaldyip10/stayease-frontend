@@ -3,10 +3,10 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { signIn } from "next-auth/react";
 
 export default function AuthCallback() {
   const router = useRouter();
-  const { login } = useAuth();
 
   useEffect(() => {
     const handleCallback = async () => {
@@ -16,7 +16,7 @@ export default function AuthCallback() {
 
       if (code) {
         try {
-          await login({ values: { code }, isOAuth: true });
+          await signIn("credentials", { values: { code }, isOAuth: true });
           router.push("/check-email"); // TODO : redirect to dashboard
         } catch (error) {
           console.error("Failed to exchange code for tokens:", error);
@@ -28,7 +28,7 @@ export default function AuthCallback() {
     };
 
     handleCallback();
-  }, [login, router]);
+  }, [router]);
 
   // TODO : Make loading UI?
   return <div>Processing your login...</div>;

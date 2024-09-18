@@ -124,3 +124,11 @@ export type PropertyListingType = {
   //   lowestAdjustedPrice: number;
   // }[];
 };
+
+export type RoomAvailabilityType = {
+  id: number;
+  room: RoomType;
+  startDate: string;
+  endDate: string;
+  isAvailable: boolean;
+};

@@ -1,6 +1,7 @@
 import * as yup from "yup";
 import { whiteSpaceRegex } from "@/constants/WhiteSpaceRegex";
 import { FormType } from "@/constants/Types";
+import { UserType } from "@/hooks/useSelectUserType";
 
 export const loginSchema = yup.object().shape({
   email: yup
@@ -21,12 +22,27 @@ export const registerSchema = yup.object().shape({
     .required("Please enter your email"),
 });
 
+export const userTypeSelectSchema = yup.object().shape({
+  userType: yup
+    .string()
+    .oneOf(["USER", "TENANT"])
+    .required("User type is required"),
+  businessName: yup.string().when("userType", {
+    is: (val: UserType) => val === "TENANT",
+    then: (schema) => schema.required("Business name is required for tenants"),
+    otherwise: (schema) => schema.nullable(),
+  }),
+  taxId: yup.string().nullable(),
+});
+
 export const getValidationSchema = (formType: FormType) => {
   switch (formType) {
     case "login":
       return loginSchema;
     case "register":
       return registerSchema;
+    case "userType":
+      return userTypeSelectSchema;
     default:
       return registerSchema;
   }

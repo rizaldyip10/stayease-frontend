@@ -17,7 +17,7 @@ const SidePicture: React.FC<PictureProps> = ({ className, alt, src }) => {
         alt={alt}
         src={src}
         width={680}
-        height={860}
+        height={900}
       />
     </div>
   );

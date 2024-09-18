@@ -5,7 +5,7 @@ import ProtectedRoute from "@/components/hoc/ProtectedRoute";
 
 const ProfileLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <ProtectedRoute>
+    <>
       <div className="w-full flex flex-col lg:flex-row gap-4 lg:gap-0">
         <UserMenu />
         <div className="lg:hidden">
@@ -15,7 +15,7 @@ const ProfileLayout = ({ children }: { children: ReactNode }) => {
           {children}
         </div>
       </div>
-    </ProtectedRoute>
+    </>
   );
 };
 
