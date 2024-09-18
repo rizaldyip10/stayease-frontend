@@ -5,7 +5,12 @@ type RouteHandler = (
   request: NextRequest,
 ) => boolean | NextResponse;
 
-const publicRoutes = new Set(["/login", "/register", "/forgot-password"]);
+const publicRoutes = new Set([
+  "/login",
+  "/register",
+  "/forgot-password",
+  "/register/verify",
+]);
 
 const routeHandlers = new Map<string, RouteHandler>([
   ["/dashboard/user", (session) => session.user.userType === "USER"],
