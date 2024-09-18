@@ -118,11 +118,9 @@ export const usePropertyCreation = () => {
   };
 
   return {
-    categories,
     setCategories,
     isLoading,
     error,
-    fetchCategories,
     handleSubmit,
     handleImageUpload,
   };

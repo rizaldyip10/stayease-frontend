@@ -7,54 +7,21 @@ import { createPropValidationSchema } from "@/utils/validationSchema";
 import PropertyForm from "@/app/dashboard/properties/create/_components/PropertyForm";
 import RoomForm from "@/app/dashboard/properties/create/_components/RoomForm";
 import { usePropertyCreation } from "@/hooks/usePropertyCreation";
+import { createPropertyInitialValues } from "@/utils/PropertyInitialValues";
+import { usePropertyUtils } from "@/hooks/usePropertyUtils";
 
 const CreateProperty = () => {
   const [showCategoryForm, setShowCategoryForm] = useState(false);
-  const {
-    categories,
-    setCategories,
-    isLoading,
-    error,
-    fetchCategories,
-    handleSubmit,
-    handleImageUpload,
-  } = usePropertyCreation();
-
-  useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
-
-  const initialValues = {
-    property: {
-      name: "",
-      description: "",
-      imageUrl: "",
-      address: "",
-      city: "",
-      country: "",
-      longitude: 0,
-      latitude: 0,
-      categoryId: 0,
-    },
-    rooms: [
-      {
-        name: "",
-        description: "",
-        basePrice: 0,
-        capacity: 0,
-        imageUrl: "",
-      },
-    ],
-    category: {
-      name: "",
-    },
-  };
+  const { setCategories, isLoading, error, handleSubmit, handleImageUpload } =
+    usePropertyCreation();
+  const { categories } = usePropertyUtils();
+  console.log("categories", categories);
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Create New Property</h1>
       <Formik
-        initialValues={initialValues}
+        initialValues={createPropertyInitialValues}
         validationSchema={createPropValidationSchema}
         onSubmit={handleSubmit}
       >

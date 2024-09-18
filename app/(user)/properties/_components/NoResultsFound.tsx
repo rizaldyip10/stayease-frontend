@@ -9,7 +9,7 @@ const NoResultsFound: React.FC = () => {
         No Results Found
       </h2>
       <p className="text-gray-500 mb-4">
-        We couldn&amp;t find any properties matching your search criteria.
+        We couldn't find any properties matching your search criteria.
       </p>
       <p className="text-gray-500">
         Try adjusting your filters or search terms to find more options.

@@ -37,10 +37,8 @@ interface PropertyFormProps {
     setFieldValue: (field: string, value: any) => void,
   ) => Promise<void>;
   setCategories: React.Dispatch<React.SetStateAction<CategoryType[]>>;
-  categories: CategoryType[];
+  categories: CategoryType[] | undefined;
 }
-
-const libraries: "places"[] = ["places"];
 
 const PropertyForm: React.FC<PropertyFormProps> = ({
   onImageUpload,
@@ -86,46 +84,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
     }
   };
 
-  const handleMapClick = useCallback(
-    (e: google.maps.MapMouseEvent) => {
-      if (e.latLng) {
-        const lat = e.latLng.lat();
-        const lng = e.latLng.lng();
-        setFieldValue("property.latitude", lat);
-        setFieldValue("property.longitude", lng);
-        setMapCenter({ lat, lng });
-        console.log("Map clicked at:", lat, lng);
-        console.log("field value:", values);
-      }
-    },
-    [setFieldValue],
-  );
-
-  const onLoad = (autocomplete: google.maps.places.Autocomplete) => {
-    setSearchBox(autocomplete);
-  };
-
-  const capitalizeFirstLetter = (string: string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
-
-  const onPlaceChanged = () => {
-    if (searchBox !== null) {
-      const place = searchBox.getPlace();
-      if (place.geometry && place.geometry.location) {
-        const newLocation = {
-          lat: place.geometry.location.lat(),
-          lng: place.geometry.location.lng(),
-        };
-        setLocation(newLocation);
-      } else {
-        console.log("Place geometry or location is not available.");
-      }
-    } else {
-      console.log("Autocomplete is not loaded yet!");
-    }
-  };
-
   useEffect(() => {
     console.log("Field values:", values);
   }, [setFieldValue, values]);
@@ -159,40 +117,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
       <div className="mt-4">
         <Label>Location</Label>
         <div style={{ height: "400px", width: "100%" }}>
-          {/*<LoadScript*/}
-          {/*  googleMapsApiKey={`${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}*/}
-          {/*  libraries={libraries}*/}
-          {/*>*/}
-          {/*  <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>*/}
-          {/*    <input*/}
-          {/*      type="text"*/}
-          {/*      placeholder="Search for a location"*/}
-          {/*      style={{*/}
-          {/*        boxSizing: `border-box`,*/}
-          {/*        border: `1px solid transparent`,*/}
-          {/*        width: `240px`,*/}
-          {/*        height: `32px`,*/}
-          {/*        padding: `0 12px`,*/}
-          {/*        borderRadius: `3px`,*/}
-          {/*        boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,*/}
-          {/*        fontSize: `14px`,*/}
-          {/*        outline: `none`,*/}
-          {/*        textOverflow: `ellipses`,*/}
-          {/*        marginBottom: "10px",*/}
-          {/*      }}*/}
-          {/*    />*/}
-          {/*  </Autocomplete>*/}
-          {/*  <div style={{ height: "400px", width: "100%" }}>*/}
-          {/*    <GoogleMap*/}
-          {/*      mapContainerStyle={{ height: "100%", width: "100%" }}*/}
-          {/*      center={location}*/}
-          {/*      zoom={10}*/}
-          {/*      onClick={handleMapClick}*/}
-          {/*    >*/}
-          {/*      <Marker position={location} />*/}
-          {/*    </GoogleMap>*/}
-          {/*  </div>*/}
-          {/*</LoadScript>*/}
           <MapComponent
             initialCenter={{
               lat: values.property.latitude || 0,

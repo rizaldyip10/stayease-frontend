@@ -1,6 +1,6 @@
 "use client";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { format, isValid } from "date-fns";
+import React, { useEffect, useMemo } from "react";
+import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,8 +14,6 @@ import RoomCard from "@/app/(user)/properties/[propertyId]/_components/RoomCard"
 import AvailabilityCalendar from "@/components/AvailabilityCalendar";
 import { CurrentAvailablePropertyType } from "@/constants/Property";
 import { usePropertyDetails } from "@/hooks/usePropertyDetails";
-import { MapPin } from "lucide-react";
-import Image from "next/image";
 import PropertyHeader from "@/app/(user)/properties/[propertyId]/_components/PropertyHeader";
 import { useDateSelection } from "@/hooks/useDateSelection";
 
