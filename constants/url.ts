@@ -7,10 +7,12 @@ export const config = {
       login: "/auth/login",
       logout: "/auth/logout",
       refreshToken: "/auth/refresh",
+      refreshAccessToken: "/auth/refresh-access",
     },
     oauth2: {
+      checkUserExists: "/oauth2/check-user-exists",
+      registerOAuth2: "/oauth2/register",
       exchangeCode: "/oauth2/exchange-code",
-      socialUserSelect: "/oauth2/user-select",
     },
     password: {
       forgot: "/password/forgot",
