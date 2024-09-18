@@ -1,12 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import CustomAlert from "@/components/CustomAlert";
+import CustomAlert from "@/components/AlertComponent";
 import Image from "next/image";
 import { FormType, UserType } from "@/constants/Types";
 import useAuthForm from "@/hooks/useAuthForm";
 import AuthCard from "@/app/(auth)/_components/AuthCard";
 import MultiStepForm from "@/app/(auth)/_components/MultiStepForm";
 import { useSearchParams } from "next/navigation";
+import AlertComponent from "@/components/AlertComponent";
+import { useAuth } from "@/hooks/useAuth";
+import { FormikHelpers, FormikValues } from "formik";
 
 interface AuthFormProps {
   className?: string;
@@ -21,13 +24,25 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
   formType: FormType;
 }) => {
   const [userType, setUserType] = useState<UserType>("USER");
-  const { message, alertType, showAlert, setShowAlert, handleMultiStepSubmit } =
-    useAuthForm({
-      userType,
-    });
+  const {
+    loading,
+    error,
+    alertInfo,
+    handleSubmit,
+    handleMultiStepSubmit,
+    hideAlert,
+  } = useAuthForm({ userType });
+  const { googleLogin } = useAuth();
 
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+
+  const onSubmit = (
+    values: FormikValues,
+    actions: FormikHelpers<FormikValues>,
+  ) => {
+    handleSubmit(values, actions, formType);
+  };
 
   return (
     <div className={className}>
@@ -50,12 +65,11 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
         </div>
         <div className="overflow-hidden flex flex-col items-center justify-between text-left text-sm text-gray-900">
           <div className="flex flex-col items-center justify-start py-0 md:px-8">
-            {showAlert && (
-              <CustomAlert
-                className={`z-50 top-1/2 -translate-y-full md:max-w-[500px] max-w-[300px] bg-white fixed left-1/2 transform -translate-x-1/2`}
-                title={alertType}
-                message={message}
-                onClose={() => setShowAlert(false)}
+            {alertInfo.show && (
+              <AlertComponent
+                type={alertInfo.type as "success" | "error"}
+                message={alertInfo.message}
+                onClose={hideAlert}
               />
             )}
             {formType === "verify" && token ? (
@@ -69,6 +83,17 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
                 formType={formType}
                 userType={userType}
                 setUserType={setUserType}
+                onSubmit={onSubmit}
+                googleLogin={googleLogin}
+                loading={loading}
+                alertInfo={
+                  alertInfo as {
+                    show: boolean;
+                    type: "success" | "error";
+                    message: string;
+                  }
+                }
+                hideAlert={hideAlert}
               />
             )}
           </div>

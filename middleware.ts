@@ -1,51 +1,39 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { auth } from "./auth";
-import { publicRoutes, routeHandlers } from "./utils/routeHandlers";
+import { isPublicRoute, getRouteHandler } from "./utils/routeHandlers";
 
-export type RouteHandler = (
-  session: any,
-  request: NextRequest,
-) => boolean | NextResponse;
-
-export interface RouteConfig {
-  route: string;
-  handler: RouteHandler;
-}
 export default async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
-  // Public routes access
-  if (publicRoutes.some((route) => path === route)) {
+  if (path === "/" || isPublicRoute(path)) {
     return NextResponse.next();
   }
+
   const session = await auth();
 
   if (!session) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  const handler = findMatchingHandler(path);
+  if (["/login", "/register"].includes(path)) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
 
+  const handler = getRouteHandler(path);
   if (handler) {
     const result = handler(session, request);
-    if (result === true) return NextResponse.next();
-    if (result instanceof NextResponse) return result;
+    if (result instanceof NextResponse) {
+      return result;
+    }
+    return result
+      ? NextResponse.next()
+      : NextResponse.redirect(new URL("/unauthorized", request.url));
   }
 
   return NextResponse.redirect(new URL("/unauthorized", request.url));
 }
 
-function findMatchingHandler(path: string) {
-  return routeHandlers.find(({ route }) => path.startsWith(route))?.handler;
-}
-
 export const config = {
-  matcher: [
-    "/dashboard/:path*",
-    "/properties/:path*",
-    "/bookings/:path*",
-    "/register/:path*",
-    // Add more matchers as needed
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

@@ -13,13 +13,29 @@ interface UseAuthFormProps {
 const UseAuthForm = ({ userType }: UseAuthFormProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [message, setMessage] = useState("");
-  const [alertType, setAlertType] = useState<AlertType>("Success");
-  const [showAlert, setShowAlert] = useState(false);
+  const [alertInfo, setAlertInfo] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
   const { register, verify } = useAuth();
 
   const router = useRouter();
+
+  const showAlert = (type: AlertType, message: string) => {
+    setAlertInfo({ show: true, type, message });
+    setTimeout(() => {
+      setAlertInfo({ show: false, type: "success", message: "" });
+      if (type === "success") {
+        router.push("/dashboard");
+      }
+    }, 3000);
+  };
+
+  const hideAlert = () => {
+    setAlertInfo({ show: false, type: "success", message: "" });
+  };
 
   const handleSubmit = async (
     values: FormikValues,
@@ -38,25 +54,19 @@ const UseAuthForm = ({ userType }: UseAuthFormProps) => {
         });
 
         if (result?.error) {
-          throw new Error(result.error);
+          showAlert("error", result.error);
+        } else {
+          showAlert("success", "Login successful!");
         }
-
-        setMessage("Login successful!");
-        setAlertType("Success");
-      } else {
+      } else if (formType === "register") {
         await register({ email: values.email, userType });
-        setMessage(
-          "Register successful! Please check your email for further instructions!",
-        );
-        setAlertType("Success");
+        showAlert("success", "Registration successful! Please log in.");
         setLoading(false);
       }
     } catch (error: any) {
       const errorMessage = "An error occurred";
       setError(errorMessage);
-      setMessage(errorMessage);
-      setAlertType("Error");
-      setShowAlert(true);
+      showAlert("error", error.message);
       console.error("Error details:", error?.response?.data?.message);
     } finally {
       setLoading(false);
@@ -71,22 +81,13 @@ const UseAuthForm = ({ userType }: UseAuthFormProps) => {
   ) => {
     setLoading(true);
     setError(null);
-    setAlertType("Success");
 
     try {
       const response = await verify({ token, values });
 
       console.log(response);
-      // TODO handle success (store token, redirect, etc)
 
-      setMessage("Registration completed successfully, please sign in!");
-      // TODO : ALerts
-      // setAlertType("Success");
-      // setShowAlert(true);
-      // TODO: handle success verification: redirect to login page
-      alert(
-        "Registration completed successfully. Please login. This is from FE",
-      );
+      showAlert("success", "Verification successful! Please log in.");
       router.push("/login");
     } catch (error: any) {
       const errorMessage = "An error occurred";
@@ -95,9 +96,7 @@ const UseAuthForm = ({ userType }: UseAuthFormProps) => {
         error?.response?.data?.message,
       );
       setError(errorMessage);
-      setMessage(errorMessage);
-      setAlertType("Error");
-      setShowAlert(true);
+      showAlert("error", error.message);
 
       console.error("Error during registration verification:", error);
     } finally {
@@ -108,18 +107,12 @@ const UseAuthForm = ({ userType }: UseAuthFormProps) => {
 
   return {
     loading,
-    setLoading,
     error,
-    setError,
-    message,
-    setMessage,
-    alertType,
-    setAlertType,
     showAlert,
-    setShowAlert,
+    alertInfo,
+    hideAlert,
     handleSubmit,
     handleMultiStepSubmit,
   };
 };
-
 export default UseAuthForm;

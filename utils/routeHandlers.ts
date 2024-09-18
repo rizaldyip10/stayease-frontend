@@ -5,56 +5,38 @@ type RouteHandler = (
   request: NextRequest,
 ) => boolean | NextResponse;
 
-interface RouteConfig {
-  route: string;
-  handler: RouteHandler;
+const publicRoutes = new Set(["/login", "/register", "/forgot-password"]);
+
+const routeHandlers = new Map<string, RouteHandler>([
+  ["/dashboard/user", (session) => session.user.userType === "USER"],
+  ["/dashboard/tenant", (session) => session.user.userType === "TENANT"],
+  [
+    "/dashboard",
+    (session) => ["USER", "TENANT"].includes(session.user.userType),
+  ],
+  ["/properties", (session) => session.user.userType === "TENANT"],
+  ["/bookings", (session) => session.user.userType === "USER"],
+  [
+    "/register/select-user-type",
+    (session, request) =>
+      session.user.isNewUser ||
+      NextResponse.redirect(new URL("/", request.url)),
+  ],
+]);
+
+export function isPublicRoute(path: string): boolean {
+  return publicRoutes.has(path);
 }
 
-export const publicRoutes = ["/login", "/register", "/forgot-password"];
+export function getRouteHandler(path: string): RouteHandler | undefined {
+  const exactMatch = routeHandlers.get(path);
+  if (exactMatch) {
+    return exactMatch;
+  }
 
-const dashboardHandlers: RouteConfig[] = [
-  {
-    route: "/dashboard/user",
-    handler: (session) => session.user.userType === "USER",
-  },
-  {
-    route: "/dashboard/tenant",
-    handler: (session) => session.user.userType === "TENANT",
-  },
-  {
-    route: "/dashboard",
-    handler: (session) => ["USER", "TENANT"].includes(session.user.userType),
-  },
-];
+  const partialMatch = Array.from(routeHandlers.keys()).find((route) =>
+    path.startsWith(route),
+  );
 
-const propertyHandlers: RouteConfig[] = [
-  {
-    route: "/properties",
-    handler: (session) => session.user.userType === "TENANT",
-  },
-];
-
-const bookingHandlers: RouteConfig[] = [
-  {
-    route: "/bookings",
-    handler: (session) => session.user.userType === "USER",
-  },
-];
-
-const registrationHandlers: RouteConfig[] = [
-  {
-    route: "/register/select-user-type",
-    handler: (session, request) => {
-      if (session.user.isNewUser === true) return true;
-      return NextResponse.redirect(new URL("/", request.url));
-    },
-  },
-];
-
-export const routeHandlers: RouteConfig[] = [
-  ...dashboardHandlers,
-  ...propertyHandlers,
-  ...bookingHandlers,
-  ...registrationHandlers,
-  // Add more route handler groups as needed
-];
+  return partialMatch ? routeHandlers.get(partialMatch) : undefined;
+}

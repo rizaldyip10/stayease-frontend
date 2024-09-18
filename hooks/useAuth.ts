@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useEffect, useState } from "react";
 import { UserType } from "@/constants/Types";
-import { FormikValues } from "formik";
 import { AuthResponse, RegisterResponse } from "@/constants/Auth";
 import { MultiStepFormValues } from "@/app/(auth)/_components/MultiStepForm";
 import { signIn as nextAuthSignIn } from "next-auth/react";

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { FormType, UserType } from "@/constants/Types";
+import { AlertType, FormType, UserType } from "@/constants/Types";
 import Image from "next/image";
 import logo from "@/assets/images/logo_horizontal.png";
 import { Button } from "@/components/ui/button";
@@ -12,39 +12,36 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getInitialValues } from "@/utils/authInitialValues";
 import { useAuth } from "@/hooks/useAuth";
+import logger from "@/utils/logger";
 
 interface AuthCardProps {
   formType: FormType;
   userType: UserType;
   setUserType: React.Dispatch<React.SetStateAction<UserType>>;
+  onSubmit: (
+    values: FormikValues,
+    actions: FormikHelpers<FormikValues>,
+  ) => void;
+  googleLogin: () => void;
+  loading: boolean;
+  alertInfo: { show: boolean; type: AlertType; message: string };
+  hideAlert: () => void;
 }
 
 const AuthCard: React.FC<AuthCardProps> = ({
   formType,
   userType,
   setUserType,
+  onSubmit,
+  googleLogin,
+  loading,
+  alertInfo,
+  hideAlert,
 }) => {
   const router = useRouter();
-  const { handleSubmit, error, loading, message, alertType, showAlert } =
-    useAuthForm({
-      userType,
-    });
-
-  console.log("usertype:", userType);
-  console.log("formType:", formType);
-
-  const { googleLogin } = useAuth();
-
   const initialValues = getInitialValues(formType);
 
-  const onSubmit = (
-    values: FormikValues,
-    actions: FormikHelpers<FormikValues>,
-  ) => {
-    handleSubmit(values, actions, formType);
-    // login({ values });
-    console.log("values: ", values);
-  };
+  logger.debug("AuthCard", { formType, userType });
 
   const handleNavigation = (
     e: React.MouseEvent<HTMLAnchorElement>,
@@ -97,14 +94,13 @@ const AuthCard: React.FC<AuthCardProps> = ({
         userType={userType}
       />
 
-      {error && <p className="text-red-500">{error}</p>}
-      {/*{showAlert && (*/}
-      {/*  <div*/}
-      {/*    className={`text-${alertType === "Success" ? "green" : "red"}-500`}*/}
-      {/*  >*/}
-      {/*    {message}*/}
-      {/*  </div>*/}
-      {/*)}*/}
+      {alertInfo.show && (
+        <div
+          className={`text-${alertInfo.type === "success" ? "green" : "red"}-500`}
+        >
+          {alertInfo.message}
+        </div>
+      )}
 
       <div className="w-full relative mt-2">
         <hr className="bg-neutral-500 w-full relative" />
