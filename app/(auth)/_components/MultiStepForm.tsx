@@ -60,7 +60,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
       lastName: yup.string().required("Required"),
       phoneNumber: yup.string(),
     }),
-    userType === "tenant"
+    userType === "TENANT"
       ? yup.object({
           businessName: yup.string().required("Required"),
           taxId: yup.string(),
@@ -82,7 +82,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
     values: MultiStepFormValues,
     actions: FormikHelpers<MultiStepFormValues>,
   ) => {
-    if (step < (userType === "tenant" ? 4 : 3)) {
+    if (step < (userType === "TENANT" ? 4 : 3)) {
       setStep(step + 1);
       console.log("values: ", values);
       actions.setSubmitting(false);
@@ -141,7 +141,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
           </>
         );
       case 3:
-        if (userType === "tenant") {
+        if (userType === "TENANT") {
           return (
             <>
               <FormikInput
@@ -174,7 +174,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
               <strong>Phone Number:</strong>{" "}
               {values.phoneNumber || "Not provided"}
             </p>
-            {userType === "tenant" && (
+            {userType === "TENANT" && (
               <>
                 <p>
                   <strong>Business Name:</strong>{" "}
@@ -206,7 +206,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
         <Form className="space-y-7 min-w-lg">
           <div className="flex justify-center gap-7 mb-4">
             {[1, 2, 3, 4]
-              .slice(0, userType === "tenant" ? 4 : 3)
+              .slice(0, userType === "TENANT" ? 4 : 3)
               .map((stepNumber) => (
                 <div
                   key={stepNumber}
@@ -238,7 +238,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
               className="bg-appblue-900 w-1/2 text-white mx-auto"
               disabled={!(isValid && dirty) || isSubmitting}
             >
-              {step === (userType === "tenant" ? 4 : 3) ? "Submit" : "Next"}
+              {step === (userType === "TENANT" ? 4 : 3) ? "Submit" : "Next"}
             </Button>
           </div>
         </Form>

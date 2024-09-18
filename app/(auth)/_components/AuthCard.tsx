@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { FormType, UserType } from "@/constants/Types";
+import { AlertType, FormType, UserType } from "@/constants/Types";
 import Image from "next/image";
 import logo from "@/assets/images/logo_horizontal.png";
 import { Button } from "@/components/ui/button";
@@ -12,35 +12,36 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getInitialValues } from "@/utils/authInitialValues";
 import { useAuth } from "@/hooks/useAuth";
+import logger from "@/utils/logger";
 
 interface AuthCardProps {
   formType: FormType;
   userType: UserType;
   setUserType: React.Dispatch<React.SetStateAction<UserType>>;
+  onSubmit: (
+    values: FormikValues,
+    actions: FormikHelpers<FormikValues>,
+  ) => void;
+  googleLogin?: () => void;
+  loading: boolean;
+  alertInfo: { show: boolean; type: AlertType; message: string };
+  hideAlert: () => void;
 }
 
 const AuthCard: React.FC<AuthCardProps> = ({
   formType,
   userType,
   setUserType,
+  onSubmit,
+  googleLogin,
+  loading,
+  alertInfo,
+  hideAlert,
 }) => {
   const router = useRouter();
-  const { handleSubmit, error, loading, message, alertType, showAlert } =
-    useAuthForm({
-      userType,
-    });
-  const { initiateGoogleLogin, login } = useAuth();
-
   const initialValues = getInitialValues(formType);
 
-  const onSubmit = (
-    values: FormikValues,
-    actions: FormikHelpers<FormikValues>,
-  ) => {
-    handleSubmit(values, actions, formType);
-    // login({ values });
-    console.log("values: ", values);
-  };
+  logger.debug("AuthCard", { formType, userType });
 
   const handleNavigation = (
     e: React.MouseEvent<HTMLAnchorElement>,
@@ -54,7 +55,7 @@ const AuthCard: React.FC<AuthCardProps> = ({
     <div className="w-96 max-sm:w-80 max-sm:px-5 flex flex-col items-center bg-white px-7 py-10 gap-5 md:gap-7">
       <div className="w-full flex flex-col items-center md:gap-3 gap-2 md:mb-5">
         <Image src={logo} alt="logo" height={50} className="md:hidden mb-10" />
-        <h1 className="text-3xl font-bold text-appblue-800 md:text-left">
+        <h1 className="text-3xl font-bold text-blue-950 md:text-left">
           {formType === "login" ? "Login" : "Register"}
         </h1>
         {formType === "register" && (
@@ -63,22 +64,22 @@ const AuthCard: React.FC<AuthCardProps> = ({
             <p>
               <span
                 className={
-                  userType === "user"
-                    ? "font-bold p-1 bg-appblue-900 text-white rounded-sm cursor-pointer"
+                  userType === "USER"
+                    ? "font-bold p-1 bg-blue-950 text-white rounded-sm cursor-pointer"
                     : "font-normal cursor-pointer"
                 }
-                onClick={() => setUserType("user")}
+                onClick={() => setUserType("USER")}
               >
                 <a>User</a>
               </span>{" "}
               /{" "}
               <span
                 className={
-                  userType === "tenant"
-                    ? "font-bold p-1 bg-appblue-900 text-white rounded-sm cursor-pointer"
+                  userType === "TENANT"
+                    ? "font-bold p-1 bg-blue-950 text-white rounded-sm cursor-pointer"
                     : "font-normal cursor-pointer"
                 }
-                onClick={() => setUserType("tenant")}
+                onClick={() => setUserType("TENANT")}
               >
                 <a>Tenant</a>
               </span>
@@ -93,14 +94,13 @@ const AuthCard: React.FC<AuthCardProps> = ({
         userType={userType}
       />
 
-      {error && <p className="text-red-500">{error}</p>}
-      {/*{showAlert && (*/}
-      {/*  <div*/}
-      {/*    className={`text-${alertType === "Success" ? "green" : "red"}-500`}*/}
-      {/*  >*/}
-      {/*    {message}*/}
-      {/*  </div>*/}
-      {/*)}*/}
+      {alertInfo.show && (
+        <div
+          className={`text-${alertInfo.type === "success" ? "green" : "red"}-500`}
+        >
+          {alertInfo.message}
+        </div>
+      )}
 
       <div className="w-full relative mt-2">
         <hr className="bg-neutral-500 w-full relative" />
@@ -114,7 +114,7 @@ const AuthCard: React.FC<AuthCardProps> = ({
       <Button
         variant="outline"
         className="w-full flex items-center gap-2"
-        onClick={initiateGoogleLogin}
+        onClick={googleLogin}
       >
         <Image src={googleLogo} alt={"google"} height={20} />
         Continue with Google

@@ -7,10 +7,12 @@ export const config = {
       login: "/auth/login",
       logout: "/auth/logout",
       refreshToken: "/auth/refresh",
+      refreshAccessToken: "/auth/refresh-access",
     },
     oauth2: {
+      checkUserExists: "/oauth2/check-user-exists",
+      registerOAuth2: "/oauth2/register",
       exchangeCode: "/oauth2/exchange-code",
-      socialUserSelect: "/oauth2/user-select",
     },
     password: {
       forgot: "/password/forgot",
@@ -31,6 +33,7 @@ export const config = {
       getAllProperties: "/properties",
       getProperty: "/properties/{propertyId}",
       getTenantProperties: "/properties/tenant",
+      getTenantRooms: "/properties/tenant/rooms",
       createProperty: "/properties",
       updateProperty: "/properties/{propertyId}",
       deleteProperty: "/properties/{propertyId}",
@@ -48,5 +51,17 @@ export const config = {
       getAllCities: "/properties/cities",
       getAllImages: "/properties/images",
     },
+    bookings: {
+      tenantBookings: "/bookings/tenant",
+      userBookings: "/bookings/user"
+    },
+    transactions: {
+      tenant: "/transactions",
+      user: "/transactions/user",
+    },
+    payments: {
+      paymentInfo: "/payments",
+      uploadPayment: "/payments/payment-proof"
+    }
   },
 };

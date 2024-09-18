@@ -138,7 +138,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
           <Card>
             <CardContent className="p-4">
               <h2 className="text-2xl font-semibold mb-4">Available Rooms</h2>
-              {property.rooms.map((room) => (
+              {property.rooms?.map((room) => (
                 <RoomCard
                   key={room.id}
                   room={room}

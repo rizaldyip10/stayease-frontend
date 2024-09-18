@@ -18,6 +18,7 @@ export type BookingQueries = {
     totalChildren: number | null;
     totalInfants: number | null;
     roomId: number | null;
+    propertyId: number | null;
 };
 
 export type BookingType = {
@@ -64,3 +65,13 @@ export type BookingDataType = {
     totalChildren: number | null;
     totalInfants: number | null;
 };
+
+export type UserBookingsType = {
+    page: number;
+    size: number;
+    direction: string | null;
+    search: string | null;
+};
+
+export const rejectedBookings = ["payment failed", "expired", "cancelled"];
+export const pendingBookings = ["pending", "waiting for confirmation"];

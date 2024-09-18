@@ -1,35 +1,35 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { format, parse } from "date-fns"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import * as React from "react";
+import { format, parse } from "date-fns";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/components/ui/popover"
-import { CalendarIcon } from "lucide-react"
-import { FC } from "react"
-import {BookingQueries} from "@/constants/Booking";
+} from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { FC } from "react";
 
 interface DatePickerProps {
-    name: string
+    name: string;
     label: string;
-    value: string | null | undefined;
+    value?: string | null | undefined;
     isEditing?: boolean;
-    onChange: (value: Partial<BookingQueries>) => void;
+    onChange: (value: Partial<any>) => void;
+    className?: string;
 }
 
-const FormikDatePicker: FC<DatePickerProps> = ({ name, label, value, isEditing, onChange }) => {
+const DatePicker: FC<DatePickerProps> = ({ name, label, value, className, isEditing, onChange }) => {
     const handleSelect = (date: Date | undefined) => {
         if (date) {
             onChange({ [name]: format(date, 'yyyy-MM-dd') });
         } else {
             onChange({ [name]: null })
         }
-    }
+    };
 
     const displayValue = value
         ? format(parse(value, 'yyyy-MM-dd', new Date()), "PPP")
@@ -42,7 +42,7 @@ const FormikDatePicker: FC<DatePickerProps> = ({ name, label, value, isEditing, 
                     variant={"outline"}
                     className={cn(
                         "w-[240px] justify-start text-left font-normal",
-                        !value && "text-muted-foreground"
+                        !value && "text-muted-foreground", className
                     )}
                 >
                     <CalendarIcon className="mr-2 h-4 w-4" />
@@ -61,4 +61,4 @@ const FormikDatePicker: FC<DatePickerProps> = ({ name, label, value, isEditing, 
     );
 };
 
-export default FormikDatePicker;
+export default DatePicker;

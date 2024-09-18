@@ -13,7 +13,8 @@ export const useBookingValues = () => {
         totalAdults: null,
         totalChildren: null,
         totalInfants: null,
-        roomId: null
+        roomId: null,
+        propertyId: null
     });
 
     useEffect(() => {
@@ -24,6 +25,7 @@ export const useBookingValues = () => {
         const totalChildren = query.get("totalChildren");
         const totalInfants = query.get("totalInfants");
         const roomId = query.get("roomId");
+        const propertyId = query.get("propertyId");
 
         setBookingValues(prev => ({
             ...prev,
@@ -32,25 +34,29 @@ export const useBookingValues = () => {
             totalAdults: parseInt(totalAdults || "1"),
             totalChildren: totalChildren ? +totalChildren : null,
             totalInfants: totalInfants ? +totalInfants : null,
-            roomId: +roomId!
+            roomId: +roomId!,
+            propertyId: +propertyId!
         }));
     }, [searchParams]);
 
     const setBookingInfo = useCallback((newFilter: Partial<BookingQueries>) => {
-        setBookingValues((prevFilters) => {
-            const updatedFilters = { ...prevFilters, ...newFilter };
-            const params = new URLSearchParams();
+        setBookingValues((prevFilters) => ({
+            ...prevFilters,
+            ...newFilter
+        }));
+    }, []);
 
-            Object.entries(updatedFilters).forEach(([key, value]) => {
-                if (value !== null && value !== undefined && value !== '') {
-                    params.set(key, value.toString());
-                }
-            });
+    const saveToUrlParams = useCallback(() => {
+        const params = new URLSearchParams();
 
-            router.push(`?${params.toString()}`);
-            return updatedFilters;
+        Object.entries(bookingValues).forEach(([key, value]) => {
+            if (value !== null && value !== undefined && value !== '') {
+                params.set(key, value.toString());
+            }
         });
-    }, [router]);
 
-    return {bookingValues, setBookingInfo}
+        router.push(`?${params.toString()}`);
+    }, [bookingValues, router]);
+
+    return {bookingValues, setBookingInfo, save: saveToUrlParams};
 }
