@@ -67,7 +67,7 @@ export async function handleJwtCallback({
   }
 
   if (trigger === "update" && session) {
-    Object.assign(token, session);
+    mapNewSessionToToken(token, session);
     logger.debug("Token updated from session", { email: token.email });
   }
 
@@ -122,6 +122,25 @@ function mapTokenToSessionUser(token: any) {
     googleToken: token.googleToken,
     isNewUser: token.isNewUser,
   };
+}
+
+function mapNewSessionToToken(token: any, session: any) {
+  Object.assign(token, {
+    sub: session.user.email,
+    id: session.user.id,
+    email: session.user.email,
+    userType: session.user.userType,
+    firstName: session.user.firstName,
+    lastName: session.user.lastName,
+    avatar: session.user.avatar,
+    isVerified: session.user.isVerified,
+    isOAuth2: session.user.isOAuth2,
+    accessToken: session.user.accessToken,
+    refreshToken: session.user.refreshToken,
+    expiresAt: session.user.expiresAt,
+    googleToken: session.user.googleToken,
+    isNewUser: session.user.isNewUser,
+  });
 }
 
 async function shouldRefreshTokens(token: any) {

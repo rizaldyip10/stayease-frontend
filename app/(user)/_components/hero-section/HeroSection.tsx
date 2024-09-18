@@ -4,6 +4,7 @@ import HeroDescription from "@/app/(user)/_components/hero-section/HeroDescripti
 import PropertySearchBar from "@/components/PropertySearchBar";
 import { CarouselPlugin } from "@/components/CarouselPlugin";
 import useMediaQuery from "@/hooks/useMediaQuery";
+import { useSession } from "next-auth/react";
 
 interface HeroSectionProps {
   className?: string;
@@ -11,6 +12,8 @@ interface HeroSectionProps {
 
 const HeroSection: React.FC<HeroSectionProps> = ({ className }) => {
   const isDesktop: boolean = useMediaQuery("(min-width: 768px)");
+  const { data: session } = useSession();
+  console.log("Home", { session });
 
   const images = [
     {

@@ -49,18 +49,39 @@ export const useSelectUserType = () => {
             values.userType === "TENANT" ? values.businessName : undefined,
           taxId: values.userType === "TENANT" ? values.taxId : undefined,
         });
+        console.log("Session: ", session);
 
         await update({
           ...session,
           user: {
             ...session?.user,
             ...response,
+            id: response.id,
+            email: response.email,
+            firstName: response.firstName,
+            lastName: response.lastName,
+            userType: response.userType,
+            avatar: response.avatar,
+            isVerified: response.isVerified,
+            isOAuth2: response.isOAuth2,
+            accessToken: response.token.accessToken,
+            refreshToken: response.token.refreshToken,
+            expiresAt: response.token.expiresAt,
             googleToken: null,
             isNewUser: false,
           },
         });
 
+        await update();
+
+        console.log("Updated session: ", session);
+
         showAlert("success", "Registration successful! Please sign in again.");
+        // TODO !! Figure this out
+        // setTimeout(() => {
+        //   router.replace("/dashboard");
+        //   redirect("/dashboard");
+        // }, 5000);
         setTimeout(() => {
           signOut({ callbackUrl: "/login" });
         }, 3000);
