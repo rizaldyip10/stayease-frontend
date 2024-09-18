@@ -43,7 +43,7 @@ const EditState: FC<EditStateProps> = ({ rating, comment }) => {
                 () => (
                     <Form className="w-full grid grid-cols-1 gap-y-2">
                         <StarInput />
-                        <FormikInput name="comment" label="How's your stay?" />
+                        <FormikInput className="w-full" name="comment" label="How's your stay?" />
                         <Button
                             variant="link"
                             type="submit"

@@ -5,16 +5,28 @@ import UserStayingDataForm from "@/app/(user)/book/_components/UserStayingDataFo
 import SpecialRequest from "@/app/(user)/book/_components/SpecialRequest";
 import PaymentMethodForm from "@/app/(user)/book/_components/PaymentMethodForm";
 import CancellationPolicy from "@/app/(user)/book/_components/CancellationPolicy";
-import axiosInterceptor from "@/utils/axiosInterceptor";
 import {Form, Formik, FormikValues} from "formik";
 import {Button} from "@/components/ui/button";
 import {whiteSpaceRegex} from "@/constants/WhiteSpaceRegex";
 import {useRouter} from "next/navigation";
 import {useBookingValues} from "@/hooks/useBookingValues";
+import {useEffect} from "react";
+import {calculateDaysBetweenDates} from "@/utils/datesDifference";
+import {useRoomDetail} from "@/hooks/useRoomDetail";
+import {transactionService} from "@/services/transactionService";
+import {getAccessToken, setAccessToken} from "@/utils/axiosInterceptor";
 
 const BookingForm = () => {
     const router = useRouter();
     const { bookingValues } = useBookingValues();
+
+    const roomId = bookingValues.roomId;
+    const propertyId = bookingValues.propertyId;
+    const checkInDate = bookingValues.checkInDate;
+    const checkOutDate = bookingValues.checkOutDate;
+
+    const daysDiff = calculateDaysBetweenDates(checkInDate!, checkOutDate!)
+    const { room } = useRoomDetail(propertyId!, roomId!);
 
     const bookingSchema = yup.object().shape({
         checkInTime: yup.date().nullable(),
@@ -37,13 +49,8 @@ const BookingForm = () => {
     const handleBooking = async (value: FormikValues) => {
         try {
             const bookingItem = {
-                checkInDate: bookingValues.checkInDate,
-                checkOutDate: bookingValues.checkOutDate,
-                totalAdults: bookingValues.totalAdults,
-                totalChildren: bookingValues?.totalChildren,
-                totalInfants: bookingValues?.totalInfants,
+                extendingUntil: null
             };
-
             const bookingRequest = {
                 checkInTime: value?.checkInTime,
                 checkOutTime: value?.checkOutTime,
@@ -58,25 +65,32 @@ const BookingForm = () => {
             }
 
             const valueToSent = {
-                booking: { bookingItem, bookingRequest },
-                amount: 1500000,
+                booking: {
+                    bookingItem,
+                    bookingRequest,
+                    checkInDate: bookingValues.checkInDate,
+                    checkOutDate: bookingValues.checkOutDate,
+                    totalAdults: bookingValues.totalAdults,
+                    totalChildren: bookingValues?.totalChildren,
+                    totalInfants: bookingValues?.totalInfants,
+                },
+                amount: room?.basePrice * daysDiff,
                 paymentMethod: value.paymentMethod,
                 bank: value?.bank,
                 custom_expiry: expiryTimeInfo,
             };
 
-            const { data } = await axiosInterceptor.post(`/transactions/${bookingValues.roomId}`, valueToSent, {
-                headers: {
-                    Authorization: `Bearer token`
-                }
-            });
-            console.log(data);
-            router.push(value.paymentMethod == "manual_transfer" ? "/payment?id=paymentId&bank=atm" : `/payment?id=paymentId&bank=${value?.bank}`);
+            const data = await transactionService.newReservation(valueToSent, bookingValues.roomId!)
 
+            router.push(value.paymentMethod == "manual_transfer" ? `/payment?id=${data.bookingId}&bank=atm` : `/payment?id=${data.bookingId}&bank=${value?.bank}`);
         } catch (error) {
             console.log(error);
         }
     };
+
+    useEffect(() => {
+        setAccessToken(getAccessToken());
+    }, []);
 
     return (
         <div className="w-full flex flex-col gap-3">

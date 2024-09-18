@@ -31,6 +31,7 @@ export const config = {
       getAllProperties: "/properties",
       getProperty: "/properties/{propertyId}",
       getTenantProperties: "/properties/tenant",
+      getTenantRooms: "/properties/tenant/rooms",
       createProperty: "/properties",
       updateProperty: "/properties/{propertyId}",
       deleteProperty: "/properties/{propertyId}",
@@ -44,5 +45,17 @@ export const config = {
       updateCategory: "/properties/categories/{categoryId}",
       deleteCategory: "/properties/categories/{categoryId}",
     },
+    bookings: {
+      tenantBookings: "/bookings/tenant",
+      userBookings: "/bookings/user"
+    },
+    transactions: {
+      tenant: "/transactions",
+      user: "/transactions/user",
+    },
+    payments: {
+      paymentInfo: "/payments",
+      uploadPayment: "/payments/payment-proof"
+    }
   },
 };
