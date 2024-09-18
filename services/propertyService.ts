@@ -49,7 +49,7 @@ const propertyService = {
 
   getTenantRooms: async (): Promise<RoomType[]> => {
     const response = await axiosInterceptor.get(
-        config.endpoints.properties.getTenantRooms,
+      config.endpoints.properties.getTenantRooms,
     );
     return response.data.data;
   },
@@ -177,6 +177,15 @@ const propertyService = {
     const response = await axiosInterceptor.get(url, {
       params: { date: formatDate(date) },
     });
+    return response.data.data;
+  },
+
+  checkPropertyOwnership: async (propertyId: number): Promise<boolean> => {
+    const url = config.endpoints.propertyUtils.checkPropertyOwnership.replace(
+      "{propertyId}",
+      propertyId.toString(),
+    );
+    const response = await axiosInterceptor.get(url);
     return response.data.data;
   },
 

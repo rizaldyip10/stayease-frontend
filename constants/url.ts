@@ -48,6 +48,7 @@ export const config = {
       getProperty: "/properties/{propertyId}",
       getRooms: "/properties/{propertyId}/rooms",
       getRoom: "/properties/{propertyId}/rooms/{roomId}",
+      checkPropertyOwnership: "/properties/{propertyId}/check-ownership",
       getCurrentRoom: "/properties/{propertyId}/rooms/{roomId}/available",
       getAdjustedRates: "/properties/{propertyId}/rates",
       getCurrentAvailableProperty: "/properties/{propertyId}/available",
@@ -64,7 +65,7 @@ export const config = {
     },
     bookings: {
       tenantBookings: "/bookings/tenant",
-      userBookings: "/bookings/user"
+      userBookings: "/bookings/user",
     },
     transactions: {
       tenant: "/transactions",
@@ -72,7 +73,7 @@ export const config = {
     },
     payments: {
       paymentInfo: "/payments",
-      uploadPayment: "/payments/payment-proof"
-    }
+      uploadPayment: "/payments/payment-proof",
+    },
   },
 };
