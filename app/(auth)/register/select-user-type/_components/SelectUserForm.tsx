@@ -21,19 +21,20 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { useSelectUserType } from "@/hooks/useSelectUserType";
+import FormInputs from "@/app/(auth)/_components/FormInputs";
 
 const SelectUserForm: React.FC = () => {
   const {
     initialValues,
     validationSchema,
-    handleSubmit,
+    handleUserTypeSubmit,
     alertInfo,
     hideAlert,
   } = useSelectUserType();
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Card className="w-full max-w-md">
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center text-blue-950">
             Select User Type
@@ -45,7 +46,7 @@ const SelectUserForm: React.FC = () => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={handleSubmit}
+          onSubmit={handleUserTypeSubmit}
         >
           {({ values, setFieldValue, isSubmitting }) => (
             <Form>
@@ -66,20 +67,7 @@ const SelectUserForm: React.FC = () => {
                   </Select>
                 </div>
                 {values.userType === "TENANT" && (
-                  <>
-                    <FormikInput
-                      name="businessName"
-                      label="Business Name"
-                      placeholder="Enter your business name"
-                      className="w-full border py-1 px-2 rounded-md focus-visible:ring-0"
-                    />
-                    <FormikInput
-                      name="taxId"
-                      label="Tax ID (optional)"
-                      placeholder="Enter your tax ID"
-                      className="w-full border py-1 px-2 rounded-md focus-visible:ring-0"
-                    />
-                  </>
+                  <FormInputs formType="userType" />
                 )}
               </CardContent>
               <CardFooter>
@@ -94,7 +82,7 @@ const SelectUserForm: React.FC = () => {
             </Form>
           )}
         </Formik>
-      </Card>
+      </div>
       {alertInfo.show && (
         <AlertComponent
           type={alertInfo.type}

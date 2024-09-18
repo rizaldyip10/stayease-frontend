@@ -2,6 +2,7 @@ import { UserType } from "@/constants/Types";
 import { useAlert } from "./useAlert";
 import { useCredentialSubmission } from "@/hooks/useCredentialSubmission";
 import { useVerifyAccount } from "@/hooks/useVerifyAccount";
+import { useSelectUserType } from "@/hooks/useSelectUserType";
 interface UseAuthFormProps {
   userType: UserType;
 }
@@ -18,6 +19,7 @@ const useAuthForm = ({ userType }: UseAuthFormProps) => {
     error: multiStepError,
     handleMultiStepSubmit,
   } = useVerifyAccount();
+  const { handleUserTypeSubmit } = useSelectUserType();
 
   return {
     loading: formLoading || multiStepLoading,
@@ -27,6 +29,7 @@ const useAuthForm = ({ userType }: UseAuthFormProps) => {
     hideAlert,
     handleSubmit,
     handleMultiStepSubmit,
+    handleUserTypeSubmit,
   };
 };
 

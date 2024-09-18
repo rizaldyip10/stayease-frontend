@@ -39,7 +39,7 @@ export const useSelectUserType = () => {
     taxId: yup.string().nullable(),
   });
 
-  const handleSubmit = useCallback(
+  const handleUserTypeSubmit = useCallback(
     async (values: FormValues) => {
       try {
         const response = await authService.registerOAuth2({
@@ -75,7 +75,7 @@ export const useSelectUserType = () => {
   return {
     initialValues,
     validationSchema,
-    handleSubmit,
+    handleUserTypeSubmit,
     alertInfo,
     hideAlert,
   };

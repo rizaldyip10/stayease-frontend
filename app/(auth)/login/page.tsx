@@ -9,7 +9,7 @@ import AuthFormSection from "@/app/(auth)/_components/AuthFormSection";
 const LogIn: React.FC = () => {
   const { data: session } = useSession();
   useEffect(() => {
-    logger.info("AuthFormSection", { session });
+    console.log("LogIn", { session });
   }, []);
 
   return (

@@ -4,6 +4,14 @@ import { Form, Formik, FormikHelpers, FormikValues } from "formik";
 import { Button } from "@/components/ui/button";
 import { getValidationSchema } from "@/utils/validationSchema";
 import FormInputs from "@/app/(auth)/_components/FormInputs";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface AuthFormProps {
   formType: FormType;

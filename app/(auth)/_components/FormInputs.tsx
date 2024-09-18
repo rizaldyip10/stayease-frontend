@@ -34,7 +34,7 @@ const FormInputs: React.FC<FormInputsProps> = ({ formType }) => {
           label="Email"
         />
       );
-    case "select-user-type":
+    case "userType":
       return (
         <>
           <FormikInput
