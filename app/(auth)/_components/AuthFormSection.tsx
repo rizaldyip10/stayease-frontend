@@ -1,15 +1,16 @@
 "use client";
-import React, { useState } from "react";
-import CustomAlert from "@/components/AlertComponent";
+import React, { useEffect, useState } from "react";
+import AlertComponent from "@/components/AlertComponent";
 import Image from "next/image";
 import { FormType, UserType } from "@/constants/Types";
 import useAuthForm from "@/hooks/useAuthForm";
 import AuthCard from "@/app/(auth)/_components/AuthCard";
 import MultiStepForm from "@/app/(auth)/_components/MultiStepForm";
-import { useSearchParams } from "next/navigation";
-import AlertComponent from "@/components/AlertComponent";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { FormikHelpers, FormikValues } from "formik";
+import { useSession } from "next-auth/react";
+import logger from "@/utils/logger";
 
 interface AuthFormProps {
   className?: string;
@@ -33,6 +34,7 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
     hideAlert,
   } = useAuthForm({ userType });
   const { googleLogin } = useAuth();
+  const { data: session } = useSession();
 
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -43,6 +45,18 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
   ) => {
     handleSubmit(values, actions, formType);
   };
+
+  useEffect(() => {
+    logger.info("AuthFormSection", { session });
+  }, []);
+
+  const router = useRouter();
+  if (session) {
+    router.push("/dashboard");
+    if (session.user.isNewUser) {
+      router.push("/auth/register/select-user-type");
+    }
+  }
 
   return (
     <div className={className}>

@@ -1,11 +1,18 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import SidePicture from "@/app/(auth)/_components/SidePicture";
 import AuthFormSection from "@/app/(auth)/_components/AuthFormSection";
 
 import { AnimatePresence, motion } from "framer-motion";
+import logger from "@/utils/logger";
+import { useSession } from "next-auth/react";
 
 const LogIn: React.FC = () => {
+  const { data: session } = useSession();
+  useEffect(() => {
+    logger.info("AuthFormSection", { session });
+  }, []);
+
   return (
     <AnimatePresence mode="wait">
       <motion.div

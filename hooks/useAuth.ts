@@ -12,12 +12,13 @@ import { useEffect, useState } from "react";
 import { UserType } from "@/constants/Types";
 import { AuthResponse, RegisterResponse } from "@/constants/Auth";
 import { MultiStepFormValues } from "@/app/(auth)/_components/MultiStepForm";
-import { signIn as nextAuthSignIn } from "next-auth/react";
+import { signIn as nextAuthSignIn, useSession } from "next-auth/react";
 
 export function useAuth() {
   const queryClient: QueryClient = useQueryClient();
   const router: AppRouterInstance = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const { data: session, status, update } = useSession();
 
   const {
     data: auth,
@@ -81,9 +82,21 @@ export function useAuth() {
 
   const handleGoogleLogin = async () => {
     try {
-      await nextAuthSignIn("google", { callbackUrl: "/dashboard" });
+      const result = await nextAuthSignIn("google", { redirect: false });
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+
+      if (session?.user?.isNewUser) {
+        // Redirect to user type selection page
+        router.push("/register/select-user-type");
+      } else {
+        // Existing user, redirect to dashboard
+        router.push("/dashboard");
+      }
     } catch (error) {
       console.error("Google login failed:", error);
+      // Handle error (e.g., show error message to user)
     }
   };
 

@@ -11,6 +11,7 @@ import {
   handleJwtCallback,
   handleSessionCallback,
 } from "@/utils/authHelpers";
+import { redirect } from "next/navigation";
 
 interface AuthCallbacks {
   handleGoogleSignIn: (params: {
@@ -89,6 +90,22 @@ const nextAuthConfig: NextAuthConfig = {
     },
     async session({ session, token }) {
       return authCallbacks.handleSessionCallback({ session, token });
+    },
+    async redirect({ url, baseUrl }) {
+      return url.startsWith(baseUrl) ? url : baseUrl;
+    },
+  },
+  events: {
+    async signIn(message) {
+      logger.info("Sign in event", { message });
+      if (message.user.isNewUser && message.account?.provider === "google") {
+        logger.info("New user sign up", { email: message.user.email });
+      } else if (message.account?.provider === "google") {
+        logger.info("Existing user sign in", { email: message.user.email });
+      }
+    },
+    async signOut(message) {
+      logger.info("Sign out event", { message });
     },
   },
   pages: {

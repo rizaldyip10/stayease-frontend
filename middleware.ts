@@ -16,7 +16,17 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (["/login", "/register"].includes(path)) {
+  // Handle new OAuth users
+  if (session?.user.isNewUser && session.user.googleToken) {
+    if (path !== "/register/select-user-type") {
+      return NextResponse.redirect(
+        new URL("/register/select-user-type", request.url),
+      );
+    }
+  }
+
+  // Redirect logged-in users trying to access auth pages
+  if (session && ["/login", "/register"].includes(path)) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
@@ -35,5 +45,8 @@ export default async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+    "/login|/register|register/verify|/dashboard",
+  ],
 };
