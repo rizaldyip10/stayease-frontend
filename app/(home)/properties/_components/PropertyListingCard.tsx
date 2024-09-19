@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { AvailablePropertyType } from "@/constants/Property";
 import Image from "next/image";

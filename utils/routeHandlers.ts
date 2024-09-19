@@ -10,6 +10,8 @@ const publicRoutes = new Set([
   "/register",
   "/forgot-password",
   "/register/verify",
+  "/about",
+  "/properties",
 ]);
 
 const routeHandlers = new Map<string, RouteHandler>([
@@ -19,7 +21,6 @@ const routeHandlers = new Map<string, RouteHandler>([
     "/dashboard",
     (session) => ["USER", "TENANT"].includes(session.user.userType),
   ],
-  ["/properties", (session) => session.user.userType === "TENANT"],
   ["/bookings", (session) => session.user.userType === "USER"],
   [
     "/register/select-user-type",

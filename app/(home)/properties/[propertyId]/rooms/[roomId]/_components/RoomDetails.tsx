@@ -12,9 +12,8 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { format, isValid, parseISO } from "date-fns";
 import { useBookingValues } from "@/hooks/useBookingValues";
-import { AdjustedRatesType, UnavailableRoomType } from "@/constants/Property";
+import { AdjustedRatesType } from "@/constants/Property";
 import Image from "next/image";
-import AvatarUploadModal from "@/app/(user)/profile/_components/AvatarUploadModal";
 
 interface RoomDetailsProps {
   room: AdjustedRatesType;

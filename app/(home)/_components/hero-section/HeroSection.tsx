@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
-import HeroDescription from "@/app/(user)/_components/hero-section/HeroDescription";
+import HeroDescription from "@/app/(home)/_components/hero-section/HeroDescription";
 import PropertySearchBar from "@/components/PropertySearchBar";
 import { CarouselPlugin } from "@/components/CarouselPlugin";
-import useMediaQuery from "@/hooks/useMediaQuery";
+import useMediaQuery from "@/hooks/utils/useMediaQuery";
 
 interface HeroSectionProps {
   className?: string;

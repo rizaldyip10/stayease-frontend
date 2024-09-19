@@ -1,12 +1,11 @@
 "use client";
 
-import { useMotionValueEvent, useScroll, motion } from "framer-motion";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { useState } from "react";
 import logo from "@/public/stayease-logo.webp";
 import Image from "next/image";
 import AuthBtn from "@/app/(user)/_components/AuthBtn";
 import NavRoutes from "@/app/(user)/_components/NavRoutes";
-import ProfileBtn from "@/app/(user)/_components/ProfileBtn";
 import MobileMenu from "@/app/(user)/_components/MobileMenu";
 import AuthBtnMobile from "@/app/(user)/_components/AuthBtnMobile";
 import { usePathname } from "next/navigation";
@@ -38,7 +37,7 @@ const Navbar = () => {
     >
       <div className="w-full 2xl:w-[1400px] flex justify-between items-center">
         <MobileMenu />
-        <Link href="/dashboard">
+        <Link href="/">
           <Image
             src={logo}
             alt={"logo"}

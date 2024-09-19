@@ -1,12 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Combobox from "@/components/Combobox";
 import { Input } from "@/components/ui/input";
 import { CustomDatePicker } from "@/components/ui/date-picker";
 import { Button } from "@/components/ui/button";
-import useMediaQuery from "@/hooks/useMediaQuery";
-import propertyService from "@/services/propertyService";
 import { usePropertyUtils } from "@/hooks/usePropertyUtils";
+import useMediaQuery from "@/hooks/utils/useMediaQuery";
 
 interface HeroSearchBarProps {
   className?: string;

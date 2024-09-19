@@ -46,13 +46,7 @@ export const adminRoutes: SidebarRoutesType[] = [
   { label: "Reports", href: "/dashboard/reports", icon: ChartLine },
 ];
 
-export type UserMenuRoutesType = {
-  label: string;
-  href: string;
-  icon: LucideIcon;
-};
-
-export const userMenuRoutes: UserMenuRoutesType[] = [
+export const userMenuRoutes: SidebarRoutesType[] = [
   { label: "My Profile", href: "/profile", icon: User },
   { label: "My Bookings", href: "/profile/bookings", icon: BookOpenText },
   { label: "My Reviews", href: "/profile/reviews", icon: Star },
@@ -69,6 +63,6 @@ export const footerServicesItems = [
   // TODO : make these links work
   { label: "Video Chat", href: "" },
   { label: "Housing Guide", href: "/" },
-  { label: "Terms & Conditions", href: "/terms" },
-  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms & Conditions", href: "/" },
+  { label: "Privacy Policy", href: "/" },
 ];

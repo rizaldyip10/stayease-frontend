@@ -1,17 +1,17 @@
 // app/(user)/properties/page.tsx
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import SearchFilterCard from "./_components/SearchFilterCard";
-import PropertyListingCard from "./_components/PropertyListingCard";
-import SortSelect from "./_components/SortSelect";
-import CustomPagination from "./_components/CustomPagination";
+import SearchFilterCard from "@/app/(home)/properties/_components/SearchFilterCard";
+import PropertyListingCard from "@/app/(home)/properties/_components/PropertyListingCard";
+import SortSelect from "@/app/(home)/properties/_components/SortSelect";
+import CustomPagination from "@/app/(home)/properties/_components/CustomPagination";
 import {
   FilterOptions,
   usePropertyListings,
 } from "@/hooks/properties/usePropertyListings";
 import { usePropertyUtils } from "@/hooks/properties/usePropertyUtils";
-import PropertyListingSkeleton from "./_components/PropertyListingSkeleton";
-import NoResultsFound from "./_components/NoResultsFound";
+import PropertyListingSkeleton from "@/app/(home)/properties/_components/PropertyListingSkeleton";
+import NoResultsFound from "@/app/(home)/properties/_components/NoResultsFound";
 import { Button } from "@/components/ui/button";
 import { FilterIcon } from "lucide-react";
 import { useBookingValues } from "@/hooks/useBookingValues";

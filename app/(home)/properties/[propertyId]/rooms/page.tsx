@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { notFound } from "next/navigation";
-import RoomDetails from "@/app/(user)/properties/[propertyId]/rooms/[roomId]/_components/RoomDetails";
+import RoomDetails from "@/app/(home)/properties/[propertyId]/rooms/[roomId]/_components/RoomDetails";
 import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
 import { useSearchParams } from "next/navigation";
 
