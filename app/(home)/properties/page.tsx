@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { FilterIcon } from "lucide-react";
 import { useBookingValues } from "@/hooks/useBookingValues";
 import { format } from "date-fns";
+import { usePropertySearch } from "@/hooks/properties/usePropertySearch";
 
 const PropertiesPage: React.FC = () => {
   const { categories, cities } = usePropertyUtils();
@@ -29,34 +30,21 @@ const PropertiesPage: React.FC = () => {
     updateSort,
     updatePage,
     resetFilters,
+    bookingValues,
   } = usePropertyListings();
-
-  const { bookingValues, setBookingInfo } = useBookingValues();
 
   const [showFilters, setShowFilters] = useState(false);
 
   const handleFilterChange = useCallback(
     (newFilters: Partial<FilterOptions>) => {
       updateFilters(newFilters);
-
-      if (newFilters.startDate) {
-        setBookingInfo({
-          checkInDate: format(newFilters.startDate, "yyyy-MM-dd"),
-        });
-      }
-      if (newFilters.endDate) {
-        setBookingInfo({
-          checkOutDate: format(newFilters.endDate, "yyyy-MM-dd"),
-        });
-      }
     },
-    [updateFilters, setBookingInfo],
+    [updateFilters],
   );
 
   const handleResetFilters = useCallback(() => {
     resetFilters();
-    setBookingInfo({ checkInDate: null, checkOutDate: null });
-  }, [resetFilters, setBookingInfo]);
+  }, [resetFilters]);
 
   if (error) return <div>Error: {error}</div>;
 

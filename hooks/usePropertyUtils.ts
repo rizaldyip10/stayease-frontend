@@ -1,35 +1,9 @@
 "use client";
 import propertyService from "@/services/propertyService";
-import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { CategoryType, PropertyAndRoomType } from "@/constants/Property";
 
-// const fetchProperties = () => propertyService.getAllProperties();
-// const fetchCities = () => propertyService.getAllCities();
-// const fetchCategories = () => propertyService.getAllCategory();
-
 export const usePropertyUtils = () => {
-  // const {
-  //   data: properties = [],
-  //   isLoading: propertiesLoading,
-  //   error: propertiesError,
-  //   refetch: refetchProperties,
-  // } = useQuery({ queryKey: ["properties"], queryFn: fetchProperties });
-  //
-  // const {
-  //   data: cities = [],
-  //   isLoading: citiesLoading,
-  //   error: citiesError,
-  //   refetch: refetchCities,
-  // } = useQuery({ queryKey: ["cities"], queryFn: fetchCities });
-  //
-  // const {
-  //   data: categories = [],
-  //   isLoading: categoriesLoading,
-  //   error: categoriesError,
-  //   refetch: refetchCategories,
-  // } = useQuery({ queryKey: ["categories"], queryFn: fetchCategories });
-
   const [properties, setProperties] = useState<PropertyAndRoomType[]>([]);
   const [cities, setCities] = useState<string[]>([]);
   const [categories, setCategories] = useState<CategoryType[]>([]);
@@ -64,7 +38,7 @@ export const usePropertyUtils = () => {
   const fetchCategories = async () => {
     setIsLoading(true);
     try {
-      const data = await propertyService.getAllCategory();
+      const data = await propertyService.getAllCategories();
       setCategories(data);
     } catch (error) {
       setError("Error fetching categories");
@@ -77,7 +51,6 @@ export const usePropertyUtils = () => {
     setIsLoading(true);
     try {
       const data = await propertyService.getAllImages();
-      console.log("data", data);
       setImages(data);
     } catch (error) {
       setError("Error fetching images");

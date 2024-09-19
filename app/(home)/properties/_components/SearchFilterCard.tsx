@@ -38,7 +38,6 @@ const SearchFilterCard: React.FC<SearchFilterCardProps> = ({
     handleInputChange("startDate", date);
     setCheckInOpen(false);
     setCheckOutOpen(true);
-    // If end date is before new start date, update it
     if (filters.endDate && date && filters.endDate <= date) {
       handleInputChange("endDate", addDays(date, 1));
     }
