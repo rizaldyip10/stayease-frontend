@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { auth } from "./auth";
 import { isPublicRoute, getRouteHandler } from "./utils/routeHandlers";
+import propertyService from "@/services/propertyService";
 
 export default async function middleware(request: NextRequest) {
   const session = await auth();
@@ -46,6 +47,12 @@ function handleSpecialCases(
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
+  if (path.startsWith("/dashboard/properties") && path.endsWith("/edit")) {
+    if (!isPropertyOwner(session, path)) {
+      return NextResponse.redirect(new URL("/unauthorized", request.url));
+    }
+  }
+
   return null;
 }
 
@@ -74,6 +81,11 @@ function handleRouteAccess(
   }
 
   return NextResponse.redirect(new URL("/unauthorized", request.url));
+}
+
+async function isPropertyOwner(session: any, path: any): Promise<boolean> {
+  const propertyId = path.split("/")[3];
+  return await propertyService.checkPropertyOwnership(propertyId);
 }
 
 export const config = {

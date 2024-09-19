@@ -1,79 +1,132 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import CustomCheckbox from "@/app/(user)/properties/_components/CustomCheckbox";
-import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { CustomDatePicker } from "@/components/ui/date-picker";
 import CustomSelect from "@/app/(user)/properties/_components/CustomSelect";
-import FormikDatePicker from "@/components/DatePicker";
-import DatePicker from "@/components/DatePicker";
+import { CategoryType } from "@/constants/Property";
+import BudgetInput from "@/app/(user)/properties/_components/BudgetInput";
+import { CustomDatePicker } from "@/app/(user)/properties/_components/CustomDatePicker";
+import { FilterOptions } from "@/hooks/properties/usePropertyListings";
+import { Button } from "@/components/ui/button";
+import { addDays } from "date-fns";
 
-const SearchFilterCard: React.FC = () => {
-  // !! TODO: dummy datas, replace with actual data from API
-  const locations = ["Bali", "Jakarta", "Yogyakarta"];
-  const categories = ["Apartment", "House", "Villa", "Hotel"];
+interface SearchFilterCardProps {
+  cities: string[] | undefined;
+  categories: CategoryType[] | undefined;
+  filters: FilterOptions;
+  onFilterChange: (filters: Partial<FilterOptions>) => void;
+  onResetFilters: () => void;
+}
+
+const SearchFilterCard: React.FC<SearchFilterCardProps> = ({
+  cities,
+  categories,
+  filters,
+  onFilterChange,
+  onResetFilters,
+}) => {
+  const [checkInOpen, setCheckInOpen] = useState(false);
+  const [checkOutOpen, setCheckOutOpen] = useState(false);
+
+  const handleInputChange = (field: keyof FilterOptions, value: any) => {
+    onFilterChange({ [field]: value });
+  };
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const handleStartDateChange = (date?: Date) => {
+    handleInputChange("startDate", date);
+    setCheckInOpen(false);
+    setCheckOutOpen(true);
+    // If end date is before new start date, update it
+    if (filters.endDate && date && filters.endDate <= date) {
+      handleInputChange("endDate", addDays(date, 1));
+    }
+  };
+
+  const handleEndDateChange = (date?: Date) => {
+    handleInputChange("endDate", date);
+    setCheckOutOpen(false);
+  };
 
   return (
-    <div>
-      <Card className="mb-4">
-        <CardContent className="p-4">
-          <h2 className="text-lg font-semibold mb-4 text-blue-950">Filters</h2>
+    <Card className="mb-4">
+      <CardContent className="p-4">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-semibold text-blue-950">Filters</h2>
+          <Button variant="link" onClick={onResetFilters}>
+            Reset Filters
+          </Button>
+        </div>
 
-          <div className="mb-4">
-            <h3 className="font-semibold mb-2 text-blue-950">Location</h3>
-            <div className="space-y-2">
-              {/*// TODO : call locations from API*/}
-              {locations.map((location) => (
-                <CustomCheckbox key={location} label={location} />
-              ))}
-            </div>
-          </div>
+        <div className="space-y-4">
+          <Input
+            placeholder="Search properties..."
+            value={filters.searchTerm}
+            onChange={(e) => handleInputChange("searchTerm", e.target.value)}
+            className="mb-2"
+          />
+        </div>
 
-          <div className="mb-4 flex flex-col gap-2">
-            <h3 className="font-semibold mb-2 text-blue-950">Budget</h3>
-            <Slider defaultValue={[0]} max={5000000} step={10000} />
-            <div className="flex justify-between mt-2">
-              <Input placeholder="Min" className="w-20" />
-              <Input placeholder="Max" className="w-20" />
-            </div>
-          </div>
+        <div>
+          <h3 className="font-semibold mb-2 text-blue-950">Location</h3>
+          <CustomSelect
+            options={cities?.map((city) => ({ value: city, label: city }))}
+            value={filters.city}
+            onChange={(value) => handleInputChange("city", value)}
+          />
+        </div>
 
-          <div className="mb-4 flex flex-col gap-2">
-            <h3 className="font-semibold mb-2 text-blue-950">Dates</h3>
-            <CustomDatePicker title="From" />
-            <CustomDatePicker title="To" />
-            {/*<DatePicker*/}
-            {/*  name="checkInDate"*/}
-            {/*  label="Check-in"*/}
-            {/*  value={checkInDate}*/}
-            {/*  onChange={setBookingInfo}*/}
-            {/*  isEditing={edit}*/}
-            {/*/>*/}
-            {/*-*/}
-            {/*<DatePicker*/}
-            {/*  name="checkOutDate"*/}
-            {/*  label="Check-in"*/}
-            {/*  value={checkOutDate}*/}
-            {/*  onChange={setBookingInfo}*/}
-            {/*  isEditing={edit}*/}
-            {/*/>*/}
-          </div>
+        <div>
+          <h3 className="font-semibold mb-2 text-blue-950">Budget</h3>
+          <BudgetInput
+            minPrice={filters.minPrice}
+            maxPrice={filters.maxPrice}
+            onChange={(minPrice, maxPrice) =>
+              onFilterChange({ minPrice, maxPrice })
+            }
+          />
+        </div>
 
-          <div className="mb-4">
-            <h3 className="font-semibold mb-2 text-blue-950">Category</h3>
-            {/*// TODO: Call categories from API*/}
-            <CustomSelect category={categories} />
+        <div>
+          <h3 className="font-semibold mb-2 text-blue-950">Dates</h3>
+          <div className="space-y-2">
+            <CustomDatePicker
+              title="Check-in"
+              date={filters.startDate}
+              onDateChange={handleStartDateChange}
+              minDate={today}
+              open={checkInOpen}
+              onOpenChange={setCheckInOpen}
+            />
+            <CustomDatePicker
+              title="Check-out"
+              date={filters.endDate}
+              onDateChange={handleEndDateChange}
+              minDate={
+                filters.startDate
+                  ? addDays(filters.startDate, 1)
+                  : addDays(today, 1)
+              }
+              open={checkOutOpen}
+              onOpenChange={setCheckOutOpen}
+            />
           </div>
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+
+        <div className="mb-4">
+          <h3 className="font-semibold mb-2 text-blue-950">Category</h3>
+          <CustomSelect
+            options={categories?.map((cat) => ({
+              value: cat.id.toString(),
+              label: cat.name.charAt(0).toUpperCase() + cat.name.slice(1),
+            }))}
+            value={filters.categoryId}
+            onChange={(value) => handleInputChange("categoryId", value)}
+          />
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

@@ -3,7 +3,7 @@ import { FormType, UserType } from "@/constants/Types";
 import { FormikHelpers, FormikValues } from "formik";
 import { signIn } from "next-auth/react";
 import { useAuth } from "@/hooks/useAuth";
-import { useAlert } from "./useAlert";
+import { useAlert } from "./utils/useAlert";
 
 export const useCredentialSubmission = (userType: UserType) => {
   const [loading, setLoading] = useState(false);

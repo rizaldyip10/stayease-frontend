@@ -1,16 +1,20 @@
-"use client";
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { useField } from "formik";
+import { useField, useFormikContext } from "formik";
 import Image from "next/image";
 
 interface ImageUploadProps {
   name: string;
-  onImageUpload: (file: File) => Promise<string>;
+  onImageUpload: (
+    file: File,
+    fieldName: string,
+    setFieldValue: (field: string, value: any) => void,
+  ) => Promise<void>;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({ name, onImageUpload }) => {
-  const [field, , helpers] = useField(name);
+  const [field] = useField(name);
+  const { setFieldValue } = useFormikContext();
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -25,15 +29,15 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ name, onImageUpload }) => {
           return;
         }
         try {
-          const result = await onImageUpload(file);
-          helpers.setValue(result);
+          console.log("Uploading image...");
+          await onImageUpload(file, name, setFieldValue);
         } catch (error) {
           console.error("Failed to upload image:", error);
           alert("Failed to upload image");
         }
       }
     },
-    [helpers, onImageUpload],
+    [onImageUpload, name, setFieldValue],
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

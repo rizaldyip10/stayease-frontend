@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import React, { Suspense } from "react";
 import { ClientWrapper } from "@/components/ClientWrapper";
-import { AuthProvider } from "@/components/AuthProvider";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SessionProvider } from "next-auth/react";
 
@@ -23,10 +22,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ClientWrapper>
-          {/*  <AuthProvider>*/}
           <SessionProvider>
             <Suspense fallback={<Skeleton />}>{children}</Suspense>
-            {/*</AuthProvider>*/}
           </SessionProvider>
         </ClientWrapper>
       </body>

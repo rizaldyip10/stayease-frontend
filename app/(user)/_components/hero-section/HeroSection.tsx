@@ -3,7 +3,7 @@ import React from "react";
 import HeroDescription from "@/app/(user)/_components/hero-section/HeroDescription";
 import PropertySearchBar from "@/components/PropertySearchBar";
 import { CarouselPlugin } from "@/components/CarouselPlugin";
-import useMediaQuery from "@/hooks/useMediaQuery";
+import useMediaQuery from "@/hooks/utils/useMediaQuery";
 import { useSession } from "next-auth/react";
 
 interface HeroSectionProps {
