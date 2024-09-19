@@ -29,6 +29,8 @@ axiosInterceptor.interceptors.request.use(
       logger.debug("Server-side token retrieval", { tokenExists: !!token });
     }
 
+    logger.debug("Token", { token });
+
     if (token) {
       config.headers = config.headers || {};
       config.headers["Authorization"] = `Bearer ${token}`;

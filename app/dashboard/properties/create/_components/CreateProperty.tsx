@@ -1,68 +1,32 @@
 "use client";
-import { Formik, Form, FormikValues, FieldArray } from "formik";
+import { FieldArray, Form, Formik } from "formik";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createPropValidationSchema } from "@/utils/validationSchema";
-import { boolean } from "yup";
 import PropertyForm from "@/app/dashboard/properties/create/_components/PropertyForm";
 import RoomForm from "@/app/dashboard/properties/create/_components/RoomForm";
-import CategoryForm from "@/app/dashboard/properties/create/_components/CategoryForm";
-import { usePropertyCreation } from "@/hooks/usePropertyCreation";
-import { Plus } from "lucide-react";
+import { usePropertyCreation } from "@/hooks/properties/usePropertyCreation";
+import { createPropertyInitialValues } from "@/utils/PropertyInitialValues";
+import { usePropertyUtils } from "@/hooks/properties/usePropertyUtils";
 
 const CreateProperty = () => {
   const [showCategoryForm, setShowCategoryForm] = useState(false);
-  const {
-    categories,
-    setCategories,
-    isLoading,
-    error,
-    fetchCategories,
-    handleSubmit,
-    handleImageUpload,
-  } = usePropertyCreation();
-
-  useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
-
-  const initialValues = {
-    property: {
-      name: "",
-      description: "",
-      imageUrl: "",
-      address: "",
-      city: "",
-      country: "",
-      longitude: 0,
-      latitude: 0,
-      categoryId: 0,
-    },
-    rooms: [
-      {
-        name: "",
-        description: "",
-        basePrice: 0,
-        capacity: 0,
-        imageUrl: "",
-      },
-    ],
-    category: {
-      name: "",
-    },
-  };
+  const { setCategories, isLoading, error, handleSubmit, handleImageUpload } =
+    usePropertyCreation();
+  const { categories } = usePropertyUtils();
+  console.log("categories", categories);
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Create New Property</h1>
       <Formik
-        initialValues={initialValues}
+        initialValues={createPropertyInitialValues}
         validationSchema={createPropValidationSchema}
         onSubmit={handleSubmit}
       >
         {({ values, isSubmitting }) => (
-          <Form>
+          <Form className="flex flex-col">
             <PropertyForm
               onImageUpload={handleImageUpload}
               categories={categories}
@@ -79,34 +43,26 @@ const CreateProperty = () => {
                       onRemove={() => remove(index)}
                     />
                   ))}
-                  <Button
-                    type="button"
-                    onClick={() =>
-                      push({
-                        name: "",
-                        description: "",
-                        basePrice: 0,
-                        capacity: 0,
-                        imageUrl: "",
-                      })
-                    }
-                  >
-                    Add Room
-                  </Button>
+                  <div className="grid md:grid-cols-7">
+                    <Button
+                      type="button"
+                      onClick={() =>
+                        push({
+                          name: "",
+                          description: "",
+                          basePrice: 0,
+                          capacity: 0,
+                          imageUrl: "",
+                        })
+                      }
+                      className="md:col-span-1"
+                    >
+                      Add Room
+                    </Button>
+                  </div>
                 </>
               )}
             </FieldArray>
-            {/*<div className="mt-4">*/}
-            {/*  <Button*/}
-            {/*    type="button"*/}
-            {/*    onClick={() => setShowCategoryForm(!showCategoryForm)}*/}
-            {/*  >*/}
-            {/*    {showCategoryForm*/}
-            {/*      ? "Use Existing Category"*/}
-            {/*      : "Create New Category"}*/}
-            {/*  </Button>*/}
-            {/*</div>*/}
-            {/*{showCategoryForm && <CategoryForm />}*/}
             <Button
               type="submit"
               disabled={isSubmitting}
@@ -118,7 +74,7 @@ const CreateProperty = () => {
         )}
       </Formik>
       <Link
-        href="/properties"
+        href="/dashboard/properties"
         className="mt-4 inline-block text-blue-500 hover:underline"
       >
         Back to Properties

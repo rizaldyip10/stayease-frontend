@@ -1,9 +1,7 @@
 "use client";
-import React, { useState } from "react";
-import { PropertyAndRoomType, PropertyType } from "@/constants/Property";
+import React, { useEffect, useMemo, useRef } from "react";
+import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Heart, Share2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -11,62 +9,93 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { format, isValid, parseISO } from "date-fns";
 import { useBookingValues } from "@/hooks/useBookingValues";
 import RoomCard from "@/app/(user)/properties/[propertyId]/_components/RoomCard";
+import AvailabilityCalendar from "@/components/AvailabilityCalendar";
+import { CurrentAvailablePropertyType } from "@/constants/Property";
+import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
+import PropertyHeader from "@/app/(user)/properties/[propertyId]/_components/PropertyHeader";
+import { useDateSelection } from "@/hooks/useDateSelection";
 
 interface PropertyDetailsProps {
-  property: PropertyAndRoomType;
+  property: CurrentAvailablePropertyType;
+  propertyId: number;
 }
 
-const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
-  const { propertyName, description, address, imageUrl, city, country, rooms } =
-    property;
+const PropertyDetails: React.FC<PropertyDetailsProps> = ({
+  property,
+  propertyId,
+}) => {
   const { bookingValues, setBookingInfo } = useBookingValues();
+  const {
+    selectedDate,
+    checkInDate,
+    checkOutDate,
+    isSelectingCheckOut,
+    isCalendarOpen,
+    handleDateSelect,
+    handleDateChange,
+    handleReset,
+    handleConfirm,
+    setIsCalendarOpen,
+  } = useDateSelection();
 
-  const handleDateSelect =
-    (field: "checkInDate" | "checkOutDate") => (date: Date | undefined) => {
-      if (date && isValid(date)) {
-        setBookingInfo({ [field]: format(date, "yyyy-MM-dd") });
-      }
-    };
+  // Use the hook to refetch data when selectedDate changes
+  const { currentProperty, isLoading, error } = usePropertyDetails(
+    propertyId,
+    selectedDate,
+  );
 
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return null;
-    const date = parseISO(dateString);
-    return isValid(date) ? format(date, "PPP") : null;
-  };
+  const mapRef = useRef<HTMLDivElement>(null);
+
+  const displayProperty = currentProperty || property;
+  const availableRooms = useMemo(
+    () => displayProperty?.rooms || [],
+    [displayProperty],
+  );
+  const unavailableRooms = useMemo(
+    () => displayProperty?.unavailableRooms || [],
+    [displayProperty],
+  );
+
+  useEffect(() => {
+    setBookingInfo({
+      checkInDate: undefined,
+      checkOutDate: undefined,
+    });
+  }, []);
+
+  if (isLoading) return <div>Updating...</div>;
+  if (error) return <div>Error updating: {error.message}</div>;
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container md:relative mx-auto p-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2">
-          <h1 className="text-3xl font-bold mb-4">{property.propertyName}</h1>
-          <div className="flex items-center mb-4">
-            <p className="text-sm text-gray-600 mr-4">{property.address}</p>
-            <Button variant="outline" size="sm" className="mr-2">
-              <Heart className="mr-2 h-4 w-4" /> Save
-            </Button>
-            <Button variant="outline" size="sm">
-              <Share2 className="mr-2 h-4 w-4" /> Share
-            </Button>
-          </div>
-          <img
-            src={property.imageUrl || "/api/placeholder/800/400"}
-            alt={property.propertyName}
-            className="w-full h-64 object-cover mb-4 rounded"
-          />
+          <PropertyHeader property={displayProperty} />
 
           <Tabs defaultValue="description">
             <TabsList>
               <TabsTrigger value="description">Description</TabsTrigger>
-              <TabsTrigger value="facilities">Facilities</TabsTrigger>
+              <TabsTrigger value="facilities">Info</TabsTrigger>
             </TabsList>
             <TabsContent value="description">
-              <p>{property.description}</p>
+              <p>{displayProperty.description}</p>
             </TabsContent>
             <TabsContent value="facilities">
-              <ul>{/* Add facilities here based on your data structure */}</ul>
+              <ul>
+                <li>Address: {displayProperty.address}</li>
+                <li>City: {displayProperty.city}</li>
+                <li>Country: {displayProperty.country}</li>
+                <li>Rooms: {property?.rooms?.length}</li>
+                <li>
+                  Total capacity:{" "}
+                  {property?.rooms?.reduce(
+                    (acc, room) => acc + room.roomCapacity,
+                    0,
+                  )}
+                </li>
+              </ul>
             </TabsContent>
           </Tabs>
 
@@ -74,79 +103,115 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
             <h2 className="text-2xl font-semibold mb-4">Location</h2>
             <div id="map" className="w-full h-64 bg-gray-200 mb-4"></div>
             <p>
-              {property.address}, {property.city}, {property.country}
+              {displayProperty.address}, {displayProperty.city},{" "}
+              {displayProperty.country}
             </p>
           </div>
         </div>
 
-        <div>
-          <Card>
-            <CardContent className="p-4">
-              <h2 className="text-2xl font-semibold mb-4">
-                Check Availability
-              </h2>
-              <div className="flex space-x-4 mb-4">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline">
-                      {formatDate(bookingValues.checkInDate) || "Check-in Date"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={
-                        bookingValues.checkInDate
-                          ? parseISO(bookingValues.checkInDate)
-                          : undefined
-                      }
-                      onSelect={handleDateSelect("checkInDate")}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline">
-                      {formatDate(bookingValues.checkOutDate) ||
-                        "Check-out Date"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={
-                        bookingValues.checkOutDate
-                          ? parseISO(bookingValues.checkOutDate)
-                          : undefined
-                      }
-                      onSelect={handleDateSelect("checkOutDate")}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <Button className="w-full">Check Availability</Button>
-            </CardContent>
-          </Card>
+        <div className="relative">
+          <div className="side-cards flex flex-col gap-4 md:top-0">
+            <Card>
+              <CardContent className="p-4">
+                <h2 className="text-2xl font-semibold mb-4">
+                  Available Rooms for{" "}
+                  {checkInDate ? format(checkInDate, "dd MMM yyyy") : "Today"}
+                </h2>
+                <div className="flex space-x-4 mb-4">
+                  <Popover
+                    open={isCalendarOpen}
+                    onOpenChange={setIsCalendarOpen}
+                  >
+                    <PopoverTrigger asChild>
+                      <Button variant="outline">
+                        {checkInDate
+                          ? `${format(checkInDate, "dd MMM yyyy")} - ${checkOutDate ? format(checkOutDate, "dd MMM yyyy") : "Select check-out"}`
+                          : "Select dates"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <AvailabilityCalendar
+                        propertyId={displayProperty.id}
+                        onSelect={handleDateSelect}
+                        onReset={handleReset}
+                        onConfirm={handleConfirm}
+                        selected={
+                          isSelectingCheckOut ? checkOutDate : checkInDate
+                        }
+                        isCheckOut={isSelectingCheckOut}
+                        checkInDate={checkInDate}
+                        checkOutDate={checkOutDate}
+                        onDateChange={handleDateChange}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                <div className="mb-3">
+                  <p>
+                    Check-in:{" "}
+                    {checkInDate
+                      ? format(checkInDate, "dd MMM yyyy")
+                      : "Not selected"}
+                  </p>
+                  <p>
+                    Check-out:{" "}
+                    {checkOutDate
+                      ? format(checkOutDate, "dd MMM yyyy")
+                      : "Not selected"}
+                  </p>
+                </div>
+                <Button
+                  className="w-full"
+                  onClick={() =>
+                    mapRef.current?.scrollIntoView({ behavior: "smooth" })
+                  }
+                >
+                  Check Availability
+                </Button>
+              </CardContent>
+            </Card>
+            {/*<Card>*/}
+            {/*  <CardContent className="p-4">*/}
+            {/*    <div className="w-full h-64 bg-gray-200 flex items-center justify-center">*/}
+            {/*      Map Placeholder*/}
+            {/*    </div>*/}
+            {/*  </CardContent>*/}
+            {/*</Card>*/}
+          </div>
         </div>
       </div>
 
-      <div className="mt-8">
-        <h2 className="text-2xl font-semibold mb-4">Available Rooms</h2>
+      <div className="mt-8" ref={mapRef}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Card>
-            <CardContent className="p-4">
-              <h2 className="text-2xl font-semibold mb-4">Available Rooms</h2>
-              {property.rooms?.map((room) => (
+          <div className="md:col-span-2">
+            <h2 className="text-2xl font-semibold mb-4">Available Rooms</h2>
+            {availableRooms
+              ?.sort((a, b) => a.basePrice - b.basePrice)
+              .map((room) => (
                 <RoomCard
-                  key={room.id}
+                  key={room.roomId}
                   room={room}
                   bookingValues={bookingValues}
+                  isAvailable={true}
                 />
               ))}
-            </CardContent>
-          </Card>
+            {unavailableRooms.length > 0 && (
+              <>
+                <h2 className="text-2xl font-semibold mb-4">
+                  Unavailable Rooms
+                </h2>
+
+                {unavailableRooms?.map((room) => (
+                  <RoomCard
+                    key={room.roomId}
+                    room={room}
+                    bookingValues={bookingValues}
+                    isAvailable={false}
+                  />
+                ))}
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>
