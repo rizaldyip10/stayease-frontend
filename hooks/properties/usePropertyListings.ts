@@ -1,7 +1,7 @@
 import { AvailablePropertyType } from "@/constants/Property";
 import { useCallback, useEffect, useState } from "react";
-import { useDebounce } from "use-debounce";
 import propertyService from "@/services/propertyService";
+import { useDebounce } from "use-debounce";
 
 export interface FilterOptions {
   city?: string;
