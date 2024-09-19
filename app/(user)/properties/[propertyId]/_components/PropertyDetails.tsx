@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -46,7 +46,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
     selectedDate,
   );
 
-  console.log("booking info", bookingValues);
+  const mapRef = useRef<HTMLDivElement>(null);
 
   const displayProperty = currentProperty || property;
   const availableRooms = useMemo(
@@ -160,7 +160,14 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
                       : "Not selected"}
                   </p>
                 </div>
-                <Button className="w-full">Check Availability</Button>
+                <Button
+                  className="w-full"
+                  onClick={() =>
+                    mapRef.current?.scrollIntoView({ behavior: "smooth" })
+                  }
+                >
+                  Check Availability
+                </Button>
               </CardContent>
             </Card>
             {/*<Card>*/}
@@ -174,7 +181,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
         </div>
       </div>
 
-      <div className="mt-8">
+      <div className="mt-8" ref={mapRef}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div className="md:col-span-2">
             <h2 className="text-2xl font-semibold mb-4">Available Rooms</h2>

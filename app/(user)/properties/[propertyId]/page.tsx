@@ -10,32 +10,24 @@ export default function PropertyDetailsPage({
   params: { propertyId: string };
 }) {
   const searchParams = useSearchParams();
+
   const checkInDate = searchParams.get("checkInDate");
-
-  let date = new Date();
-  const timezoneOffset = date.getTimezoneOffset();
-  date = new Date(date.getTime() - timezoneOffset * 60 * 1000);
-  if (checkInDate !== null) {
-    date = new Date(checkInDate);
-  }
-
+  const date = checkInDate ? new Date(checkInDate) : new Date();
   const timezone = date.getTimezoneOffset();
   console.log("timezone", timezone);
 
-  const propertyId = useMemo(
-    () => parseInt(params.propertyId, 10),
-    [params.propertyId],
-  );
+  const propertyId = parseInt(params.propertyId, 10);
+
   const { currentProperty, error, isLoading } = usePropertyDetails(
     propertyId,
     date,
   );
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>Loading property details...</div>;
   }
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <div>Error loading property details: {error.message}</div>;
   }
   if (!currentProperty) {
     return notFound();
