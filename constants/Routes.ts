@@ -19,8 +19,8 @@ export type RouteType = {
 export const routes: RouteType[] = [
   { label: "Home", href: "/" },
   { label: "Properties", href: "/properties" },
-  { label: "Contact", href: "/contact" },
   { label: "About", href: "/about" },
+  { label: "FAQ", href: "/faq" },
 ];
 
 export type SidebarRoutesType = {

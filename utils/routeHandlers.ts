@@ -12,6 +12,7 @@ const publicRoutes = new Set([
   "/register/verify",
   "/about",
   "/properties",
+  "/faq",
 ]);
 
 const routeHandlers = new Map<string, RouteHandler>([

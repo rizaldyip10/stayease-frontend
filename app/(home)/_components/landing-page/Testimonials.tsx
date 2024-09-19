@@ -14,19 +14,19 @@ const testimonials = [
     name: "Serena Johnson",
     avatar: "/avatar1.jpg",
     content:
-      "Erasmus Life Housing is a game-changer for students seeking accommodation abroad. The process was smooth, and I found my perfect home away from home!",
+      "StayEase made finding a place super easy! The whole process was smooth, and I found the perfect spot for my stay.",
   },
   {
     name: "Ilias Elhassi",
     avatar: "/avatar2.jpg",
     content:
-      "I couldn't be happier with the service provided by Erasmus Life Housing. They made finding a place to stay during my exchange program a breeze.",
+      "I couldn’t be happier with StayEase. They made booking a place for my trip completely stress-free.",
   },
   {
     name: "Maria González",
     avatar: "/avatar3.jpg",
     content:
-      "The team at Erasmus Life Housing went above and beyond to ensure I found the perfect accommodation. Highly recommended!",
+      "The StayEase team went above and beyond to help me find the right place. I highly recommend them!",
   },
 ];
 
