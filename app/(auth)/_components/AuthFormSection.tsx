@@ -71,7 +71,7 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
           />
           {formType === "verify" && (
             <div>
-              <p className="font-semibold text-appblue-900 text-xl text-center md:hidden">
+              <p className="font-semibold text-blue-950 text-xl text-center md:hidden">
                 Complete your registration!
               </p>
             </div>

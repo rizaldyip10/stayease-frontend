@@ -18,9 +18,9 @@ const FooterNav: React.FC<FooterNavProps> = ({ className, title, items }) => {
           {title}
         </h3>
       )}
-      <ul>
+      <ul className="md:text-left text-center">
         {items.map((item, index) => (
-          <li key={index} className="mb-1 md:block hidden">
+          <li key={index} className="mb-1 md:font-normal font-bold">
             <Link href={item.href} className="hover:underline">
               {item.label}
             </Link>

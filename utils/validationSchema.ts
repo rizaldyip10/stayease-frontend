@@ -2,6 +2,7 @@ import * as yup from "yup";
 import { whiteSpaceRegex } from "@/constants/WhiteSpaceRegex";
 import { FormType } from "@/constants/Types";
 import { UserType } from "@/hooks/useSelectUserType";
+import * as Yup from "yup";
 
 export const loginSchema = yup.object().shape({
   email: yup
@@ -76,4 +77,18 @@ export const createPropValidationSchema = yup.object().shape({
   category: yup.object().shape({
     name: yup.string(),
   }),
+});
+
+export const contactFormValidationSchema = Yup.object().shape({
+  fullName: Yup.string()
+    .required("Full name is required")
+    .min(2, "Name must be at least 2 characters")
+    .max(50, "Name must not exceed 50 characters"),
+  email: Yup.string()
+    .email("Invalid email format")
+    .required("Email is required"),
+  message: Yup.string()
+    .required("Message is required")
+    .min(255, "Message must be at least 25 characters")
+    .max(1000, "Message must not exceed 1000 characters"),
 });

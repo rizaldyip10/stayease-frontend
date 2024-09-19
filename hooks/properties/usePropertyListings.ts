@@ -2,6 +2,7 @@ import { AvailablePropertyType } from "@/constants/Property";
 import { useCallback, useEffect, useState } from "react";
 import propertyService from "@/services/propertyService";
 import { useDebounce } from "use-debounce";
+import { usePropertySearch } from "./usePropertySearch";
 
 export interface FilterOptions {
   city?: string;
@@ -44,11 +45,18 @@ export const usePropertyListings = () => {
     size: 10,
   });
   const [debouncedFilters] = useDebounce(filters, 1000);
+  const { urlFilters, updateSearchParams, bookingValues } = usePropertySearch();
+
+  useEffect(() => {
+    setFilters((prev) => ({ ...prev, ...urlFilters }));
+  }, [urlFilters]);
+
   const resetFilters = useCallback(() => {
     setFilters(initialFilters);
     setSort({ sortBy: "name", sortDirection: "ASC" });
     setPagination((prev) => ({ ...prev, currentPage: 0 }));
-  }, []);
+    updateSearchParams({});
+  }, [updateSearchParams]);
 
   const fetchPropertyListings = useCallback(async () => {
     setIsLoading(true);
@@ -87,34 +95,26 @@ export const usePropertyListings = () => {
     fetchPropertyListings();
   }, [fetchPropertyListings]);
 
-  const updateFilters = (newFilters: Partial<FilterOptions>) => {
-    setFilters((prev) => ({
-      ...prev,
-      ...newFilters,
-    }));
-    setPagination((prev) => ({
-      ...prev,
-      currentPage: 0,
-    }));
-  };
+  const updateFilters = useCallback(
+    (newFilters: Partial<FilterOptions>) => {
+      setFilters((prev) => {
+        const updatedFilters = { ...prev, ...newFilters };
+        updateSearchParams(updatedFilters);
+        return updatedFilters;
+      });
+      setPagination((prev) => ({ ...prev, currentPage: 0 }));
+    },
+    [updateSearchParams],
+  );
 
-  const updateSort = (newSort: Partial<SortOption>) => {
-    setSort((prev) => ({
-      ...prev,
-      ...newSort,
-    }));
-    setPagination((prev) => ({
-      ...prev,
-      currentPage: 0,
-    }));
-  };
+  const updateSort = useCallback((newSort: Partial<SortOption>) => {
+    setSort((prev) => ({ ...prev, ...newSort }));
+    setPagination((prev) => ({ ...prev, currentPage: 0 }));
+  }, []);
 
-  const updatePage = (newPage: number) => {
-    setPagination((prev) => ({
-      ...prev,
-      currentPage: newPage,
-    }));
-  };
+  const updatePage = useCallback((newPage: number) => {
+    setPagination((prev) => ({ ...prev, currentPage: newPage }));
+  }, []);
 
   return {
     properties,
@@ -127,5 +127,6 @@ export const usePropertyListings = () => {
     updateSort,
     updatePage,
     resetFilters,
+    bookingValues,
   };
 };
