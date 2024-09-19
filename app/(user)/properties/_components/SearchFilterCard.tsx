@@ -5,7 +5,7 @@ import CustomSelect from "@/app/(user)/properties/_components/CustomSelect";
 import { CategoryType } from "@/constants/Property";
 import BudgetInput from "@/app/(user)/properties/_components/BudgetInput";
 import { CustomDatePicker } from "@/app/(user)/properties/_components/CustomDatePicker";
-import { FilterOptions } from "@/hooks/usePropertyListings";
+import { FilterOptions } from "@/hooks/properties/usePropertyListings";
 import { Button } from "@/components/ui/button";
 import { addDays } from "date-fns";
 

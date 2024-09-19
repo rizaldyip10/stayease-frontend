@@ -8,8 +8,8 @@ import CustomPagination from "./_components/CustomPagination";
 import {
   FilterOptions,
   usePropertyListings,
-} from "@/hooks/usePropertyListings";
-import { usePropertyUtils } from "@/hooks/usePropertyUtils";
+} from "@/hooks/properties/usePropertyListings";
+import { usePropertyUtils } from "@/hooks/properties/usePropertyUtils";
 import PropertyListingSkeleton from "./_components/PropertyListingSkeleton";
 import NoResultsFound from "./_components/NoResultsFound";
 import { Button } from "@/components/ui/button";

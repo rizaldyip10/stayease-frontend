@@ -1,32 +1,55 @@
 import { useEffect, useState } from "react";
-import { PropertyAndRoomType, RoomType } from "@/constants/Property";
+import {
+  CategoryType,
+  PropertyAndRoomType,
+  RoomType,
+} from "@/constants/Property";
 import propertyService from "@/services/propertyService";
 
 export const usePropertyData = (propertyId: number) => {
   const [property, setProperty] = useState<PropertyAndRoomType | null>(null);
   const [rooms, setRooms] = useState<RoomType[]>([]);
+  const [categories, setCategories] = useState<CategoryType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPropertyAndRooms = async () => {
       try {
-        const propertyData = await propertyService.getPropertyById(propertyId);
+        const [propertyData, categoriesData] = await Promise.all([
+          propertyService.getPropertyById(propertyId),
+          propertyService.getAllCategories(),
+        ]);
+
         setProperty(propertyData);
         setRooms(propertyData?.rooms ?? []);
+        setCategories(categoriesData);
       } catch (err) {
         setError("Failed to fetch property data");
       } finally {
         setIsLoading(false);
       }
     };
-    fetchPropertyAndRooms().then(() => {});
+    fetchPropertyAndRooms();
   }, [propertyId]);
 
   const updateProperty = async (propertyData: any) => {
+    const categoryId = categories.find(
+      (cat) => cat.name === propertyData.category,
+    )?.id;
+
+    if (!categoryId) {
+      throw new Error("Invalid category");
+    }
+
+    const updatedPropertyData = {
+      ...propertyData,
+      categoryId: categoryId,
+    };
+
     const updatedProperty = await propertyService.updateProperty(
       propertyId,
-      propertyData,
+      updatedPropertyData,
     );
     setProperty(updatedProperty);
   };

@@ -1,12 +1,9 @@
 import React from "react";
-import logo from "@/assets/images/logo_horizontal.png";
-import Image from "next/image";
 import SocialIcons from "@/app/(user)/_components/footer/SocialIcons";
 import { footerServicesItems, routes } from "@/constants/Routes";
 import FooterNav from "@/app/(user)/_components/footer/FooterNav";
 import FooterLogo from "@/app/(user)/_components/footer/FooterLogo";
 import FooterResources from "@/app/(user)/_components/footer/FooterResources";
-import useMediaQuery from "@/hooks/useMediaQuery";
 
 const Footer: React.FC = () => {
   return (

@@ -2,7 +2,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import RoomDetails from "@/app/(user)/properties/[propertyId]/rooms/[roomId]/_components/RoomDetails";
-import { usePropertyDetails } from "@/hooks/usePropertyDetails";
+import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
 import { useSearchParams } from "next/navigation";
 
 export default function RoomDetailsPage({

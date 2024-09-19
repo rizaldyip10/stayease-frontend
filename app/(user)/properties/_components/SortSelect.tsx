@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SortOption } from "@/hooks/usePropertyListings";
+import { SortOption } from "@/hooks/properties/usePropertyListings";
 
 interface SortSelectProps {
   sort: SortOption;

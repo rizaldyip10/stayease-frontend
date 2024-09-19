@@ -1,7 +1,7 @@
 "use client";
 import React, { useMemo } from "react";
 import PropertyDetails from "@/app/(user)/properties/[propertyId]/_components/PropertyDetails";
-import { usePropertyDetails } from "@/hooks/usePropertyDetails";
+import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
 import { notFound, useSearchParams } from "next/navigation";
 
 export default function PropertyDetailsPage({
