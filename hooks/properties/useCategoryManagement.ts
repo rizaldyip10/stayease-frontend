@@ -39,6 +39,7 @@ export const useCategoryManagement = (
           name: categoryName,
         });
         showAlert("success", "New category created successfully");
+        setSelectedCategory(newCategory);
         return newCategory;
       } catch (error) {
         showAlert("error", "Failed to create new category");
