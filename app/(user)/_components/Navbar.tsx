@@ -1,17 +1,20 @@
 "use client";
 
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { useState } from "react";
+import React, { useState } from "react";
 import logo from "@/public/stayease-logo.webp";
 import Image from "next/image";
-import AuthBtn from "@/app/(user)/_components/AuthBtn";
 import NavRoutes from "@/app/(user)/_components/NavRoutes";
 import MobileMenu from "@/app/(user)/_components/MobileMenu";
 import AuthBtnMobile from "@/app/(user)/_components/AuthBtnMobile";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import ProfileBtn from "@/app/dashboard/_components/ProfileBtn";
 
-const Navbar = () => {
+interface NavbarProps {
+  isDashboard: boolean;
+}
+const Navbar: React.FC<NavbarProps> = ({ isDashboard }) => {
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState<boolean>(false);
   const pathname = usePathname();
@@ -47,9 +50,9 @@ const Navbar = () => {
         </Link>
         <NavRoutes />
         <div className={pathname.startsWith("/book") ? "hidden" : "block"}>
-          <AuthBtn />
+          {/*<AuthBtn />*/}
           <AuthBtnMobile />
-          {/*<ProfileBtn />*/}
+          <ProfileBtn isDashboard={isDashboard} />
         </div>
       </div>
     </motion.nav>

@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import SearchFilterCard from "@/app/(home)/properties/_components/SearchFilterCard";
-import PropertyListingCard from "@/app/(home)/properties/_components/PropertyListingCard";
+import PropertyListingCard from "@/components/PropertyListingCard";
 import SortSelect from "@/app/(home)/properties/_components/SortSelect";
 import CustomPagination from "@/app/(home)/properties/_components/CustomPagination";
 import {
@@ -9,8 +9,8 @@ import {
   usePropertyListings,
 } from "@/hooks/properties/usePropertyListings";
 import { usePropertyUtils } from "@/hooks/properties/usePropertyUtils";
-import PropertyListingSkeleton from "@/app/(home)/properties/_components/PropertyListingSkeleton";
-import NoResultsFound from "@/app/(home)/properties/_components/NoResultsFound";
+import PropertyListingSkeleton from "@/components/PropertyListingSkeleton";
+import NoResultsFound from "@/components/NoResultsFound";
 import { Button } from "@/components/ui/button";
 import { FilterIcon } from "lucide-react";
 import { useBookingValues } from "@/hooks/useBookingValues";

@@ -49,7 +49,7 @@ const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
             <div style={{ flex: "1 1 0%" }}>
               <Button
                 type="submit"
-                className="bg-appblue-900 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
+                className="bg-blue-950 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
               >
                 Search
               </Button>
@@ -73,7 +73,7 @@ const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
             <div>
               <Button
                 type="submit"
-                className="bg-appblue-900 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
+                className="bg-blue-950 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
               >
                 Search
               </Button>

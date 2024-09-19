@@ -41,7 +41,7 @@ const ContactForm = () => {
           Have questions or doubts?
         </h2>
         <p className="text-xl text-gray-300 mb-8 text-center">
-          Don't Hesitate Contact Us
+          Don't Hesitate, Contact Us
         </p>
         <Formik
           initialValues={{ fullName: "", email: "", message: "" }}

@@ -1,32 +1,6 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-const steps = [
-  {
-    number: 1,
-    title: "Pick a few places",
-    description:
-      "Explore hundreds of high-quality rooms, studios, and apartments. Choose the one that suits you best.",
-  },
-  {
-    number: 2,
-    title: "Accepting a reservation",
-    description:
-      "You will receive the acceptance of the reservation from the owner in just a couple of hours. You will not have to wait long for an answer and torment yourself with guesses.",
-  },
-  {
-    number: 3,
-    title: "Payment",
-    description:
-      "All that's necessary after receiving a response, is to send the payment and you are almost at the finish line!",
-  },
-  {
-    number: 4,
-    title: "Get your keys!",
-    description:
-      "Your accommodation is reserved! You can now pack your bags and get ready for your trip. StayEase, Stay Chill!",
-  },
-];
+import { reservationSteps } from "@/constants/FillerData";
 
 const ReservationSteps = () => {
   return (
@@ -39,7 +13,7 @@ const ReservationSteps = () => {
           Fast, Intuitive And Absolutely Safe!
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {steps.map((step) => (
+          {reservationSteps.map((step) => (
             <Card key={step.number}>
               <CardHeader>
                 <CardTitle className="flex items-center">

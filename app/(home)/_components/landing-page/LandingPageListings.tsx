@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
 import { usePropertyListings } from "@/hooks/properties/usePropertyListings";
-import PropertyListingSkeleton from "@/app/(home)/properties/_components/PropertyListingSkeleton";
-import PropertyListingCard from "@/app/(home)/properties/_components/PropertyListingCard";
-import NoResultsFound from "@/app/(home)/properties/_components/NoResultsFound";
+import PropertyListingSkeleton from "@/components/PropertyListingSkeleton";
+import PropertyListingCard from "@/components/PropertyListingCard";
+import NoResultsFound from "@/components/NoResultsFound";
 
 const LandingPageListings = () => {
   const { properties, isLoading } = usePropertyListings();
@@ -12,7 +12,9 @@ const LandingPageListings = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Reserve The Finest Rooms</h1>
+      <h1 className="text-3xl font-bold mb-6 text-blue-950">
+        Reserve The Finest Rooms
+      </h1>
       {/*<div className="grid grid-cols-1 md:grid-cols-3 gap-6">*/}
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-7">

@@ -52,12 +52,16 @@ const PropertyListingCard: React.FC<PropertyCardProps> = (property) => {
         </div>
         <CardContent className="p-4">
           <div className="flex justify-between items-start mb-2">
-            <h3 className="text-xl font-semibold">{propertyName}</h3>
+            <h3 className="text-xl font-semibold text-blue-950">
+              {propertyName}
+            </h3>
             <span className="text-xs text-gray-500">By: {tenant}</span>
           </div>
           <p className="text-sm text-gray-600 mb-2">{address}</p>
-          <p className="text-lg font-bold">
-            <span className="text-xs font-light">Starts from </span>
+          <p className="text-lg font-bold text-blue-950">
+            <span className="text-xs font-light text-gray-600">
+              Starts from{" "}
+            </span>
             {formatPrice(lowestAdjustedPrice)}
             <span className="text-xs font-light"> / night</span>
           </p>

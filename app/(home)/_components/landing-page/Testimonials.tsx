@@ -8,27 +8,7 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-const testimonials = [
-  {
-    name: "Serena Johnson",
-    avatar: "/avatar1.jpg",
-    content:
-      "StayEase made finding a place super easy! The whole process was smooth, and I found the perfect spot for my stay.",
-  },
-  {
-    name: "Ilias Elhassi",
-    avatar: "/avatar2.jpg",
-    content:
-      "I couldn’t be happier with StayEase. They made booking a place for my trip completely stress-free.",
-  },
-  {
-    name: "Maria González",
-    avatar: "/avatar3.jpg",
-    content:
-      "The StayEase team went above and beyond to help me find the right place. I highly recommend them!",
-  },
-];
+import { fillerTestimonials } from "@/constants/FillerData";
 
 const Testimonials = () => {
   return (
@@ -39,7 +19,7 @@ const Testimonials = () => {
         </h2>
         <Carousel className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto">
           <CarouselContent>
-            {testimonials.map((testimonial, index) => (
+            {fillerTestimonials.map((testimonial, index) => (
               <CarouselItem key={index}>
                 <Card>
                   <CardContent className="flex flex-col items-center p-6">
