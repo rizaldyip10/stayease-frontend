@@ -1,3 +1,5 @@
+import { PropertyAndRoomType } from "@/constants/Property";
+
 export const createPropertyInitialValues = {
   property: {
     name: "",

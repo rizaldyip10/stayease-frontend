@@ -27,6 +27,7 @@ const propertyService = {
       "{propertyId}",
       propertyId.toString(),
     );
+    console.log("Type of propertyId:", typeof propertyId);
     const response = await axiosInterceptor.get(url);
     return response.data.data;
   },

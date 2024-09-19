@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { ErrorMessage, Field } from "formik";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { usePropertyUtils } from "@/hooks/usePropertyUtils";
+import { usePropertyUtils } from "@/hooks/properties/usePropertyUtils";
 
 interface Category {
   id: number;
@@ -29,7 +29,6 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<number | string>("");
   const [newCategoryName, setNewCategoryName] = useState("");
   const [isCreatingNew, setIsCreatingNew] = useState(false);
-  const { isLoading, error } = usePropertyUtils();
 
   console.log("categories in dropdown", categories);
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -50,9 +49,6 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     }
   };
 
-  if (isLoading) return <div>Loading categories...</div>;
-  if (error) return <div>{error.message}</div>;
-
   return (
     <div>
       {!isCreatingNew ? (
@@ -67,12 +63,6 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
         </select>
       ) : (
         <div className="flex flex-col gap-2">
-          {/*<input*/}
-          {/*  type="text"*/}
-          {/*  value={newCategoryName}*/}
-          {/*  onChange={(e) => setNewCategoryName(e.target.value)}*/}
-          {/*  placeholder="Enter new category name"*/}
-          {/*/>*/}
           <div>
             <Label htmlFor="category.name">New Category Name</Label>
             <Field name="category.name" as={Input} />

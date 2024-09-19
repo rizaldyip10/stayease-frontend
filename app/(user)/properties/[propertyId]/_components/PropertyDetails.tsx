@@ -13,7 +13,7 @@ import { useBookingValues } from "@/hooks/useBookingValues";
 import RoomCard from "@/app/(user)/properties/[propertyId]/_components/RoomCard";
 import AvailabilityCalendar from "@/components/AvailabilityCalendar";
 import { CurrentAvailablePropertyType } from "@/constants/Property";
-import { usePropertyDetails } from "@/hooks/usePropertyDetails";
+import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
 import PropertyHeader from "@/app/(user)/properties/[propertyId]/_components/PropertyHeader";
 import { useDateSelection } from "@/hooks/useDateSelection";
 

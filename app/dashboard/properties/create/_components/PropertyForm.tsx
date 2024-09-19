@@ -1,20 +1,13 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ErrorMessage, Field, useFormikContext } from "formik";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import dynamic from "next/dynamic";
 import ImageUpload from "@/app/dashboard/properties/create/_components/ImageUpload";
-import {
-  Autocomplete,
-  GoogleMap,
-  LoadScript,
-  Marker,
-} from "@react-google-maps/api";
 import CategoryDropdown from "@/app/dashboard/properties/create/_components/CategoryDropdown";
 import propertyService from "@/services/propertyService";
 import { CategoryType } from "@/constants/Property";
-import MapComponent from "@/app/dashboard/properties/create/_components/MapComponent";
+import MapComponent from "@/components/MapComponent";
 
 interface PropertyFormValues {
   property: {
@@ -114,7 +107,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           setCategories={setCategories}
         />
       </div>
-      <div className="mt-4">
+      <div className="mt-4 mb-10">
         <Label>Location</Label>
         <div style={{ height: "400px", width: "100%" }}>
           <MapComponent
@@ -123,6 +116,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
               lng: values.property.longitude || 0,
             }}
             onLocationChange={handleLocationChange}
+            isEditable={true}
+            viewOnly={false}
           />
         </div>
         <ErrorMessage

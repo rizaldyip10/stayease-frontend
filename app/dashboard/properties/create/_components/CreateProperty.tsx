@@ -6,9 +6,9 @@ import { useEffect, useState } from "react";
 import { createPropValidationSchema } from "@/utils/validationSchema";
 import PropertyForm from "@/app/dashboard/properties/create/_components/PropertyForm";
 import RoomForm from "@/app/dashboard/properties/create/_components/RoomForm";
-import { usePropertyCreation } from "@/hooks/usePropertyCreation";
+import { usePropertyCreation } from "@/hooks/properties/usePropertyCreation";
 import { createPropertyInitialValues } from "@/utils/PropertyInitialValues";
-import { usePropertyUtils } from "@/hooks/usePropertyUtils";
+import { usePropertyUtils } from "@/hooks/properties/usePropertyUtils";
 
 const CreateProperty = () => {
   const [showCategoryForm, setShowCategoryForm] = useState(false);

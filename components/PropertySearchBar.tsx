@@ -4,7 +4,7 @@ import Combobox from "@/components/Combobox";
 import { Input } from "@/components/ui/input";
 import { CustomDatePicker } from "@/components/ui/date-picker";
 import { Button } from "@/components/ui/button";
-import useMediaQuery from "@/hooks/useMediaQuery";
+import useMediaQuery from "@/hooks/utils/useMediaQuery";
 
 interface HeroSearchBarProps {
   className?: string;

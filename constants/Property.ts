@@ -109,20 +109,6 @@ export type PropertyListingType = {
   currentPage: number;
   totalElements: number;
   content: AvailablePropertyType[];
-  //   {
-  //   propertyId: number;
-  //   tenant: string;
-  //   propertyName: string;
-  //   description: string;
-  //   imageUrl: string;
-  //   city: string;
-  //   country: string;
-  //   categoryName: string;
-  //   longitude: number;
-  //   latitude: number;
-  //   lowestBasePrice: number;
-  //   lowestAdjustedPrice: number;
-  // }[];
 };
 
 export type RoomAvailabilityType = {
