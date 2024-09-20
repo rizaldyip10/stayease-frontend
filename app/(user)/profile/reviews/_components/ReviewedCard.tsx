@@ -23,8 +23,8 @@ const ReviewedCard = () => {
                         <PencilLine className="w-4 h-4" />
                     </Button>
                 </div>
-                <div className="w-full flex flex-col lg:flex-row gap-3 lg:gap-1">
-                    <div className="w-full lg:w-1/2 flex flex-col gap-2">
+                <div className="w-full flex flex-col xl:flex-row gap-3 lg:gap-1">
+                    <div className="w-full xl:w-1/2 flex flex-col gap-2">
                         <h1 className="text-lg text-blue-950 font-semibold">The Cove Bali -- Beachfront Villa</h1>
                         <p className="text-sm text-blue-950">Rp 1.150.000</p>
                         <p className="text-sm text-blue-950 text-opacity-70">10 Sept 2024 - 12 Sept 2024</p>

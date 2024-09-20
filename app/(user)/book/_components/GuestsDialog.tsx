@@ -15,7 +15,7 @@ import GuestEditorBtn from "@/app/(user)/book/_components/GuestEditorBtn";
 import {useBookingValues} from "@/hooks/useBookingValues";
 
 const GuestsDialog = () => {
-    const { bookingValues, setBookingInfo } = useBookingValues();
+    const { bookingValues, setBookingInfo, save } = useBookingValues();
     return (
         <Dialog>
             <DialogTrigger className="text-sm font-medium px-4 hover:underline">
@@ -33,7 +33,7 @@ const GuestsDialog = () => {
                     <DialogClose className="hover:underline text-blue-950 mr-auto">
                         Cancel
                     </DialogClose>
-                    <DialogClose className="bg-blue-950 rounded-md p-2 text-white">
+                    <DialogClose className="bg-blue-950 rounded-md p-2 text-white" onClick={save}>
                         Submit
                     </DialogClose>
                 </DialogFooter>

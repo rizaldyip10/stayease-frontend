@@ -4,7 +4,7 @@ import {useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
 
 type PaymentQueryType = {
-    id: number | null;
+    id: string | null;
     bank: string | null;
 }
 
@@ -22,7 +22,7 @@ export const usePaymentQuery = () => {
         
         setPaymentQuery(prev => ({
             ...prev,
-            id: id ? +id : null,
+            id: id,
             bank
         }))
     }, [searchParams]);

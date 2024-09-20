@@ -8,7 +8,7 @@ interface ReviewSectionProps {
 
 const ReviewSection: FC<ReviewSectionProps> = ({ isEditState }) => {
     return (
-        <div className="w-full lg:w-1/2 flex flex-col gap-y-2 pl-2">
+        <div className="w-full xl:w-1/2 flex flex-col gap-y-2 pl-2">
             {
                 isEditState ?
                     <EditState /> :

@@ -12,15 +12,24 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import React from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { signOut } from "@/auth";
 
-const ProfileBtn = () => {
-  const { logout } = useAuth();
+interface ProfileBtnProps {
+  isDashboard: boolean;
+}
+
+const ProfileBtn: React.FC<ProfileBtnProps> = ({ isDashboard }) => {
+  const { data: session } = useSession();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex items-center">
         <Image
-          src="https://ui-avatars.com/api/?name=Rizaldy+Putra"
+          src={
+            session?.user.avatar ||
+            "https://ui-avatars.com/api/?name=Rizaldy+Putra"
+          }
           alt="pp"
           className="w-6 h-6 rounded-full"
           width={24}
@@ -32,12 +41,21 @@ const ProfileBtn = () => {
           My Account
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
-          <Link href="/profile" className="flex gap-1">
-            <CircleUserRound className="w-4 h-4 text-blue-950" />
-            <p>My Profile</p>
-          </Link>
-        </DropdownMenuItem>
+        {isDashboard ? (
+          <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
+            <Link href="/profile" className="flex gap-1">
+              <CircleUserRound className="w-4 h-4 text-blue-950" />
+              <p>My Profile</p>
+            </Link>
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
+            <Link href="/dashboard" className="flex gap-1">
+              <CircleUserRound className="w-4 h-4 text-blue-950" />
+              <p>Dashboard</p>
+            </Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
           <Link href="/profile/settings" className="flex gap-1">
             <Settings className="w-4 h-4 text-blue-950" />
@@ -45,7 +63,7 @@ const ProfileBtn = () => {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="text-xs flex items-center text-red-700 gap-1">
-          <Link href="/" onClick={() => logout()} className="flex gap-1">
+          <Link href="/" onClick={() => signOut()} className="flex gap-1">
             <LogOut className="w-4 h-4 text-red-700" />
             Log Out
           </Link>

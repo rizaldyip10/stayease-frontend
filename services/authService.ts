@@ -1,65 +1,41 @@
 import { config } from "@/constants/url";
 import { UserType } from "@/constants/Types";
+import axiosInterceptor from "@/utils/axiosInterceptor";
+import {
+  RefreshResponse,
+  ExchangeCodeRequest,
+  RegisterResponse,
+  AuthResponse,
+  TokenCheckResponse,
+} from "@/constants/Auth";
+import { handleError } from "@/utils/errorHandler";
+import { signIn } from "@/auth";
+
+import logger from "@/utils/logger";
 import { FormikValues } from "formik";
-import axiosInterceptor, {
-  getAccessToken,
-  setAccessToken,
-} from "@/utils/axiosInterceptor";
-import { queryClient } from "@/lib/queryClient";
-
-export interface AuthResponse {
-  id: string;
-  email: string;
-  userType: string;
-  isVerified: boolean;
-  firstName: string;
-  lastName: string;
-  isOAuth2: boolean;
-  token: {
-    accessToken: string;
-    refreshToken: string;
-  };
-}
-
-export interface RegisterResponse {
-  message: string;
-  verificationLink: string;
-}
-
-export interface TokenCheckResponse {
-  statusCode: number;
-  statusMessage: string;
-  data: {
-    isValid: boolean;
-  };
-}
-
-export interface SSOResponse {
-  accessToken: string;
-  refreshToken: string;
-}
 
 export const authService = {
-  setAccessToken,
-  getAccessToken,
-
   register: async (
     email: string,
     userType: UserType,
   ): Promise<RegisterResponse> => {
-    const response = await axiosInterceptor.post(
-      config.endpoints.registration.register,
-      {
-        email,
-      },
-      { params: { userType } },
-    );
-    console.log("Calling register endpoint");
-    const res = response.data;
-    return {
-      message: res.data.message,
-      verificationLink: res.data.verificationLink,
-    };
+    try {
+      logger.info("Initiating registration", { email, userType });
+      const response = await axiosInterceptor.post(
+        config.endpoints.registration.register,
+        { email },
+        { params: { userType } },
+      );
+      logger.info("Registration successful", { email });
+      return {
+        message: response.data.data.message,
+        verificationLink: response.data.data.verificationLink,
+      };
+    } catch (error: any) {
+      logger.error("Registration failed", { error, email });
+      handleError(error);
+      throw error;
+    }
   },
 
   checkToken: async (token: string): Promise<TokenCheckResponse> => {
@@ -81,142 +57,165 @@ export const authService = {
     return response.data;
   },
 
-  exchangeCodeForTokens: async (code: string): Promise<AuthResponse> => {
-    const response = await axiosInterceptor.post(
-      config.endpoints.oauth2.exchangeCode,
-      { code },
-    );
-    console.log("Exchanging code for tokens: ", response);
-    const res = response.data;
-    authService.setAccessToken(res.data.accessToken);
-    return res;
-  },
+  // exchangeCodeForTokens: async (code: string): Promise<AuthResponse> => {
+  //   const response = await axiosInterceptor.post(
+  //     config.endpoints.oauth2.exchangeCode,
+  //     { code },
+  //   );
+  //   console.log("Exchanging code for tokens: ", response);
+  //   const res = response.data;
+  //   authService.setAccessToken(res.data.accessToken);
+  //   return res;
+  // },
 
-  selectUserType: async (userType: UserType): Promise<AuthResponse> => {
-    const response = await axiosInterceptor.post(
-      config.endpoints.oauth2.socialUserSelect,
-      { userType },
-    );
-    console.log("Selecting user type: ", response);
-    const res = response.data;
-    authService.setAccessToken(res.data.accessToken);
-    return res;
-  },
-
-  login: async (
-    values: FormikValues,
-    isOAuth = false,
-    isNew = false,
-  ): Promise<AuthResponse> => {
-    let res;
+  login: async ({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }): Promise<AuthResponse> => {
     try {
-      if (isOAuth) {
-        res = await authService.exchangeCodeForTokens(values.code);
-        console.log("OAuth2 Login flow initiated");
-      } else if (isNew) {
-        res = await authService.selectUserType(values.userType);
-        console.log("New user login flow initiated");
-      } else {
-        const response = await axiosInterceptor.post(
-          config.endpoints.auth.login,
-          values,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          },
-        );
-        res = response.data;
-        console.log("Normal login flow initiated");
-      }
-      console.log("Login response:", res);
-      if (res.data && res.data.token && res.data.token.accessToken) {
-        authService.setAccessToken(res.data.token.accessToken);
-        return {
-          id: res.data.id,
-          email: res.data.email,
-          userType: res.data.userType,
-          isVerified: res.data.isVerified,
-          firstName: res.data.firstName,
-          lastName: res.data.lastName,
-          isOAuth2: res.data.isOAuth2,
-          token: {
-            accessToken: res.data.token.accessToken,
-            refreshToken: res.data.token.refreshToken,
-          },
-        };
-      } else {
-        throw new Error("Invalid response structure");
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      throw error;
-    }
-  },
-
-  checkAuthStatus: async (): Promise<AuthResponse> => {
-    console.log("Checking auth status", Math.random().toFixed(5));
-    const token = authService.getAccessToken();
-    if (token) {
-      authService.setAccessToken(token);
-      console.log("Checking auth status with token:", token);
-    }
-    const response = await axiosInterceptor.get(config.endpoints.auth.status);
-    console.log("Calling auth status endpoint");
-    const res = response.data;
-    const serializableData = {
-      id: res.data.id,
-      email: res.data.email,
-      userType: res.data.userType,
-      firstName: res.data.firstName,
-      lastName: res.data.lastName,
-      isOAuth2: res.data.isOAuth2,
-      isVerified: res.data.isVerified,
-    };
-    queryClient.setQueryData(["auth"], serializableData);
-    if (queryClient.getQueryData(["auth"]) == serializableData) {
-      console.log("Auth status set in query client");
-    } else {
-      console.log("????????");
-    }
-    console.log(
-      "Set auth status in query client:",
-      queryClient.getQueryData(["auth"]),
-    );
-    console.log("Auth status response:", res);
-    return {
-      id: res.data.id,
-      email: res.data.email,
-      userType: res.data.userType,
-      isVerified: res.data.isVerified,
-      firstName: res.data.firstName,
-      lastName: res.data.lastName,
-      isOAuth2: res.data.isOAuth2,
-      token: {
-        accessToken: res.data.token.accessToken,
-        refreshToken: res.data.token.refreshToken,
-      },
-    };
-  },
-
-  exchangeGoogleCodeForTokens: async (code: string): Promise<SSOResponse> => {
-    try {
+      logger.info("Initiating login", { email });
       const response = await axiosInterceptor.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/login/oauth2/code/google`,
-        { code },
+        config.endpoints.auth.login,
+        { email, password },
       );
-      const { accessToken, refreshToken } = response.data;
-      authService.setAccessToken(accessToken);
-      return response.data;
-    } catch (error) {
-      console.error("Token exchange failed:", error);
+      logger.info("Login successful", { email });
+      return response.data.data;
+    } catch (error: any) {
+      logger.error("Login failed", { error, email });
       throw error;
     }
   },
 
-  logout: async (): Promise<void> => {
-    await axiosInterceptor.post(config.endpoints.auth.logout);
-    authService.setAccessToken(null);
+  checkUserExists: async (email: string): Promise<boolean> => {
+    try {
+      logger.info("Checking if user exists", { email });
+      const response = await axiosInterceptor.post(
+        config.endpoints.oauth2.checkUserExists,
+        email,
+      );
+      logger.info("User existence check complete", {
+        email,
+        exists: response.data.data,
+      });
+      return response.data.data;
+    } catch (error: any) {
+      logger.error("User existence check failed", { error, email });
+      handleError(error);
+      return false;
+    }
+  },
+
+  registerOAuth2: async (
+    values: Partial<ExchangeCodeRequest>,
+  ): Promise<AuthResponse> => {
+    try {
+      logger.info("Registering OAuth2 user", { values });
+      const response = await axiosInterceptor.post(
+        config.endpoints.oauth2.registerOAuth2,
+        values,
+      );
+      logger.info("OAuth2 registration successful");
+      return response.data.data;
+    } catch (error: any) {
+      logger.error("OAuth2 registration failed", {
+        values,
+      });
+      handleError(error);
+      throw error;
+    }
+  },
+
+  reAuthenticate: async (googleToken: string) => {
+    try {
+      logger.info("Re-authenticating with Google");
+      const result = await signIn("google", {
+        token: { id_token: googleToken },
+        redirect: false,
+      });
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+      logger.info("Re-authentication successful");
+      return result;
+    } catch (error) {
+      logger.error("Re-authentication failed", { error });
+      throw error;
+    }
+  },
+
+  exchangeCode: async (code: string): Promise<AuthResponse> => {
+    try {
+      logger.info("Exchanging code for tokens");
+      const response = await axiosInterceptor.post(
+        config.endpoints.oauth2.exchangeCode,
+        code,
+      );
+      logger.info("Code exchange successful");
+      return response.data.data;
+    } catch (error: any) {
+      logger.error("Code exchange failed", { error });
+      handleError(error);
+      throw error;
+    }
+  },
+
+  isAccessTokenNearExpiry: (token: any): boolean => {
+    if (!token || !token.accessToken) return true;
+    try {
+      const decoded = JSON.parse(atob(token.accessToken.split(".")[1]));
+      const isNearExpiry = decoded.exp * 1000 < Date.now() + 5 * 60 * 1000;
+      logger.debug("Access token expiry check", { isNearExpiry });
+      return isNearExpiry;
+    } catch (error) {
+      logger.error("Error decoding accessToken", { error });
+      return true;
+    }
+  },
+
+  refreshBothTokens: async (refreshToken: string): Promise<RefreshResponse> => {
+    try {
+      logger.info("Refreshing both tokens");
+      const response = await axiosInterceptor.post(
+        config.endpoints.auth.refreshToken,
+        refreshToken,
+      );
+      logger.info("Both tokens refreshed successfully");
+      return response.data.data;
+    } catch (error: any) {
+      logger.error("Error refreshing both tokens", { error });
+      throw error;
+    }
+  },
+
+  refreshAccessToken: async (
+    refreshToken: string,
+  ): Promise<RefreshResponse> => {
+    try {
+      logger.info("Refreshing access token");
+      const response = await axiosInterceptor.post(
+        config.endpoints.auth.refreshAccessToken,
+        refreshToken,
+      );
+      logger.info("Access token refreshed successfully");
+      return response.data.data;
+    } catch (error: any) {
+      logger.error("Error refreshing access token", { error });
+      throw error;
+    }
+  },
+
+  logout: async (email: string): Promise<void> => {
+    try {
+      logger.info("Logging out user");
+      await axiosInterceptor.post(config.endpoints.auth.logout, email);
+      logger.info("Logout successful");
+    } catch (error: any) {
+      logger.error("Logout failed", { error });
+      throw error;
+    }
   },
 };
 
