@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,15 +23,26 @@ interface ComboboxProps {
     label: string;
   }[];
   onSelect: (value: string) => void;
+  value?: string;
 }
 
-const Combobox: React.FC<ComboboxProps> = ({ choices, onSelect }) => {
+const Combobox: React.FC<ComboboxProps> = ({
+  choices,
+  onSelect,
+  value: externalValue,
+}) => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const [internalValue, setInternalValue] = useState(externalValue || "");
+
+  useEffect(() => {
+    if (externalValue !== undefined) {
+      setInternalValue(externalValue);
+    }
+  }, [externalValue]);
 
   const handleSelect = (currentValue: string) => {
-    const newValue = currentValue === value ? "" : currentValue;
-    setValue(newValue);
+    const newValue = currentValue === internalValue ? "" : currentValue;
+    setInternalValue(newValue);
     onSelect(newValue);
     setOpen(false);
   };
@@ -45,8 +56,8 @@ const Combobox: React.FC<ComboboxProps> = ({ choices, onSelect }) => {
           aria-expanded={open}
           className="w-full text-left font-normal flex justify-between"
         >
-          {value
-            ? choices.find((choice) => choice.value === value)?.label
+          {internalValue
+            ? choices.find((choice) => choice.value === internalValue)?.label
             : "Select choice..."}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -64,12 +75,6 @@ const Combobox: React.FC<ComboboxProps> = ({ choices, onSelect }) => {
                   onSelect={handleSelect}
                 >
                   {choice.label}
-                  {/*<CheckIcon*/}
-                  {/*  className={cn(*/}
-                  {/*    "ml-auto h-4 w-4",*/}
-                  {/*    value === choice.value ? "opacity-100" : "opacity-0",*/}
-                  {/*  )}*/}
-                  {/*/>*/}
                 </CommandItem>
               ))}
             </CommandGroup>

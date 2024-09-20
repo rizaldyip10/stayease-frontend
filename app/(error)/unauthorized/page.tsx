@@ -5,7 +5,7 @@ import React from "react";
 const Unauthorized: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-slate-200">
-      <h1 className="text-6xl font-bold text-appblue-900 mb-4">
+      <h1 className="text-6xl font-bold text-blue-950 mb-4">
         401 - Unauthorized
       </h1>
       <p className="text-xl text-black mb-6">
@@ -21,7 +21,7 @@ const Unauthorized: React.FC = () => {
       />
       <Link
         href="/login"
-        className="bg-appblue-900 text-white px-6 py-2 rounded hover:bg-appblue-800"
+        className="bg-blue-950 text-white px-6 py-2 rounded hover:bg-blue-900"
       >
         Log In or Sign Up
       </Link>

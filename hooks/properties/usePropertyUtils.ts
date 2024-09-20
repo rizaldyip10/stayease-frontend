@@ -27,7 +27,6 @@ export const usePropertyUtils = () => {
     "categories",
     propertyService.getAllCategories,
   );
-  console.log("Fetched categories:", categories);
 
   const {
     data: images,
