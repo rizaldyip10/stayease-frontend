@@ -18,11 +18,12 @@ const publicRoutes = new Set([
 
 const routeHandlers = new Map<string, RouteHandler>([
   ["/dashboard/user", (session) => session.user.userType === "USER"],
-  ["/dashboard/tenant", (session) => session.user.userType === "TENANT"],
+  ["/dashboard/properties", (session) => session.user.userType === "TENANT"],
   [
     "/dashboard",
     (session) => ["USER", "TENANT"].includes(session.user.userType),
   ],
+  ["/profile", (session) => session],
   ["/bookings", (session) => session.user.userType === "USER"],
   [
     "/register/select-user-type",
@@ -51,6 +52,13 @@ export function getRouteHandler(path: string): RouteHandler | undefined {
   const exactMatch = routeHandlers.get(path);
   if (exactMatch) {
     return exactMatch;
+  }
+
+  // Check for wildcard patterns
+  for (const route of Array.from(routeHandlers.keys())) {
+    if (route.endsWith("*") && path.startsWith(route.slice(0, -1))) {
+      return routeHandlers.get(route);
+    }
   }
 
   const partialMatch = Array.from(routeHandlers.keys()).find((route) =>

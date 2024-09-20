@@ -1,11 +1,12 @@
+"use client";
 import UserMenu from "@/app/(user)/profile/_components/UserMenu";
 import { ReactNode } from "react";
 import MenuMobileBtn from "@/app/(user)/profile/_components/MenuMobileBtn";
-import ProtectedRoute from "@/components/hoc/ProtectedRoute";
+import { ProfileProvider } from "@/context/ProfileContext";
 
 const ProfileLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <>
+    <ProfileProvider>
       <div className="w-full flex flex-col lg:flex-row gap-4 lg:gap-0">
         <UserMenu />
         <div className="lg:hidden">
@@ -15,7 +16,7 @@ const ProfileLayout = ({ children }: { children: ReactNode }) => {
           {children}
         </div>
       </div>
-    </>
+    </ProfileProvider>
   );
 };
 
