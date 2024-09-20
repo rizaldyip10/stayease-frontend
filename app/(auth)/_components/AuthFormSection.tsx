@@ -11,6 +11,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { FormikHelpers, FormikValues } from "formik";
 import { useSession } from "next-auth/react";
 import logger from "@/utils/logger";
+import ResetPassword from "@/app/(auth)/reset-password/_components/ResetPassword";
 
 interface AuthFormProps {
   className?: string;
@@ -92,6 +93,8 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
                 onSubmit={handleMultiStepSubmit}
                 token={token}
               />
+            ) : formType === "forgotPassword" && token ? (
+              <ResetPassword token={token} />
             ) : (
               <AuthCard
                 formType={formType}
@@ -100,13 +103,7 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
                 onSubmit={onSubmit}
                 googleLogin={googleLogin}
                 loading={loading}
-                alertInfo={
-                  alertInfo as {
-                    show: boolean;
-                    type: "success" | "error";
-                    message: string;
-                  }
-                }
+                alertInfo={alertInfo}
                 hideAlert={hideAlert}
               />
             )}

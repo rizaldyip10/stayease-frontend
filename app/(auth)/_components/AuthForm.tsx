@@ -4,6 +4,7 @@ import { Form, Formik, FormikHelpers, FormikValues } from "formik";
 import { Button } from "@/components/ui/button";
 import { getValidationSchema } from "@/utils/validationSchema";
 import FormInputs from "@/app/(auth)/_components/FormInputs";
+import ForgotPasswordButton from "@/app/(auth)/reset-password/_components/ForgotPasswordButton";
 
 interface AuthFormProps {
   formType: FormType;
@@ -48,6 +49,11 @@ const AuthForm: React.FC<AuthFormProps> = ({
           </Form>
         )}
       </Formik>
+      {formType === "login" && (
+        <div className=" text-center">
+          <ForgotPasswordButton />
+        </div>
+      )}
     </div>
   );
 };

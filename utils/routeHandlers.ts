@@ -8,7 +8,7 @@ type RouteHandler = (
 const publicRoutes = new Set([
   "/login",
   "/register",
-  "/forgot-password",
+  "/reset-password",
   "/register/verify",
 ]);
 
