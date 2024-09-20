@@ -12,14 +12,10 @@ import PropertyManagement from "@/app/dashboard/(tenant)/_components/PropertyMan
 import RecentActivity from "@/app/dashboard/(user)/_components/RecentActivity";
 import QuickActions from "@/app/dashboard/(user)/_components/QuickActions";
 import PeakRateManagement from "@/app/dashboard/(tenant)/_components/PeakSeasonRateMgmt";
+import { useSession } from "next-auth/react";
 
 const TenantDashboard: React.FC = () => {
-  // !! TODO : DUMMY DATA - Replace with real data
-  const tenant = {
-    name: "John Doe",
-    email: "john@example.com",
-    avatar: "/api/placeholder/150/150",
-  };
+  const { data: session } = useSession();
 
   // TODO : Replace with real data
   const stats = [
@@ -58,10 +54,17 @@ const TenantDashboard: React.FC = () => {
     },
   ];
 
+  const fullName = session?.user?.firstName + " " + session?.user?.lastName;
+  const tenant = {
+    name: fullName,
+    email: session?.user?.email || "",
+    avatar: session?.user?.avatar || "",
+  };
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6 text-blue-950">
-        Tenant Dashboard
+        Welcome, {fullName}
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <ProfileCard className="col-span-1" user={tenant} />

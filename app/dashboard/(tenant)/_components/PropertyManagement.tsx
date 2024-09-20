@@ -4,6 +4,12 @@ import { Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useTenantProperties } from "@/hooks/useTenantProperties";
+import { AdjustedRatesType, PropertyAndRoomType } from "@/constants/Property";
+import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
+import { currencyFormatter } from "@/utils/CurrencyFormatter";
+import Link from "next/link";
+import RoomTab from "@/app/dashboard/(tenant)/_components/RoomTab";
 
 interface Room {
   id: number;
@@ -26,33 +32,14 @@ interface PropertyManagementProps {
 const PropertyManagement: React.FC<PropertyManagementProps> = ({
   className,
 }) => {
-  const [selectedProperty, setSelectedProperty] = useState<Property | null>(
-    null,
-  );
+  const [activeTab, setActiveTab] = useState("properties");
+  const [selectedProperty, setSelectedProperty] =
+    useState<PropertyAndRoomType | null>(null);
+  const { properties, isLoading, error } = useTenantProperties();
 
-  const properties = [
-    {
-      id: 1,
-      name: "Beachfront Villa",
-      location: "Malibu, CA",
-      rooms: [
-        { id: 1, name: "Master Suite", baseRate: 200, peakRate: 300 },
-        { id: 2, name: "Guest Room", baseRate: 150, peakRate: 250 },
-      ],
-    },
-    {
-      id: 2,
-      name: "Mountain Cabin",
-      location: "Aspen, CO",
-      rooms: [
-        { id: 3, name: "Loft", baseRate: 180, peakRate: 280 },
-        { id: 4, name: "Downstairs Bedroom", baseRate: 160, peakRate: 260 },
-      ],
-    },
-  ];
-
-  const handlePropertySelect = (property: Property) => {
+  const handlePropertySelect = (property: PropertyAndRoomType) => {
     setSelectedProperty(property);
+    setActiveTab("rooms");
   };
 
   return (
@@ -61,22 +48,22 @@ const PropertyManagement: React.FC<PropertyManagementProps> = ({
         <CardTitle className="text-blue-950">Property Management</CardTitle>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="properties" className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList>
             <TabsTrigger value="properties">Properties</TabsTrigger>
             <TabsTrigger value="rooms">Rooms</TabsTrigger>
           </TabsList>
           <TabsContent value="properties">
             <div className="space-y-4">
-              {properties.map((property) => (
+              {properties?.map((property) => (
                 <Card key={property.id} className="p-4">
                   <div className="flex flex-col md:flex-row gap-5 md:gap-0 justify-between items-center">
                     <div className="w-full">
                       <h3 className="font-semibold text-blue-950">
-                        {property.name}
+                        {property.propertyName}
                       </h3>
                       <p className="text-sm text-gray-500">
-                        {property.location}
+                        {property.address}
                       </p>
                     </div>
                     <Button
@@ -88,40 +75,20 @@ const PropertyManagement: React.FC<PropertyManagementProps> = ({
                   </div>
                 </Card>
               ))}
-              <Button className="w-full bg-blue-950 text-appgray hover:bg-appgray hover:text-blue-950">
-                <Plus className="mr-2 h-4 w-4" /> Add New Property
-              </Button>
+              <Link href="/dashboard/properties/create">
+                <Button className="w-full bg-blue-950 text-appgray hover:bg-appgray hover:text-blue-950 mt-5">
+                  <Plus className="mr-2 h-4 w-4" /> Add New Property
+                </Button>
+              </Link>
             </div>
           </TabsContent>
           <TabsContent value="rooms">
             {selectedProperty ? (
               <div className="space-y-4">
                 <h3 className="font-semibold text-blue-950">
-                  {selectedProperty.name} - Rooms
+                  {selectedProperty.propertyName} - Rooms
                 </h3>
-                {selectedProperty.rooms.map((room) => (
-                  <Card key={room.id} className="p-4">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <h4 className="font-medium text-blue-950">
-                          {room.name}
-                        </h4>
-                        <p className="text-sm text-gray-500">
-                          Base Rate: ${room.baseRate}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          Peak Rate: ${room.peakRate}
-                        </p>
-                      </div>
-                      <Button variant="outline" className="text-blue-950">
-                        Adjust Rates
-                      </Button>
-                    </div>
-                  </Card>
-                ))}
-                <Button className="w-full bg-blue-950 text-appgray hover:bg-appgray hover:text-blue-950">
-                  <Plus className="mr-2 h-4 w-4" /> Add New Room
-                </Button>
+                <RoomTab propertyId={selectedProperty.id} />
               </div>
             ) : (
               <p>Select a property to manage rooms</p>
