@@ -6,10 +6,14 @@ import SidebarMobile from "@/app/dashboard/_components/SidebarMobile";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { useState } from "react";
 import ProfileBtn from "@/app/dashboard/_components/ProfileBtn";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
+  const { data: session } = useSession();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious();

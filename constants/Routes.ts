@@ -61,7 +61,6 @@ export const footerNavigationItems = [
 ];
 
 export const footerServicesItems = [
-  // TODO : make these links work
   { label: "Video Chat", href: "" },
   { label: "Housing Guide", href: "/" },
   { label: "Terms & Conditions", href: "/" },

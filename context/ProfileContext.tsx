@@ -5,11 +5,11 @@ import {
 } from "@/services/profileService";
 import { createContext, useContext, useState } from "react";
 import { useSession } from "next-auth/react";
-import { useAlert } from "@/hooks/utils/useAlert";
 import { useImageUpload } from "@/hooks/utils/useImageUpload";
 import { useFetchData } from "@/hooks/utils/useFetchData";
 import { useEditData } from "@/hooks/utils/useEditData";
 import { queryClient } from "@/lib/queryClient";
+import { useAlert } from "./AlertContext";
 
 export interface ProfileContextType {
   profile: UserProfile | null;
@@ -23,6 +23,7 @@ export interface ProfileContextType {
   toggleTenantEditing: () => void;
   uploadAvatar: (file: File) => Promise<void>;
   removeAvatar: () => Promise<void>;
+  showAlert: (type: "success" | "error", message: string) => void;
 }
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
@@ -130,6 +131,7 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({
         toggleTenantEditing,
         uploadAvatar,
         removeAvatar,
+        showAlert,
       }}
     >
       {children}

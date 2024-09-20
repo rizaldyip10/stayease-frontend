@@ -3,6 +3,8 @@ import UserProfileForm from "@/app/(user)/profile/_components/UserProfileForm";
 import { useSession } from "next-auth/react";
 import TenantProfileForm from "@/app/(user)/profile/_components/TenantProfileForm";
 import { useProfile } from "@/context/ProfileContext";
+import { useAlert } from "@/hooks/utils/useAlert";
+import AlertComponent from "@/components/AlertComponent";
 
 const ProfilePage: React.FC = () => {
   const {
@@ -15,8 +17,6 @@ const ProfilePage: React.FC = () => {
     updateTenantProfile,
     toggleEditing,
     toggleTenantEditing,
-    uploadAvatar,
-    removeAvatar,
   } = useProfile();
 
   const { data: sessions } = useSession();
