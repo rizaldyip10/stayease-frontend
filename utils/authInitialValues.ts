@@ -7,6 +7,7 @@ export const userTypeSelectInitialValues = {
   businessName: "",
   taxId: "",
 };
+export const passwordInitialValues = { password: "", confirmPassword: "" };
 
 export const getInitialValues = (formType: FormType) => {
   switch (formType) {
@@ -16,6 +17,8 @@ export const getInitialValues = (formType: FormType) => {
       return registerInitialValues;
     case "userType":
       return userTypeSelectInitialValues;
+    case "forgotPassword":
+      return passwordInitialValues;
     default:
       return registerInitialValues;
   }

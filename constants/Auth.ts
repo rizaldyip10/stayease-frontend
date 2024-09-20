@@ -70,3 +70,8 @@ export interface TokenCheckResponse {
     isValid: boolean;
   };
 }
+
+export interface ForgotPasswordValues {
+  password: string;
+  confirmPassword: string;
+}

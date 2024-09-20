@@ -51,6 +51,25 @@ const FormInputs: React.FC<FormInputsProps> = ({ formType }) => {
           />
         </>
       );
+    case "forgotPassword":
+      return (
+        <>
+          <FormikInput
+            as="input"
+            name="password"
+            className="w-full border py-1 px-2 rounded-md focus-visible:ring-0"
+            label="Password"
+            type="password"
+          />
+          <FormikInput
+            as="input"
+            name="confirmPassword"
+            className="w-full border py-1 px-2 rounded-md focus-visible:ring-0"
+            label="Confirm Password"
+            type="password"
+          />
+        </>
+      );
     default:
       return null;
   }
