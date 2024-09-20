@@ -7,12 +7,11 @@ import { Button } from "@/components/ui/button";
 import googleLogo from "@/assets/icons/google-icon.png";
 import AuthForm from "@/app/(auth)/_components/AuthForm";
 import { FormikHelpers, FormikValues } from "formik";
-import useAuthForm from "@/hooks/useAuthForm";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getInitialValues } from "@/utils/authInitialValues";
-import { useAuth } from "@/hooks/useAuth";
 import logger from "@/utils/logger";
+import ForgotPasswordButton from "@/app/(auth)/reset-password/_components/ForgotPasswordButton";
 
 interface AuthCardProps {
   formType: FormType;
@@ -56,7 +55,11 @@ const AuthCard: React.FC<AuthCardProps> = ({
       <div className="w-full flex flex-col items-center md:gap-3 gap-2 md:mb-5">
         <Image src={logo} alt="logo" height={50} className="md:hidden mb-10" />
         <h1 className="text-3xl font-bold text-blue-950 md:text-left">
-          {formType === "login" ? "Login" : "Register"}
+          {formType === "login"
+            ? "Login"
+            : formType === "register"
+              ? "Register"
+              : "Reset Password"}
         </h1>
         {formType === "register" && (
           <>

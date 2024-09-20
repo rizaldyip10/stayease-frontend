@@ -7,6 +7,7 @@ import {
   RegisterResponse,
   AuthResponse,
   TokenCheckResponse,
+  ForgotPasswordValues,
 } from "@/constants/Auth";
 import { handleError } from "@/utils/errorHandler";
 import { signIn } from "@/auth";
@@ -56,18 +57,6 @@ export const authService = {
     console.log("Calling verify endpoint, response: ", response);
     return response.data;
   },
-
-  // exchangeCodeForTokens: async (code: string): Promise<AuthResponse> => {
-  //   const response = await axiosInterceptor.post(
-  //     config.endpoints.oauth2.exchangeCode,
-  //     { code },
-  //   );
-  //   console.log("Exchanging code for tokens: ", response);
-  //   const res = response.data;
-  //   authService.setAccessToken(res.data.accessToken);
-  //   return res;
-  // },
-
   login: async ({
     email,
     password,
@@ -214,6 +203,33 @@ export const authService = {
       logger.info("Logout successful");
     } catch (error: any) {
       logger.error("Logout failed", { error });
+      throw error;
+    }
+  },
+
+  forgotPassword: async (email: string): Promise<void> => {
+    try {
+      logger.info("Initiating forgot password", { email });
+      await axiosInterceptor.post(config.endpoints.password.forgot, { email });
+      logger.info("Forgot password successful", { email });
+    } catch (error: any) {
+      logger.error("Forgot password failed", { error, email });
+      throw error;
+    }
+  },
+
+  resetPassword: async (
+    token: string,
+    values: ForgotPasswordValues,
+  ): Promise<void> => {
+    try {
+      logger.info("Initiating password reset, values: ", values);
+      await axiosInterceptor.post(config.endpoints.password.reset, values, {
+        params: { token },
+      });
+      logger.info("Password reset successful");
+    } catch (error: any) {
+      logger.error("Password reset failed", { error });
       throw error;
     }
   },

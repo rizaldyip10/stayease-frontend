@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 type AlertType = "success" | "error";
 
 interface AlertContextType {
-  showAlert: (type: AlertType, message: string) => void;
+  showAlert: (type: AlertType, message: string, redirect?: string) => void;
   hideAlert: () => void;
   alertInfo: {
     type: AlertType;
