@@ -1,20 +1,13 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ErrorMessage, Field, useFormikContext } from "formik";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import dynamic from "next/dynamic";
 import ImageUpload from "@/app/dashboard/properties/create/_components/ImageUpload";
-import {
-  Autocomplete,
-  GoogleMap,
-  LoadScript,
-  Marker,
-} from "@react-google-maps/api";
 import CategoryDropdown from "@/app/dashboard/properties/create/_components/CategoryDropdown";
 import propertyService from "@/services/propertyService";
 import { CategoryType } from "@/constants/Property";
-import MapComponent from "@/app/dashboard/properties/create/_components/MapComponent";
+import MapComponent from "@/components/MapComponent";
 
 interface PropertyFormValues {
   property: {
@@ -31,12 +24,14 @@ interface PropertyFormValues {
 }
 
 interface PropertyFormProps {
-  onImageUpload: (file: File) => Promise<string>;
+  onImageUpload: (
+    file: File,
+    fieldName: string,
+    setFieldValue: (field: string, value: any) => void,
+  ) => Promise<void>;
   setCategories: React.Dispatch<React.SetStateAction<CategoryType[]>>;
-  categories: CategoryType[];
+  categories: CategoryType[] | undefined;
 }
-
-const libraries: "places"[] = ["places"];
 
 const PropertyForm: React.FC<PropertyFormProps> = ({
   onImageUpload,
@@ -82,45 +77,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
     }
   };
 
-  const handleMapClick = useCallback(
-    (e: google.maps.MapMouseEvent) => {
-      if (e.latLng) {
-        const lat = e.latLng.lat();
-        const lng = e.latLng.lng();
-        setFieldValue("property.latitude", lat);
-        setFieldValue("property.longitude", lng);
-        setMapCenter({ lat, lng });
-        console.log("Map clicked at:", lat, lng);
-        console.log("field value:", values);
-      }
-    },
-    [setFieldValue],
-  );
-
-  const onLoad = (autocomplete: google.maps.places.Autocomplete) => {
-    setSearchBox(autocomplete);
-  };
-
-  const capitalizeFirstLetter = (string: string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
-
-  const onPlaceChanged = () => {
-    if (searchBox !== null) {
-      const place = searchBox.getPlace();
-      if (place.geometry && place.geometry.location) {
-        const newLocation = {
-          lat: place.geometry.location.lat(),
-          lng: place.geometry.location.lng(),
-        };
-        setLocation(newLocation);
-      } else {
-        console.log("Place geometry or location is not available.");
-      }
-    } else {
-      console.log("Autocomplete is not loaded yet!");
-    }
-  };
+  useEffect(() => {
+    console.log("Field values:", values);
+  }, [setFieldValue, values]);
 
   return (
     <div className="mb-4">
@@ -148,49 +107,17 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           setCategories={setCategories}
         />
       </div>
-      <div className="mt-4">
+      <div className="mt-4 mb-10">
         <Label>Location</Label>
         <div style={{ height: "400px", width: "100%" }}>
-          {/*<LoadScript*/}
-          {/*  googleMapsApiKey={`${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}*/}
-          {/*  libraries={libraries}*/}
-          {/*>*/}
-          {/*  <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>*/}
-          {/*    <input*/}
-          {/*      type="text"*/}
-          {/*      placeholder="Search for a location"*/}
-          {/*      style={{*/}
-          {/*        boxSizing: `border-box`,*/}
-          {/*        border: `1px solid transparent`,*/}
-          {/*        width: `240px`,*/}
-          {/*        height: `32px`,*/}
-          {/*        padding: `0 12px`,*/}
-          {/*        borderRadius: `3px`,*/}
-          {/*        boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,*/}
-          {/*        fontSize: `14px`,*/}
-          {/*        outline: `none`,*/}
-          {/*        textOverflow: `ellipses`,*/}
-          {/*        marginBottom: "10px",*/}
-          {/*      }}*/}
-          {/*    />*/}
-          {/*  </Autocomplete>*/}
-          {/*  <div style={{ height: "400px", width: "100%" }}>*/}
-          {/*    <GoogleMap*/}
-          {/*      mapContainerStyle={{ height: "100%", width: "100%" }}*/}
-          {/*      center={location}*/}
-          {/*      zoom={10}*/}
-          {/*      onClick={handleMapClick}*/}
-          {/*    >*/}
-          {/*      <Marker position={location} />*/}
-          {/*    </GoogleMap>*/}
-          {/*  </div>*/}
-          {/*</LoadScript>*/}
           <MapComponent
             initialCenter={{
               lat: values.property.latitude || 0,
               lng: values.property.longitude || 0,
             }}
             onLocationChange={handleLocationChange}
+            isEditable={true}
+            viewOnly={false}
           />
         </div>
         <ErrorMessage

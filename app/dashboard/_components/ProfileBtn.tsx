@@ -15,7 +15,11 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { signOut } from "@/auth";
 
-const ProfileBtn = () => {
+interface ProfileBtnProps {
+  isDashboard: boolean;
+}
+
+const ProfileBtn: React.FC<ProfileBtnProps> = ({ isDashboard }) => {
   const { data: session } = useSession();
 
   return (
@@ -37,12 +41,21 @@ const ProfileBtn = () => {
           My Account
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
-          <Link href="/profile" className="flex gap-1">
-            <CircleUserRound className="w-4 h-4 text-blue-950" />
-            <p>My Profile</p>
-          </Link>
-        </DropdownMenuItem>
+        {isDashboard ? (
+          <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
+            <Link href="/profile" className="flex gap-1">
+              <CircleUserRound className="w-4 h-4 text-blue-950" />
+              <p>My Profile</p>
+            </Link>
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
+            <Link href="/dashboard" className="flex gap-1">
+              <CircleUserRound className="w-4 h-4 text-blue-950" />
+              <p>Dashboard</p>
+            </Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
           <Link href="/profile/settings" className="flex gap-1">
             <Settings className="w-4 h-4 text-blue-950" />

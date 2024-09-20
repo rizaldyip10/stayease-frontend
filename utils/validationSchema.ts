@@ -98,3 +98,17 @@ export const createPropValidationSchema = yup.object().shape({
     name: yup.string(),
   }),
 });
+
+export const contactFormValidationSchema = yup.object().shape({
+  fullName: yup.string()
+    .required("Full name is required")
+    .min(2, "Name must be at least 2 characters")
+    .max(50, "Name must not exceed 50 characters"),
+  email: yup.string()
+    .email("Invalid email format")
+    .required("Email is required"),
+  message: yup.string()
+    .required("Message is required")
+    .min(255, "Message must be at least 25 characters")
+    .max(1000, "Message must not exceed 1000 characters"),
+});

@@ -8,8 +8,12 @@ type RouteHandler = (
 const publicRoutes = new Set([
   "/login",
   "/register",
-  "/reset-password",
+  "/forgot-password",
   "/register/verify",
+  "/about",
+  "/properties",
+  "/properties/*",
+  "/faq",
 ]);
 
 const routeHandlers = new Map<string, RouteHandler>([
@@ -19,7 +23,6 @@ const routeHandlers = new Map<string, RouteHandler>([
     "/dashboard",
     (session) => ["USER", "TENANT"].includes(session.user.userType),
   ],
-  ["/properties", (session) => session.user.userType === "TENANT"],
   ["/bookings", (session) => session.user.userType === "USER"],
   [
     "/register/select-user-type",
@@ -30,7 +33,18 @@ const routeHandlers = new Map<string, RouteHandler>([
 ]);
 
 export function isPublicRoute(path: string): boolean {
-  return publicRoutes.has(path);
+  if (publicRoutes.has(path)) {
+    return true;
+  }
+
+  // Check for wildcard patterns
+  for (const route of Array.from(publicRoutes)) {
+    if (route.endsWith("*") && path.startsWith(route.slice(0, -1))) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 export function getRouteHandler(path: string): RouteHandler | undefined {

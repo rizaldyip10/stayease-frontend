@@ -212,7 +212,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
                   key={stepNumber}
                   className={`w-8 h-8 rounded-full flex items-center justify-center ${
                     step === stepNumber
-                      ? "bg-appblue-900 text-white"
+                      ? "bg-blue-950 text-white"
                       : "bg-gray-200"
                   }`}
                 >
@@ -227,7 +227,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
                 type="button"
                 onClick={() => setStep(step - 1)}
                 variant="outline"
-                className="bg-appblue-900 w-1/2 text-white text-center"
+                className="bg-blue-950 w-1/2 text-white text-center"
                 disabled={!(isValid && dirty) || isSubmitting}
               >
                 Back
@@ -235,7 +235,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
             )}
             <Button
               type="submit"
-              className="bg-appblue-900 w-1/2 text-white mx-auto"
+              className="bg-blue-950 w-1/2 text-white mx-auto"
               disabled={!(isValid && dirty) || isSubmitting}
             >
               {step === (userType === "TENANT" ? 4 : 3) ? "Submit" : "Next"}

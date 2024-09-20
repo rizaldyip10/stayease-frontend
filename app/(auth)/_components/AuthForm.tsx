@@ -36,7 +36,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
             <FormInputs formType={formType} />
             <Button
               type="submit"
-              className="bg-appblue-900 w-full text-white"
+              className="bg-blue-950 w-full text-white"
               disabled={!(isValid && dirty) || isSubmitting}
             >
               {isSubmitting

@@ -12,7 +12,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
 
   return (
     <div className="min-h-screen min-w-screen flex flex-col items-center justify-center bg-slate-200">
-      <h1 className="md:text-4xl text-3xl text-center font-bold text-appblue-900 mb-4 flex flex-col md:gap-5">
+      <h1 className="md:text-4xl text-3xl text-center font-bold text-blue-950 mb-4 flex flex-col md:gap-5">
         <p>Oops!</p>
         <p>This property is under construction =(</p>
       </h1>
@@ -23,13 +23,13 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
       <div className="space-x-4">
         <button
           onClick={() => reset()}
-          className="bg-appblue-900 text-white px-6 py-2 rounded hover:bg-appblue-800"
+          className="bg-blue-950 text-white px-6 py-2 rounded hover:bg-blue-900"
         >
           Try Again
         </button>
         <button
           onClick={() => router.push("/")}
-          className="bg-appblue-900 text-white px-6 py-2 rounded hover:bg-appblue-800"
+          className="bg-blue-950 text-white px-6 py-2 rounded hover:bg-blue-900"
         >
           Go to Home
         </button>
