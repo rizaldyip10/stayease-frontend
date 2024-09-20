@@ -39,6 +39,7 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
 
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+  const newUserType = searchParams.get("t") === "t" ? "TENANT" : "USER";
 
   const onSubmit = (
     values: FormikValues,
@@ -87,9 +88,9 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
                 onClose={hideAlert}
               />
             )}
-            {formType === "verify" && token ? (
+            {formType === "verify" && token && newUserType ? (
               <MultiStepForm
-                userType={userType}
+                userType={newUserType}
                 onSubmit={handleMultiStepSubmit}
                 token={token}
               />
