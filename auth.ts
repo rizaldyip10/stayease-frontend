@@ -12,6 +12,7 @@ import {
   handleSessionCallback,
 } from "@/utils/authHelpers";
 import { redirect } from "next/navigation";
+import authService from "@/services/authService";
 
 interface AuthCallbacks {
   handleGoogleSignIn: (params: {
@@ -135,7 +136,7 @@ export const signOut = async (options?: {
     // Call backend logout endpoint
     const session = await getSession();
     const email = session?.user?.email;
-    await axiosInterceptor.post(config.endpoints.auth.logout, email);
+    await authService.logout(email);
     logger.info("Backend logout successful");
   } catch (error) {
     logger.error("Backend logout failed", { error });

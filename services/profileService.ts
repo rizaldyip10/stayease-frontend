@@ -1,5 +1,6 @@
 import { config } from "@/constants/url";
 import axiosInterceptor from "@/utils/axiosInterceptor";
+import logger from "@/utils/logger";
 
 export interface UserProfile {
   id: string;
@@ -123,6 +124,41 @@ export const profileService = {
       return {
         avatarUrl: response.data.data.avatarUrl,
       };
+    }
+  },
+
+  changeEmailRequest: async (email: string): Promise<void> => {
+    try {
+      logger.info("Requesting email change");
+      await axiosInterceptor.post(config.endpoints.users.email, { email });
+      logger.info("Email change request successful");
+    } catch (error: any) {
+      logger.error("Email change request failed", { error });
+      throw error;
+    }
+  },
+
+  verifyEmailChange: async (token: string): Promise<void> => {
+    try {
+      logger.info("Verifying email change");
+      await axiosInterceptor.post(config.endpoints.users.email, null, {
+        params: { token },
+      });
+      logger.info("Email change verification successful");
+    } catch (error: any) {
+      logger.error("Email change verification failed", { error });
+      throw error;
+    }
+  },
+
+  deleteAccount: async (): Promise<void> => {
+    try {
+      logger.info("Deleting account");
+      await axiosInterceptor.delete(config.endpoints.users.profile);
+      logger.info("Account deletion successful");
+    } catch (error: any) {
+      logger.error("Account deletion failed", { error });
+      throw error;
     }
   },
 };

@@ -207,7 +207,7 @@ export const authService = {
     }
   },
 
-  logout: async (email: string): Promise<void> => {
+  logout: async (email: string | undefined): Promise<void> => {
     try {
       logger.info("Logging out user");
       await axiosInterceptor.post(config.endpoints.auth.logout, email);

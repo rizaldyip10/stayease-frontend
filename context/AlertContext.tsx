@@ -16,7 +16,9 @@ interface AlertContextType {
   alertInfo: {
     type: AlertType;
     message: string;
+    redirect?: string;
   } | null;
+  redirect?: string;
 }
 
 const AlertContext = createContext<AlertContextType | undefined>(undefined);
@@ -27,13 +29,14 @@ export const AlertProvider: React.FC<{ children: ReactNode }> = ({
   const [alertInfo, setAlertInfo] = useState<{
     type: AlertType;
     message: string;
+    redirect?: string;
   } | null>(null);
 
   const router = useRouter();
 
   const showAlert = useCallback(
     (type: AlertType, message: string, redirect?: string) => {
-      setAlertInfo({ type, message });
+      setAlertInfo({ type, message, redirect });
       setTimeout(() => {
         setAlertInfo(null);
         if (redirect) {
