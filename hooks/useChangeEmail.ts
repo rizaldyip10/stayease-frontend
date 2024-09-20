@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAlert } from "@/context/AlertContext";
 import { signOut } from "@/auth";
 import { profileService } from "@/services/profileService";
+import { handleError } from "@/utils/errorHandler";
 
 export const useChangeEmail = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,9 +18,13 @@ export const useChangeEmail = () => {
         "success",
         "Email change request sent successfully, please check your email to verify the change.",
       );
-    } catch (error: any) {
-      setError(error.message);
-      showAlert("error", error.message);
+    } catch (err: any) {
+      handleError(
+        err,
+        "Failed to send reset link. Please try again.",
+        setError,
+      );
+      showAlert("error", err.message);
     } finally {
       setIsLoading(false);
     }
@@ -32,9 +37,13 @@ export const useChangeEmail = () => {
       await profileService.verifyEmailChange(token);
       showAlert("success", "Email change successful");
       await signOut({ redirect: true });
-    } catch (error: any) {
-      setError(error.message);
-      showAlert("error", error.message);
+    } catch (err: any) {
+      handleError(
+        err,
+        "Failed to send reset link. Please try again.",
+        setError,
+      );
+      showAlert("error", err.message);
     } finally {
       setIsLoading(false);
     }

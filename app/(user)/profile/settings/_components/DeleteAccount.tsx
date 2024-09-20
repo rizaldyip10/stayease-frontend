@@ -36,9 +36,10 @@ const DeleteAccount: React.FC = () => {
         <DialogHeader>
           <DialogTitle>Are you absolutely sure?</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers. Any future bookings
-            will be cancelled.
+            This action is <span className="font-semibold">permanent</span>. It
+            will delete your account, remove all data from our servers, block
+            your email from re-registering for 48 hours, and cancel any future
+            bookings.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

@@ -1,6 +1,7 @@
 import { config } from "@/constants/url";
 import axiosInterceptor from "@/utils/axiosInterceptor";
 import logger from "@/utils/logger";
+import { signOut } from "@/auth";
 
 export interface UserProfile {
   id: string;
@@ -127,10 +128,10 @@ export const profileService = {
     }
   },
 
-  changeEmailRequest: async (email: string): Promise<void> => {
+  changeEmailRequest: async (newEmail: string): Promise<void> => {
     try {
       logger.info("Requesting email change");
-      await axiosInterceptor.post(config.endpoints.users.email, { email });
+      await axiosInterceptor.post(config.endpoints.users.email, { newEmail });
       logger.info("Email change request successful");
     } catch (error: any) {
       logger.error("Email change request failed", { error });
@@ -141,7 +142,7 @@ export const profileService = {
   verifyEmailChange: async (token: string): Promise<void> => {
     try {
       logger.info("Verifying email change");
-      await axiosInterceptor.post(config.endpoints.users.email, null, {
+      await axiosInterceptor.put(config.endpoints.users.email, null, {
         params: { token },
       });
       logger.info("Email change verification successful");
@@ -154,8 +155,9 @@ export const profileService = {
   deleteAccount: async (): Promise<void> => {
     try {
       logger.info("Deleting account");
-      await axiosInterceptor.delete(config.endpoints.users.profile);
+      await axiosInterceptor.delete(config.endpoints.users.delete);
       logger.info("Account deletion successful");
+      await signOut({ redirect: true });
     } catch (error: any) {
       logger.error("Account deletion failed", { error });
       throw error;

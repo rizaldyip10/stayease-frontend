@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getInitialValues } from "@/utils/authInitialValues";
 import logger from "@/utils/logger";
-import ForgotPasswordButton from "@/app/(auth)/reset-password/_components/ForgotPasswordButton";
+import ChangeCredentialButton from "@/app/(auth)/reset-password/_components/ChangeCredentialButton";
 
 interface AuthCardProps {
   formType: FormType;

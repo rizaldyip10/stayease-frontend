@@ -9,11 +9,11 @@ import {
   TokenCheckResponse,
   ForgotPasswordValues,
 } from "@/constants/Auth";
-import { handleError } from "@/utils/errorHandler";
 import { signIn } from "@/auth";
 
 import logger from "@/utils/logger";
 import { FormikValues } from "formik";
+import { logError } from "@/utils/errorHandler";
 
 export const authService = {
   register: async (
@@ -34,7 +34,7 @@ export const authService = {
       };
     } catch (error: any) {
       logger.error("Registration failed", { error, email });
-      handleError(error);
+      logError(error);
       throw error;
     }
   },
@@ -92,7 +92,7 @@ export const authService = {
       return response.data.data;
     } catch (error: any) {
       logger.error("User existence check failed", { error, email });
-      handleError(error);
+      logError(error);
       return false;
     }
   },
@@ -112,7 +112,7 @@ export const authService = {
       logger.error("OAuth2 registration failed", {
         values,
       });
-      handleError(error);
+      logError(error);
       throw error;
     }
   },
@@ -146,7 +146,7 @@ export const authService = {
       return response.data.data;
     } catch (error: any) {
       logger.error("Code exchange failed", { error });
-      handleError(error);
+      logError(error);
       throw error;
     }
   },

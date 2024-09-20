@@ -25,6 +25,7 @@ const routeHandlers = new Map<string, RouteHandler>([
   ],
   ["/profile", (session) => session],
   ["/settings", (session) => session],
+  ["/verify-email", (session) => session],
   ["/bookings", (session) => session.user.userType === "USER"],
   [
     "/register/select-user-type",

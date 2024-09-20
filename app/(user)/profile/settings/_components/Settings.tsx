@@ -1,19 +1,30 @@
+"use client";
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import ResetPassword from "@/app/(user)/profile/settings/_components/PlaceholderResetPassword";
-import ChangeEmail from "@/app/(user)/profile/settings/_components/ChangeEmail";
 import DeleteAccount from "@/app/(user)/profile/settings/_components/DeleteAccount";
+import ChangeCredentialButton from "@/app/(auth)/reset-password/_components/ChangeCredentialButton";
 
 const SettingsPage: React.FC = () => {
   const cardContents = [
     {
       title: "Reset Password",
-      // !TODO placeholder to be replaced with ResetPassword component
-      component: <ResetPassword />,
+      component: (
+        <ChangeCredentialButton
+          variant="default"
+          title="Request password reset"
+          isPasswordReset={true}
+        />
+      ),
     },
     {
       title: "Change Email",
-      component: <ChangeEmail /> || null,
+      component: (
+        <ChangeCredentialButton
+          variant="default"
+          title="Request password reset"
+          isPasswordReset={false}
+        />
+      ),
     },
     {
       title: "Delete Account",
