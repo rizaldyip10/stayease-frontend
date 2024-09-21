@@ -1,7 +1,10 @@
 import React from "react";
-import { useProfile } from "@/hooks/useProfile";
 import UserProfileForm from "@/app/(user)/profile/_components/UserProfileForm";
+import { useSession } from "next-auth/react";
 import TenantProfileForm from "@/app/(user)/profile/_components/TenantProfileForm";
+import { useProfile } from "@/context/ProfileContext";
+import { useAlert } from "@/hooks/utils/useAlert";
+import AlertComponent from "@/components/AlertComponent";
 
 const ProfilePage: React.FC = () => {
   const {
@@ -10,11 +13,14 @@ const ProfilePage: React.FC = () => {
     error,
     isEditing,
     isTenantEditing,
-    toggleEditing,
-    toggleTenantEditing,
     updateProfile,
     updateTenantProfile,
+    toggleEditing,
+    toggleTenantEditing,
   } = useProfile();
+
+  const { data: sessions } = useSession();
+  const isUser = sessions?.user?.userType === "USER";
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -29,7 +35,7 @@ const ProfilePage: React.FC = () => {
         toggleEditing={toggleEditing}
         updateProfile={updateProfile}
       />
-      {profile.userType === "TENANT" && profile.tenantInfo && (
+      {!isUser && profile.tenantInfo && (
         <TenantProfileForm
           tenantInfo={profile.tenantInfo}
           isEditing={isTenantEditing}

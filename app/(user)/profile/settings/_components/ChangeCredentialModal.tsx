@@ -1,6 +1,6 @@
 import React from "react";
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
+import { Formik, Form, FormikValues } from "formik";
+import * as yup from "yup";
 import {
   Dialog,
   DialogContent,
@@ -10,38 +10,63 @@ import {
 import { Button } from "@/components/ui/button";
 import FormikInput from "@/components/FormikInput";
 import { useForgotPassword } from "@/hooks/useForgotPassword";
+import { useChangeEmail } from "@/hooks/useChangeEmail";
 
 interface ForgotPasswordModalProps {
   isOpen: boolean;
   onClose: () => void;
+  isPasswordReset: boolean;
 }
 
-const ForgotPasswordSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email").required("Required"),
+const ForgotPasswordSchema = yup.object().shape({
+  email: yup.string().email("Invalid email").required("Required"),
 });
 
-const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
+const ChangeCredentialModal: React.FC<ForgotPasswordModalProps> = ({
   isOpen,
   onClose,
+  isPasswordReset,
 }) => {
   const { forgotPassword, isLoading, error } = useForgotPassword();
+  const {
+    initiateChangeEmail,
+    isLoading: emailIsLoading,
+    error: emailError,
+  } = useChangeEmail();
+
+  const handleSubmit = async (
+    values: { email: string },
+    { setSubmitting }: any,
+  ) => {
+    let res;
+    if (isPasswordReset) {
+      res = await forgotPassword(values.email);
+    } else {
+      res = await initiateChangeEmail(values.email);
+    }
+    setSubmitting(false);
+    console.log("error", res);
+    console.log("emailError", emailError);
+    if (res.statusCode == 200) {
+      onClose();
+    }
+  };
+
+  const title = isPasswordReset ? "Reset Password" : "Change E-mail";
+  const buttonText = isPasswordReset
+    ? "Send Reset Link"
+    : "Send E-mail Verification Link";
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Reset Password</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
         <Formik
           initialValues={{ email: "" }}
           validationSchema={ForgotPasswordSchema}
-          onSubmit={async (values, { setSubmitting }) => {
-            await forgotPassword(values.email);
-            setSubmitting(false);
-            if (!error) {
-              onClose();
-            }
-          }}
+          onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
             <Form className="space-y-4">
@@ -59,7 +84,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
                 disabled={isSubmitting || isLoading}
                 className="w-full bg-blue-950 text-white hover:bg-blue-900"
               >
-                {isSubmitting || isLoading ? "Sending..." : "Send Reset Link"}
+                {isSubmitting || isLoading ? "Sending..." : buttonText}
               </Button>
             </Form>
           )}
@@ -69,4 +94,4 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
   );
 };
 
-export default ForgotPasswordModal;
+export default ChangeCredentialModal;

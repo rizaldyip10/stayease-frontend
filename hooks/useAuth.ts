@@ -13,12 +13,13 @@ import { UserType } from "@/constants/Types";
 import { AuthResponse, RegisterResponse } from "@/constants/Auth";
 import { MultiStepFormValues } from "@/app/(auth)/_components/MultiStepForm";
 import { signIn as nextAuthSignIn, useSession } from "next-auth/react";
+import { useAlert } from "@/context/AlertContext";
 
 export function useAuth() {
   const queryClient: QueryClient = useQueryClient();
-  const router: AppRouterInstance = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const { data: session, status, update } = useSession();
+  const { showAlert } = useAlert();
 
   const {
     data: auth,
@@ -48,16 +49,11 @@ export function useAuth() {
   >({
     mutationFn: ({ email, userType }) => authService.register(email, userType),
     onSuccess: (data) => {
-      // Show success message
-      alert(data.message);
-      // TODO clear form
-      // TODO: Redirect to a "Check your email" page
-      router.push("/");
+      showAlert("success", data.message, "/");
     },
     onError: (error) => {
-      // Handle error (show error message, etc.)
       console.error("Registration failed:", error.message);
-      alert("Registration failed. Please try again.");
+      showAlert("error", "Registration failed. " + error.message);
     },
   });
 
@@ -68,35 +64,30 @@ export function useAuth() {
   >({
     mutationFn: ({ values, token }) => authService.verify(values, token),
     onSuccess: (data) => {
-      // Show success message
-      alert(data.statusMessage);
-      // Redirect to login page
-      router.push("/login");
+      showAlert("success", data.statusMessage, "/login");
     },
     onError: (error) => {
-      // Handle error (show error message, etc.)
       console.error("Verification failed:", error.message);
-      alert("Verification failed. Please try again.");
+      showAlert("error", "Verification failed. " + error.message);
     },
   });
 
   const handleGoogleLogin = async () => {
     try {
-      const result = await nextAuthSignIn("google", { redirect: false });
-      if (result?.error) {
-        throw new Error(result.error);
-      }
+      const result = await nextAuthSignIn("google", { redirect: true });
 
       if (session?.user?.isNewUser) {
-        // Redirect to user type selection page
-        router.push("/register/select-user-type");
+        showAlert(
+          "success",
+          "Please continue to select your user type.",
+          "/register/select-user-type",
+        );
       } else {
-        // Existing user, redirect to dashboard
-        router.push("/dashboard");
+        showAlert("success", "Login successful.", "/");
       }
     } catch (error) {
       console.error("Google login failed:", error);
-      // Handle error (e.g., show error message to user)
+      showAlert("error", "Google login failed. " + error);
     }
   };
 

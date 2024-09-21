@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "./useAuth";
 import {
   profileService,
   TenantProfile,
   UpdateProfile,
-  UserProfile,
   UserImage,
+  UserProfile,
 } from "@/services/profileService";
+import { useSession } from "next-auth/react";
 
 export const useProfile = () => {
-  const { auth } = useAuth();
+  const { data: session } = useSession();
   const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(false);
   const [isTenantEditing, setIsTenantEditing] = useState(false);
@@ -22,7 +22,7 @@ export const useProfile = () => {
   } = useQuery<UserProfile, Error>({
     queryKey: ["profile"],
     queryFn: profileService.getProfile,
-    enabled: !!auth, // Only fetch if user is authenticated
+    enabled: !!session, // Only fetch if user is authenticated
   });
 
   const updateProfileMutation = useMutation<

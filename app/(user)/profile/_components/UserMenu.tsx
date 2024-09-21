@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AvatarUploadModal from "@/app/(user)/profile/_components/AvatarUploadModal";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const UserMenu = () => {
   const { profile, isLoading, error } = useProfile();
@@ -26,16 +27,10 @@ const UserMenu = () => {
       <h1 className="text-blue-950 font-semibold mb-4">My Profile</h1>
       <div className="flex flex-col items-center gap-3 w-full border-b border-gray-200 pb-5">
         <div className="relative w-[150px] h-[150px] rounded-full flex items-center justify-center border border-gray-300 bg-white">
-          {/*// TODO : placeholder?*/}
-          <div className="overflow-hidden w-[150px] h-[150px] rounded-full flex items-center justify-center">
-            <Image
-              src={`${profile?.avatarUrl}`}
-              width={150}
-              height={150}
-              alt="avatar"
-              className="object-over"
-            />
-          </div>
+          <Avatar className="w-full h-full">
+            <AvatarImage src={profile?.avatarUrl} alt="avatar" />
+            <AvatarFallback className="text-4xl"> {fullName[0]}</AvatarFallback>
+          </Avatar>
           <Button
             className="w-7 h-7 absolute bottom-2 right-1 hover:bg-blue-950 p-2 bg-[#FAFAFA] rounded-full shadow-md"
             onClick={() => setIsModalOpen(true)}
@@ -54,7 +49,6 @@ const UserMenu = () => {
       <AvatarUploadModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        currentAvatar={profile?.avatarUrl}
       />
     </div>
   );
