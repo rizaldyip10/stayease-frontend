@@ -1,12 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import MenuRoutes from "@/app/(user)/profile/_components/MenuRoutes";
-import { useProfile } from "@/hooks/useProfile";
-import Image from "next/image";
 import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AvatarUploadModal from "@/app/(user)/profile/_components/AvatarUploadModal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useProfile } from "@/context/ProfileContext";
 
 const UserMenu = () => {
   const { profile, isLoading, error } = useProfile();
