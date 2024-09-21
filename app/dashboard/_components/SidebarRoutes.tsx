@@ -10,24 +10,22 @@ const SidebarRoutes = () => {
   const { data: session } = useSession();
 
   const isUser = session?.user?.userType === "USER";
+  let routes;
+  if (session?.user?.userType === "TENANT") {
+    routes = adminRoutes;
+  } else {
+    routes = userMenuRoutes;
+  }
 
   return (
     <div className="w-full h-full items-start flex flex-col gap-3 mt-10">
-      {isUser
-        ? userMenuRoutes.map((route, i) => (
-            <SidebarItems
-              key={i}
-              route={route}
-              onClick={() => router.push(route.href)}
-            />
-          ))
-        : adminRoutes.map((route, i) => (
-            <SidebarItems
-              key={i}
-              route={route}
-              onClick={() => router.push(route.href)}
-            />
-          ))}
+      {routes.map((route, i) => (
+        <SidebarItems
+          key={i}
+          route={route}
+          onClick={() => router.push(route.href)}
+        />
+      ))}
     </div>
   );
 };
