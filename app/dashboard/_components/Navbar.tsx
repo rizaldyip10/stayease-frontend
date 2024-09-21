@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 const Navbar = () => {
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
+  const { data: session } = useSession();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious();
