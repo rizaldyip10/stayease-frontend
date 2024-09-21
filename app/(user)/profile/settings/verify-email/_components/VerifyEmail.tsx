@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Loader2 } from "lucide-react";
 
 const VerifyEmail: React.FC = () => {
   const { completeChangeEmail, isLoading, error } = useChangeEmail();
@@ -20,14 +21,6 @@ const VerifyEmail: React.FC = () => {
     router.push("/dashboard");
   }
 
-  // useEffect(() => {
-  //   if (token) {
-  //     completeChangeEmail(token)
-  //       .then(() => setIsVerified(true))
-  //       .catch(() => setIsVerified(false));
-  //   }
-  // }, [token]);
-
   const handleSubmit = async () => {
     if (!token) return;
     try {
@@ -40,9 +33,9 @@ const VerifyEmail: React.FC = () => {
     }
   };
 
-  if (isLoading) {
-    return <div>Verifying email change...</div>;
-  }
+  // if (isLoading) {
+  //   return <div>Verifying email change...</div>;
+  // }
 
   return (
     <div className="container mx-auto p-4">
@@ -57,13 +50,20 @@ const VerifyEmail: React.FC = () => {
                 Click the button below to confirm your request to change email
                 address. You will be logged out once your change is confirmed.
               </p>
-              <Button
-                variant="secondary"
-                onClick={handleSubmit}
-                className="bg-blue-950 text-white hover:text-blue-950"
-              >
-                Verify your new email address
-              </Button>
+              {isLoading ? (
+                <Button disabled>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Verifying...
+                </Button>
+              ) : (
+                <Button
+                  variant="secondary"
+                  onClick={handleSubmit}
+                  className="bg-blue-950 text-white hover:text-blue-950"
+                >
+                  "Verify your new email address"
+                </Button>
+              )}
             </div>
           )}
           {initialized ? (

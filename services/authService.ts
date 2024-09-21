@@ -14,6 +14,7 @@ import { signIn } from "@/auth";
 import logger from "@/utils/logger";
 import { FormikValues } from "formik";
 import { logError } from "@/utils/errorHandler";
+import axios from "axios";
 
 export const authService = {
   register: async (
@@ -207,30 +208,62 @@ export const authService = {
     }
   },
 
-  forgotPassword: async (email: string): Promise<void> => {
+  forgotPassword: async (email: string): Promise<any> => {
     try {
       logger.info("Initiating forgot password", { email });
-      await axiosInterceptor.post(config.endpoints.password.forgot, { email });
+      const res = await axiosInterceptor.post(
+        config.endpoints.password.forgot,
+        { email },
+      );
       logger.info("Forgot password successful", { email });
+      return res.data;
     } catch (error: any) {
-      logger.error("Forgot password failed", { error, email });
-      throw error;
+      try {
+        const response = await axios.post(
+          `${config.BASE_URL}${config.endpoints.password.forgot}`,
+          { email },
+        );
+        logger.info("Unlogged user requesting for forgot password", { email });
+        logger.info("Forgot password successful", response.data);
+        return response.data;
+      } catch (error: any) {
+        logger.error("Forgot password failed", { error, email });
+        throw error;
+      }
     }
   },
 
   resetPassword: async (
     token: string,
     values: ForgotPasswordValues,
-  ): Promise<void> => {
+  ): Promise<any> => {
     try {
       logger.info("Initiating password reset, values: ", values);
-      await axiosInterceptor.post(config.endpoints.password.reset, values, {
-        params: { token },
-      });
+      const res = await axiosInterceptor.post(
+        config.endpoints.password.reset,
+        values,
+        {
+          params: { token },
+        },
+      );
       logger.info("Password reset successful");
+      return res.data;
     } catch (error: any) {
-      logger.error("Password reset failed", { error });
-      throw error;
+      try {
+        const response = await axios.post(
+          `${config.BASE_URL}${config.endpoints.password.reset}`,
+          {
+            password: values.password,
+            confirmPassword: values.confirmPassword,
+          },
+          { params: { token } },
+        );
+        logger.info("Forgot password successful", response.data.data);
+        return response.data;
+      } catch (error: any) {
+        logger.error("Forgot password failed", { error });
+        throw error;
+      }
     }
   },
 };

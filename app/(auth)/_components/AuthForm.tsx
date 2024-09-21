@@ -4,7 +4,7 @@ import { Form, Formik, FormikHelpers, FormikValues } from "formik";
 import { Button } from "@/components/ui/button";
 import { getValidationSchema } from "@/utils/validationSchema";
 import FormInputs from "@/app/(auth)/_components/FormInputs";
-import ChangeCredentialButton from "@/app/(auth)/reset-password/_components/ChangeCredentialButton";
+import ChangeCredentialButton from "@/app/(user)/profile/settings/_components/ChangeCredentialButton";
 
 interface AuthFormProps {
   formType: FormType;
@@ -50,8 +50,12 @@ const AuthForm: React.FC<AuthFormProps> = ({
         )}
       </Formik>
       {formType === "login" && (
-        <div className=" text-center">
-          <ChangeCredentialButton variant="link" title="Forgot Password?" />
+        <div className="mt-3 text-center">
+          <ChangeCredentialButton
+            variant="link"
+            title="Forgot Password?"
+            isPasswordReset={true}
+          />
         </div>
       )}
     </div>

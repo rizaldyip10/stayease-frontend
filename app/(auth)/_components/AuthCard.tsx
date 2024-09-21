@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getInitialValues } from "@/utils/authInitialValues";
 import logger from "@/utils/logger";
-import ChangeCredentialButton from "@/app/(auth)/reset-password/_components/ChangeCredentialButton";
+import ChangeCredentialButton from "@/app/(user)/profile/settings/_components/ChangeCredentialButton";
 
 interface AuthCardProps {
   formType: FormType;
@@ -96,15 +96,6 @@ const AuthCard: React.FC<AuthCardProps> = ({
         initialValues={initialValues}
         userType={userType}
       />
-
-      {alertInfo.show && (
-        <div
-          className={`text-${alertInfo.type === "success" ? "green" : "red"}-500`}
-        >
-          {alertInfo.message}
-        </div>
-      )}
-
       <div className="w-full relative mt-2">
         <hr className="bg-neutral-500 w-full relative" />
         <h1
@@ -130,7 +121,7 @@ const AuthCard: React.FC<AuthCardProps> = ({
         </p>
         <Link
           href="#"
-          className="text-sm font-bold text-blue-950"
+          className="text-sm font-bold text-blue-950 hover:underline"
           onClick={(e) =>
             handleNavigation(e, formType === "login" ? "/register" : "/login")
           }

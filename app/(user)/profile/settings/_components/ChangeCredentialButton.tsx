@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import ChangeCredentialModal from "./ChangeCredentialModal";
-import { useForgotPassword } from "@/hooks/useForgotPassword";
+import { MdAlternateEmail, MdLockReset } from "react-icons/md";
 
 interface ForgotPasswordButtonProps {
   variant:
@@ -15,12 +15,14 @@ interface ForgotPasswordButtonProps {
     | undefined;
   title: string;
   isPasswordReset: boolean;
+  className?: string;
 }
 
 const ChangeCredentialButton: React.FC<ForgotPasswordButtonProps> = ({
   variant,
   title,
   isPasswordReset,
+  className,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -29,8 +31,13 @@ const ChangeCredentialButton: React.FC<ForgotPasswordButtonProps> = ({
       <Button
         variant={variant}
         onClick={() => setIsModalOpen(true)}
-        className="bg-blue-950 hover:bg-blue-900 text-white"
+        className={className}
       >
+        {isPasswordReset ? (
+          <MdLockReset className="mr-2" size={20} />
+        ) : (
+          <MdAlternateEmail className="mr-2" size={20} />
+        )}
         {title}
       </Button>
       <ChangeCredentialModal

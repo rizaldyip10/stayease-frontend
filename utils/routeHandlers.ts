@@ -8,7 +8,7 @@ type RouteHandler = (
 const publicRoutes = new Set([
   "/login",
   "/register",
-  "/forgot-password",
+  "/reset-password",
   "/register/verify",
   "/about",
   "/properties",
@@ -25,7 +25,7 @@ const routeHandlers = new Map<string, RouteHandler>([
   ],
   ["/profile", (session) => session],
   ["/settings", (session) => session],
-  ["/verify-email", (session) => session],
+  ["/profile/settings/verify-email", (session) => session],
   ["/bookings", (session) => session.user.userType === "USER"],
   [
     "/register/select-user-type",

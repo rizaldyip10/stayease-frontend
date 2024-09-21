@@ -1,6 +1,6 @@
 import React from "react";
 import { Formik, Form, FormikValues } from "formik";
-import * as Yup from "yup";
+import * as yup from "yup";
 import {
   Dialog,
   DialogContent,
@@ -18,8 +18,8 @@ interface ForgotPasswordModalProps {
   isPasswordReset: boolean;
 }
 
-const ForgotPasswordSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email").required("Required"),
+const ForgotPasswordSchema = yup.object().shape({
+  email: yup.string().email("Invalid email").required("Required"),
 });
 
 const ChangeCredentialModal: React.FC<ForgotPasswordModalProps> = ({
@@ -38,13 +38,16 @@ const ChangeCredentialModal: React.FC<ForgotPasswordModalProps> = ({
     values: { email: string },
     { setSubmitting }: any,
   ) => {
+    let res;
     if (isPasswordReset) {
-      await forgotPassword(values.email);
+      res = await forgotPassword(values.email);
     } else {
-      await initiateChangeEmail(values.email);
+      res = await initiateChangeEmail(values.email);
     }
     setSubmitting(false);
-    if (!error) {
+    console.log("error", res);
+    console.log("emailError", emailError);
+    if (res.statusCode == 200) {
       onClose();
     }
   };

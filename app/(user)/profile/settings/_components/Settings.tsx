@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import DeleteAccount from "@/app/(user)/profile/settings/_components/DeleteAccount";
-import ChangeCredentialButton from "@/app/(auth)/reset-password/_components/ChangeCredentialButton";
+import ChangeCredentialButton from "@/app/(user)/profile/settings/_components/ChangeCredentialButton";
 
 const SettingsPage: React.FC = () => {
   const cardContents = [
@@ -10,9 +10,10 @@ const SettingsPage: React.FC = () => {
       title: "Reset Password",
       component: (
         <ChangeCredentialButton
-          variant="default"
+          variant="ghost"
           title="Request password reset"
           isPasswordReset={true}
+          className="bg-blue-950 text-white hover:text-blue-950 font-semibold"
         />
       ),
     },
@@ -20,15 +21,16 @@ const SettingsPage: React.FC = () => {
       title: "Change Email",
       component: (
         <ChangeCredentialButton
-          variant="default"
-          title="Request password reset"
+          variant="ghost"
+          title="Request email change"
           isPasswordReset={false}
+          className="bg-blue-950 text-white hover:text-blue-950 font-semibold"
         />
       ),
     },
     {
       title: "Delete Account",
-      component: <DeleteAccount /> || null,
+      component: <DeleteAccount />,
     },
   ];
 

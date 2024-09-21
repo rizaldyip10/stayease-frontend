@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { profileService } from "@/services/profileService";
 import { useAlert } from "@/context/AlertContext";
+import { TiUserDeleteOutline } from "react-icons/ti";
 
 const DeleteAccount: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,7 +31,13 @@ const DeleteAccount: React.FC = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="destructive">Delete Account</Button>
+        <Button
+          variant="ghost"
+          className="bg-appcancel text-white hover:text-appcancel"
+        >
+          <TiUserDeleteOutline className="mr-2" size={20} />
+          Delete Account
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
