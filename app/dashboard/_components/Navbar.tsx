@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button";
 const Navbar = () => {
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
-  const { data: session } = useSession();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious();
@@ -25,7 +24,7 @@ const Navbar = () => {
   });
   return (
     <motion.div
-      className="sticky top-0 w-full flex justify-between z-50 items-center h-16 border-b border-gray-200 bg-white px-3 md:px-7"
+      className="sticky top-0 w-full flex justify-between z-50 items-center h-16 border-b border-gray-200 bg-white px-5 md:px-7"
       variants={{
         visible: { y: 0 },
         hidden: { y: "-100%" },
@@ -34,9 +33,16 @@ const Navbar = () => {
       transition={{ duration: 0.35, ease: "easeInOut" }}
     >
       <SidebarMobile />
-      <Image src={logo} alt={"logo"} height={30} className="block lg:hidden" />
-      <div className="lg:ml-auto">
-        <ProfileBtn isDashboard={true} />
+      <Link href="/">
+        <Image
+          src={logo}
+          alt={"logo"}
+          height={30}
+          className="block lg:hidden"
+        />
+      </Link>
+      <div className="lg:ml-auto lg:mr-10">
+        <ProfileBtn />
       </div>
     </motion.div>
   );

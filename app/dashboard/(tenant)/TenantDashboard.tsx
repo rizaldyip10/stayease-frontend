@@ -11,7 +11,6 @@ import PropertyManagement from "@/app/dashboard/(tenant)/_components/PropertyMan
 import RecentActivity from "@/app/dashboard/(user)/_components/RecentActivity";
 import QuickActions from "@/app/dashboard/(user)/_components/QuickActions";
 import PeakRateManagement from "@/app/dashboard/(tenant)/_components/PeakSeasonRateMgmt";
-import { useSession } from "next-auth/react";
 import { useProfile } from "@/context/ProfileContext";
 import ProfileCard from "@/app/dashboard/(user)/_components/ProfileCard";
 
