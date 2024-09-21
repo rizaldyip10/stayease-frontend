@@ -11,23 +11,11 @@ const AuthBtn = () => {
 
   return (
     <div className="items-center gap-2 hidden lg:flex">
-      {session ? (
-        <Link href="/">
-          <Button
-            variant="outline"
-            className="text-blue-950 border-blue-950"
-            onClick={() => signOut()}
-          >
-            Logout
-          </Button>
-        </Link>
-      ) : (
-        <Link href="/login">
-          <Button variant="outline" className="text-blue-950 border-blue-950">
-            Login/Register
-          </Button>
-        </Link>
-      )}
+      <Link href="/login">
+        <Button variant="outline" className="text-blue-950 border-blue-950">
+          Login/Register
+        </Button>
+      </Link>
     </div>
   );
 };

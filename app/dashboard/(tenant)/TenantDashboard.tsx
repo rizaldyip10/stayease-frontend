@@ -1,5 +1,4 @@
 import React from "react";
-import ProfileCard from "@/app/dashboard/(user)/_components/ProfileCard";
 import {
   CalendarDays,
   DollarSign,
@@ -12,10 +11,14 @@ import PropertyManagement from "@/app/dashboard/(tenant)/_components/PropertyMan
 import RecentActivity from "@/app/dashboard/(user)/_components/RecentActivity";
 import QuickActions from "@/app/dashboard/(user)/_components/QuickActions";
 import PeakRateManagement from "@/app/dashboard/(tenant)/_components/PeakSeasonRateMgmt";
-import { useSession } from "next-auth/react";
+import { useProfile } from "@/context/ProfileContext";
+import ProfileCard from "@/app/dashboard/(user)/_components/ProfileCard";
 
 const TenantDashboard: React.FC = () => {
-  const { data: session } = useSession();
+  const { profile, isLoading, error } = useProfile();
+  if (!profile) return <div>No profile data available</div>;
+
+  const fullName = profile?.firstName + " " + (profile?.lastName ?? "");
 
   // TODO : Replace with real data
   const stats = [
@@ -54,20 +57,13 @@ const TenantDashboard: React.FC = () => {
     },
   ];
 
-  const fullName = session?.user?.firstName + " " + session?.user?.lastName;
-  const tenant = {
-    name: fullName,
-    email: session?.user?.email || "",
-    avatar: session?.user?.avatar || "",
-  };
-
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6 text-blue-950">
-        Welcome, {fullName}
+        Welcome, {profile.tenantInfo?.businessName}!
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <ProfileCard className="col-span-1" user={tenant} />
+        <ProfileCard className="col-span-1" user={profile} />
         <StatusGrid className="col-span-1 md:col-span-3" stats={stats} />
         <PeakRateManagement
           className="w-full col-span-1 md:col-span-2"

@@ -10,6 +10,8 @@ import AuthBtnMobile from "@/app/(user)/_components/AuthBtnMobile";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import ProfileBtn from "@/app/dashboard/_components/ProfileBtn";
+import AuthBtn from "@/app/(user)/_components/AuthBtn";
+import { useSession } from "next-auth/react";
 
 interface NavbarProps {
   isDashboard: boolean;
@@ -18,6 +20,7 @@ const Navbar: React.FC<NavbarProps> = ({ isDashboard }) => {
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState<boolean>(false);
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const prev = scrollY.getPrevious();
@@ -50,9 +53,8 @@ const Navbar: React.FC<NavbarProps> = ({ isDashboard }) => {
         </Link>
         <NavRoutes />
         <div className={pathname.startsWith("/book") ? "hidden" : "block"}>
-          {/*<AuthBtn />*/}
-          <AuthBtnMobile />
-          <ProfileBtn isDashboard={isDashboard} />
+          {session ? <ProfileBtn /> : <AuthBtn />}
+          {/*<AuthBtnMobile />*/}
         </div>
       </div>
     </motion.nav>

@@ -47,6 +47,7 @@ export const adminRoutes: SidebarRoutesType[] = [
 ];
 
 export const userMenuRoutes: SidebarRoutesType[] = [
+  { label: "Dashboard", href: "/dashboard", icon: LayoutGrid },
   { label: "My Profile", href: "/profile", icon: User },
   { label: "My Bookings", href: "/profile/bookings", icon: BookOpenText },
   { label: "My Reviews", href: "/profile/reviews", icon: Star },
@@ -60,7 +61,6 @@ export const footerNavigationItems = [
 ];
 
 export const footerServicesItems = [
-  // TODO : make these links work
   { label: "Video Chat", href: "" },
   { label: "Housing Guide", href: "/" },
   { label: "Terms & Conditions", href: "/" },

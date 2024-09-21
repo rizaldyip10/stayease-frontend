@@ -11,6 +11,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { FormikHelpers, FormikValues } from "formik";
 import { useSession } from "next-auth/react";
 import logger from "@/utils/logger";
+import ResetPassword from "@/app/(auth)/reset-password/_components/ResetPassword";
 
 interface AuthFormProps {
   className?: string;
@@ -38,6 +39,7 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
 
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+  const newUserType = searchParams.get("t") === "t" ? "TENANT" : "USER";
 
   const onSubmit = (
     values: FormikValues,
@@ -71,7 +73,7 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
           />
           {formType === "verify" && (
             <div>
-              <p className="font-semibold text-blue-950 text-xl text-center md:hidden">
+              <p className="font-semibold text-appblue-900 text-xl text-center md:hidden">
                 Complete your registration!
               </p>
             </div>
@@ -86,12 +88,14 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
                 onClose={hideAlert}
               />
             )}
-            {formType === "verify" && token ? (
+            {formType === "verify" && token && newUserType ? (
               <MultiStepForm
-                userType={userType}
+                userType={newUserType}
                 onSubmit={handleMultiStepSubmit}
                 token={token}
               />
+            ) : formType === "forgotPassword" && token ? (
+              <ResetPassword token={token} />
             ) : (
               <AuthCard
                 formType={formType}
@@ -100,13 +104,7 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
                 onSubmit={onSubmit}
                 googleLogin={googleLogin}
                 loading={loading}
-                alertInfo={
-                  alertInfo as {
-                    show: boolean;
-                    type: "success" | "error";
-                    message: string;
-                  }
-                }
+                alertInfo={alertInfo}
                 hideAlert={hideAlert}
               />
             )}
