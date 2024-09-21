@@ -30,12 +30,6 @@ axiosInterceptor.interceptors.request.use(
       logger.debug("Server-side token retrieval", { tokenExists: !!token });
     }
 
-    if (!token) {
-      const session = await auth();
-      token = session?.user.accessToken;
-      logger.debug("Token from auth", { tokenExists: !!token });
-    }
-
     logger.debug("Token", { token });
 
     if (token) {
