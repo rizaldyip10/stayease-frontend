@@ -135,6 +135,17 @@ const rateService = {
       return error.response.data;
     }
   },
+
+  deleteRate: async (rateId: number) => {
+    try {
+      const response = await axiosInterceptor.delete(
+        `${config.endpoints.rates.baseRoute}/${rateId}`,
+      );
+      return response.data.statusMessage;
+    } catch (error: any) {
+      return error.response.data;
+    }
+  },
 };
 
 export default rateService;
