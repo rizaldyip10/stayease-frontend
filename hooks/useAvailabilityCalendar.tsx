@@ -1,16 +1,15 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import propertyService from "@/services/propertyService";
 import {
   addMonths,
-  format,
-  startOfDay,
   endOfDay,
-  isSameMonth,
+  format,
   isBefore,
-  isAfter,
+  isSameMonth,
+  startOfDay,
 } from "date-fns";
+import rateService from "@/services/rateService";
 
 export const useAvailabilityCalendar = (
   propertyId: number,
@@ -35,13 +34,13 @@ export const useAvailabilityCalendar = (
     ],
     queryFn: async () => {
       if (isCheckOut && checkInDate) {
-        return await propertyService.getLowestDailyCumulativeRate(
+        return await rateService.getLowestDailyCumulativeRate(
           propertyId,
           checkInDate,
           new Date(endDate),
         );
       } else {
-        return await propertyService.getLowestDailyRate(
+        return await rateService.getLowestDailyRate(
           propertyId,
           new Date(startDate),
           new Date(endDate),

@@ -11,8 +11,7 @@ import {
   RoomType,
 } from "@/constants/Property";
 import { format } from "date-fns";
-
-const formatDate = (date: Date): string => format(date, "yyyy-MM-dd");
+import { formatDate } from "@/utils/dateFormatter";
 
 const propertyService = {
   getAllProperties: async (): Promise<PropertyAndRoomType[]> => {
@@ -164,23 +163,6 @@ const propertyService = {
     return response.data.data;
   },
 
-  getAdjustedRates: async ({
-    propertyId,
-    date,
-  }: {
-    propertyId: number;
-    date: Date;
-  }): Promise<AdjustedRatesType> => {
-    const url = config.endpoints.propertyUtils.getAdjustedRates.replace(
-      "{propertyId}",
-      propertyId.toString(),
-    );
-    const response = await axiosInterceptor.get(url, {
-      params: { date: formatDate(date) },
-    });
-    return response.data.data;
-  },
-
   checkPropertyOwnership: async (propertyId: number): Promise<boolean> => {
     const url = config.endpoints.propertyUtils.checkPropertyOwnership.replace(
       "{propertyId}",
@@ -218,41 +200,6 @@ const propertyService = {
       .replace("{roomId}", roomId.toString());
     const response = await axiosInterceptor.get(url, {
       params: { date: formatDate(date) },
-    });
-    return response.data.data;
-  },
-
-  getLowestDailyRate: async (
-    propertyId: number,
-    startDate: Date,
-    endDate: Date,
-  ): Promise<LowestDailyRateType[]> => {
-    const formattedStartDate = format(startDate, "yyyy-MM-dd");
-    const formattedEndDate = format(endDate, "yyyy-MM-dd");
-    const url = config.endpoints.propertyUtils.getLowestDailyRate.replace(
-      "{propertyId}",
-      propertyId.toString(),
-    );
-    const response = await axiosInterceptor.get(url, {
-      params: { startDate: formattedStartDate, endDate: formattedEndDate },
-    });
-    return response.data.data;
-  },
-
-  getLowestDailyCumulativeRate: async (
-    propertyId: number,
-    startDate: Date,
-    endDate: Date,
-  ): Promise<LowestDailyRateType[]> => {
-    const formattedStartDate = format(startDate, "yyyy-MM-dd");
-    const formattedEndDate = format(endDate, "yyyy-MM-dd");
-    const url =
-      config.endpoints.propertyUtils.getLowestDailyCumulativeRate.replace(
-        "{propertyId}",
-        propertyId.toString(),
-      );
-    const response = await axiosInterceptor.get(url, {
-      params: { startDate: formattedStartDate, endDate: formattedEndDate },
     });
     return response.data.data;
   },
