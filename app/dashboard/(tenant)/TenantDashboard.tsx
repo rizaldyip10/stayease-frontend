@@ -10,9 +10,9 @@ import StatusGrid from "@/app/dashboard/(user)/_components/StatusGrid";
 import PropertyManagement from "@/app/dashboard/(tenant)/_components/PropertyManagement";
 import RecentActivity from "@/app/dashboard/(user)/_components/RecentActivity";
 import QuickActions from "@/app/dashboard/(user)/_components/QuickActions";
-import PeakRateManagement from "@/app/dashboard/(tenant)/_components/PeakSeasonRateMgmt";
 import { useProfile } from "@/context/ProfileContext";
 import ProfileCard from "@/app/dashboard/(user)/_components/ProfileCard";
+import { DashboardRatesSummary } from "@/app/dashboard/(tenant)/_components/RatesSummary";
 
 const TenantDashboard: React.FC = () => {
   const { profile, isLoading, error } = useProfile();
@@ -65,7 +65,7 @@ const TenantDashboard: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <ProfileCard className="col-span-1" user={profile} />
         <StatusGrid className="col-span-1 md:col-span-3" stats={stats} />
-        <PeakRateManagement className="w-full col-span-1 md:col-span-2" />
+        <DashboardRatesSummary className="w-full col-span-1 md:col-span-2" />
         <PropertyManagement className="col-span-1 md:col-span-2" />
         <RecentActivity className="col-span-1 md:col-span-3" />
         <QuickActions actions={actions} className="col-span-1" />

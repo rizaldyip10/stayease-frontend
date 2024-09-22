@@ -3,6 +3,7 @@ import { config } from "@/constants/url";
 import { AdjustedRatesType, LowestDailyRateType } from "@/constants/Property";
 import { format } from "date-fns";
 import { formatDate } from "@/utils/dateFormatter";
+import logger from "@/utils/logger";
 
 export interface RateResponse {
   rateId: number;
@@ -11,6 +12,7 @@ export interface RateResponse {
   adjustmentRate: number;
   adjustmentType: string;
   validFrom: Date;
+  reason: string;
   propertySummary: {
     propertyId: number;
     propertyName: string;
@@ -22,6 +24,7 @@ export interface RateRequest {
   endDate: Date;
   adjustmentRate: number;
   adjustmentType: string;
+  reason: string;
 }
 
 const rateService = {
@@ -32,7 +35,7 @@ const rateService = {
       );
       return response.data.data;
     } catch (error: any) {
-      return error.response.data;
+      throw error;
     }
   },
 
@@ -53,7 +56,7 @@ const rateService = {
       });
       return response.data.data;
     } catch (error: any) {
-      return error.response.data;
+      throw error;
     }
   },
 
@@ -75,7 +78,7 @@ const rateService = {
       });
       return response.data.data;
     } catch (error: any) {
-      return error.response.data;
+      throw error.response.data;
     }
   },
 
@@ -97,7 +100,7 @@ const rateService = {
       });
       return response.data.data;
     } catch (error: any) {
-      return error.response.data;
+      throw error;
     }
   },
 
@@ -106,16 +109,16 @@ const rateService = {
     values: RateRequest,
   ): Promise<RateResponse> => {
     try {
+      logger.info("Setting rate...");
       const response = await axiosInterceptor.post(
         config.endpoints.rates.baseRoute,
-        {
-          values,
-        },
+        values,
         { params: { propertyId } },
       );
+      logger.info("Rate set successfully", response.data.data);
       return response.data.data;
     } catch (error: any) {
-      return error.response.data;
+      throw error;
     }
   },
 
@@ -132,7 +135,7 @@ const rateService = {
       );
       return response.data.data;
     } catch (error: any) {
-      return error.response.data;
+      throw error;
     }
   },
 
@@ -143,7 +146,7 @@ const rateService = {
       );
       return response.data.statusMessage;
     } catch (error: any) {
-      return error.response.data;
+      throw error;
     }
   },
 };

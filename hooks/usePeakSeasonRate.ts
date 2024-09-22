@@ -1,6 +1,7 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import rateService, { RateRequest, RateResponse } from "@/services/rateService";
 import { useAlert } from "@/context/AlertContext";
+import logger from "@/utils/logger";
 
 export const usePeakSeasonRate = () => {
   const [rates, setRates] = useState<RateResponse[]>([]);
@@ -28,7 +29,9 @@ export const usePeakSeasonRate = () => {
       setIsLoading(true);
       setError(null);
       try {
-        await rateService.setRate(propertyId, rateData);
+        logger.info("Creating rate for property: " + propertyId);
+        const response = await rateService.setRate(propertyId, rateData);
+        logger.info("Rate created successfully", response);
         showAlert("success", "Rate created successfully", "/dashboard");
       } catch (error) {
         setError("Failed to create rate");
@@ -76,6 +79,10 @@ export const usePeakSeasonRate = () => {
     },
     [showAlert],
   );
+
+  useEffect(() => {
+    fetchRates();
+  }, [fetchRates]);
 
   return {
     rates,
