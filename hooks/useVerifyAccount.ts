@@ -2,8 +2,8 @@ import { useState } from "react";
 import { FormikHelpers } from "formik";
 import { MultiStepFormValues } from "@/app/(auth)/_components/MultiStepForm";
 import { useAuth } from "@/hooks/useAuth";
-import { useAlert } from "./utils/useAlert";
 import { useRouter } from "next/navigation";
+import { useAlert } from "@/context/AlertContext";
 
 export const useVerifyAccount = () => {
   const [loading, setLoading] = useState(false);

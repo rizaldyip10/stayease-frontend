@@ -25,7 +25,7 @@ export interface RateRequest {
 }
 
 const rateService = {
-  getTenantRates: async (tenantId: string) => {
+  getTenantRates: async () => {
     try {
       const response = await axiosInterceptor.get(
         config.endpoints.rates.baseRoute,

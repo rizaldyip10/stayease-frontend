@@ -23,8 +23,6 @@ interface AuthCardProps {
   ) => void;
   googleLogin?: () => void;
   loading: boolean;
-  alertInfo: { show: boolean; type: AlertType; message: string };
-  hideAlert: () => void;
 }
 
 const AuthCard: React.FC<AuthCardProps> = ({
@@ -34,8 +32,6 @@ const AuthCard: React.FC<AuthCardProps> = ({
   onSubmit,
   googleLogin,
   loading,
-  alertInfo,
-  hideAlert,
 }) => {
   const router = useRouter();
   const initialValues = getInitialValues(formType);

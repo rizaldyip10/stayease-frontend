@@ -3,7 +3,6 @@ import { config } from "@/constants/url";
 import { getToken } from "@auth/core/jwt";
 import { getSession } from "next-auth/react";
 import logger from "@/utils/logger";
-import { auth } from "@/auth";
 
 const axiosInterceptor = axios.create({
   baseURL: config.BASE_URL,

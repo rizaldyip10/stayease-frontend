@@ -1,8 +1,8 @@
 import { UserType } from "@/constants/Types";
-import { useAlert } from "./utils/useAlert";
 import { useCredentialSubmission } from "@/hooks/useCredentialSubmission";
 import { useVerifyAccount } from "@/hooks/useVerifyAccount";
 import { useSelectUserType } from "@/hooks/useSelectUserType";
+import { useAlert } from "@/context/AlertContext";
 interface UseAuthFormProps {
   userType: UserType;
 }

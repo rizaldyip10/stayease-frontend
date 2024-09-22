@@ -5,7 +5,6 @@ import {
   AvailablePropertyType,
   CategoryType,
   CurrentAvailablePropertyType,
-  LowestDailyRateType,
   PropertyAndRoomType,
   PropertyListingType,
   RoomType,

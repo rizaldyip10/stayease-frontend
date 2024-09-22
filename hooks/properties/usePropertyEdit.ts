@@ -1,10 +1,10 @@
-import { useAlert } from "@/hooks/utils/useAlert";
 import { usePropertyData } from "@/hooks/properties/usePropertyData";
 import { useCategoryManagement } from "@/hooks/properties/useCategoryManagement";
 import { useImageUpload } from "@/hooks/utils/useImageUpload";
 import { usePropertyUtils } from "@/hooks/properties/usePropertyUtils";
 import propertyService from "@/services/propertyService";
 import { useRouter } from "next/navigation";
+import { useAlert } from "@/context/AlertContext";
 
 type PropertyEditFormValues = {
   property: {
