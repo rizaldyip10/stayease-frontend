@@ -65,10 +65,7 @@ const TenantDashboard: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <ProfileCard className="col-span-1" user={profile} />
         <StatusGrid className="col-span-1 md:col-span-3" stats={stats} />
-        <PeakRateManagement
-          className="w-full col-span-1 md:col-span-2"
-          propertyId={1}
-        />
+        <PeakRateManagement className="w-full col-span-1 md:col-span-2" />
         <PropertyManagement className="col-span-1 md:col-span-2" />
         <RecentActivity className="col-span-1 md:col-span-3" />
         <QuickActions actions={actions} className="col-span-1" />

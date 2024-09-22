@@ -14,19 +14,24 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
+import { CustomDatePicker } from "@/components/CustomDatePicker";
+import { usePropertyData } from "@/hooks/properties/usePropertyData";
+import { useTenantProperties } from "@/hooks/useTenantProperties";
+import CustomSelect from "@/components/CustomSelect";
 
 type AdjustmentType = "PERCENTAGE" | "FIXED";
 
 interface ManualPeakRate {
+  propertyId: number | undefined;
   startDate: Date | undefined;
   endDate: Date | undefined;
-  adjustment: string;
+  adjustmentRate: string;
   adjustmentType: AdjustmentType;
   reason: string;
 }
 
 interface ScheduledRate {
-  adjustment: string;
+  adjustmentRate: string;
   adjustmentType: AdjustmentType;
 }
 
@@ -36,40 +41,46 @@ interface ScheduledRates {
 }
 interface PeakRateManagementProps {
   className?: string;
-  propertyId: number;
 }
 
 const PeakRateManagement: React.FC<PeakRateManagementProps> = ({
   className,
-  propertyId,
 }) => {
+  const { properties } = useTenantProperties();
   const [useScheduler, setUseScheduler] = useState(false);
   const [holidaySchedulerEnabled, setHolidaySchedulerEnabled] = useState(false);
   const [weekendSchedulerEnabled, setWeekendSchedulerEnabled] = useState(false);
+  const [startDateOpen, setStartDateOpen] = useState(false);
+  const [endDateOpen, setEndDateOpen] = useState(false);
 
   const [manualPeakRate, setManualPeakRate] = useState<ManualPeakRate>({
+    propertyId: undefined,
     startDate: undefined,
     endDate: undefined,
-    adjustment: "",
+    adjustmentRate: "",
     adjustmentType: "PERCENTAGE",
     reason: "",
   });
 
   const [scheduledRates, setScheduledRates] = useState<ScheduledRates>({
     holiday: {
-      adjustment: "",
+      adjustmentRate: "",
       adjustmentType: "PERCENTAGE",
     },
     weekend: {
-      adjustment: "",
+      adjustmentRate: "",
       adjustmentType: "PERCENTAGE",
     },
   });
 
+  const propertyList = properties?.map((property) => ({
+    value: property.id.toString(),
+    label: property.propertyName,
+  }));
+
   const handleManualSubmit = () => {
     // TODO: Implement API call to save manual peak rate
     console.log("Submitting manual peak rate:", {
-      propertyId,
       ...manualPeakRate,
     });
   };
@@ -77,11 +88,32 @@ const PeakRateManagement: React.FC<PeakRateManagementProps> = ({
   const handleScheduledSubmit = () => {
     // TODO: Implement API call to save scheduled rates
     console.log("Submitting scheduled rates:", {
-      propertyId,
       holidaySchedulerEnabled,
       weekendSchedulerEnabled,
       scheduledRates,
     });
+  };
+
+  const minEndDate = manualPeakRate.startDate
+    ? new Date(manualPeakRate.startDate.getTime() + 24 * 60 * 60 * 1000)
+    : new Date();
+
+  const updateDate = (
+    date: Date | undefined,
+    type: "startDate" | "endDate",
+  ) => {
+    const updatedManualPeakRate = {
+      ...manualPeakRate,
+      [type]: date || undefined,
+    };
+
+    if (type === "startDate") {
+      setStartDateOpen(false);
+      setEndDateOpen(true);
+    }
+
+    setManualPeakRate(updatedManualPeakRate);
+    setEndDateOpen(false);
   };
 
   return (
@@ -92,6 +124,18 @@ const PeakRateManagement: React.FC<PeakRateManagementProps> = ({
         </CardTitle>
       </CardHeader>
       <CardContent>
+        <div className="flex items-center space-x-2 mb-4">
+          <CustomSelect
+            title="Select Property"
+            options={propertyList}
+            onChange={(value) => {
+              setManualPeakRate({
+                ...manualPeakRate,
+                propertyId: Number(value),
+              });
+            }}
+          />
+        </div>
         <div className="flex items-center space-x-2 mb-4">
           <Switch
             id="use-scheduler"
@@ -118,30 +162,23 @@ const PeakRateManagement: React.FC<PeakRateManagementProps> = ({
                   <Label className="text-blue-950 font-semibold">
                     Start Date
                   </Label>
-                  <Calendar
-                    mode="single"
-                    selected={manualPeakRate.startDate}
-                    onSelect={(date) =>
-                      setManualPeakRate({
-                        ...manualPeakRate,
-                        startDate: date || undefined,
-                      })
-                    }
+                  <CustomDatePicker
+                    title="Select start date"
+                    date={manualPeakRate.startDate}
+                    onDateChange={(date) => updateDate(date, "startDate")}
+                    minDate={new Date(new Date().setHours(0, 0, 0, 0))}
                   />
                 </div>
                 <div className="md:w-1/2 w-full">
                   <Label className="text-blue-950 font-semibold">
                     End Date
                   </Label>
-                  <Calendar
-                    mode="single"
-                    selected={manualPeakRate.endDate}
-                    onSelect={(date) =>
-                      setManualPeakRate({
-                        ...manualPeakRate,
-                        endDate: date || undefined,
-                      })
-                    }
+                  <CustomDatePicker
+                    title="Select end date"
+                    date={manualPeakRate.endDate}
+                    onDateChange={(date) => updateDate(date, "endDate")}
+                    minDate={minEndDate}
+                    open={endDateOpen}
                   />
                 </div>
               </div>
@@ -152,11 +189,11 @@ const PeakRateManagement: React.FC<PeakRateManagementProps> = ({
                   </Label>
                   <Input
                     type="number"
-                    value={manualPeakRate.adjustment}
+                    value={manualPeakRate.adjustmentRate}
                     onChange={(e) =>
                       setManualPeakRate({
                         ...manualPeakRate,
-                        adjustment: e.target.value,
+                        adjustmentRate: e.target.value,
                       })
                     }
                   />
@@ -224,13 +261,13 @@ const PeakRateManagement: React.FC<PeakRateManagementProps> = ({
                       <Label>Holiday Adjustment</Label>
                       <Input
                         type="number"
-                        value={scheduledRates.holiday.adjustment}
+                        value={scheduledRates.holiday.adjustmentRate}
                         onChange={(e) =>
                           setScheduledRates({
                             ...scheduledRates,
                             holiday: {
                               ...scheduledRates.holiday,
-                              adjustment: e.target.value,
+                              adjustmentRate: e.target.value,
                             },
                           })
                         }
@@ -280,13 +317,13 @@ const PeakRateManagement: React.FC<PeakRateManagementProps> = ({
                       <Label>Weekend Adjustment</Label>
                       <Input
                         type="number"
-                        value={scheduledRates.weekend.adjustment}
+                        value={scheduledRates.weekend.adjustmentRate}
                         onChange={(e) =>
                           setScheduledRates({
                             ...scheduledRates,
                             weekend: {
                               ...scheduledRates.weekend,
-                              adjustment: e.target.value,
+                              adjustmentRate: e.target.value,
                             },
                           })
                         }

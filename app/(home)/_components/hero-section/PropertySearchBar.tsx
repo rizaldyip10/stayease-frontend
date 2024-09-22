@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { usePropertyUtils } from "@/hooks/usePropertyUtils";
 import useMediaQuery from "@/hooks/utils/useMediaQuery";
 import { usePropertySearch } from "@/hooks/properties/usePropertySearch";
-import { CustomDatePicker } from "@/app/(home)/properties/_components/CustomDatePicker";
+import { CustomDatePicker } from "@/components/CustomDatePicker";
 
 interface HeroSearchBarProps {
   className?: string;
@@ -19,7 +19,6 @@ const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [budget, setBudget] = useState<string>("");
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -62,8 +61,7 @@ const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
                   title="Pick a date"
                   date={date}
                   onDateChange={setDate}
-                  open={isDatePickerOpen}
-                  onOpenChange={setIsDatePickerOpen}
+                  minDate={new Date(new Date().setHours(0, 0, 0, 0))}
                 />
               </div>
               <div style={{ flex: "1 1 0%" }}>
@@ -94,8 +92,7 @@ const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
                   title="Pick a date"
                   date={date}
                   onDateChange={setDate}
-                  open={isDatePickerOpen}
-                  onOpenChange={setIsDatePickerOpen}
+                  minDate={new Date(new Date().setHours(0, 0, 0, 0))}
                 />
               </div>
               <div>

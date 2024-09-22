@@ -13,27 +13,38 @@ interface SelectOption {
 }
 
 interface CustomSelectProps {
+  title: string;
   options: SelectOption[] | undefined;
   value?: string;
   onChange: (value: string) => void;
 }
 
 const CustomSelect: React.FC<CustomSelectProps> = ({
+  title,
   options,
   value,
   onChange,
 }) => {
+  const isLoading = !options;
+  const error = !isLoading && !options?.length;
+
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger>
-        <SelectValue placeholder="Select category" />
+        <SelectValue placeholder={title} />
       </SelectTrigger>
       <SelectContent>
-        {options?.map((option) => (
-          <SelectItem key={option.value} value={option.value}>
-            {option.label}
-          </SelectItem>
-        ))}
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : error ? (
+          <div>No options found</div>
+        ) : (
+          options?.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))
+        )}
       </SelectContent>
     </Select>
   );
