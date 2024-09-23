@@ -1,7 +1,7 @@
 "use client";
 
 import {PropertyColumns as columns} from "@/app/dashboard/properties/_components/PropertyTableColumn";
-import {useTenantProperties} from "@/hooks/useTenantProperties";
+import {useTenantProperties} from "@/hooks/properties/useTenantProperties";
 import TableHeaders from "@/app/dashboard/properties/_components/TableHeaders";
 import DataTable from "@/components/ui/data-table";
 

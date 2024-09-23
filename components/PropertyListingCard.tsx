@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AvailablePropertyType } from "@/constants/Property";
 import Image from "next/image";
 import Link from "next/link";
-import { useBookingValues } from "@/hooks/useBookingValues";
+import { useBookingValues } from "@/hooks/transactions/useBookingValues";
 
 interface PropertyCardProps {
   property: AvailablePropertyType;

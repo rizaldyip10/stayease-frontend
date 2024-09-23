@@ -6,8 +6,8 @@ import bni from "@/assets/images/bni.png";
 import cimb from "@/assets/images/cimb.png";
 import atm from "@/assets/images/atm-logo.png";
 import UploadProofDialog from "@/components/UploadProofDialog";
-import {usePaymentQuery} from "@/hooks/usePaymentQuery";
-import {usePaymentInfo} from "@/hooks/usePaymentInfo";
+import {usePaymentQuery} from "@/hooks/transactions/usePaymentQuery";
+import {usePaymentInfo} from "@/hooks/transactions/usePaymentInfo";
 
 const PaymentInfo = () => {
     const { bank, id } = usePaymentQuery();

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import propsImg from "@/assets/images/template_property.jpg";
 import { Star } from "lucide-react";
-import { useBookingValues } from "@/hooks/useBookingValues";
+import { useBookingValues } from "@/hooks/transactions/useBookingValues";
 import { useRoomDetail } from "@/hooks/properties/useRoomDetail";
 
 const PropertyInfo = () => {
