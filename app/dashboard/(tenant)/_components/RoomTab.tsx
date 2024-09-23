@@ -37,8 +37,8 @@ const RoomTab: React.FC<RoomTabProps> = ({ propertyId }) => {
                 <p className="text-sm text-gray-500">No adjustments today</p>
               )}
             </div>
-            <Button variant="outline" className="text-blue-950">
-              Adjust Rates
+            <Button variant="outline" className="text-blue-950" asChild>
+              <Link href="/dashboard/rates">Adjust Rates</Link>
             </Button>
           </div>
         </Card>

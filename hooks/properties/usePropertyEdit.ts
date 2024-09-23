@@ -38,7 +38,11 @@ export const usePropertyEdit = (propertyId: number) => {
     try {
       await updateProperty(values.property);
       await updateRooms(values.rooms);
-      showAlert("success", "Property updated successfully");
+      showAlert(
+        "success",
+        "Property updated successfully",
+        "/dashboard/properties",
+      );
     } catch (err) {
       console.error("Error updating property:", err);
       showAlert("error", "Failed to update property");

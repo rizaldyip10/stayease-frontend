@@ -88,6 +88,11 @@ export const RateColumns: ColumnDef<RateResponse>[] = [
     cell: ({ row }) => <div>{row.getValue("validFrom")}</div>,
   },
   {
+    accessorKey: "reason",
+    header: "Reason",
+    cell: ({ row }) => <div>{row.getValue("reason")}</div>,
+  },
+  {
     id: "actions",
     header: "More",
     enableHiding: false,
@@ -103,7 +108,6 @@ export const RateColumns: ColumnDef<RateResponse>[] = [
                 <Edit className="h-4 w-4" />
               </Button>
             }
-            onClose={() => {}}
           />
           <RateDeleteDialog rateId={rate.rateId} />
         </div>

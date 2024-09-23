@@ -42,6 +42,11 @@ const PropertyManagement: React.FC<PropertyManagementProps> = ({
     setActiveTab("rooms");
   };
 
+  const total =
+    (properties?.length ?? 0) > 0
+      ? `Total properties: ${properties?.length}`
+      : "No properties found";
+
   return (
     <Card className={className}>
       <CardHeader>
@@ -55,7 +60,8 @@ const PropertyManagement: React.FC<PropertyManagementProps> = ({
           </TabsList>
           <TabsContent value="properties">
             <div className="space-y-4">
-              {properties?.map((property) => (
+              <p>{total}</p>
+              {properties?.slice(0, 4).map((property) => (
                 <Card key={property.id} className="p-4">
                   <div className="flex flex-col md:flex-row gap-5 md:gap-0 justify-between items-center">
                     <div className="w-full">
@@ -75,6 +81,11 @@ const PropertyManagement: React.FC<PropertyManagementProps> = ({
                   </div>
                 </Card>
               ))}
+              {(properties?.length ?? 0) > 4 && (
+                <p className="mt-2">
+                  ... and {(properties?.length ?? 0) - 4} more
+                </p>
+              )}
               <Link href="/dashboard/properties/create">
                 <Button className="w-full bg-blue-950 text-appgray hover:bg-appgray hover:text-blue-950 mt-5">
                   <Plus className="mr-2 h-4 w-4" /> Add New Property

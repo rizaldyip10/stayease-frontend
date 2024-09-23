@@ -20,7 +20,7 @@ const RateTableHeaders: FC<RateTableHeaderProps> = ({ value, onChange }) => {
         <RateSettingDialog
           isEditing={false}
           trigger={
-            <Button>
+            <Button className="bg-blue-950 text-appgray hover:bg-appgray hover:text-blue-950 w-full md:w-auto">
               <Plus className="mr-2 h-4 w-4" /> Set New Rate
             </Button>
           }

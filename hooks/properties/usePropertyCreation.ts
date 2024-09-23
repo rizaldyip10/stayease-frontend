@@ -2,7 +2,6 @@
 import { useCallback, useState } from "react";
 import { FormikHelpers } from "formik";
 import propertyService from "@/services/propertyService";
-import { usePropertyUtils } from "@/hooks/usePropertyUtils";
 import { useAlert } from "@/context/AlertContext";
 
 interface Category {
@@ -40,16 +39,6 @@ export const usePropertyCreation = () => {
   const [error, setError] = useState<string | null>(null);
   const { showAlert } = useAlert();
 
-  const fetchCategories = useCallback(async () => {
-    try {
-      const response = await propertyService.getAllCategories();
-      setCategories(response);
-    } catch (error) {
-      setError("Failed to fetch categories");
-      console.error("Error fetching categories:", error);
-    }
-  }, []);
-
   const handleImageUpload = useCallback(
     async (
       file: File,
@@ -66,7 +55,7 @@ export const usePropertyCreation = () => {
         showAlert("error", "Failed to upload image");
       }
     },
-    [],
+    [showAlert],
   );
 
   const handleSubmit = async (
