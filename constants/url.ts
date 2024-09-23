@@ -68,6 +68,10 @@ export const config = {
       getLowestDailyCumulativeRate: "/rates/daily/cumulative",
       updateRates: "/rates/{rateId}",
     },
+    availability: {
+      getTenantAvailability: "/properties/tenant/availability",
+      baseRoute: "/availability",
+    },
     bookings: {
       tenantBookings: "/bookings/tenant",
       userBookings: "/bookings/user",
