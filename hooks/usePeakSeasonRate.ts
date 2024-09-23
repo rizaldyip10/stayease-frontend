@@ -32,7 +32,7 @@ export const usePeakSeasonRate = () => {
         logger.info("Creating rate for property: " + propertyId);
         const response = await rateService.setRate(propertyId, rateData);
         logger.info("Rate created successfully", response);
-        showAlert("success", "Rate created successfully", "/dashboard");
+        showAlert("success", "Rate created successfully", "/dashboard/rates");
       } catch (error) {
         setError("Failed to create rate");
         console.error("Error creating rate:", error);

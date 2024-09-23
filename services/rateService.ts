@@ -147,7 +147,7 @@ const rateService = {
 
   deleteRate: async (rateId: number) => {
     try {
-      const url = config.endpoints.rates.baseRoute.replace(
+      const url = config.endpoints.rates.updateRates.replace(
         "{rateId}",
         rateId.toString(),
       );

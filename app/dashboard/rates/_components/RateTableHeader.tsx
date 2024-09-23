@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ChangeEvent, FC } from "react";
 import { useRouter } from "next/navigation";
-import RateSettingDialog from "@/app/dashboard/rates/settings/_components/RateSettingDialog";
+import RateSettingDialog from "@/app/dashboard/rates/_components/setting/RateSettingDialog";
 import { Plus } from "lucide-react";
 
 interface RateTableHeaderProps {

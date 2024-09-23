@@ -10,7 +10,7 @@ import { RateResponse } from "@/services/rateService";
 import { formatDate } from "@/utils/dateFormatter";
 import RateDeleteDialog from "@/app/dashboard/rates/_components/RateDeleteDialog";
 import { currencyFormatter } from "@/utils/CurrencyFormatter";
-import RateSettingDialog from "@/app/dashboard/rates/settings/_components/RateSettingDialog";
+import RateSettingDialog from "@/app/dashboard/rates/_components/setting/RateSettingDialog";
 
 export const RateColumns: ColumnDef<RateResponse>[] = [
   {
@@ -103,6 +103,7 @@ export const RateColumns: ColumnDef<RateResponse>[] = [
                 <Edit className="h-4 w-4" />
               </Button>
             }
+            onClose={() => {}}
           />
           <RateDeleteDialog rateId={rate.rateId} />
         </div>
