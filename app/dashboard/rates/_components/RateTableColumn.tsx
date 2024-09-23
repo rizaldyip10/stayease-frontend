@@ -1,11 +1,7 @@
 import * as React from "react";
-import Image from "next/image";
-import DeleteDialog from "@/app/dashboard/properties/_components/DeleteDialog";
 import { ColumnDef } from "@tanstack/table-core";
-import { PropertyAndRoomType } from "@/constants/Property";
 import { ArrowUpDown, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { RateResponse } from "@/services/rateService";
 import { formatDate } from "@/utils/dateFormatter";
 import RateDeleteDialog from "@/app/dashboard/rates/_components/RateDeleteDialog";

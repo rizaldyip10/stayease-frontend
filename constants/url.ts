@@ -70,7 +70,7 @@ export const config = {
     },
     availability: {
       getTenantAvailability: "/properties/tenant/availability",
-      baseRoute: "/availability",
+      baseRoute: "/properties/availability",
     },
     bookings: {
       tenantBookings: "/bookings/tenant",

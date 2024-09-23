@@ -25,13 +25,9 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
   formType: FormType;
 }) => {
   const [userType, setUserType] = useState<UserType>("USER");
-  const {
-    loading,
-    error,
-    alertInfo,
-    handleSubmit,
-    handleMultiStepSubmit,
-  } = useAuthForm({ userType });
+  const { loading, error, handleSubmit, handleMultiStepSubmit } = useAuthForm({
+    userType,
+  });
   const { googleLogin } = useAuth();
   const { data: session } = useSession();
 

@@ -1,5 +1,7 @@
 import { config } from "@/constants/url";
 import axiosInterceptor from "@/utils/axiosInterceptor";
+import { formatDate } from "@/utils/dateFormatter";
+import logger from "@/utils/logger";
 
 export interface TenantRoomAvailabilityType {
   id: number;
@@ -9,12 +11,7 @@ export interface TenantRoomAvailabilityType {
     propertyName: string;
     imageUrl: string;
   };
-  roomAvailability: {
-    id: number;
-    startDate: Date;
-    endDate: Date;
-    isAvailable: boolean;
-  }[];
+  roomAvailability: AvailabilityResponse[];
 }
 
 export interface AvailabilityRequest {
@@ -27,6 +24,8 @@ export interface AvailabilityResponse {
   startDate: Date;
   endDate: Date;
   isAvailable: boolean;
+  isManual: boolean;
+  roomId: number;
 }
 
 export const availabilityService = {
@@ -47,10 +46,14 @@ export const availabilityService = {
     data: AvailabilityRequest,
   ): Promise<AvailabilityResponse> => {
     try {
+      logger.info("Setting availability for room", { id: roomId, data });
       const url = config.endpoints.availability.baseRoute;
       const response = await axiosInterceptor.post(
         url,
-        { data },
+        {
+          startDate: formatDate(data.startDate),
+          endDate: formatDate(data.endDate),
+        },
         {
           params: { roomId },
         },
@@ -69,6 +72,7 @@ export const availabilityService = {
       const response = await axiosInterceptor.delete(url, {
         params: { roomId, availabilityId },
       });
+      logger.info("Availability removed", { roomId, availabilityId });
       return await response.data.statusMessage;
     } catch (error: any) {
       throw error.response.data;

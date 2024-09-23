@@ -1,32 +1,25 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   availabilityService,
   TenantRoomAvailabilityType,
 } from "@/services/availabilityService";
+import { useAlert } from "@/context/AlertContext";
+import { useFetchData } from "@/hooks/utils/useFetchData";
 
 export const useAvailability = () => {
-  const [availabilityData, setAvailabilityData] = useState<
-    TenantRoomAvailabilityType[]
-  >([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { showAlert } = useAlert();
 
-  useEffect(() => {
-    fetchAvailabilityData();
-  }, []);
-
-  const fetchAvailabilityData = async () => {
-    try {
-      setIsLoading(true);
-      const data = await availabilityService.getTenantRoomAvailability();
-      setAvailabilityData(data);
-      setError(null);
-    } catch (err) {
-      setError("Failed to fetch availability data");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const {
+    data: availabilityData,
+    error: dataError,
+    isLoading: dataLoading,
+  } = useFetchData<TenantRoomAvailabilityType[]>(
+    "availabilityData",
+    async () => {
+      return availabilityService.getTenantRoomAvailability();
+    },
+  );
 
   const setAvailability = async (
     roomId: number,
@@ -35,25 +28,37 @@ export const useAvailability = () => {
   ) => {
     try {
       await availabilityService.setAvailability(roomId, { startDate, endDate });
-      await fetchAvailabilityData();
-    } catch (err) {
-      setError("Failed to set availability");
+      await availabilityService.getTenantRoomAvailability();
+      showAlert(
+        "success",
+        "Availability set successfully",
+        "/dashboard/room-availability",
+      );
+    } catch (err: any) {
+      setError("Failed to set availability: " + err.message);
+      showAlert("error", "Failed to set availability: " + err.message);
     }
   };
 
   const removeAvailability = async (roomId: number, availabilityId: number) => {
     try {
       await availabilityService.removeAvailability(roomId, availabilityId);
-      await fetchAvailabilityData();
-    } catch (err) {
-      setError("Failed to remove availability");
+      await availabilityService.getTenantRoomAvailability();
+      showAlert(
+        "success",
+        "Availability removed successfully",
+        "/dashboard/room-availability",
+      );
+    } catch (err: any) {
+      setError("Failed to remove availability: " + err.message);
+      showAlert("error", "Failed to remove availability: " + err.message);
     }
   };
 
   return {
     availabilityData,
-    isLoading,
-    error,
+    loading: dataLoading,
+    error: error || dataError,
     setAvailability,
     removeAvailability,
   };

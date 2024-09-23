@@ -52,7 +52,7 @@ export const DashboardRatesSummary: React.FC<DashboardRatesSummaryProps> = ({
             <RatesCard rates={automaticRates} isAutomatic />
           </TabsContent>
         </Tabs>
-        <Link href="/dashboard/rates-settings">
+        <Link href="/dashboard/rates">
           <Button className="w-full bg-blue-950 text-appgray hover:bg-appgray hover:text-blue-950 mt-5 md:hidden">
             <GearIcon className="mr-2 h-4 w-4" /> Manage Rates
           </Button>
