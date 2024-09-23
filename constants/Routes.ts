@@ -44,8 +44,8 @@ export const adminRoutes: SidebarRoutesType[] = [
     icon: LibraryBig,
   },
   {
-    label: "Rates Settings",
-    href: "/dashboard/rates-settings",
+    label: "Rates Management",
+    href: "/dashboard/rates",
     icon: BadgePercent,
   },
   { label: "Reviews", href: "/dashboard/reviews", icon: Star },
