@@ -10,6 +10,7 @@ import { RateResponse } from "@/services/rateService";
 import { formatDate } from "@/utils/dateFormatter";
 import RateDeleteDialog from "@/app/dashboard/rates/_components/RateDeleteDialog";
 import { currencyFormatter } from "@/utils/CurrencyFormatter";
+import RateSettingDialog from "@/app/dashboard/rates/settings/_components/RateSettingDialog";
 
 export const RateColumns: ColumnDef<RateResponse>[] = [
   {
@@ -91,16 +92,19 @@ export const RateColumns: ColumnDef<RateResponse>[] = [
     header: "More",
     enableHiding: false,
     cell: ({ row }) => {
-      const rateId = row.original.rateId;
+      const rate = row.original;
       return (
         <div className="flex items-center gap-2">
-          {/*TODO decide what to do with this*/}
-          {/*<Link href={`/dashboard/properties/${rateId}/edit`}>*/}
-          <Button variant="ghost" className="w-10 h-10 p-0">
-            <Edit className="w-4 h-4" />
-          </Button>
-          {/*</Link>*/}
-          <RateDeleteDialog rateId={rateId} />
+          <RateSettingDialog
+            isEditing={true}
+            selectedRate={rate}
+            trigger={
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <Edit className="h-4 w-4" />
+              </Button>
+            }
+          />
+          <RateDeleteDialog rateId={rate.rateId} />
         </div>
       );
     },

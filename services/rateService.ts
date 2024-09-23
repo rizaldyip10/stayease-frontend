@@ -127,12 +127,18 @@ const rateService = {
     values: RateRequest,
   ): Promise<RateResponse> => {
     try {
-      const response = await axiosInterceptor.put(
-        `${config.endpoints.rates.baseRoute}/${rateId}`,
-        {
-          values,
-        },
+      logger.info("Updating rate..." + rateId);
+      const url = config.endpoints.rates.updateRates.replace(
+        "{rateId}",
+        rateId.toString(),
       );
+      const response = await axiosInterceptor.put(url, {
+        startDate: formatDate(values.startDate),
+        endDate: formatDate(values.endDate),
+        adjustmentRate: values.adjustmentRate,
+        adjustmentType: values.adjustmentType,
+        reason: values.reason,
+      });
       return response.data.data;
     } catch (error: any) {
       throw error;
@@ -141,9 +147,11 @@ const rateService = {
 
   deleteRate: async (rateId: number) => {
     try {
-      const response = await axiosInterceptor.delete(
-        `${config.endpoints.rates.baseRoute}/${rateId}`,
+      const url = config.endpoints.rates.baseRoute.replace(
+        "{rateId}",
+        rateId.toString(),
       );
+      const response = await axiosInterceptor.delete(url);
       return response.data.statusMessage;
     } catch (error: any) {
       throw error;

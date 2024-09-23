@@ -17,6 +17,7 @@ interface CustomSelectProps {
   options: SelectOption[] | undefined;
   value?: string;
   onChange: (value: string) => void;
+  disabled?: boolean;
 }
 
 const CustomSelect: React.FC<CustomSelectProps> = ({
@@ -24,12 +25,13 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
   options,
   value,
   onChange,
+  disabled,
 }) => {
   const isLoading = !options;
   const error = !isLoading && !options?.length;
 
   return (
-    <Select value={value} onValueChange={onChange}>
+    <Select value={value} onValueChange={onChange} disabled={disabled}>
       <SelectTrigger>
         <SelectValue placeholder={title} />
       </SelectTrigger>
