@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { CircleUserRound, LogOut, Settings } from "lucide-react";
 import {
   DropdownMenu,
@@ -9,40 +8,51 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAuth } from "@/hooks/useAuth";
 import React from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { signOut } from "@/auth";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { RxDashboard } from "react-icons/rx";
 
-const ProfileBtn = () => {
+interface ProfileBtnProps {
+  isDashboard: boolean;
+}
+
+const ProfileBtn: React.FC = () => {
   const { data: session } = useSession();
+
+  const initials =
+    (session?.user?.firstName?.[0] ?? "") +
+    (session?.user?.lastName?.[0] ?? "");
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex items-center">
-        <Image
-          src={
-            session?.user.avatar ||
-            "https://ui-avatars.com/api/?name=Rizaldy+Putra"
-          }
-          alt="pp"
-          className="w-6 h-6 rounded-full"
-          width={24}
-          height={24}
-        />
+        <Avatar className="w-10 h-10">
+          <AvatarImage src={session?.user.avatar} alt="avatar" />
+          <AvatarFallback> {initials}</AvatarFallback>
+        </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel className="text-xs text-blue-950">
           My Account
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+
+        <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
+          <Link href="/dashboard" className="flex gap-1">
+            <RxDashboard className="w-4 h-4 text-blue-950" />
+            <p>Dashboard</p>
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
           <Link href="/profile" className="flex gap-1">
             <CircleUserRound className="w-4 h-4 text-blue-950" />
-            <p>My Profile</p>
+            <p>Profile</p>
           </Link>
         </DropdownMenuItem>
+
         <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
           <Link href="/profile/settings" className="flex gap-1">
             <Settings className="w-4 h-4 text-blue-950" />

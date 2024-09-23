@@ -4,7 +4,7 @@ import { signOut, useSession } from "next-auth/react";
 import * as yup from "yup";
 import authService from "@/services/authService";
 import logger from "@/utils/logger";
-import { useAlert } from "@/hooks/useAlert";
+import { useAlert } from "@/hooks/utils/useAlert";
 
 export type UserType = "USER" | "TENANT";
 

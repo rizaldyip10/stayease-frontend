@@ -3,6 +3,7 @@ import { config } from "@/constants/url";
 import { getToken } from "@auth/core/jwt";
 import { getSession } from "next-auth/react";
 import logger from "@/utils/logger";
+import { auth } from "@/auth";
 
 const axiosInterceptor = axios.create({
   baseURL: config.BASE_URL,
@@ -28,6 +29,14 @@ axiosInterceptor.interceptors.request.use(
       token = jwtToken?.accessToken as string | undefined;
       logger.debug("Server-side token retrieval", { tokenExists: !!token });
     }
+
+    if (!token) {
+      const session = await auth();
+      token = session?.user.accessToken;
+      logger.debug("Token from auth", { tokenExists: !!token });
+    }
+
+    logger.debug("Token", { token });
 
     if (token) {
       config.headers = config.headers || {};

@@ -28,28 +28,45 @@ export const config = {
       tenant: "/users/profile/tenant",
       avatar: "/users/profile/avatar",
       email: "/users/profile/email",
+      delete: "/users",
     },
     properties: {
-      getAllProperties: "/properties",
-      getProperty: "/properties/{propertyId}",
       getTenantProperties: "/properties/tenant",
       getTenantRooms: "/properties/tenant/rooms",
       createProperty: "/properties",
       updateProperty: "/properties/{propertyId}",
       deleteProperty: "/properties/{propertyId}",
-      getRooms: "/properties/{propertyId}/rooms",
-      getRoom: "/properties/{propertyId}/rooms/{roomId}",
       createRoom: "/properties/{propertyId}/rooms",
       updateRoom: "/properties/{propertyId}/rooms/{roomId}",
       deleteRoom: "/properties/{propertyId}/rooms/{roomId}",
-      getAllCategories: "/properties/categories",
       createCategory: "/properties/categories",
       updateCategory: "/properties/categories/{categoryId}",
       deleteCategory: "/properties/categories/{categoryId}",
+      uploadImage: "/properties/upload-image",
+    },
+    propertyUtils: {
+      getAllProperties: "/properties",
+      getProperty: "/properties/{propertyId}",
+      getRooms: "/properties/{propertyId}/rooms",
+      getRoom: "/properties/{propertyId}/rooms/{roomId}",
+      checkPropertyOwnership: "/properties/{propertyId}/check-ownership",
+      getCurrentRoom: "/properties/{propertyId}/rooms/{roomId}/available",
+      getAdjustedRates: "/properties/{propertyId}/rates",
+      getCurrentAvailableProperty: "/properties/{propertyId}/available",
+      getLowestDailyRate: "/properties/{propertyId}/rates/daily",
+      getLowestDailyCumulativeRate:
+        "/properties/{propertyId}/rates/daily/cumulative",
+    },
+    propertyListings: {
+      sortAndFilter: "/properties/listings",
+      getAllAvailablePropertiesOnDate: "/properties/available",
+      getAllCategories: "/properties/categories",
+      getAllCities: "/properties/cities",
+      getAllImages: "/properties/images",
     },
     bookings: {
       tenantBookings: "/bookings/tenant",
-      userBookings: "/bookings/user"
+      userBookings: "/bookings/user",
     },
     transactions: {
       tenant: "/transactions",
@@ -57,7 +74,7 @@ export const config = {
     },
     payments: {
       paymentInfo: "/payments",
-      uploadPayment: "/payments/payment-proof"
-    }
+      uploadPayment: "/payments/payment-proof",
+    },
   },
 };

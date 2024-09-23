@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FormikHelpers } from "formik";
 import { MultiStepFormValues } from "@/app/(auth)/_components/MultiStepForm";
 import { useAuth } from "@/hooks/useAuth";
-import { useAlert } from "./useAlert";
+import { useAlert } from "./utils/useAlert";
 import { useRouter } from "next/navigation";
 
 export const useVerifyAccount = () => {

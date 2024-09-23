@@ -69,7 +69,7 @@ export function CarouselPlugin({ className, images }: CarouselPluginProps) {
       {/*  {images.map((_, index) => (*/}
       {/*    <div*/}
       {/*      key={index}*/}
-      {/*      className={`w-3 h-3 rounded-full ${index === activeIndex ? "bg-appblue-900" : "bg-gray-300"}`}*/}
+      {/*      className={`w-3 h-3 rounded-full ${index === activeIndex ? "bg-blue-950" : "bg-gray-300"}`}*/}
       {/*    />*/}
       {/*  ))}*/}
       {/*</div>*/}

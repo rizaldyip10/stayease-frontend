@@ -1,5 +1,5 @@
 import React from "react";
-import { AlertCircle, CheckCircle } from "lucide-react";
+import { AlertCircle, CheckCircle, X } from "lucide-react";
 
 interface AlertProps {
   type: "success" | "error";
@@ -10,7 +10,13 @@ interface AlertProps {
 const AlertComponent: React.FC<AlertProps> = ({ type, message, onClose }) => {
   return (
     <div
-      className={`fixed top-4 right-4 p-4 rounded-md shadow-md ${type === "success" ? "bg-green-100" : "bg-red-100"}`}
+      className="fixed top-4 right-4 z-50 p-4 rounded-md shadow-md flex items-center justify-between max-w-md w-full animate-in slide-in-from-top-2 duration-300"
+      style={{
+        backgroundColor:
+          type === "success"
+            ? "rgba(220, 252, 231, 0.95)"
+            : "rgba(254, 226, 226, 0.95)",
+      }}
     >
       <div className="flex items-center">
         {type === "success" ? (
@@ -24,9 +30,9 @@ const AlertComponent: React.FC<AlertProps> = ({ type, message, onClose }) => {
       </div>
       <button
         onClick={onClose}
-        className="absolute top-1 right-1 text-gray-500 hover:text-gray-700"
+        className="text-gray-500 hover:text-gray-700 focus:outline-none"
       >
-        &times;
+        <X size={18} />
       </button>
     </div>
   );

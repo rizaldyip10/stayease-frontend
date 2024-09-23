@@ -7,12 +7,14 @@ import {
   RegisterResponse,
   AuthResponse,
   TokenCheckResponse,
+  ForgotPasswordValues,
 } from "@/constants/Auth";
-import { handleError } from "@/utils/errorHandler";
 import { signIn } from "@/auth";
 
 import logger from "@/utils/logger";
 import { FormikValues } from "formik";
+import { logError } from "@/utils/errorHandler";
+import axios from "axios";
 
 export const authService = {
   register: async (
@@ -33,7 +35,7 @@ export const authService = {
       };
     } catch (error: any) {
       logger.error("Registration failed", { error, email });
-      handleError(error);
+      logError(error);
       throw error;
     }
   },
@@ -56,18 +58,6 @@ export const authService = {
     console.log("Calling verify endpoint, response: ", response);
     return response.data;
   },
-
-  // exchangeCodeForTokens: async (code: string): Promise<AuthResponse> => {
-  //   const response = await axiosInterceptor.post(
-  //     config.endpoints.oauth2.exchangeCode,
-  //     { code },
-  //   );
-  //   console.log("Exchanging code for tokens: ", response);
-  //   const res = response.data;
-  //   authService.setAccessToken(res.data.accessToken);
-  //   return res;
-  // },
-
   login: async ({
     email,
     password,
@@ -103,7 +93,7 @@ export const authService = {
       return response.data.data;
     } catch (error: any) {
       logger.error("User existence check failed", { error, email });
-      handleError(error);
+      logError(error);
       return false;
     }
   },
@@ -123,7 +113,7 @@ export const authService = {
       logger.error("OAuth2 registration failed", {
         values,
       });
-      handleError(error);
+      logError(error);
       throw error;
     }
   },
@@ -157,7 +147,7 @@ export const authService = {
       return response.data.data;
     } catch (error: any) {
       logger.error("Code exchange failed", { error });
-      handleError(error);
+      logError(error);
       throw error;
     }
   },
@@ -207,7 +197,7 @@ export const authService = {
     }
   },
 
-  logout: async (email: string): Promise<void> => {
+  logout: async (email: string | undefined): Promise<void> => {
     try {
       logger.info("Logging out user");
       await axiosInterceptor.post(config.endpoints.auth.logout, email);
@@ -215,6 +205,65 @@ export const authService = {
     } catch (error: any) {
       logger.error("Logout failed", { error });
       throw error;
+    }
+  },
+
+  forgotPassword: async (email: string): Promise<any> => {
+    try {
+      logger.info("Initiating forgot password", { email });
+      const res = await axiosInterceptor.post(
+        config.endpoints.password.forgot,
+        { email },
+      );
+      logger.info("Forgot password successful", { email });
+      return res.data;
+    } catch (error: any) {
+      try {
+        const response = await axios.post(
+          `${config.BASE_URL}${config.endpoints.password.forgot}`,
+          { email },
+        );
+        logger.info("Unlogged user requesting for forgot password", { email });
+        logger.info("Forgot password successful", response.data);
+        return response.data;
+      } catch (error: any) {
+        logger.error("Forgot password failed", { error, email });
+        throw error;
+      }
+    }
+  },
+
+  resetPassword: async (
+    token: string,
+    values: ForgotPasswordValues,
+  ): Promise<any> => {
+    try {
+      logger.info("Initiating password reset, values: ", values);
+      const res = await axiosInterceptor.post(
+        config.endpoints.password.reset,
+        values,
+        {
+          params: { token },
+        },
+      );
+      logger.info("Password reset successful");
+      return res.data;
+    } catch (error: any) {
+      try {
+        const response = await axios.post(
+          `${config.BASE_URL}${config.endpoints.password.reset}`,
+          {
+            password: values.password,
+            confirmPassword: values.confirmPassword,
+          },
+          { params: { token } },
+        );
+        logger.info("Forgot password successful", response.data.data);
+        return response.data;
+      } catch (error: any) {
+        logger.error("Forgot password failed", { error });
+        throw error;
+      }
     }
   },
 };
