@@ -9,16 +9,18 @@ import Link from "next/link";
 import { RateResponse } from "@/services/rateService";
 import { formatDate } from "@/utils/dateFormatter";
 import RateDeleteDialog from "@/app/dashboard/rates/_components/RateDeleteDialog";
+import { currencyFormatter } from "@/utils/CurrencyFormatter";
 
 export const RateColumns: ColumnDef<RateResponse>[] = [
   {
-    accessorKey: "propertyName",
+    id: "propertyName",
+    accessorKey: "propertySummary.propertyName",
     header: "Property",
     cell: ({ row }) => {
-      const rate = row.original;
+      const propertyName = row.original.propertySummary.propertyName;
       return (
         <div className="flex items-center gap-2">
-          <p>{rate.propertySummary.propertyName}</p>
+          <p>{propertyName}</p>
         </div>
       );
     },
@@ -35,12 +37,20 @@ export const RateColumns: ColumnDef<RateResponse>[] = [
         <ArrowUpDown className="ml-2 w-4 h-4" />
       </Button>
     ),
-    cell: ({ row }) => <div>{row.getValue("adjustmentRate")}</div>,
-  },
-  {
-    accessorKey: "adjustmentType",
-    header: "Adjustment Type",
-    cell: ({ row }) => <div>{row.getValue("adjustmentType")}</div>,
+    cell: ({ row }) => {
+      let rate;
+      if (row.original.adjustmentType === "PERCENTAGE") {
+        rate = `${row.original.adjustmentRate}%`;
+      } else {
+        const price = currencyFormatter(row.original.adjustmentRate);
+        rate = `${price}`;
+      }
+      return (
+        <div className="flex items-center gap-2">
+          <p>{rate}</p>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "startDate",
