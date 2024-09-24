@@ -16,6 +16,7 @@ import { CurrentAvailablePropertyType } from "@/constants/Property";
 import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
 import PropertyHeader from "@/app/(home)/properties/[propertyId]/_components/PropertyHeader";
 import { useDateSelection } from "@/hooks/useDateSelection";
+import MapComponent from "@/components/MapComponent";
 
 interface PropertyDetailsProps {
   property: CurrentAvailablePropertyType;
@@ -104,7 +105,17 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
 
           <div className="mt-6">
             <h2 className="text-2xl font-semibold mb-4">Location</h2>
-            <div id="map" className="w-full h-64 bg-gray-200 mb-4"></div>
+            <div id="map" className="w-full h-64 bg-gray-200 mb-4">
+              <MapComponent
+                initialCenter={{
+                  lat: displayProperty.latitude,
+                  lng: displayProperty.longitude,
+                }}
+                onLocationChange={() => {}} // No-op function as we don't need to change location
+                isEditable={false}
+                viewOnly={false}
+              />
+            </div>
             <p>
               {displayProperty.address}, {displayProperty.city},{" "}
               {displayProperty.country}
