@@ -57,7 +57,7 @@ export const useAvailability = () => {
 
   return {
     availabilityData,
-    loading: dataLoading,
+    isLoading: dataLoading,
     error: error || dataError,
     setAvailability,
     removeAvailability,

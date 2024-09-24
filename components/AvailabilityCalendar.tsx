@@ -32,7 +32,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
 
   const handleSelect = useCallback(
     (date: Date | undefined) => {
-      console.log("AvailabilityCalendar: Selected date:", date);
+      console.log("RoomAvailabilityCalendar: Selected date:", date);
       onSelect(date);
       if (date) {
         onDateChange(date);

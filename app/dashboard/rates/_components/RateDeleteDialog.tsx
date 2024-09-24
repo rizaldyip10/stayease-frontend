@@ -22,6 +22,8 @@ interface DeleteDialogProps {
   title?: string;
   description?: string;
   trigger?: React.ReactNode;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
 const RateDeleteDialog: FC<DeleteDialogProps> = ({

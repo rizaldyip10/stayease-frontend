@@ -4,7 +4,8 @@ import { useAvailability } from "@/hooks/useAvailability";
 import AvailabilityDialog from "./AvailabilityDialog";
 import { Button } from "@/components/ui/button";
 import NoResultsFound from "@/components/NoResultsFound";
-import AvailabilityTable from "@/app/dashboard/room-availability/_components/availability-table/AvailabilityTable";
+import RoomAvailabilityCalendar from "@/app/dashboard/room-availability/_components/RoomAvailabilityCalendar";
+import ConfirmationDialog from "@/app/dashboard/room-availability/_components/ConfirmationDialog";
 
 const RoomAvailability: React.FC = () => {
   const {
@@ -15,6 +16,12 @@ const RoomAvailability: React.FC = () => {
     removeAvailability,
   } = useAvailability();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [selectedDates, setSelectedDates] = useState<{
+    start: Date;
+    end: Date;
+  } | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
 
   const handleOpenDialog = () => {
     setIsDialogOpen(true);
@@ -24,9 +31,38 @@ const RoomAvailability: React.FC = () => {
     setIsDialogOpen(false);
   };
 
+  const handleSubmitNewAvailability = (
+    roomId: number,
+    startDate: Date,
+    endDate: Date,
+  ) => {
+    setAvailability(roomId, startDate, endDate);
+    setIsDialogOpen(false);
+  };
+
+  const handleEventClick = (event: any) => {
+    if (event.extendedProps.isManual) {
+      setSelectedEvent(event);
+      setIsConfirmDialogOpen(true);
+    } else {
+      alert("This unavailability cannot be removed as it's not manually set.");
+    }
+  };
+
+  const handleConfirmRemove = () => {
+    if (selectedEvent) {
+      removeAvailability(
+        selectedEvent.extendedProps.roomId,
+        parseInt(selectedEvent.id),
+      );
+    }
+    setIsConfirmDialogOpen(false);
+    setSelectedEvent(null);
+  };
+
   if (!availabilityData) return <NoResultsFound />;
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <div>Error: {error.toString()}</div>;
 
   return (
     <div className="container mx-auto p-4">
@@ -40,26 +76,24 @@ const RoomAvailability: React.FC = () => {
         Set Availability
       </Button>
       <p className="text-red-500 font-semibold text-sm mb-4">
-        *Rooms with a disabled remove button are booked and cannot be manually
-        removed.
+        *Unavailabilities marked as (Booked) cannot be manually removed.
       </p>
-      {availabilityData.map((room) => (
-        <div key={room.id} className="mb-8">
-          <h2 className="text-xl font-semibold mb-2 text-blue-950">
-            {room.propertySummary.propertyName} - {room.name}
-          </h2>
-          <AvailabilityTable
-            availability={room.roomAvailability}
-            onRemove={(availabilityId) =>
-              removeAvailability(room.id, availabilityId)
-            }
-          />
-        </div>
-      ))}
+      <RoomAvailabilityCalendar
+        availabilityData={availabilityData}
+        onDateSelect={handleOpenDialog}
+        onEventClick={handleEventClick}
+      />
       <AvailabilityDialog
         isOpen={isDialogOpen}
         onClose={handleCloseDialog}
-        onSubmit={setAvailability}
+        onSubmit={handleSubmitNewAvailability}
+      />
+      <ConfirmationDialog
+        isOpen={isConfirmDialogOpen}
+        onClose={() => setIsConfirmDialogOpen(false)}
+        onConfirm={handleConfirmRemove}
+        title="Remove Unavailability"
+        description="Are you sure you want to remove this unavailability?"
       />
     </div>
   );
