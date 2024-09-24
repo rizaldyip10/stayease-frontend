@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import NoResultsFound from "@/components/NoResultsFound";
 import RoomAvailabilityCalendar from "@/app/dashboard/room-availability/_components/RoomAvailabilityCalendar";
 import ConfirmationDialog from "@/app/dashboard/room-availability/_components/ConfirmationDialog";
+import { useAlert } from "@/context/AlertContext";
 
 const RoomAvailability: React.FC = () => {
   const {
@@ -22,6 +23,7 @@ const RoomAvailability: React.FC = () => {
     end: Date;
   } | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const { showAlert } = useAlert();
 
   const handleOpenDialog = () => {
     setIsDialogOpen(true);
@@ -45,7 +47,10 @@ const RoomAvailability: React.FC = () => {
       setSelectedEvent(event);
       setIsConfirmDialogOpen(true);
     } else {
-      alert("This unavailability cannot be removed as it's not manually set.");
+      showAlert(
+        "warn",
+        "This unavailability cannot be removed as it's not manually set.",
+      );
     }
   };
 

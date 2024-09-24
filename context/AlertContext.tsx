@@ -8,7 +8,7 @@ import React, {
 import AlertComponent from "@/components/AlertComponent";
 import { useRouter } from "next/navigation";
 
-type AlertType = "success" | "error";
+type AlertType = "success" | "error" | "warn" | "info";
 
 interface AlertContextType {
   showAlert: (type: AlertType, message: string, redirect?: string) => void;
