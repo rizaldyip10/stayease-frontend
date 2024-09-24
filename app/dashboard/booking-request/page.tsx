@@ -1,4 +1,3 @@
-import React from 'react';
 import BookingTable from "@/app/dashboard/booking-request/_components/BookingTable";
 
 const BookingRequestPage = () => {
