@@ -5,10 +5,12 @@ import {
 } from "@/services/availabilityService";
 import { useAlert } from "@/context/AlertContext";
 import { useFetchData } from "@/hooks/utils/useFetchData";
+import { useRouter } from "next/navigation";
 
 export const useRoomAvailability = () => {
   const [error, setError] = useState<string | null>(null);
   const { showAlert } = useAlert();
+  const router = useRouter();
 
   const {
     data: availabilityData,
@@ -34,6 +36,7 @@ export const useRoomAvailability = () => {
         "Availability set successfully",
         "/dashboard/room-availability",
       );
+      router.refresh();
     } catch (err: any) {
       setError("Failed to set availability: " + err.message);
       showAlert("error", "Failed to set availability: " + err.message);
@@ -49,6 +52,7 @@ export const useRoomAvailability = () => {
         "Availability removed successfully",
         "/dashboard/room-availability",
       );
+      router.refresh();
     } catch (err: any) {
       setError("Failed to remove availability: " + err.message);
       showAlert("error", "Failed to remove availability: " + err.message);
