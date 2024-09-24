@@ -76,5 +76,8 @@ export const config = {
       paymentInfo: "/payments",
       uploadPayment: "/payments/payment-proof",
     },
+    reports: {
+      availabilityReports: "/properties/tenant/availability"
+    }
   },
 };

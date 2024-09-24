@@ -1,6 +1,6 @@
 "use client";
 
-import {useTenantBookings} from "@/hooks/useTenantBookings";
+import {useTenantBookings} from "@/hooks/transactions/useTenantBookings";
 import {columns} from "@/app/dashboard/booking-request/_components/BookingTableColumns";
 import DataTable from "@/components/ui/data-table";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import {FC} from "react";
-import {usePaymentInfo} from "@/hooks/usePaymentInfo";
+import {usePaymentInfo} from "@/hooks/transactions/usePaymentInfo";
 import TransferInfo from "@/app/(user)/profile/bookings/[bookingId]/_components/TransferInfo";
 
 interface PaymentInfoProps {
