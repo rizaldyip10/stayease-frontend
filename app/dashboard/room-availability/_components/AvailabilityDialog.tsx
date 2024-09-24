@@ -11,12 +11,14 @@ interface AvailabilityDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (roomId: number, startDate: Date, endDate: Date) => void;
+  preSelectedDates?: { start: Date; end: Date } | null;
 }
 
 const AvailabilityDialog: React.FC<AvailabilityDialogProps> = ({
   isOpen,
   onClose,
   onSubmit,
+  preSelectedDates,
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -24,7 +26,10 @@ const AvailabilityDialog: React.FC<AvailabilityDialogProps> = ({
         <DialogHeader>
           <DialogTitle>Set Room Availability</DialogTitle>
         </DialogHeader>
-        <AvailabilityForm onSubmit={onSubmit} />
+        <AvailabilityForm
+          onSubmit={onSubmit}
+          preSelectedDates={preSelectedDates}
+        />
       </DialogContent>
     </Dialog>
   );

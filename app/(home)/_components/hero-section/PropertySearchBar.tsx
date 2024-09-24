@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Combobox from "@/components/Combobox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { usePropertyUtils } from "@/hooks/usePropertyUtils";
+import { usePropertyUtils } from "@/hooks/properties/usePropertyUtils";
 import useMediaQuery from "@/hooks/utils/useMediaQuery";
 import { usePropertySearch } from "@/hooks/properties/usePropertySearch";
 import { CustomDatePicker } from "@/components/CustomDatePicker";

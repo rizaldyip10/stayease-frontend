@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ErrorMessage, Field, FieldProps, Form, Formik } from "formik";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { CustomDatePicker } from "@/components/CustomDatePicker";
 
 interface AvailabilityFormProps {
   onSubmit: (roomId: number, startDate: Date, endDate: Date) => void;
+  preSelectedDates?: { start: Date; end: Date } | null;
 }
 
 const validationSchema = yup.object().shape({
@@ -23,16 +24,35 @@ const validationSchema = yup.object().shape({
     .required("End date is required"),
 });
 
-const AvailabilityForm: React.FC<AvailabilityFormProps> = ({ onSubmit }) => {
+const AvailabilityForm: React.FC<AvailabilityFormProps> = ({
+  onSubmit,
+  preSelectedDates,
+}) => {
   const [isStartDateOpen, setIsStartDateOpen] = useState(false);
   const [isEndDateOpen, setIsEndDateOpen] = useState(false);
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
     null,
   );
+  const [initialValues, setInitialValues] = useState({
+    propertyId: "",
+    roomId: "",
+    startDate: "",
+    endDate: "",
+  });
   const { properties } = useTenantProperties();
   const { rooms } = usePropertyData(
     selectedPropertyId ? parseInt(selectedPropertyId) : 0,
   );
+
+  useEffect(() => {
+    if (preSelectedDates) {
+      setInitialValues((prev) => ({
+        ...prev,
+        startDate: formatDate(preSelectedDates.start),
+        endDate: formatDate(preSelectedDates.end),
+      }));
+    }
+  }, [preSelectedDates]);
 
   const minDate = new Date();
   minDate.setHours(0, 0, 0, 0);
@@ -46,8 +66,8 @@ const AvailabilityForm: React.FC<AvailabilityFormProps> = ({ onSubmit }) => {
       shouldValidate?: boolean,
     ) => void,
   ) => {
-    setIsStartDateOpen(false);
     if (date) {
+      setIsStartDateOpen(false);
       setFieldValue("startDate", formatDate(date));
       setIsEndDateOpen(true);
     }
@@ -61,20 +81,15 @@ const AvailabilityForm: React.FC<AvailabilityFormProps> = ({ onSubmit }) => {
       shouldValidate?: boolean,
     ) => void,
   ) => {
-    setIsEndDateOpen(false);
     if (date) {
+      setIsEndDateOpen(false);
       setFieldValue("endDate", formatDate(date));
     }
   };
 
   return (
     <Formik
-      initialValues={{
-        propertyId: "",
-        roomId: "",
-        startDate: "",
-        endDate: "",
-      }}
+      initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={(values) => {
         onSubmit(
@@ -83,6 +98,7 @@ const AvailabilityForm: React.FC<AvailabilityFormProps> = ({ onSubmit }) => {
           new Date(values.endDate),
         );
       }}
+      enableReinitialize
     >
       {({ errors, touched, values, setFieldValue }) => (
         <Form className="space-y-4">
@@ -134,13 +150,9 @@ const AvailabilityForm: React.FC<AvailabilityFormProps> = ({ onSubmit }) => {
                 <CustomDatePicker
                   title="Select start date"
                   date={field.value ? new Date(field.value) : undefined}
-                  onDateChange={(date) => {
-                    if (date) {
-                      setFieldValue("startDate", formatDate(date));
-                      setIsStartDateOpen(false);
-                      setIsEndDateOpen(true);
-                    }
-                  }}
+                  onDateChange={(date) =>
+                    handleStartDateChange(date, setFieldValue)
+                  }
                   minDate={minDate}
                   open={isStartDateOpen}
                   setOpen={setIsStartDateOpen}
@@ -161,10 +173,7 @@ const AvailabilityForm: React.FC<AvailabilityFormProps> = ({ onSubmit }) => {
                   title="Select end date"
                   date={field.value ? new Date(field.value) : undefined}
                   onDateChange={(date) => {
-                    if (date) {
-                      setFieldValue("endDate", formatDate(date));
-                      setIsEndDateOpen(false);
-                    }
+                    handleEndDateChange(date, setFieldValue);
                   }}
                   minDate={endMinDate}
                   open={isEndDateOpen}

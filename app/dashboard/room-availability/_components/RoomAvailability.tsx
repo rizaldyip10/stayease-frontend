@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useAvailability } from "@/hooks/useAvailability";
+import { useRoomAvailability } from "@/hooks/useRoomAvailability";
 import AvailabilityDialog from "./AvailabilityDialog";
 import { Button } from "@/components/ui/button";
 import NoResultsFound from "@/components/NoResultsFound";
@@ -15,7 +15,7 @@ const RoomAvailability: React.FC = () => {
     error,
     setAvailability,
     removeAvailability,
-  } = useAvailability();
+  } = useRoomAvailability();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [selectedDates, setSelectedDates] = useState<{
@@ -31,6 +31,11 @@ const RoomAvailability: React.FC = () => {
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
+  };
+
+  const handleDateSelect = (start: Date, end: Date) => {
+    setSelectedDates({ start, end });
+    setIsDialogOpen(true);
   };
 
   const handleSubmitNewAvailability = (
@@ -85,13 +90,14 @@ const RoomAvailability: React.FC = () => {
       </p>
       <RoomAvailabilityCalendar
         availabilityData={availabilityData}
-        onDateSelect={handleOpenDialog}
+        onDateSelect={handleDateSelect}
         onEventClick={handleEventClick}
       />
       <AvailabilityDialog
         isOpen={isDialogOpen}
         onClose={handleCloseDialog}
         onSubmit={handleSubmitNewAvailability}
+        preSelectedDates={selectedDates}
       />
       <ConfirmationDialog
         isOpen={isConfirmDialogOpen}

@@ -14,7 +14,7 @@ import { Trash } from "lucide-react";
 import React, { FC } from "react";
 import { useAlert } from "@/context/AlertContext";
 import { usePeakSeasonRate } from "@/hooks/usePeakSeasonRate";
-import { useAvailability } from "@/hooks/useAvailability";
+import { useRoomAvailability } from "@/hooks/useRoomAvailability";
 
 interface DeleteDialogProps {
   rateId?: number;

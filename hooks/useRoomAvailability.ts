@@ -6,7 +6,7 @@ import {
 import { useAlert } from "@/context/AlertContext";
 import { useFetchData } from "@/hooks/utils/useFetchData";
 
-export const useAvailability = () => {
+export const useRoomAvailability = () => {
   const [error, setError] = useState<string | null>(null);
   const { showAlert } = useAlert();
 
