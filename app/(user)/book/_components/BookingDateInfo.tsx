@@ -2,7 +2,7 @@
 
 import {useState} from 'react';
 import { Button } from "@/components/ui/button";
-import {useBookingValues} from "@/hooks/useBookingValues";
+import {useBookingValues} from "@/hooks/transactions/useBookingValues";
 import DatePicker from "@/components/DatePicker";
 
 const BookingDateInfo = () => {

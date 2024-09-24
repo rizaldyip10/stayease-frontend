@@ -13,7 +13,7 @@ import PropertyListingSkeleton from "@/components/PropertyListingSkeleton";
 import NoResultsFound from "@/components/NoResultsFound";
 import { Button } from "@/components/ui/button";
 import { FilterIcon } from "lucide-react";
-import { useBookingValues } from "@/hooks/useBookingValues";
+import { useBookingValues } from "@/hooks/transactions/useBookingValues";
 import { format } from "date-fns";
 import { usePropertySearch } from "@/hooks/properties/usePropertySearch";
 

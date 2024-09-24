@@ -11,8 +11,9 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format, isValid, parseISO } from "date-fns";
-import { useBookingValues } from "@/hooks/useBookingValues";
+import { useBookingValues } from "@/hooks/transactions/useBookingValues";
 import { AdjustedRatesType } from "@/constants/Property";
+import {useRouter} from "next/router";
 import Image from "next/image";
 
 interface RoomDetailsProps {
@@ -21,6 +22,7 @@ interface RoomDetailsProps {
 
 const RoomDetailsComponent: React.FC<RoomDetailsProps> = ({ room }) => {
   const { bookingValues, setBookingInfo } = useBookingValues();
+  const router = useRouter();
 
   const formatDate = useCallback((dateString: string | null) => {
     if (!dateString) return null;
@@ -37,14 +39,15 @@ const RoomDetailsComponent: React.FC<RoomDetailsProps> = ({ room }) => {
     [setBookingInfo],
   );
 
-  const handleBookNow = useCallback(() => {
+  const handleBookNow = useCallback(async () => {
     console.log(
       "Booking room:",
       room.roomId,
       "with booking values:",
       bookingValues,
     );
-  }, [room.roomId, bookingValues]);
+    await router.push(`/book?checkInDate=${bookingValues.checkInDate}&checkOutDate=${bookingValues.checkOutDate}&roomId=${room.roomId}`)
+  }, [room.roomId, bookingValues, router]);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-US", {

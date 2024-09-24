@@ -1,6 +1,6 @@
 "use client";
 
-import { useBookingValues } from "@/hooks/useBookingValues";
+import { useBookingValues } from "@/hooks/transactions/useBookingValues";
 import { currencyFormatter } from "@/utils/CurrencyFormatter";
 import { calculateDaysBetweenDates } from "@/utils/datesDifference";
 import { useRoomDetail } from "@/hooks/properties/useRoomDetail";

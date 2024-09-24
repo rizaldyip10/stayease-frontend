@@ -111,10 +111,16 @@ export type PropertyListingType = {
   content: AvailablePropertyType[];
 };
 
-export type RoomAvailabilityType = {
+export type RoomAvailabilityInfoType = {
   id: number;
-  room: RoomType;
   startDate: string;
   endDate: string;
-  isAvailable: boolean;
+  available: boolean;
+};
+
+export type RoomAvailabilityType = {
+  id: number;
+  name: string;
+  propertySummary: { propertyId: number; propertyName: string, imageUrl: string };
+  roomAvailability: RoomAvailabilityInfoType[];
 };

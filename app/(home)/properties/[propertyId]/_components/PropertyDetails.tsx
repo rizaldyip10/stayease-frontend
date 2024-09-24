@@ -9,7 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useBookingValues } from "@/hooks/useBookingValues";
+import { useBookingValues } from "@/hooks/transactions/useBookingValues";
 import RoomCard from "@/app/(home)/properties/[propertyId]/_components/RoomCard";
 import AvailabilityCalendar from "@/app/(home)/properties/[propertyId]/_components/AvailabilityCalendar";
 import { CurrentAvailablePropertyType } from "@/constants/Property";
