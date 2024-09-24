@@ -1,4 +1,5 @@
 import {
+  BadgePercent,
   BookOpenText,
   Calendar,
   ChartLine,
@@ -41,6 +42,11 @@ export const adminRoutes: SidebarRoutesType[] = [
     label: "Booking Request",
     href: "/dashboard/booking-request",
     icon: LibraryBig,
+  },
+  {
+    label: "Rates Management",
+    href: "/dashboard/rates",
+    icon: BadgePercent,
   },
   { label: "Reviews", href: "/dashboard/reviews", icon: Star },
   { label: "Reports", href: "/dashboard/reports", icon: ChartLine },

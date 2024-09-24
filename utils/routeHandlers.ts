@@ -19,6 +19,11 @@ const publicRoutes = new Set([
 const routeHandlers = new Map<string, RouteHandler>([
   ["/dashboard/user", (session) => session.user.userType === "USER"],
   ["/dashboard/properties", (session) => session.user.userType === "TENANT"],
+  ["/dashboard/rates", (session) => session.user.userType === "TENANT"],
+  [
+    "/dashboard/rates/settings",
+    (session) => session.user.userType === "TENANT",
+  ],
   [
     "/dashboard",
     (session) => ["USER", "TENANT"].includes(session.user.userType),

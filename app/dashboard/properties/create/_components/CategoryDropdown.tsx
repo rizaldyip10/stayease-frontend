@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { CategoryType } from "@/constants/Property";
-import propertyService from "@/services/propertyService";
+import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { ErrorMessage, Field } from "formik";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { usePropertyUtils } from "@/hooks/properties/usePropertyUtils";
+import CustomSelect from "@/components/CustomSelect";
 
 interface Category {
   id: number;
@@ -26,17 +23,16 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   onSelect,
   onCreateNew,
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState<number | string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [newCategoryName, setNewCategoryName] = useState("");
   const [isCreatingNew, setIsCreatingNew] = useState(false);
 
   console.log("categories in dropdown", categories);
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
+  const handleSelectChange = (value: string) => {
     if (value === "new") {
       setIsCreatingNew(true);
     } else {
-      setSelectedCategory(Number(value));
+      setSelectedCategory(value);
       onSelect(value);
     }
   };
@@ -52,15 +48,21 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   return (
     <div>
       {!isCreatingNew ? (
-        <select value={selectedCategory} onChange={handleSelectChange}>
-          <option value="">Select a category</option>
-          <option value="new">Create new category</option>
-          {categories?.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
+        <>
+          <CustomSelect
+            title="Select a category"
+            value={selectedCategory}
+            onChange={handleSelectChange}
+            options={[
+              { value: "", label: "Select a category" },
+              { value: "new", label: "Create new category" },
+              ...(categories?.map((category) => ({
+                value: category.id.toString(),
+                label: category.name,
+              })) ?? []),
+            ]}
+          />
+        </>
       ) : (
         <div className="flex flex-col gap-2">
           <div>

@@ -3,8 +3,6 @@ import UserProfileForm from "@/app/(user)/profile/_components/UserProfileForm";
 import { useSession } from "next-auth/react";
 import TenantProfileForm from "@/app/(user)/profile/_components/TenantProfileForm";
 import { useProfile } from "@/context/ProfileContext";
-import { useAlert } from "@/hooks/utils/useAlert";
-import AlertComponent from "@/components/AlertComponent";
 
 const ProfilePage: React.FC = () => {
   const {
