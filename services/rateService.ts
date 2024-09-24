@@ -89,7 +89,7 @@ const rateService = {
   ): Promise<LowestDailyRateType[]> => {
     const formattedStartDate = formatDate(startDate);
     const formattedEndDate = formatDate(endDate);
-    const url = config.endpoints.propertyUtils.getLowestDailyCumulativeRate;
+    const url = config.endpoints.rates.getLowestDailyCumulativeRate;
     try {
       const response = await axiosInterceptor.get(url, {
         params: {

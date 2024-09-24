@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
+  addDays,
   addMonths,
   endOfDay,
   format,
@@ -22,7 +23,7 @@ export const useAvailabilityCalendar = (
     isCheckOut && checkInDate
       ? format(checkInDate, "yyyy-MM-dd")
       : format(startOfDay(currentMonth), "yyyy-MM-dd");
-  const endDate = format(endOfDay(addMonths(currentMonth, 1)), "yyyy-MM-dd");
+  const endDate = format(endOfDay(addDays(currentMonth, 10)), "yyyy-MM-dd");
 
   const { data, error, isLoading } = useQuery({
     queryKey: [
@@ -33,18 +34,38 @@ export const useAvailabilityCalendar = (
       isCheckOut,
     ],
     queryFn: async () => {
-      if (isCheckOut && checkInDate) {
-        return await rateService.getLowestDailyCumulativeRate(
-          propertyId,
-          checkInDate,
-          new Date(endDate),
-        );
-      } else {
-        return await rateService.getLowestDailyRate(
-          propertyId,
-          new Date(startDate),
-          new Date(endDate),
-        );
+      try {
+        let result;
+        if (isCheckOut && checkInDate) {
+          console.log(
+            "Fetching cumulative rates:",
+            propertyId,
+            checkInDate,
+            new Date(endDate),
+          );
+          result = await rateService.getLowestDailyCumulativeRate(
+            propertyId,
+            checkInDate,
+            new Date(endDate),
+          );
+        } else {
+          console.log(
+            "Fetching daily rates:",
+            propertyId,
+            new Date(startDate),
+            new Date(endDate),
+          );
+          result = await rateService.getLowestDailyRate(
+            propertyId,
+            new Date(startDate),
+            new Date(endDate),
+          );
+        }
+        console.log("API result:", result);
+        return result || []; // Ensure we always return an array
+      } catch (error) {
+        console.error("Error fetching availability data:", error);
+        return []; // Return an empty array instead of undefined
       }
     },
     enabled: (!isCheckOut || (isCheckOut && !!checkInDate)) && !!currentMonth,
@@ -52,6 +73,9 @@ export const useAvailabilityCalendar = (
   });
 
   const formatPrice = (price: number) => {
+    if (price >= 1000000) {
+      return `${(price / 1000000).toFixed(1)}M`;
+    }
     const thousands = Math.round(price / 1000);
     return `${thousands}`;
   };
@@ -64,7 +88,8 @@ export const useAvailabilityCalendar = (
     const isBeforeCheckIn =
       isCheckOut && checkInDate && isBefore(day, checkInDate);
 
-    let className = "w-full h-full flex flex-col items-center justify-center";
+    let className =
+      "w-[70px] h-full flex flex-col items-center justify-center border-b border-r border-gray-200";
     if (!isCurrentMonth || isPastDate || isBeforeCheckIn) {
       className += " text-gray-300";
     } else if (dayData) {
@@ -96,5 +121,6 @@ export const useAvailabilityCalendar = (
     renderDay,
     isLoading,
     error,
+    data,
   };
 };
