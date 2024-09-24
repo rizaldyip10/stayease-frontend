@@ -13,7 +13,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { format, isValid, parseISO } from "date-fns";
 import { useBookingValues } from "@/hooks/transactions/useBookingValues";
 import { AdjustedRatesType } from "@/constants/Property";
-import {useRouter} from "next/router";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 interface RoomDetailsProps {
@@ -46,7 +46,9 @@ const RoomDetailsComponent: React.FC<RoomDetailsProps> = ({ room }) => {
       "with booking values:",
       bookingValues,
     );
-    await router.push(`/book?checkInDate=${bookingValues.checkInDate}&checkOutDate=${bookingValues.checkOutDate}&roomId=${room.roomId}`)
+    await router.push(
+      `/book?checkInDate=${bookingValues.checkInDate}&checkOutDate=${bookingValues.checkOutDate}&roomId=${room.roomId}`,
+    );
   }, [room.roomId, bookingValues, router]);
 
   const formatPrice = (price: number) => {

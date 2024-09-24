@@ -95,6 +95,9 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
                     0,
                   )}
                 </li>
+                <li className="text-sm mt-6">
+                  Leased by: {displayProperty.tenant}
+                </li>
               </ul>
             </TabsContent>
           </Tabs>
