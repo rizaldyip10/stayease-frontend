@@ -1,17 +1,14 @@
 "use client";
 import React from "react";
 import { Form, Formik } from "formik";
-import AlertComponent from "@/components/AlertComponent";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import FormikInput from "@/components/FormikInput";
 import {
   Select,
   SelectContent,
@@ -24,13 +21,8 @@ import { useSelectUserType } from "@/hooks/useSelectUserType";
 import FormInputs from "@/app/(auth)/_components/FormInputs";
 
 const SelectUserForm: React.FC = () => {
-  const {
-    initialValues,
-    validationSchema,
-    handleUserTypeSubmit,
-    alertInfo,
-    hideAlert,
-  } = useSelectUserType();
+  const { initialValues, validationSchema, handleUserTypeSubmit } =
+    useSelectUserType();
 
   return (
     <div className="flex items-center justify-center min-h-screen">
@@ -83,13 +75,6 @@ const SelectUserForm: React.FC = () => {
           )}
         </Formik>
       </div>
-      {alertInfo.show && (
-        <AlertComponent
-          type={alertInfo.type}
-          message={alertInfo.message}
-          onClose={hideAlert}
-        />
-      )}
     </div>
   );
 };

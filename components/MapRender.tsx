@@ -91,7 +91,7 @@ export const MapRender: React.FC<MapRenderProps> = ({
   }, [center]);
 
   return (
-    <div style={{ height: "400px", width: "100%", position: "relative" }}>
+    <div style={{ height: "100%", width: "100%", position: "relative" }}>
       {!viewOnly && isEditable && (
         <input
           id="pac-input"
@@ -113,7 +113,18 @@ export const MapRender: React.FC<MapRenderProps> = ({
           }}
         />
       )}
-      <div ref={ref} style={{ height: "100%", width: "100%" }} />
+      <div
+        ref={ref}
+        style={{
+          height: "100%",
+          width: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        }}
+      />
       {!viewOnly && (
         <div style={{ marginTop: "10px" }}>
           <a

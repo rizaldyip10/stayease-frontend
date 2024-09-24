@@ -18,11 +18,13 @@ export default function RoomDetailsPage({
   const checkInDate = searchParams.get("checkInDate");
   const date = checkInDate ? new Date(checkInDate) : new Date();
 
-  const { room, isLoading, error } = usePropertyDetails(
+  const { currentProperty, isLoading, error } = usePropertyDetails(
     propertyId,
     date,
     roomId,
   );
+
+  const room = currentProperty?.rooms?.find((room) => room.roomId === roomId);
 
   if (isLoading) {
     return <div>Loading...</div>;

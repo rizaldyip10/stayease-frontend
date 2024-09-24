@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import AlertComponent from "@/components/AlertComponent";
 import Image from "next/image";
 import { FormType, UserType } from "@/constants/Types";
 import useAuthForm from "@/hooks/useAuthForm";
@@ -26,14 +25,9 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
   formType: FormType;
 }) => {
   const [userType, setUserType] = useState<UserType>("USER");
-  const {
-    loading,
-    error,
-    alertInfo,
-    handleSubmit,
-    handleMultiStepSubmit,
-    hideAlert,
-  } = useAuthForm({ userType });
+  const { loading, error, handleSubmit, handleMultiStepSubmit } = useAuthForm({
+    userType,
+  });
   const { googleLogin } = useAuth();
   const { data: session } = useSession();
 
@@ -81,13 +75,6 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
         </div>
         <div className="overflow-hidden flex flex-col items-center justify-between text-left text-sm text-gray-900">
           <div className="flex flex-col items-center justify-start py-0 md:px-8">
-            {alertInfo.show && (
-              <AlertComponent
-                type={alertInfo.type as "success" | "error"}
-                message={alertInfo.message}
-                onClose={hideAlert}
-              />
-            )}
             {formType === "verify" && token && newUserType ? (
               <MultiStepForm
                 userType={newUserType}
@@ -104,8 +91,6 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
                 onSubmit={onSubmit}
                 googleLogin={googleLogin}
                 loading={loading}
-                alertInfo={alertInfo}
-                hideAlert={hideAlert}
               />
             )}
           </div>

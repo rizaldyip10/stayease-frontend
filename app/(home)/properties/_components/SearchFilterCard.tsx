@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import CustomSelect from "@/app/(home)/properties/_components/CustomSelect";
+import CustomSelect from "@/components/CustomSelect";
 import { CategoryType } from "@/constants/Property";
 import BudgetInput from "@/app/(home)/properties/_components/BudgetInput";
-import { CustomDatePicker } from "@/app/(home)/properties/_components/CustomDatePicker";
+import { CustomDatePicker } from "@/components/CustomDatePicker";
 import { FilterOptions } from "@/hooks/properties/usePropertyListings";
 import { Button } from "@/components/ui/button";
 import { addDays } from "date-fns";
@@ -70,6 +70,7 @@ const SearchFilterCard: React.FC<SearchFilterCardProps> = ({
         <div>
           <h3 className="font-semibold mb-2 text-blue-950">Location</h3>
           <CustomSelect
+            title="Select City"
             options={cities?.map((city) => ({ value: city, label: city }))}
             value={filters.city}
             onChange={(value) => handleInputChange("city", value)}
@@ -96,7 +97,7 @@ const SearchFilterCard: React.FC<SearchFilterCardProps> = ({
               onDateChange={handleStartDateChange}
               minDate={today}
               open={checkInOpen}
-              onOpenChange={setCheckInOpen}
+              setOpen={setCheckInOpen}
             />
             <CustomDatePicker
               title="Check-out"
@@ -108,7 +109,7 @@ const SearchFilterCard: React.FC<SearchFilterCardProps> = ({
                   : addDays(today, 1)
               }
               open={checkOutOpen}
-              onOpenChange={setCheckOutOpen}
+              setOpen={setCheckOutOpen}
             />
           </div>
         </div>
@@ -116,6 +117,7 @@ const SearchFilterCard: React.FC<SearchFilterCardProps> = ({
         <div className="mb-4">
           <h3 className="font-semibold mb-2 text-blue-950">Category</h3>
           <CustomSelect
+            title="Select Category"
             options={categories?.map((cat) => ({
               value: cat.id.toString(),
               label: cat.name.charAt(0).toUpperCase() + cat.name.slice(1),

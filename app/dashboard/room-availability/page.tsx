@@ -1,12 +1,13 @@
-import AvailabilityChart from "@/app/dashboard/room-availability/_components/AvailabilityChart";
+"use client";
+import React from "react";
+import RoomAvailability from "@/app/dashboard/room-availability/_components/RoomAvailability";
 
 const RoomAvailabilityPage = () => {
-    return (
-        <div className="w-full grid grid-cols-1 gap-y-5">
-            <h1 className="text-blue-950 font-bold text-2xl">Room Availability</h1>
-            <AvailabilityChart />
-        </div>
-    );
+  return (
+    <div>
+      <RoomAvailability />
+    </div>
+  );
 };
 
 export default RoomAvailabilityPage;

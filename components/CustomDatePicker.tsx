@@ -13,10 +13,10 @@ import {
 interface CustomDatePickerProps {
   title: string;
   date?: Date;
-  onDateChange: (date?: Date) => void;
+  onDateChange: (date: Date | undefined) => void;
   minDate?: Date;
   open?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  setOpen?: (open: boolean) => void;
 }
 
 export function CustomDatePicker({
@@ -25,17 +25,17 @@ export function CustomDatePicker({
   onDateChange,
   minDate,
   open,
-  onOpenChange,
+  setOpen,
 }: CustomDatePickerProps) {
   const handleSelect = (newDate: Date | undefined) => {
     onDateChange(newDate);
-    if (onOpenChange) {
-      onOpenChange(false);
+    if (setOpen) {
+      setOpen(false);
     }
   };
 
   return (
-    <Popover open={open} onOpenChange={onOpenChange}>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant={"outline"}
