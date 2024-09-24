@@ -7,6 +7,7 @@ import propertyService from "@/services/propertyService";
 export default async function middleware(request: NextRequest) {
   const session = await auth();
   const path = request.nextUrl.pathname;
+  console.log("session from middleware:", session);
 
   if (isPublicOrHomePage(path)) {
     return NextResponse.next();

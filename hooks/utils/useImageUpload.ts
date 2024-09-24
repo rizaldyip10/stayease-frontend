@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import propertyService from "@/services/propertyService";
-import { useAlert } from "@/hooks/utils/useAlert";
 import { profileService } from "@/services/profileService";
+import { useAlert } from "@/context/AlertContext";
 
 type ImageUploaderType = "profile" | "property";
 export const useImageUpload = (type: ImageUploaderType) => {

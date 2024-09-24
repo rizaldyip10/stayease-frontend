@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getInitialValues } from "@/utils/authInitialValues";
 import logger from "@/utils/logger";
-import ForgotPasswordButton from "@/app/(auth)/reset-password/_components/ForgotPasswordButton";
+import ChangeCredentialButton from "@/app/(user)/profile/settings/_components/ChangeCredentialButton";
 
 interface AuthCardProps {
   formType: FormType;
@@ -23,8 +23,6 @@ interface AuthCardProps {
   ) => void;
   googleLogin?: () => void;
   loading: boolean;
-  alertInfo: { show: boolean; type: AlertType; message: string };
-  hideAlert: () => void;
 }
 
 const AuthCard: React.FC<AuthCardProps> = ({
@@ -34,8 +32,6 @@ const AuthCard: React.FC<AuthCardProps> = ({
   onSubmit,
   googleLogin,
   loading,
-  alertInfo,
-  hideAlert,
 }) => {
   const router = useRouter();
   const initialValues = getInitialValues(formType);
@@ -96,15 +92,6 @@ const AuthCard: React.FC<AuthCardProps> = ({
         initialValues={initialValues}
         userType={userType}
       />
-
-      {alertInfo.show && (
-        <div
-          className={`text-${alertInfo.type === "success" ? "green" : "red"}-500`}
-        >
-          {alertInfo.message}
-        </div>
-      )}
-
       <div className="w-full relative mt-2">
         <hr className="bg-neutral-500 w-full relative" />
         <h1
@@ -130,7 +117,7 @@ const AuthCard: React.FC<AuthCardProps> = ({
         </p>
         <Link
           href="#"
-          className="text-sm font-bold text-blue-950"
+          className="text-sm font-bold text-blue-950 hover:underline"
           onClick={(e) =>
             handleNavigation(e, formType === "login" ? "/register" : "/login")
           }

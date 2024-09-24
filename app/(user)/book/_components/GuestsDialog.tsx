@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import GuestEditorBtn from "@/app/(user)/book/_components/GuestEditorBtn";
-import {useBookingValues} from "@/hooks/useBookingValues";
+import {useBookingValues} from "@/hooks/transactions/useBookingValues";
 
 const GuestsDialog = () => {
     const { bookingValues, setBookingInfo, save } = useBookingValues();

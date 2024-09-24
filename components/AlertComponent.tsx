@@ -2,7 +2,7 @@ import React from "react";
 import { AlertCircle, CheckCircle, X } from "lucide-react";
 
 interface AlertProps {
-  type: "success" | "error";
+  type: "success" | "error" | "warn" | "info";
   message: string;
   onClose: () => void;
 }
@@ -15,16 +15,34 @@ const AlertComponent: React.FC<AlertProps> = ({ type, message, onClose }) => {
         backgroundColor:
           type === "success"
             ? "rgba(220, 252, 231, 0.95)"
-            : "rgba(254, 226, 226, 0.95)",
+            : type === "error"
+              ? "rgba(254, 226, 226, 0.95)"
+              : type === "warn"
+                ? "rgba(255, 243, 205, 0.95)"
+                : "rgba(219, 234, 254, 0.95)",
       }}
     >
       <div className="flex items-center">
         {type === "success" ? (
           <CheckCircle className="text-green-500 mr-2" />
-        ) : (
+        ) : type === "error" ? (
           <AlertCircle className="text-red-500 mr-2" />
+        ) : type === "warn" ? (
+          <AlertCircle className="text-yellow-500 mr-2" />
+        ) : (
+          <AlertCircle className="text-blue-500 mr-2" />
         )}
-        <p className={type === "success" ? "text-green-700" : "text-red-700"}>
+        <p
+          className={
+            type === "success"
+              ? "text-green-700"
+              : type === "error"
+                ? "text-red-700"
+                : type === "warn"
+                  ? "text-yellow-700"
+                  : "text-blue-700"
+          }
+        >
           {message}
         </p>
       </div>

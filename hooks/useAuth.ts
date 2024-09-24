@@ -1,45 +1,18 @@
 "use client";
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { authService } from "@/services/authService";
-import { useRouter } from "next/navigation";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { UserType } from "@/constants/Types";
-import { AuthResponse, RegisterResponse } from "@/constants/Auth";
+import { RegisterResponse } from "@/constants/Auth";
 import { MultiStepFormValues } from "@/app/(auth)/_components/MultiStepForm";
 import { signIn as nextAuthSignIn, useSession } from "next-auth/react";
+import { useAlert } from "@/context/AlertContext";
 
 export function useAuth() {
-  const queryClient: QueryClient = useQueryClient();
-  const router: AppRouterInstance = useRouter();
+  const [error, setError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { data: session, status, update } = useSession();
-
-  const {
-    data: auth,
-    refetch,
-    isError,
-    error,
-  } = useQuery<AuthResponse, Error>({
-    queryKey: ["auth"],
-    // queryFn: authService.checkAuthStatus,
-    retry: false,
-    enabled: false,
-  });
-
-  useEffect(() => {
-    if (isError) {
-      queryClient.setQueryData(["auth"], null);
-      setIsLoading(false);
-    } else {
-      setIsLoading(false);
-    }
-  }, [isError, auth, queryClient]);
+  const { showAlert } = useAlert();
 
   const registerMutation = useMutation<
     RegisterResponse,
@@ -48,16 +21,12 @@ export function useAuth() {
   >({
     mutationFn: ({ email, userType }) => authService.register(email, userType),
     onSuccess: (data) => {
-      // Show success message
-      alert(data.message);
-      // TODO clear form
-      // TODO: Redirect to a "Check your email" page
-      router.push("/");
+      showAlert("success", data.message, "/");
     },
     onError: (error) => {
-      // Handle error (show error message, etc.)
       console.error("Registration failed:", error.message);
-      alert("Registration failed. Please try again.");
+      showAlert("error", "Registration failed. " + error.message);
+      setError(error);
     },
   });
 
@@ -68,54 +37,38 @@ export function useAuth() {
   >({
     mutationFn: ({ values, token }) => authService.verify(values, token),
     onSuccess: (data) => {
-      // Show success message
-      alert(data.statusMessage);
-      // Redirect to login page
-      router.push("/login");
+      showAlert("success", data.statusMessage, "/login");
     },
     onError: (error) => {
-      // Handle error (show error message, etc.)
       console.error("Verification failed:", error.message);
-      alert("Verification failed. Please try again.");
+      showAlert("error", "Verification failed. " + error.message);
+      setError(error);
     },
   });
 
   const handleGoogleLogin = async () => {
     try {
-      const result = await nextAuthSignIn("google", { redirect: false });
-      if (result?.error) {
-        throw new Error(result.error);
-      }
+      const result = await nextAuthSignIn("google", { redirect: true });
 
       if (session?.user?.isNewUser) {
-        // Redirect to user type selection page
-        router.push("/register/select-user-type");
+        showAlert(
+          "success",
+          "Please continue to select your user type.",
+          "/register/select-user-type",
+        );
       } else {
-        // Existing user, redirect to dashboard
-        router.push("/dashboard");
+        showAlert("success", "Login successful.", "/");
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error("Google login failed:", error);
-      // Handle error (e.g., show error message to user)
+      showAlert("error", "Google login failed. " + error);
+      setError(error);
     }
   };
 
   return {
-    auth: auth
-      ? {
-          id: auth.id,
-          email: auth.email,
-          userType: auth.userType,
-          isVerified: auth.isVerified,
-          firstName: auth.firstName,
-          lastName: auth.lastName,
-          isOAuth2: auth.isOAuth2,
-          // Omit token from the returned object
-        }
-      : null,
     isLoading,
-    isError,
-    error: error ? error.message : null,
+    error,
     register: registerMutation.mutate,
     verify: verifyMutation.mutate,
     googleLogin: handleGoogleLogin,

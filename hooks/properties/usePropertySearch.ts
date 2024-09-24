@@ -2,7 +2,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { FilterOptions } from "@/hooks/properties/usePropertyListings";
 import { parseISO, isValid, format } from "date-fns";
-import { useBookingValues } from "@/hooks/useBookingValues";
+import { useBookingValues } from "@/hooks/transactions/useBookingValues";
 
 export const usePropertySearch = () => {
   const searchParams = useSearchParams();

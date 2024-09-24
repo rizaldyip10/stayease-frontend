@@ -11,18 +11,19 @@ export const useForgotPassword = () => {
   const { showAlert } = useAlert();
   const router = useRouter();
 
-  const forgotPassword = async (email: string) => {
+  const forgotPassword = async (email: string): Promise<any> => {
     setIsLoading(true);
     setError(null);
     setIsSuccess(false);
 
     try {
-      await authService.forgotPassword(email);
+      const response = await authService.forgotPassword(email);
       setIsSuccess(true);
       showAlert(
         "success",
         "Password reset instructions sent! Please check your email.",
       );
+      return response;
     } catch (err: any) {
       if (err.response && err.response.data && err.response.data.message) {
         setError(err.response.data.message);
@@ -38,19 +39,20 @@ export const useForgotPassword = () => {
   const resetPassword = async (
     token: string,
     passwordValues: ForgotPasswordValues,
-  ) => {
+  ): Promise<any> => {
     setIsLoading(true);
     setError(null);
     setIsSuccess(false);
 
     try {
-      await authService.resetPassword(token, passwordValues);
+      const response = await authService.resetPassword(token, passwordValues);
       setIsSuccess(true);
       showAlert(
         "success",
         "Password reset successful! Please log in.",
         "/login",
       );
+      return response;
     } catch (err: any) {
       if (err.response && err.response.data && err.response.data.message) {
         setError(err.response.data.message);

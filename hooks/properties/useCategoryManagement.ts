@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
-import { useAlert } from "@/hooks/utils/useAlert";
 import { CategoryType } from "@/constants/Property";
 import propertyService from "@/services/propertyService";
+import { useAlert } from "@/context/AlertContext";
 
 export const useCategoryManagement = (
   categories: CategoryType[],

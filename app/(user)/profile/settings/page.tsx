@@ -1,9 +1,10 @@
 import React from "react";
+import Settings from "@/app/(user)/profile/settings/_components/Settings";
 
 const SettingsPage: React.FC = () => {
   return (
     <div>
-      <h1>Settings Page</h1>
+      <Settings />
     </div>
   );
 };
