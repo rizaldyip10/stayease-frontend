@@ -2,10 +2,10 @@ import React, { useCallback, useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import CustomSelect from "@/components/CustomSelect";
 import { ManualRateForm } from "./ManualRateForm";
-import { useTenantProperties } from "@/hooks/useTenantProperties";
 import { RateRequest, RateResponse } from "@/services/rateService";
-import { usePeakSeasonRate } from "@/hooks/usePeakSeasonRate";
+import { usePeakSeasonRate } from "@/hooks/reports/usePeakSeasonRate";
 import logger from "@/utils/logger";
+import { useTenantProperties } from "@/hooks/properties/useTenantProperties";
 
 interface RatesManagementProps {
   isEditing: boolean;

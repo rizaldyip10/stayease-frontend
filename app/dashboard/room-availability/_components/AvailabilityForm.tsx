@@ -6,8 +6,8 @@ import { formatDate } from "@/utils/dateFormatter";
 import * as yup from "yup";
 import CustomSelect from "@/components/CustomSelect";
 import { usePropertyData } from "@/hooks/properties/usePropertyData";
-import { useTenantProperties } from "@/hooks/useTenantProperties";
 import { CustomDatePicker } from "@/components/CustomDatePicker";
+import { useTenantProperties } from "@/hooks/properties/useTenantProperties";
 
 interface AvailabilityFormProps {
   onSubmit: (roomId: number, startDate: Date, endDate: Date) => void;

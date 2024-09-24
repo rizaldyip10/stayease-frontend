@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useRoomAvailability } from "@/hooks/useRoomAvailability";
+import { useRoomAvailability } from "@/hooks/reports/useRoomAvailability";
 import AvailabilityDialog from "./AvailabilityDialog";
 import { Button } from "@/components/ui/button";
 import NoResultsFound from "@/components/NoResultsFound";

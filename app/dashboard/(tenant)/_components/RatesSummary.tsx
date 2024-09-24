@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { RateResponse } from "@/services/rateService";
-import { usePeakSeasonRate } from "@/hooks/usePeakSeasonRate";
+import { usePeakSeasonRate } from "@/hooks/reports/usePeakSeasonRate";
 import { GearIcon } from "@radix-ui/react-icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import RatesCard from "@/app/dashboard/(tenant)/_components/RatesCard";

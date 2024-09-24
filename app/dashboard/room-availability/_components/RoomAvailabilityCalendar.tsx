@@ -6,7 +6,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from "@fullcalendar/list";
 import multiMonthPlugin from "@fullcalendar/multimonth";
 import { TenantRoomAvailabilityType } from "@/services/availabilityService";
-import { useRoomAvailabilityCalendarConfig } from "@/hooks/useRoomAvailabilityCalendarConfig";
+import { useRoomAvailabilityCalendarConfig } from "@/hooks/reports/useRoomAvailabilityCalendarConfig";
 
 interface RoomAvailabilityCalendarProps {
   availabilityData: TenantRoomAvailabilityType[];

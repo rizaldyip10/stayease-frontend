@@ -4,12 +4,12 @@ import { Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useTenantProperties } from "@/hooks/useTenantProperties";
 import { AdjustedRatesType, PropertyAndRoomType } from "@/constants/Property";
 import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
 import { currencyFormatter } from "@/utils/CurrencyFormatter";
 import Link from "next/link";
 import RoomTab from "@/app/dashboard/(tenant)/_components/RoomTab";
+import { useTenantProperties } from "@/hooks/properties/useTenantProperties";
 
 interface Room {
   id: number;

@@ -13,8 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 import React, { FC } from "react";
 import { useAlert } from "@/context/AlertContext";
-import { usePeakSeasonRate } from "@/hooks/usePeakSeasonRate";
-import { useRoomAvailability } from "@/hooks/useRoomAvailability";
+import { usePeakSeasonRate } from "@/hooks/reports/usePeakSeasonRate";
+import { useRoomAvailability } from "@/hooks/reports/useRoomAvailability";
 
 interface DeleteDialogProps {
   rateId?: number;
