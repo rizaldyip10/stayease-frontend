@@ -10,27 +10,36 @@ import {
 } from "@/components/ui/dropdown-menu";
 import React from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { signOut } from "@/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RxDashboard } from "react-icons/rx";
+import { useProfile } from "@/context/ProfileContext";
+import { useSession } from "next-auth/react";
 
 interface ProfileBtnProps {
   isDashboard: boolean;
 }
 
 const ProfileBtn: React.FC = () => {
+  // const { profile, isLoading, error } = useProfile();
   const { data: session } = useSession();
+
+  console.log("session: ", session);
+
+  // const initials =
+  //   (profile?.firstName?.[0] ?? "") + (profile?.lastName?.[0] ?? "");
 
   const initials =
     (session?.user?.firstName?.[0] ?? "") +
     (session?.user?.lastName?.[0] ?? "");
 
+  // console.log("profile: ", profile);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex items-center">
         <Avatar className="w-10 h-10">
-          <AvatarImage src={session?.user.avatar} alt="avatar" />
+          <AvatarImage src={session?.user?.avatarUrl} alt="avatar" />
           <AvatarFallback> {initials}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
