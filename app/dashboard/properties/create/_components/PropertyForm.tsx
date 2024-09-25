@@ -39,10 +39,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
   setCategories,
 }) => {
   const { values, setFieldValue } = useFormikContext<PropertyFormValues>();
-  const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
-  const [location, setLocation] = useState({ lat: 0, lng: 0 });
-  const [searchBox, setSearchBox] =
-    useState<google.maps.places.Autocomplete | null>(null);
+  useState<google.maps.places.Autocomplete | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
   const propertyFields = [

@@ -184,13 +184,6 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
                 </Button>
               </CardContent>
             </Card>
-            {/*<Card>*/}
-            {/*  <CardContent className="p-4">*/}
-            {/*    <div className="w-full h-64 bg-gray-200 flex items-center justify-center">*/}
-            {/*      Map Placeholder*/}
-            {/*    </div>*/}
-            {/*  </CardContent>*/}
-            {/*</Card>*/}
           </div>
         </div>
       </div>
