@@ -30,16 +30,85 @@ export const useInitMap = ({
       {
         center: initialCenter,
         zoom: 15,
-        disableDefaultUI: true,
+        disableDefaultUI: false,
         zoomControl: !viewOnly,
         fullscreenControl: !viewOnly,
+        mapTypeControlOptions: {
+          style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+          position: google.maps.ControlPosition.TOP_RIGHT,
+        },
         draggable: isEditable,
         clickableIcons: isEditable,
         mapId: apiKey,
         styles: mapStyles,
+        streetViewControl: false, // Disable Street View
+        mapTypeControl: false, // Disable Map/Satellite switch
+        zoomControlOptions: {
+          position: google.maps.ControlPosition.RIGHT_TOP,
+        },
       },
     );
+    addLocationButton(mapRef, isEditable);
   }, [initialCenter, isEditable, viewOnly, apiKey, mapStyles]);
 
   return { mapRef, initMap, apiKey };
+};
+
+const addLocationButton = (
+  mapRef: React.MutableRefObject<google.maps.Map | null>,
+  isEditable: boolean,
+) => {
+  if (mapRef.current && isEditable) {
+    // Create the My Location button
+    const locationButton = document.createElement("button");
+    locationButton.textContent = "My Location";
+
+    // Inline styles for the button
+    Object.assign(locationButton.style, {
+      backgroundColor: "white",
+      border: "none",
+      borderRadius: "5px",
+      boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.3)",
+      margin: "10px",
+      padding: "6px 12px",
+      fontSize: "12px",
+      fontWeight: "bold",
+      color: "#333",
+      cursor: "pointer",
+      textAlign: "center",
+    });
+
+    // Handle hover styles
+    locationButton.addEventListener("mouseover", () => {
+      locationButton.style.backgroundColor = "#f1f1f1";
+    });
+    locationButton.addEventListener("mouseout", () => {
+      locationButton.style.backgroundColor = "white";
+    });
+
+    // Add the button to the map
+    mapRef.current.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(
+      locationButton,
+    );
+
+    // Handle click event to center the map to user's location
+    locationButton.addEventListener("click", () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position: GeolocationPosition) => {
+            const pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+            mapRef.current?.setCenter(pos);
+          },
+          () => {
+            console.error("Error: The Geolocation service failed.");
+          },
+        );
+      } else {
+        console.error("Error: Your browser doesn't support geolocation.");
+      }
+    });
+  }
 };

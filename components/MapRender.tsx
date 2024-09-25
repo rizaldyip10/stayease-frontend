@@ -47,7 +47,7 @@ export const MapRender: React.FC<MapRenderProps> = ({
     if (mapContainerRef.current) {
       initMap();
       initMarker();
-      if (!viewOnly && isEditable) {
+      if (isEditable) {
         initSearchBox();
         getCurrentLocation();
       }
@@ -74,7 +74,7 @@ export const MapRender: React.FC<MapRenderProps> = ({
 
   return (
     <div style={{ height: "100%", width: "100%", position: "relative" }}>
-      {!viewOnly && isEditable && (
+      {isEditable && (
         <input
           id="pac-input"
           type="text"
