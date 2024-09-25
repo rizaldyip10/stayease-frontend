@@ -1,5 +1,12 @@
-import { useState, useCallback, useEffect, useRef } from "react";
-import { Wrapper, Status } from "@googlemaps/react-wrapper";
+import { AvailablePropertyType } from "@/constants/Property";
+import { useCallback, useState } from "react";
+import { useCurrentLocation } from "@/hooks/utils/map/useCurrentLocation";
+import { useInitMap } from "@/hooks/utils/map/useInitMap";
+import { useMarker } from "@/hooks/utils/map/useMarker";
+import { useSearchBox } from "@/hooks/utils/map/useSearchBox";
+import { usePropertyMarkers } from "@/hooks/utils/map/usePropertyMarkers";
+import { useMapEvents } from "@/hooks/utils/map/useMapEvents";
+import { Wrapper } from "@googlemaps/react-wrapper";
 
 interface MapCenter {
   lat: number;
@@ -11,6 +18,11 @@ interface MapConfig {
   onLocationChange: (lat: number, lng: number) => void;
   isEditable: boolean;
   viewOnly: boolean;
+  properties?: AvailablePropertyType[];
+  mapStyles?: google.maps.MapTypeStyle[];
+  onBoundsChanged?: () => void;
+  onZoomChanged?: () => void;
+  onDragEnd?: () => void;
 }
 
 export const useGoogleMaps = ({
@@ -18,16 +30,13 @@ export const useGoogleMaps = ({
   onLocationChange,
   isEditable,
   viewOnly,
+  properties,
+  mapStyles,
+  onBoundsChanged,
+  onZoomChanged,
+  onDragEnd,
 }: MapConfig) => {
   const [mapCenter, setMapCenter] = useState<MapCenter>(initialCenter);
-  const [searchBox, setSearchBox] =
-    useState<google.maps.places.SearchBox | null>(null);
-  const initialLocationSet = useRef(false);
-  const mapRef = useRef<google.maps.Map | null>(null);
-  const markerRef = useRef<google.maps.Marker | null>(null);
-
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
-  const libraries: ("places" | "marker")[] = ["places", "marker"];
 
   const handleLocationChange = useCallback(
     (newLocation: MapCenter) => {
@@ -37,69 +46,55 @@ export const useGoogleMaps = ({
     [onLocationChange],
   );
 
-  const getLocationLink = useCallback((lat: number, lng: number): string => {
+  // call the current location
+  const { getCurrentLocation } = useCurrentLocation({
+    onLocationChange: handleLocationChange,
+    isEditable,
+    viewOnly,
+  });
+
+  // call init map
+  const { mapRef, initMap, apiKey } = useInitMap({
+    initialCenter: mapCenter,
+    isEditable,
+    viewOnly,
+    mapStyles,
+  });
+
+  // call the marker
+  const { markerRef, initMarker } = useMarker({
+    mapRef,
+    initialCenter: mapCenter,
+    isEditable,
+    onLocationChange: handleLocationChange,
+  });
+
+  // call the search box
+  const { initSearchBox } = useSearchBox({
+    mapRef,
+    onLocationChange: handleLocationChange,
+  });
+
+  // for property markers
+  const { propertyMarkersRef } = usePropertyMarkers({
+    mapRef,
+    properties: properties ? properties : [],
+  });
+
+  // map events
+  useMapEvents({
+    mapRef,
+    onBoundsChanged,
+    onZoomChanged,
+    onDragEnd,
+  });
+
+  // get location link
+  const getLocationLink = useCallback((lat: number, lng: number) => {
     return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
   }, []);
 
-  const initSearchBox = useCallback(
-    (map: google.maps.Map) => {
-      const input = document.getElementById("pac-input") as HTMLInputElement;
-      if (input && !searchBox) {
-        const newSearchBox = new google.maps.places.SearchBox(input);
-        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-        setSearchBox(newSearchBox);
-
-        newSearchBox.addListener("places_changed", () => {
-          const places = newSearchBox.getPlaces();
-          if (places && places.length > 0) {
-            const place = places[0];
-            if (place.geometry && place.geometry.location) {
-              const newLocation = {
-                lat: place.geometry.location.lat(),
-                lng: place.geometry.location.lng(),
-              };
-              handleLocationChange(newLocation);
-              map.setCenter(newLocation);
-
-              // Update marker position
-              if (markerRef.current) {
-                markerRef.current.setPosition(newLocation);
-              }
-            }
-          }
-        });
-      }
-    },
-    [handleLocationChange, searchBox],
-  );
-
-  const getCurrentLocation = useCallback(() => {
-    if (navigator.geolocation && !initialLocationSet.current) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          handleLocationChange(pos);
-          initialLocationSet.current = true;
-        },
-        () => {
-          console.error("Error: The Geolocation service failed.");
-          initialLocationSet.current = true;
-        },
-      );
-    } else if (!navigator.geolocation) {
-      console.error("Error: Your browser doesn't support geolocation.");
-      initialLocationSet.current = true;
-    }
-  }, [handleLocationChange]);
-
-  useEffect(() => {
-    if (!viewOnly && isEditable && !initialLocationSet.current) {
-      getCurrentLocation();
-    }
-  }, [getCurrentLocation, viewOnly, isEditable]);
+  const libraries: ("places" | "marker")[] = ["places", "marker"];
 
   return {
     Wrapper,
@@ -110,9 +105,12 @@ export const useGoogleMaps = ({
     getLocationLink,
     isEditable,
     viewOnly,
+    initMap,
+    initMarker,
     initSearchBox,
-    searchBox,
+    getCurrentLocation,
     mapRef,
     markerRef,
+    propertyMarkersRef,
   };
 };

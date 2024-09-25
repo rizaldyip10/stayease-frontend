@@ -6,7 +6,13 @@ interface MapRenderProps {
   isEditable: boolean;
   viewOnly: boolean;
   getLocationLink: (lat: number, lng: number) => string;
-  initSearchBox: (map: google.maps.Map) => void;
+  initMap: () => void;
+  initMarker: () => void;
+  initSearchBox: () => void;
+  getCurrentLocation: () => void;
+  mapRef: React.MutableRefObject<google.maps.Map | null>;
+  markerRef: React.MutableRefObject<google.maps.Marker | null>;
+  propertyMarkersRef: React.MutableRefObject<google.maps.Marker[]>;
 }
 
 export const MapRender: React.FC<MapRenderProps> = ({
@@ -15,32 +21,16 @@ export const MapRender: React.FC<MapRenderProps> = ({
   isEditable,
   viewOnly,
   getLocationLink,
+  initMap,
+  initMarker,
   initSearchBox,
+  getCurrentLocation,
+  mapRef,
+  markerRef,
+  propertyMarkersRef,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<google.maps.Map | null>(null);
-  const markerRef = useRef<google.maps.Marker | null>(null);
-  const searchBoxInitialized = useRef(false);
-
-  const initMap = useCallback(() => {
-    if (ref.current && !mapRef.current) {
-      mapRef.current = new window.google.maps.Map(ref.current, {
-        center,
-        zoom: 15,
-        disableDefaultUI: true,
-        zoomControl: !viewOnly,
-        fullscreenControl: !viewOnly,
-        draggable: isEditable,
-        clickableIcons: isEditable,
-        mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_ID,
-      });
-
-      if (!viewOnly && isEditable && !searchBoxInitialized.current) {
-        initSearchBox(mapRef.current);
-        searchBoxInitialized.current = true;
-      }
-    }
-  }, [center, isEditable, viewOnly, initSearchBox]);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
 
   const updateMarkerAndMap = useCallback(
     (newPosition: google.maps.LatLngLiteral) => {
@@ -54,41 +44,33 @@ export const MapRender: React.FC<MapRenderProps> = ({
   );
 
   useEffect(() => {
-    initMap();
-  }, [initMap]);
-
-  useEffect(() => {
-    if (mapRef.current && !markerRef.current && !viewOnly) {
-      markerRef.current = new google.maps.Marker({
-        map: mapRef.current,
-        position: center,
-        draggable: isEditable,
-      });
-
-      if (isEditable) {
-        markerRef.current.addListener("dragend", () => {
-          const position = markerRef.current?.getPosition()?.toJSON();
-          if (position) {
-            updateMarkerAndMap(position);
-          }
-        });
-
-        mapRef.current.addListener("click", (e: google.maps.MapMouseEvent) => {
-          const clickedPos = e.latLng?.toJSON();
-          if (clickedPos) {
-            updateMarkerAndMap(clickedPos);
-          }
-        });
+    if (mapContainerRef.current) {
+      initMap();
+      initMarker();
+      if (!viewOnly && isEditable) {
+        initSearchBox();
+        getCurrentLocation();
       }
     }
-  }, [center, isEditable, viewOnly, updateMarkerAndMap]);
+  }, [
+    initMap,
+    initMarker,
+    initSearchBox,
+    getCurrentLocation,
+    isEditable,
+    viewOnly,
+  ]);
+
+  // useEffect(() => {
+  //   if (mapRef.current && markerRef.current) {
+  //     mapRef.current.setCenter(center);
+  //     markerRef.current.setPosition(center);
+  //   }
+  // }, [center, mapRef, markerRef]);
 
   useEffect(() => {
-    if (mapRef.current && markerRef.current) {
-      mapRef.current.setCenter(center);
-      markerRef.current.setPosition(center);
-    }
-  }, [center]);
+    updateMarkerAndMap(center);
+  }, []);
 
   return (
     <div style={{ height: "100%", width: "100%", position: "relative" }}>
@@ -114,7 +96,8 @@ export const MapRender: React.FC<MapRenderProps> = ({
         />
       )}
       <div
-        ref={ref}
+        id="map"
+        ref={mapContainerRef}
         style={{
           height: "100%",
           width: "100%",
