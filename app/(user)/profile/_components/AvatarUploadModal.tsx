@@ -10,6 +10,8 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import ImageDropZone from "@/components/ImageDropZone";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAlert } from "@/context/AlertContext";
+import { useSession } from "next-auth/react";
 
 interface AvatarUploadModalProps {
   isOpen: boolean;
@@ -21,9 +23,10 @@ const AvatarUploadModal: React.FC<AvatarUploadModalProps> = ({
   onClose,
 }) => {
   const { profile, uploadAvatar, removeAvatar } = useProfile();
+  const { data: session } = useSession();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(
-    profile?.avatarUrl,
+    session?.user?.avatarUrl,
   );
   const [isUploading, setIsUploading] = useState(false);
 

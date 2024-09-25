@@ -12,7 +12,7 @@ export const useImageUpload = (type: ImageUploaderType) => {
       file: File,
       fieldName: string,
       setFieldValue: (field: string, value: any) => void,
-    ): Promise<void> => {
+    ): Promise<string> => {
       try {
         const uploadFunction =
           type === "profile"
@@ -20,13 +20,15 @@ export const useImageUpload = (type: ImageUploaderType) => {
             : propertyService.uploadImage;
         const imageUrl = await uploadFunction(file);
         setFieldValue(fieldName, imageUrl);
+        showAlert("success", "Image uploaded successfully");
+        return imageUrl;
       } catch (error) {
         console.error("Error uploading image: ", error);
         showAlert("error", "Failed to upload image");
         throw error;
       }
     },
-    [showAlert],
+    [showAlert, type],
   );
 
   return { handleImageUpload };
