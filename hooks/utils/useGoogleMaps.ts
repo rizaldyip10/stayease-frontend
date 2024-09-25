@@ -66,6 +66,7 @@ export const useGoogleMaps = ({
     mapRef,
     initialCenter: mapCenter,
     isEditable,
+    viewOnly,
     onLocationChange: handleLocationChange,
   });
 

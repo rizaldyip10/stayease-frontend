@@ -39,7 +39,7 @@ export const useCurrentLocation = ({
 
   useEffect(() => {
     // If the map is editable and the current location hasn't been set yet, get the current location
-    if (!viewOnly && isEditable && !initialLocationSet.current) {
+    if ((viewOnly || isEditable) && !initialLocationSet.current) {
       getCurrentLocation();
     }
   }, [getCurrentLocation, viewOnly, isEditable]);

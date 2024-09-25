@@ -12,6 +12,7 @@ import PropertyListingSkeleton from "@/components/PropertyListingSkeleton";
 import PropertyListingCard from "@/components/PropertyListingCard";
 import CustomPagination from "@/app/(home)/properties/_components/CustomPagination";
 import NoResultsFound from "@/components/NoResultsFound";
+import MapComponent from "@/components/MapComponent";
 
 const PropertyListings: React.FC = () => {
   const { categories, cities } = usePropertyUtils();
@@ -26,10 +27,15 @@ const PropertyListings: React.FC = () => {
     updateSort,
     updatePage,
     resetFilters,
-    bookingValues,
   } = usePropertyListings();
 
   const [showFilters, setShowFilters] = useState(false);
+  const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
+
+  const handleLocationChange = useCallback((lat: number, lng: number) => {
+    setMapCenter({ lat, lng });
+    // You might want to update filters or fetch new properties based on this location
+  }, []);
 
   const handleFilterChange = useCallback(
     (newFilters: Partial<FilterOptions>) => {
@@ -63,7 +69,15 @@ const PropertyListings: React.FC = () => {
 
         <div className="lg:col-span-3">
           <div className="mb-4">
-            <div id="map" className="w-full h-64 bg-gray-200"></div>
+            <div className="w-full h-64">
+              <MapComponent
+                initialCenter={mapCenter}
+                onLocationChange={handleLocationChange}
+                isEditable={true}
+                viewOnly={true}
+                properties={properties}
+              />
+            </div>
           </div>
           <div className="mb-4 flex justify-between items-center">
             <Button

@@ -4,6 +4,7 @@ interface MarkerConfig {
   mapRef: React.MutableRefObject<google.maps.Map | null>;
   initialCenter: google.maps.LatLngLiteral;
   isEditable: boolean;
+  viewOnly: boolean;
   onLocationChange: (location: google.maps.LatLngLiteral) => void;
 }
 
@@ -11,6 +12,7 @@ export const useMarker = ({
   mapRef,
   initialCenter,
   isEditable,
+  viewOnly,
   onLocationChange,
 }: MarkerConfig) => {
   const markerRef = useRef<google.maps.Marker | null>(null);
@@ -32,7 +34,12 @@ export const useMarker = ({
     markerRef.current = new google.maps.Marker({
       map: mapRef.current,
       position: initialCenter,
-      draggable: isEditable,
+      draggable: isEditable && !viewOnly,
+      icon:
+        isEditable && viewOnly
+          ? "http://maps.google.com/mapfiles/ms/icons/pink-dot.png"
+          : undefined,
+      title: isEditable && viewOnly ? "You are here" : undefined,
     });
 
     if (isEditable) {
