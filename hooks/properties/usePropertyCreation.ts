@@ -2,7 +2,7 @@
 import { useCallback, useState } from "react";
 import { FormikHelpers } from "formik";
 import propertyService from "@/services/propertyService";
-import { usePropertyUtils } from "@/hooks/usePropertyUtils";
+import { useAlert } from "@/context/AlertContext";
 
 interface Category {
   id: number;
@@ -37,16 +37,7 @@ export const usePropertyCreation = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const fetchCategories = useCallback(async () => {
-    try {
-      const response = await propertyService.getAllCategories();
-      setCategories(response);
-    } catch (error) {
-      setError("Failed to fetch categories");
-      console.error("Error fetching categories:", error);
-    }
-  }, []);
+  const { showAlert } = useAlert();
 
   const handleImageUpload = useCallback(
     async (
@@ -58,12 +49,13 @@ export const usePropertyCreation = () => {
         const imageUrl = await propertyService.uploadImage(file);
         console.log("Image uploaded successfully, url:", imageUrl);
         setFieldValue(fieldName, imageUrl);
+        showAlert("success", "Image uploaded successfully");
       } catch (error) {
         console.error("Error uploading image: ", error);
-        throw error;
+        showAlert("error", "Failed to upload image");
       }
     },
-    [],
+    [showAlert],
   );
 
   const handleSubmit = async (
@@ -81,6 +73,7 @@ export const usePropertyCreation = () => {
         });
         console.log("New category created:", response);
         categoryId = response.id;
+        showAlert("success", "Category created successfully");
       }
 
       // Step 2: Create property (image already uploaded)
@@ -99,6 +92,7 @@ export const usePropertyCreation = () => {
       for (const room of values.rooms) {
         try {
           await propertyService.createRoom(newPropertyId, room);
+          console.log("Room created successfully:", room);
         } catch (error) {
           console.error(`Error creating room:`, error);
           setError(`Failed to create room: ${room.name}`);
@@ -107,12 +101,20 @@ export const usePropertyCreation = () => {
 
       console.log("Property and rooms created successfully");
       formikHelpers.setSubmitting(false);
-      alert("Property and rooms created successfully");
-      // TODO: Handle success (e.g., show success message, redirect)
+      showAlert(
+        "success",
+        "Property and rooms created successfully",
+        "/dashboard/properties",
+      );
     } catch (error) {
       setError("Failed to create property and rooms");
       console.error("Error submitting form:", error);
       formikHelpers.setSubmitting(false);
+      showAlert(
+        "error",
+        "Failed to create property and rooms",
+        "/dashboard/properties",
+      );
     } finally {
       setIsLoading(false);
     }

@@ -27,12 +27,12 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
   checkOutDate,
   onDateChange,
 }) => {
-  const { currentMonth, setCurrentMonth, renderDay, isLoading, error } =
+  const { currentMonth, setCurrentMonth, renderDay, isLoading, error, data } =
     useAvailabilityCalendar(propertyId, isCheckOut, checkInDate);
 
   const handleSelect = useCallback(
     (date: Date | undefined) => {
-      console.log("AvailabilityCalendar: Selected date:", date);
+      console.log("RoomAvailabilityCalendar: Selected date:", date);
       onSelect(date);
       if (date) {
         onDateChange(date);
@@ -43,6 +43,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading availability data</div>;
+  if (!data || data.length === 0) return <div>No availability data found</div>;
 
   return (
     <div>
@@ -109,7 +110,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
         <p>
           {isCheckOut
             ? "* Prices show cumulative total from check-in date"
-            : "* Prices are shown in thousands (e.g., 800 = 800,000)"}
+            : "* Prices are displayed in abbreviated form."}
         </p>
       </div>
     </div>

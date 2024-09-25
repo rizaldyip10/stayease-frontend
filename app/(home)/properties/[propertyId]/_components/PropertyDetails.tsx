@@ -9,13 +9,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useBookingValues } from "@/hooks/useBookingValues";
+import { useBookingValues } from "@/hooks/transactions/useBookingValues";
 import RoomCard from "@/app/(home)/properties/[propertyId]/_components/RoomCard";
-import AvailabilityCalendar from "@/components/AvailabilityCalendar";
+import AvailabilityCalendar from "@/app/(home)/properties/[propertyId]/_components/AvailabilityCalendar";
 import { CurrentAvailablePropertyType } from "@/constants/Property";
 import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
 import PropertyHeader from "@/app/(home)/properties/[propertyId]/_components/PropertyHeader";
 import { useDateSelection } from "@/hooks/useDateSelection";
+import MapComponent from "@/components/MapComponent";
 
 interface PropertyDetailsProps {
   property: CurrentAvailablePropertyType;
@@ -95,13 +96,26 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
                     0,
                   )}
                 </li>
+                <li className="text-sm mt-6">
+                  Leased by: {displayProperty.tenant}
+                </li>
               </ul>
             </TabsContent>
           </Tabs>
 
           <div className="mt-6">
             <h2 className="text-2xl font-semibold mb-4">Location</h2>
-            <div id="map" className="w-full h-64 bg-gray-200 mb-4"></div>
+            <div id="map" className="w-full h-64 bg-gray-200 mb-4">
+              <MapComponent
+                initialCenter={{
+                  lat: displayProperty.latitude,
+                  lng: displayProperty.longitude,
+                }}
+                onLocationChange={() => {}} // No-op function as we don't need to change location
+                isEditable={false}
+                viewOnly={false}
+              />
+            </div>
             <p>
               {displayProperty.address}, {displayProperty.city},{" "}
               {displayProperty.country}
@@ -170,13 +184,6 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
                 </Button>
               </CardContent>
             </Card>
-            {/*<Card>*/}
-            {/*  <CardContent className="p-4">*/}
-            {/*    <div className="w-full h-64 bg-gray-200 flex items-center justify-center">*/}
-            {/*      Map Placeholder*/}
-            {/*    </div>*/}
-            {/*  </CardContent>*/}
-            {/*</Card>*/}
           </div>
         </div>
       </div>

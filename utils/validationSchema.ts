@@ -2,6 +2,20 @@ import * as yup from "yup";
 import { whiteSpaceRegex } from "@/constants/WhiteSpaceRegex";
 import { FormType } from "@/constants/Types";
 import { UserType } from "@/hooks/useSelectUserType";
+export const getValidationSchema = (formType: FormType) => {
+  switch (formType) {
+    case "login":
+      return loginSchema;
+    case "register":
+      return registerSchema;
+    case "userType":
+      return userTypeSelectSchema;
+    case "forgotPassword":
+      return passwordSchema;
+    default:
+      return registerSchema;
+  }
+};
 
 export const loginSchema = yup.object().shape({
   email: yup
@@ -54,21 +68,6 @@ export const passwordSchema = yup.object().shape({
     .required("Password confirmation is required"),
 });
 
-export const getValidationSchema = (formType: FormType) => {
-  switch (formType) {
-    case "login":
-      return loginSchema;
-    case "register":
-      return registerSchema;
-    case "userType":
-      return userTypeSelectSchema;
-    case "forgotPassword":
-      return passwordSchema;
-    default:
-      return registerSchema;
-  }
-};
-
 export const createPropValidationSchema = yup.object().shape({
   property: yup.object().shape({
     name: yup.string().required("Required"),
@@ -100,15 +99,68 @@ export const createPropValidationSchema = yup.object().shape({
 });
 
 export const contactFormValidationSchema = yup.object().shape({
-  fullName: yup.string()
+  fullName: yup
+    .string()
     .required("Full name is required")
     .min(2, "Name must be at least 2 characters")
     .max(50, "Name must not exceed 50 characters"),
-  email: yup.string()
+  email: yup
+    .string()
     .email("Invalid email format")
     .required("Email is required"),
-  message: yup.string()
+  message: yup
+    .string()
     .required("Message is required")
     .min(255, "Message must be at least 25 characters")
     .max(1000, "Message must not exceed 1000 characters"),
 });
+
+export const manualRateValidationSchema = yup.object().shape({
+  startDate: yup
+    .date()
+    .required("Start date is required")
+    .min(new Date(), "Start date must be after today"),
+  endDate: yup
+    .date()
+    .required("End date is required")
+    .min(yup.ref("startDate"), "End date must be after start date"),
+  adjustmentRate: yup
+    .number()
+    .required("Adjustment rate is required")
+    .moreThan(0, "Must be more than 0"),
+  adjustmentType: yup
+    .string()
+    .oneOf(["PERCENTAGE", "FIXED"], "Invalid adjustment type")
+    .required("Adjustment type is required"),
+  reason: yup
+    .string()
+    .required("Reason is required")
+    .min(5, "Reason must be at least 5 characters"),
+});
+
+export const automaticRateValidationSchema = yup
+  .object()
+  .shape({
+    holidayRate: yup.number().min(0, "Must be a positive number"),
+    holidayRateType: yup
+      .string()
+      .oneOf(["PERCENTAGE", "FIXED"], "Invalid rate type"),
+    weekendRate: yup.number().min(0, "Must be a positive number"),
+    weekendRateType: yup
+      .string()
+      .oneOf(["PERCENTAGE", "FIXED"], "Invalid rate type"),
+  })
+  .test(
+    "at-least-one-rate",
+    "At least one rate (Holiday or Weekend) must be set",
+    function (values) {
+      return (
+        (values.holidayRate !== undefined &&
+          values.holidayRate > 0 &&
+          !!values.holidayRateType) ||
+        (values.weekendRate !== undefined &&
+          values.weekendRate > 0 &&
+          !!values.weekendRateType)
+      );
+    },
+  );

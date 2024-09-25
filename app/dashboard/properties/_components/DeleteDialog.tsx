@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 import { FC } from "react";
 import propertyService from "@/services/propertyService";
-import { useAlert } from "@/hooks/utils/useAlert";
+import { useAlert } from "@/context/AlertContext";
 
 interface DeleteDialogProps {
   propertyId: number;

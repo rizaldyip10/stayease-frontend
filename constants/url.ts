@@ -51,9 +51,7 @@ export const config = {
       getRoom: "/properties/{propertyId}/rooms/{roomId}",
       checkPropertyOwnership: "/properties/{propertyId}/check-ownership",
       getCurrentRoom: "/properties/{propertyId}/rooms/{roomId}/available",
-      getAdjustedRates: "/properties/{propertyId}/rates",
       getCurrentAvailableProperty: "/properties/{propertyId}/available",
-      getLowestDailyRate: "/properties/{propertyId}/rates/daily",
       getLowestDailyCumulativeRate:
         "/properties/{propertyId}/rates/daily/cumulative",
     },
@@ -63,6 +61,16 @@ export const config = {
       getAllCategories: "/properties/categories",
       getAllCities: "/properties/cities",
       getAllImages: "/properties/images",
+    },
+    rates: {
+      baseRoute: "/rates",
+      getLowestDailyRate: "/rates/daily",
+      getLowestDailyCumulativeRate: "/rates/daily/cumulative",
+      updateRates: "/rates/{rateId}",
+    },
+    availability: {
+      getTenantAvailability: "/properties/tenant/availability",
+      baseRoute: "/properties/availability",
     },
     bookings: {
       tenantBookings: "/bookings/tenant",
@@ -76,5 +84,8 @@ export const config = {
       paymentInfo: "/payments",
       uploadPayment: "/payments/payment-proof",
     },
+    reports: {
+      availabilityReports: "/properties/tenant/availability"
+    }
   },
 };

@@ -3,8 +3,8 @@
 import {Input} from "@/components/ui/input";
 import DatePicker from "@/components/DatePicker";
 import BookingCard from "@/app/(user)/profile/bookings/_components/BookingCard";
-import {useUserBookingList} from "@/hooks/useUserBookingList";
-import {useUserBookingsFilter} from "@/hooks/useUserBookingsFilter";
+import {useUserBookingList} from "@/hooks/transactions/useUserBookingList";
+import {useUserBookingsFilter} from "@/hooks/transactions/useUserBookingsFilter";
 import {Button} from "@/components/ui/button";
 
 const BookingList = () => {

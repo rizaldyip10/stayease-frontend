@@ -1,21 +1,14 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { CategoryType } from "@/constants/Property";
-import propertyService from "@/services/propertyService";
+import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
-import { ErrorMessage, Field } from "formik";
+import { ErrorMessage, Field, useFormikContext } from "formik";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { usePropertyUtils } from "@/hooks/properties/usePropertyUtils";
-
-interface Category {
-  id: number;
-  name: string;
-}
+import CustomSelect from "@/components/CustomSelect";
+import { CategoryType } from "@/constants/Property";
 
 interface CategoryDropdownProps {
-  categories: Category[] | undefined;
-  setCategories: React.Dispatch<React.SetStateAction<Category[]>>;
+  categories: CategoryType[] | undefined;
+  setCategories: React.Dispatch<React.SetStateAction<CategoryType[]>>;
   onSelect: (categoryId: string) => void;
   onCreateNew: (categoryName: string) => Promise<void>;
 }
@@ -26,11 +19,41 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   onSelect,
   onCreateNew,
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState<number | string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string | number>(
+    "select",
+  );
   const [newCategoryName, setNewCategoryName] = useState("");
   const [isCreatingNew, setIsCreatingNew] = useState(false);
+  const { setFieldValue } = useFormikContext();
 
   console.log("categories in dropdown", categories);
+  // const handleSelectChange = (value: string) => {
+  //   setSelectedCategory(value);
+  //   if (value === "new") {
+  //     setIsCreatingNew(true);
+  //   } else if (value !== "select") {
+  //     onSelect(value);
+  //     setFieldValue("property.categoryId", value);
+  //   }
+  // };
+  //
+  // const handleCreateNewCategory = async () => {
+  //   if (newCategoryName.trim()) {
+  //     try {
+  //       const newCategory = await onCreateNew(newCategoryName.trim());
+  //       if (newCategory) {
+  //         setCategories((prev) => [...prev!, newCategory]);
+  //         setSelectedCategory(newCategory.id.toString());
+  //         setFieldValue("property.categoryId", newCategory.id);
+  //       }
+  //       setIsCreatingNew(false);
+  //     } catch (error) {
+  //       console.error("Failed to create new category:", error);
+  //     }
+  //     setNewCategoryName("");
+  //   }
+  // };
+
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     if (value === "new") {
@@ -49,18 +72,45 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     }
   };
 
+  const selectOptions = [
+    { value: "select", label: "Select a category" },
+    { value: "new", label: "Create new category" },
+    ...(categories?.map((category) => ({
+      value: category.id.toString(),
+      label: category.name,
+    })) ?? []),
+  ];
+
   return (
     <div>
       {!isCreatingNew ? (
-        <select value={selectedCategory} onChange={handleSelectChange}>
-          <option value="">Select a category</option>
-          <option value="new">Create new category</option>
-          {categories?.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
+        <div className="flex flex-col gap-2.5">
+          <Label htmlFor="property.categoryId">Category</Label>
+          {/*<CustomSelect*/}
+          {/*  title="Select a category"*/}
+          {/*  value={selectedCategory}*/}
+          {/*  onChange={handleSelectChange}*/}
+          {/*  options={selectOptions}*/}
+          {/*/>*/}
+          <select
+            value={selectedCategory}
+            onChange={handleSelectChange}
+            className="h-full p-2 border rounded-lg"
+          >
+            <option value="">Select a category</option>
+            <option value="new">Create new category</option>
+            {categories?.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+          <ErrorMessage
+            name="property.categoryId"
+            component="div"
+            className="text-red-500"
+          />
+        </div>
       ) : (
         <div className="flex flex-col gap-2">
           <div>

@@ -11,7 +11,6 @@ import { createPropertyInitialValues } from "@/utils/PropertyInitialValues";
 import { usePropertyUtils } from "@/hooks/properties/usePropertyUtils";
 
 const CreateProperty = () => {
-  const [showCategoryForm, setShowCategoryForm] = useState(false);
   const { setCategories, isLoading, error, handleSubmit, handleImageUpload } =
     usePropertyCreation();
   const { categories } = usePropertyUtils();
