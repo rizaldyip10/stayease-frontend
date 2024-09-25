@@ -5,12 +5,12 @@ export type UserType = {
   lastName: string;
   phoneNumber: string;
   userType: string;
-  avatar: string | null;
+  avatarUrl: string | null;
   joinedAt: string;
 };
 
 export type TenantType = {
   user: UserType;
-  bussinessName: string;
+  businessName: string;
   registerDate: string;
 };

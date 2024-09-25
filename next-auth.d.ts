@@ -8,7 +8,7 @@ declare module "next-auth" {
       userType: "USER" | "TENANT";
       firstName: string;
       lastName: string;
-      avatar: string;
+      avatarUrl: string;
       isVerified: boolean;
       isOAuth2: boolean;
       accessToken: string;
@@ -25,7 +25,7 @@ declare module "next-auth" {
     userType: "USER" | "TENANT";
     firstName: string;
     lastName: string;
-    avatar: string;
+    avatarUrl: string;
     isVerified: boolean;
     isOAuth2: boolean;
     token: {
@@ -45,7 +45,7 @@ declare module "next-auth/jwt" {
     userType: "USER" | "TENANT";
     firstName: string;
     lastName: string;
-    avatar: string;
+    avatarUrl: string;
     isVerified: boolean;
     isOAuth2: boolean;
     accessToken: string;

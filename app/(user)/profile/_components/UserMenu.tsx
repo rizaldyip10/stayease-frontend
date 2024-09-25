@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import AvatarUploadModal from "@/app/(user)/profile/_components/AvatarUploadModal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useProfile } from "@/context/ProfileContext";
+import { useSession } from "next-auth/react";
 
 const UserMenu = () => {
   const { profile, isLoading, error } = useProfile();
+  const { data: session } = useSession();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   if (isLoading) return <div>Loading...</div>;
@@ -27,7 +29,7 @@ const UserMenu = () => {
       <div className="flex flex-col items-center gap-3 w-full border-b border-gray-200 pb-5">
         <div className="relative w-[150px] h-[150px] rounded-full flex items-center justify-center border border-gray-300 bg-white">
           <Avatar className="w-full h-full">
-            <AvatarImage src={profile?.avatarUrl} alt="avatar" />
+            <AvatarImage src={session?.user?.avatarUrl} alt="avatar" />
             <AvatarFallback className="text-4xl"> {fullName[0]}</AvatarFallback>
           </Avatar>
           <Button

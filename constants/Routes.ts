@@ -50,6 +50,7 @@ export const adminRoutes: SidebarRoutesType[] = [
   },
   { label: "Reviews", href: "/dashboard/reviews", icon: Star },
   { label: "Reports", href: "/dashboard/reports", icon: ChartLine },
+  { label: "Settings", href: "/profile/settings", icon: Settings },
 ];
 
 export const userMenuRoutes: SidebarRoutesType[] = [

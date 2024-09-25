@@ -78,14 +78,19 @@ export const profileService = {
   updateTenantProfile: async (
     values: Partial<TenantProfile>,
   ): Promise<UserProfile> => {
-    const response = await axiosInterceptor.put<UserProfile>(
-      config.endpoints.users.tenant,
-      values,
-    );
-    return transformUserProfile(response.data);
+    try {
+      const response = await axiosInterceptor.put<UserProfile>(
+        config.endpoints.users.tenant,
+        values,
+      );
+      return transformUserProfile(response.data);
+    } catch (error: any) {
+      logger.error("Failed to update tenant profile", { error });
+      throw error.response.data;
+    }
   },
 
-  uploadAvatar: async (file: File): Promise<UserImage> => {
+  uploadAvatar: async (file: File): Promise<string> => {
     const formData = new FormData();
     formData.append("image", file);
     const response = await axiosInterceptor.post<UserImageResponse>(
@@ -98,10 +103,7 @@ export const profileService = {
       },
     );
     console.log("response from profileService.uploadAvatar:", response);
-    return {
-      // this is actually correct, the API returns avatarUrl
-      avatarUrl: response.data.data.avatarUrl,
-    };
+    return response.data.data.avatarUrl;
   },
 
   setOrRemoveAvatar: async (
@@ -116,7 +118,7 @@ export const profileService = {
       // If userImage is not null, send a request to set the new avatar
       const response = await axiosInterceptor.put<UserImageResponse>(
         config.endpoints.users.avatar,
-        userImage,
+        { avatarUrl: userImage.avatarUrl },
       );
       console.log("response from profileService.setOrRemoveAvatar:", response);
       if (!response.data || !response.data.data.avatarUrl) {
