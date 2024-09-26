@@ -1,15 +1,15 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import CustomSelect from "@/components/CustomSelect";
 import { ManualRateForm } from "./ManualRateForm";
-import { RateRequest, RateResponse } from "@/services/rateService";
-import { usePeakSeasonRate } from "@/hooks/reports/usePeakSeasonRate";
+import { RateRequestType, RateResponseType } from "@/constants/Rates";
+import { usePeakSeasonRate } from "@/hooks/rates/usePeakSeasonRate";
 import logger from "@/utils/logger";
 import { useTenantProperties } from "@/hooks/properties/useTenantProperties";
 
 interface RatesManagementProps {
   isEditing: boolean;
-  selectedRate?: RateResponse;
+  selectedRate?: RateResponseType;
   onClose: () => void;
 }
 
@@ -38,7 +38,7 @@ export const RatesManagement: React.FC<RatesManagementProps> = ({
   }, [isEditing, selectedRate]);
 
   const handleSubmit = useCallback(
-    (data: RateRequest) => {
+    (data: RateRequestType) => {
       if (isEditing && selectedRate) {
         try {
           updateRate(selectedRate.rateId, data);

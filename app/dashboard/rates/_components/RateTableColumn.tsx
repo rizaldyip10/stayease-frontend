@@ -2,13 +2,13 @@ import * as React from "react";
 import { ColumnDef } from "@tanstack/table-core";
 import { ArrowUpDown, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { RateResponse } from "@/services/rateService";
+import { RateResponseType } from "@/constants/Rates";
 import { formatDate } from "@/utils/dateFormatter";
 import RateDeleteDialog from "@/app/dashboard/rates/_components/RateDeleteDialog";
 import { currencyFormatter } from "@/utils/CurrencyFormatter";
 import RateSettingDialog from "@/app/dashboard/rates/_components/setting/RateSettingDialog";
 
-export const RateColumns: ColumnDef<RateResponse>[] = [
+export const RateColumns: ColumnDef<RateResponseType>[] = [
   {
     id: "propertyName",
     accessorKey: "propertySummary.propertyName",

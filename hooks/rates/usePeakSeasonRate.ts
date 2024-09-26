@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import rateService, { RateRequest, RateResponse } from "@/services/rateService";
+import { RateRequestType, RateResponseType } from "@/constants/Rates";
 import { useAlert } from "@/context/AlertContext";
 import logger from "@/utils/logger";
+import rateService from "@/services/rateService";
 
 export const usePeakSeasonRate = () => {
-  const [rates, setRates] = useState<RateResponse[]>([]);
+  const [rates, setRates] = useState<RateResponseType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { showAlert } = useAlert();
@@ -25,7 +26,7 @@ export const usePeakSeasonRate = () => {
   }, [showAlert]);
 
   const createRate = useCallback(
-    async (propertyId: number, rateData: RateRequest) => {
+    async (propertyId: number, rateData: RateRequestType) => {
       setIsLoading(true);
       setError(null);
       try {
@@ -45,7 +46,7 @@ export const usePeakSeasonRate = () => {
   );
 
   const updateRate = useCallback(
-    async (rateId: number, rateData: RateRequest) => {
+    async (rateId: number, rateData: RateRequestType) => {
       setIsLoading(true);
       setError(null);
       try {

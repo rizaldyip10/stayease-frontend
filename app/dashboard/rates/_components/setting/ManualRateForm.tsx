@@ -12,13 +12,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CustomDatePicker } from "@/components/CustomDatePicker";
-import { RateRequest } from "@/services/rateService";
+import { RateRequestType } from "@/constants/Rates";
 import { manualRateValidationSchema } from "@/utils/validationSchema";
 import { formatDate } from "@/utils/dateFormatter";
 
 interface ManualRateFormProps {
-  onSubmit: (data: RateRequest) => void;
-  initialData?: RateRequest;
+  onSubmit: (data: RateRequestType) => void;
+  initialData?: RateRequestType;
 }
 export const ManualRateForm: React.FC<ManualRateFormProps> = ({
   onSubmit,

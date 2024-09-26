@@ -2,12 +2,12 @@
 
 import RateTableHeader from "@/app/dashboard/rates/_components/RateTableHeader";
 import DataTable from "@/components/ui/data-table";
-import { RateResponse } from "@/services/rateService";
+import { RateResponseType } from "@/constants/Rates";
 import { RateColumns } from "@/app/dashboard/rates/_components/RateTableColumn";
 import React from "react";
 
 interface RateTableProps {
-  rates: RateResponse[];
+  rates: RateResponseType[];
   isLoading: boolean;
 }
 
