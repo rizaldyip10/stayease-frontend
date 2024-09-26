@@ -7,7 +7,7 @@ import { AutoRateRequestType, AutoRateResponseType } from "@/constants/Rates";
 import { Switch } from "@/components/ui/switch";
 import { autoRateSettingValidationSchema } from "@/utils/validationSchema";
 import RateDeleteDialog from "@/app/dashboard/rates/_components/RateDeleteDialog";
-import TypeSelect from "@/app/dashboard/rates/_components/setting/TypeSelect";
+import TypeSelect from "@/components/TypeSelect";
 
 export const typeItems = [
   { value: "PERCENTAGE", label: "Percentage" },
@@ -106,25 +106,11 @@ export const AutomaticRateForm: React.FC<AutomaticRateFormProps> = ({
                     />
                   </div>
                   <div className="flex-1">
-                    <Label htmlFor="holidayAdjustmentType">
-                      Holiday Adjustment Rate Type
-                    </Label>
-                    <Field name="holidayAdjustmentType">
-                      {({ field }: FieldProps) => (
-                        <TypeSelect
-                          onValueChange={(value) =>
-                            setFieldValue("holidayAdjustmentType", value)
-                          }
-                          value={field.value || undefined}
-                          placeholder="Select type"
-                          items={typeItems}
-                        />
-                      )}
-                    </Field>
-                    <ErrorMessage
+                    <TypeSelect
                       name="holidayAdjustmentType"
-                      component="div"
-                      className="text-red-500 text-sm"
+                      label="Holiday Adjustment Type"
+                      placeholder="Select type"
+                      options={typeItems}
                     />
                   </div>
                 </div>
@@ -157,25 +143,11 @@ export const AutomaticRateForm: React.FC<AutomaticRateFormProps> = ({
                     />
                   </div>
                   <div className="flex-1">
-                    <Label htmlFor="longWeekendAdjustmentType">
-                      Long Weekend Adjustment Rate Type
-                    </Label>
-                    <Field name="longWeekendAdjustmentType">
-                      {({ field }: FieldProps) => (
-                        <TypeSelect
-                          onValueChange={(value) =>
-                            setFieldValue("longWeekendAdjustmentType", value)
-                          }
-                          value={field.value || undefined}
-                          placeholder="Select type"
-                          items={typeItems}
-                        />
-                      )}
-                    </Field>
-                    <ErrorMessage
+                    <TypeSelect
                       name="longWeekendAdjustmentType"
-                      component="div"
-                      className="text-red-500 text-sm"
+                      label="Long Weekend Adjustment Type"
+                      placeholder="Select type"
+                      options={typeItems}
                     />
                   </div>
                 </div>

@@ -31,12 +31,16 @@ const RatesTableSummary = () => {
         </TabsList>
         <TabsContent value="manual">
           <div className="mt-5">
-            <RateTable rates={manualRates} isLoading={isLoading} />
+            <RateTable rates={manualRates} isLoading={isLoading} isManualRate />
           </div>
         </TabsContent>
         <TabsContent value="auto">
           <div className="mt-5">
-            <RateTable rates={automaticRates} isLoading={isLoading} />
+            <RateTable
+              rates={automaticRates}
+              isLoading={isLoading}
+              isManualRate={false}
+            />
           </div>
         </TabsContent>
       </Tabs>

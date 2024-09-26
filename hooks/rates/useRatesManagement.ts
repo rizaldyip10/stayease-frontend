@@ -3,15 +3,24 @@ import { useAlert } from "@/context/AlertContext";
 import { usePeakSeasonRate } from "./usePeakSeasonRate";
 import { useAutoRateSetting } from "@/hooks/rates/useAutoRateSetting";
 import { AutoRateRequestType, RateRequestType } from "@/constants/Rates";
+import { h } from "preact";
 
-export const useRatesManagement = (initialPropertyId?: number) => {
+interface RatesManagementProps {
+  onClose?: () => void;
+  initialPropertyId?: number;
+}
+
+export const useRatesManagement = (
+  onClose: () => void,
+  initialPropertyId?: number,
+) => {
   const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(
     initialPropertyId || null,
   );
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { showAlert } = useAlert();
-  const { createRate, updateRate } = usePeakSeasonRate();
+  const { createRate, updateRate, fetchRates } = usePeakSeasonRate();
   const { autoRateSetting, updateAutoRateSetting, deactivateAutoRateSetting } =
     useAutoRateSetting(selectedPropertyId || 0);
 
@@ -23,6 +32,13 @@ export const useRatesManagement = (initialPropertyId?: number) => {
       setError(null);
     }
   }, []);
+
+  const handleSubmitSuccess = () => {
+    fetchRates();
+    if (onClose) {
+      onClose();
+    }
+  };
 
   const handleManualSubmit = useCallback(
     async (rateData: RateRequestType, isEditing: boolean, rateId?: number) => {
@@ -39,13 +55,20 @@ export const useRatesManagement = (initialPropertyId?: number) => {
           setError("Please select a property");
           return;
         }
+        handleSubmitSuccess();
       } catch (error: any) {
         setError("Failed to create rate" + error.response.data);
         console.error("Error creating rate:" + error.response.data);
         showAlert("error", "Failed to create rate: " + error.response.data);
       }
     },
-    [selectedPropertyId, showAlert, createRate, updateRate],
+    [
+      selectedPropertyId,
+      showAlert,
+      createRate,
+      updateRate,
+      handleSubmitSuccess,
+    ],
   );
 
   const handleAutoSubmit = useCallback(
@@ -67,11 +90,12 @@ export const useRatesManagement = (initialPropertyId?: number) => {
             "Failed to update rate setting: " + error.response.data,
           );
         }
+        handleSubmitSuccess();
       } else {
         setError("Please select a property");
       }
     },
-    [selectedPropertyId, showAlert, updateAutoRateSetting],
+    [selectedPropertyId, showAlert, updateAutoRateSetting, handleSubmitSuccess],
   );
 
   return {

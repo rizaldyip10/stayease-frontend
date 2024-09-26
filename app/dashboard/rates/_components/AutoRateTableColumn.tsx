@@ -1,15 +1,12 @@
 import * as React from "react";
 import { ColumnDef } from "@tanstack/table-core";
-import { ArrowUpDown, Edit } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RateResponseType } from "@/constants/Rates";
 import { formatDate } from "@/utils/dateFormatter";
-import RateDeleteDialog from "@/app/dashboard/rates/_components/RateDeleteDialog";
 import { currencyFormatter } from "@/utils/CurrencyFormatter";
-import RateSettingDialog from "@/app/dashboard/rates/_components/setting/RateSettingDialog";
-import { useState } from "react";
 
-export const RateColumns: ColumnDef<RateResponseType>[] = [
+export const AutoRateColumns: ColumnDef<RateResponseType>[] = [
   {
     id: "propertyName",
     accessorKey: "propertySummary.propertyName",
@@ -89,31 +86,26 @@ export const RateColumns: ColumnDef<RateResponseType>[] = [
     header: "Reason",
     cell: ({ row }) => <div>{row.getValue("reason")}</div>,
   },
-  {
-    id: "actions",
-    header: "More",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const rate = row.original;
-      const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-      return (
-        <div className="flex items-center gap-2">
-          <RateSettingDialog
-            isEditing={true}
-            selectedRate={rate}
-            trigger={
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <Edit className="h-4 w-4" />
-              </Button>
-            }
-          />
-          <RateDeleteDialog
-            rateId={rate.rateId}
-            isOpen={isDeleteDialogOpen}
-            onOpenChange={setIsDeleteDialogOpen}
-          />
-        </div>
-      );
-    },
-  },
+  // {
+  //   id: "actions",
+  //   header: "More",
+  //   enableHiding: false,
+  //   cell: ({ row }) => {
+  //     const rate = row.original;
+  //     return (
+  //       <div className="flex items-center gap-2">
+  //         <RateSettingDialog
+  //           isEditing={true}
+  //           selectedRate={rate}
+  //           trigger={
+  //             <Button variant="ghost" className="h-8 w-8 p-0">
+  //               <Edit className="h-4 w-4" />
+  //             </Button>
+  //           }
+  //         />
+  //         <RateDeleteDialog rateId={rate.rateId} />
+  //       </div>
+  //     );
+  //   },
+  // },
 ];

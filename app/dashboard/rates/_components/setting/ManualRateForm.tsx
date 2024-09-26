@@ -1,21 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { Formik, Form, Field, ErrorMessage, FieldProps } from "formik";
-import * as yup from "yup";
+import React, { useState } from "react";
+import { ErrorMessage, Field, FieldProps, Form, Formik } from "formik";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { CustomDatePicker } from "@/components/CustomDatePicker";
 import { RateRequestType } from "@/constants/Rates";
 import { manualRateValidationSchema } from "@/utils/validationSchema";
 import { formatDate } from "@/utils/dateFormatter";
-import TypeSelect from "@/app/dashboard/rates/_components/setting/TypeSelect";
+import TypeSelect from "@/components/TypeSelect";
 import { typeItems } from "@/app/dashboard/rates/_components/setting/AutomaticRateForm";
 
 interface ManualRateFormProps {
@@ -59,7 +51,6 @@ export const ManualRateForm: React.FC<ManualRateFormProps> = ({
       setFieldValue("endDate", formatDate(date));
     }
   };
-
   return (
     <Formik
       initialValues={
@@ -133,23 +124,11 @@ export const ManualRateForm: React.FC<ManualRateFormProps> = ({
               />
             </div>
             <div className="flex-1">
-              <Label htmlFor="adjustmentType">Adjustment Type</Label>
-              <Field name="adjustmentType">
-                {({ field }: FieldProps) => (
-                  <TypeSelect
-                    onValueChange={(value) =>
-                      setFieldValue("adjustmentType", value)
-                    }
-                    value={field.value || undefined}
-                    placeholder="Select type"
-                    items={typeItems}
-                  />
-                )}
-              </Field>
-              <ErrorMessage
+              <TypeSelect
                 name="adjustmentType"
-                component="div"
-                className="text-red-500 text-sm"
+                label="Adjustment Type"
+                placeholder="Select type"
+                options={typeItems}
               />
             </div>
           </div>

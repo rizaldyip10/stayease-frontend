@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import CustomSelect from "@/components/CustomSelect";
 import { ManualRateForm } from "./ManualRateForm";
@@ -7,6 +7,7 @@ import { RateResponseType } from "@/constants/Rates";
 import { useTenantProperties } from "@/hooks/properties/useTenantProperties";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRatesManagement } from "@/hooks/rates/useRatesManagement";
+import { usePeakSeasonRate } from "@/hooks/rates/usePeakSeasonRate";
 
 interface RatesManagementProps {
   isEditing: boolean;
@@ -20,6 +21,7 @@ export const RatesManagement: React.FC<RatesManagementProps> = ({
   onClose,
 }) => {
   const { properties } = useTenantProperties();
+  const { fetchRates } = usePeakSeasonRate();
   const {
     selectedPropertyId,
     error,
@@ -29,6 +31,10 @@ export const RatesManagement: React.FC<RatesManagementProps> = ({
     handleManualSubmit,
     handleAutoSubmit,
   } = useRatesManagement(
+    () => {
+      onClose();
+      fetchRates();
+    },
     isEditing ? selectedRate?.propertySummary.propertyId : undefined,
   );
 

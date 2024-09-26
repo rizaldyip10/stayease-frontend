@@ -15,7 +15,7 @@ interface DashboardRatesSummaryProps {
 export const DashboardRatesSummary: React.FC<DashboardRatesSummaryProps> = ({
   className,
 }) => {
-  const { rates, isLoading } = usePeakSeasonRate();
+  const { rates, isLoading, error } = usePeakSeasonRate();
   const [manualRates, setManualRates] = useState<RateResponseType[]>([]);
   const [automaticRates, setAutomaticRates] = useState<RateResponseType[]>([]);
 
@@ -34,7 +34,7 @@ export const DashboardRatesSummary: React.FC<DashboardRatesSummaryProps> = ({
       <CardHeader>
         <CardTitle className="flex justify-between items-center text-blue-950">
           <p>Peak Season Rates Summary</p>
-          <Link href="/dashboard/rates-settings" className="hidden md:block">
+          <Link href="/dashboard/rates" className="hidden md:block">
             <Button className="w-full bg-blue-950 text-appgray hover:bg-appgray hover:text-blue-950 mt-5">
               <GearIcon className="mr-2 h-4 w-4" /> Manage Rates
             </Button>

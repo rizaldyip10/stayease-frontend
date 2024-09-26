@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useAlert } from "@/context/AlertContext";
 import { usePeakSeasonRate } from "@/hooks/rates/usePeakSeasonRate";
 import { useRoomAvailability } from "@/hooks/reports/useRoomAvailability";
@@ -40,10 +40,15 @@ const RateDeleteDialog: FC<DeleteDialogProps> = ({
 }) => {
   const { showAlert } = useAlert();
   const { deleteRate } = usePeakSeasonRate();
+  const [open, setOpen] = useState(isOpen);
+
   const handleDelete = async () => {
     if (rateId) {
       try {
         await deleteRate(rateId);
+        showAlert("success", "Rate setting deleted successfully");
+        setOpen(false);
+        if (onOpenChange) onOpenChange(false); // Notify parent component
       } catch (error) {
         console.log(error);
         showAlert("error", "Failed to delete rate setting");
@@ -51,8 +56,12 @@ const RateDeleteDialog: FC<DeleteDialogProps> = ({
     }
   };
 
+  useEffect(() => {
+    setOpen(isOpen);
+  }, [isOpen]);
+
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         {!trigger ? (
           <Button variant="ghost" className="w-10 h-10 p-0">
