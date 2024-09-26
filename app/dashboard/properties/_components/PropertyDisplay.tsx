@@ -6,9 +6,9 @@ import RoomTable from "@/app/dashboard/properties/_components/RoomTable";
 
 const PropertyDisplay = () => {
     return (
-        <div className="w-full">
-            <Tabs defaultValue="apartments" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
+        <div>
+            <Tabs defaultValue="apartments">
+                <TabsList className="grid w-full md:max-w-max grid-cols-2">
                     <TabsTrigger value="apartments">Apartments</TabsTrigger>
                     <TabsTrigger value="rooms">Rooms</TabsTrigger>
                 </TabsList>
