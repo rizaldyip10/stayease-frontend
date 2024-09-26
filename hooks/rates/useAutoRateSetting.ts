@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AutoRateRequestType, AutoRateResponseType } from "@/constants/Rates";
 import { useAlert } from "@/context/AlertContext";
 import rateService from "@/services/rateService";
@@ -26,30 +26,33 @@ export const useAutoRateSetting = (propertyId: number) => {
     }
   }, [fetchedSetting, propertyId]);
 
-  const updateAutoRateSetting = async (data: AutoRateRequestType) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      await rateService.setOrUpdateAutoRateSetting(propertyId, data);
-      console.log("Auto rate setting updated successfully");
-      showAlert(
-        "success",
-        "Auto rate setting updated successfully",
-        "/dashboard/rates",
-      );
-    } catch (error: any) {
-      setError("Failed to update rate setting");
-      console.error("Error updating rate setting:", error.response.data);
-      showAlert(
-        "error",
-        "Failed to update rate setting: " + error.response.data,
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const updateAutoRateSetting = useCallback(
+    async (data: Partial<AutoRateRequestType>) => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        await rateService.setOrUpdateAutoRateSetting(propertyId, data);
+        console.log("Auto rate setting updated successfully");
+        showAlert(
+          "success",
+          "Auto rate setting updated successfully",
+          "/dashboard/rates",
+        );
+      } catch (error: any) {
+        setError("Failed to update rate setting");
+        console.error("Error updating rate setting:", error.response.data);
+        showAlert(
+          "error",
+          "Failed to update rate setting: " + error.response.data,
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [propertyId, showAlert],
+  );
 
-  const deactivateAutoRateSetting = async () => {
+  const deactivateAutoRateSetting = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -70,7 +73,7 @@ export const useAutoRateSetting = (propertyId: number) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [propertyId, showAlert]);
 
   return {
     autoRateSetting,

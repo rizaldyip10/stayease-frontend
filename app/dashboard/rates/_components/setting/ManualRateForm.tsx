@@ -15,6 +15,8 @@ import { CustomDatePicker } from "@/components/CustomDatePicker";
 import { RateRequestType } from "@/constants/Rates";
 import { manualRateValidationSchema } from "@/utils/validationSchema";
 import { formatDate } from "@/utils/dateFormatter";
+import TypeSelect from "@/app/dashboard/rates/_components/setting/TypeSelect";
+import { typeItems } from "@/app/dashboard/rates/_components/setting/AutomaticRateForm";
 
 interface ManualRateFormProps {
   onSubmit: (data: RateRequestType) => void;
@@ -134,20 +136,14 @@ export const ManualRateForm: React.FC<ManualRateFormProps> = ({
               <Label htmlFor="adjustmentType">Adjustment Type</Label>
               <Field name="adjustmentType">
                 {({ field }: FieldProps) => (
-                  <Select
+                  <TypeSelect
                     onValueChange={(value) =>
                       setFieldValue("adjustmentType", value)
                     }
-                    value={field.value}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="PERCENTAGE">Percentage</SelectItem>
-                      <SelectItem value="FIXED">Fixed Amount</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    value={field.value || undefined}
+                    placeholder="Select type"
+                    items={typeItems}
+                  />
                 )}
               </Field>
               <ErrorMessage

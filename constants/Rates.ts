@@ -21,20 +21,20 @@ export interface RateRequestType {
 }
 
 export interface AutoRateRequestType {
-  useAutoRate: boolean;
-  holidayRate: number;
-  holidayRateType: string;
-  weekendRate: number;
-  weekendRateType: string;
+  useAutoRates: boolean;
+  holidayAdjustmentRate: number | null;
+  holidayAdjustmentType: string | null;
+  longWeekendAdjustmentRate: number | null;
+  longWeekendAdjustmentType: string | null;
 }
 
 export interface AutoRateResponseType {
   settingId: number;
-  useAutoRate: boolean;
-  holidayRate: number;
-  holidayRateType: string;
-  weekendRate: number;
-  weekendRateType: string;
+  useAutoRates: boolean;
+  holidayAdjustmentRate: number;
+  holidayAdjustmentType: string;
+  longWeekendAdjustmentRate: number;
+  longWeekendAdjustmentType: string;
   validFrom: Date;
   PropertySummary: {
     propertyId: number;

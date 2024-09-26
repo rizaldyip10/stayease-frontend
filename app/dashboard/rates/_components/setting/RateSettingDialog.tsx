@@ -6,13 +6,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { RatesManagement } from "./RatesManagement";
-import { RateResponse } from "@/services/rateService";
+import { RateResponseType } from "@/constants/Rates";
 
 interface RateDialogProps {
   isEditing: boolean;
-  selectedRate?: RateResponse;
+  selectedRate?: RateResponseType;
   trigger: React.ReactNode;
   onRefresh?: () => void;
 }

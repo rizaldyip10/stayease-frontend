@@ -15,6 +15,7 @@ import React, { FC } from "react";
 import { useAlert } from "@/context/AlertContext";
 import { usePeakSeasonRate } from "@/hooks/rates/usePeakSeasonRate";
 import { useRoomAvailability } from "@/hooks/reports/useRoomAvailability";
+import { isConfigOption } from "jackspeak";
 
 interface DeleteDialogProps {
   rateId?: number;
@@ -24,6 +25,7 @@ interface DeleteDialogProps {
   trigger?: React.ReactNode;
   isOpen?: boolean;
   onClose?: () => void;
+  onOpenChange?: (isOpen: boolean) => void;
 }
 
 const RateDeleteDialog: FC<DeleteDialogProps> = ({
@@ -32,6 +34,9 @@ const RateDeleteDialog: FC<DeleteDialogProps> = ({
   title = "Delete Rate Setting",
   description = "Are you sure you want to delete this rate setting?",
   trigger,
+  isOpen,
+  onClose,
+  onOpenChange,
 }) => {
   const { showAlert } = useAlert();
   const { deleteRate } = usePeakSeasonRate();
@@ -47,7 +52,7 @@ const RateDeleteDialog: FC<DeleteDialogProps> = ({
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         {!trigger ? (
           <Button variant="ghost" className="w-10 h-10 p-0">
