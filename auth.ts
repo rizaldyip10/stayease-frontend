@@ -11,7 +11,6 @@ import {
   handleJwtCallback,
   handleSessionCallback,
 } from "@/utils/authHelpers";
-import { redirect } from "next/navigation";
 import authService from "@/services/authService";
 
 interface AuthCallbacks {
@@ -140,8 +139,10 @@ export const signOut = async (options?: {
     logger.info("Backend logout successful");
   } catch (error) {
     logger.error("Backend logout failed", { error });
+  } finally {
+    const event = new Event("visibilitychange");
+    document.dispatchEvent(event);
   }
-
   // Perform the original signOut from next-auth
   return nextAuthSignOut(options);
 };
