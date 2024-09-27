@@ -47,7 +47,7 @@ const ChangeCredentialModal: React.FC<ForgotPasswordModalProps> = ({
     setSubmitting(false);
     console.log("error", res);
     console.log("emailError", emailError);
-    if (res.statusCode == 200) {
+    if (!error && !emailError) {
       onClose();
     }
   };
