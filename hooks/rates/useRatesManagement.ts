@@ -34,10 +34,10 @@ export const useRatesManagement = (
   }, []);
 
   const handleSubmitSuccess = () => {
-    fetchRates();
     if (onClose) {
       onClose();
     }
+    fetchRates();
   };
 
   const handleManualSubmit = useCallback(
