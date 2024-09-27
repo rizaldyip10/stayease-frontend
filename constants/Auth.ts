@@ -7,7 +7,7 @@ export type SocialLoginRequest = {
   userType: string;
   firstName: string;
   lastName: string;
-  avatar: string;
+  avatarUrl: string;
   businessName?: string;
   taxId?: string;
 };
@@ -19,7 +19,7 @@ export interface User {
   firstName: string;
   lastName: string;
   phoneNumber: string;
-  avatar: string;
+  avatarUrl: string;
   joinedAt: Date;
   isVerified: boolean;
   isOAuth2: boolean;
@@ -36,7 +36,7 @@ export interface AuthResponse {
   isVerified: boolean;
   firstName: string;
   lastName: string;
-  avatar: string;
+  avatarUrl: string;
   isOAuth2: boolean;
   token: {
     accessToken: string;

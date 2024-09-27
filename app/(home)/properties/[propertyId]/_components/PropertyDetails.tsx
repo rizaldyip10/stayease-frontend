@@ -17,6 +17,7 @@ import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
 import PropertyHeader from "@/app/(home)/properties/[propertyId]/_components/PropertyHeader";
 import { useDateSelection } from "@/hooks/useDateSelection";
 import MapComponent from "@/components/MapComponent";
+import PropertyDetailsSkeleton from "@/app/(home)/properties/[propertyId]/_components/PropertyDetailsSkeleton";
 
 interface PropertyDetailsProps {
   property: CurrentAvailablePropertyType;
@@ -66,7 +67,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
     });
   }, []);
 
-  if (isLoading) return <div>Updating...</div>;
+  if (isLoading) return <PropertyDetailsSkeleton type="property" />;
   if (error) return <div>Error updating: {error.message}</div>;
 
   return (
@@ -184,13 +185,6 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
                 </Button>
               </CardContent>
             </Card>
-            {/*<Card>*/}
-            {/*  <CardContent className="p-4">*/}
-            {/*    <div className="w-full h-64 bg-gray-200 flex items-center justify-center">*/}
-            {/*      Map Placeholder*/}
-            {/*    </div>*/}
-            {/*  </CardContent>*/}
-            {/*</Card>*/}
           </div>
         </div>
       </div>

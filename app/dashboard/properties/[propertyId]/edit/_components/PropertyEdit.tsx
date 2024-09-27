@@ -1,20 +1,23 @@
 import React from "react";
 import PropertyEditForm from "./PropertyEditForm";
 import { usePropertyEdit } from "@/hooks/properties/usePropertyEdit";
+import GlobalLoading from "@/components/GlobalLoading";
 
 interface PropertyEditProps {
   propertyId: number;
 }
 const PropertyEdit: React.FC<PropertyEditProps> = ({ propertyId }) => {
-  const {
-    property,
-    rooms,
-    isLoading,
-    error,
-    handleSubmit,
-  } = usePropertyEdit(propertyId);
+  const { property, rooms, isLoading, error, handleSubmit } =
+    usePropertyEdit(propertyId);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center align-middle h-[200px]">
+        <GlobalLoading height={100} width={100} />
+      </div>
+    );
+  }
+
   if (error) return <div>Error: {error}</div>;
 
   return (

@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import GlobalError from "@/app/error";
+import ErrorPage from "@/app/error";
+import NotFound from "@/app/not-found";
+import ErrorComponent from "@/components/ErrorComponent";
 
 const TestGlobalError = () => {
   const [error, setError] = useState<Error | null>(new Error("Test Error"));
@@ -12,8 +14,10 @@ const TestGlobalError = () => {
   return (
     <div>
       {error ? (
-        <GlobalError error={error} reset={resetError} />
+        // <ErrorPage error={error} reset={resetError} />
+        <ErrorComponent message={error.message} />
       ) : (
+        // <NotFound />
         <div className="text-center">
           <h1 className="text-2xl font-bold">No Error</h1>
           <button

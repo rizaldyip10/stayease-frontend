@@ -2,12 +2,16 @@ import React from "react";
 import { Status, Wrapper } from "@googlemaps/react-wrapper";
 import { MapRender } from "./MapRender";
 import { useGoogleMaps } from "@/hooks/utils/useGoogleMaps";
+import { AvailablePropertyType } from "@/constants/Property";
+import GlobalLoading from "@/components/GlobalLoading";
+import ErrorComponent from "@/components/ErrorComponent";
 
 interface MapComponentProps {
   initialCenter: { lat: number; lng: number };
   onLocationChange: (lat: number, lng: number) => void;
   isEditable?: boolean;
   viewOnly?: boolean;
+  properties?: AvailablePropertyType[];
 }
 
 const MapComponent: React.FC<MapComponentProps> = ({
@@ -15,9 +19,9 @@ const MapComponent: React.FC<MapComponentProps> = ({
   onLocationChange,
   isEditable = true,
   viewOnly = false,
+  properties,
 }) => {
   const {
-    Wrapper,
     apiKey,
     libraries,
     mapCenter,
@@ -25,20 +29,31 @@ const MapComponent: React.FC<MapComponentProps> = ({
     getLocationLink,
     isEditable: isEditableMap,
     viewOnly: isViewOnly,
+    initMap,
+    initMarker,
     initSearchBox,
+    getCurrentLocation,
+    mapRef,
+    markerRef,
+    propertyMarkersRef,
   } = useGoogleMaps({
     initialCenter,
     onLocationChange,
     isEditable,
     viewOnly,
+    properties,
   });
 
   const render = (status: Status) => {
     switch (status) {
       case Status.LOADING:
-        return <div>Loading...</div>;
+        return (
+          <div className="flex items-center justify-center align-middle h-full">
+            <GlobalLoading height={50} width={50} />
+          </div>
+        );
       case Status.FAILURE:
-        return <div>Error loading Google Maps</div>;
+        return <ErrorComponent message="Failed to load map" />;
       case Status.SUCCESS:
         return (
           <MapRender
@@ -47,7 +62,13 @@ const MapComponent: React.FC<MapComponentProps> = ({
             isEditable={isEditableMap}
             viewOnly={isViewOnly}
             getLocationLink={getLocationLink}
+            initMap={initMap}
+            initMarker={initMarker}
             initSearchBox={initSearchBox}
+            getCurrentLocation={getCurrentLocation}
+            mapRef={mapRef}
+            markerRef={markerRef}
+            propertyMarkersRef={propertyMarkersRef}
           />
         );
     }

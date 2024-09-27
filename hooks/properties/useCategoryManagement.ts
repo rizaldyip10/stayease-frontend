@@ -7,6 +7,7 @@ export const useCategoryManagement = (
   categories: CategoryType[],
   initialCategoryId?: number,
 ) => {
+  const [categoriesState, setCategories] = useState<CategoryType[]>(categories);
   const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(
     null,
   );
@@ -38,8 +39,13 @@ export const useCategoryManagement = (
         const newCategory = await propertyService.createCategory({
           name: categoryName,
         });
+
         showAlert("success", "New category created successfully");
         setSelectedCategory(newCategory);
+        setCategories((prevCategories: CategoryType[]) => [
+          ...prevCategories,
+          newCategory,
+        ]);
         return newCategory;
       } catch (error) {
         showAlert("error", "Failed to create new category");

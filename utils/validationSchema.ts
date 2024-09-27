@@ -138,29 +138,59 @@ export const manualRateValidationSchema = yup.object().shape({
     .min(5, "Reason must be at least 5 characters"),
 });
 
-export const automaticRateValidationSchema = yup
+export const autoRateSettingValidationSchema = yup
   .object()
   .shape({
-    holidayRate: yup.number().min(0, "Must be a positive number"),
-    holidayRateType: yup
+    useAutoRates: yup.boolean(),
+    holidayAdjustmentRate: yup
+      .number()
+      .nullable()
+      .when("useAutoRates", {
+        is: true,
+        then: (schema) => schema.min(0, "Must be a positive number or empty"),
+        otherwise: (schema) => schema.strip(),
+      }),
+    holidayAdjustmentType: yup
       .string()
-      .oneOf(["PERCENTAGE", "FIXED"], "Invalid rate type"),
-    weekendRate: yup.number().min(0, "Must be a positive number"),
-    weekendRateType: yup
+      .nullable()
+      .when("holidayAdjustmentRate", {
+        is: (val: number | null) => val !== null && val > 0,
+        then: (schema) =>
+          schema.required(
+            "Holiday adjustment rate type is required when rate is set",
+          ),
+        otherwise: (schema) => schema.nullable(),
+      }),
+    longWeekendAdjustmentRate: yup
+      .number()
+      .nullable()
+      .when("useAutoRates", {
+        is: true,
+        then: (schema) => schema.min(0, "Must be a positive number or empty"),
+        otherwise: (schema) => schema.strip(),
+      }),
+    longWeekendAdjustmentType: yup
       .string()
-      .oneOf(["PERCENTAGE", "FIXED"], "Invalid rate type"),
+      .nullable()
+      .when("longWeekendAdjustmentRate", {
+        is: (val: number | null) => val !== null && val > 0,
+        then: (schema) =>
+          schema.required(
+            "Long weekend adjustment rate type is required when rate is set",
+          ),
+        otherwise: (schema) => schema.nullable(),
+      }),
   })
   .test(
     "at-least-one-rate",
-    "At least one rate (Holiday or Weekend) must be set",
+    "At least one of Holiday or Long Weekend rate must be set when auto rate is enabled",
     function (values) {
-      return (
-        (values.holidayRate !== undefined &&
-          values.holidayRate > 0 &&
-          !!values.holidayRateType) ||
-        (values.weekendRate !== undefined &&
-          values.weekendRate > 0 &&
-          !!values.weekendRateType)
-      );
+      if (values.useAutoRates) {
+        return (
+          (values.holidayAdjustmentRate ?? 0) > 0 ||
+          (values.longWeekendAdjustmentRate ?? 0) > 0
+        );
+      }
+      return true;
     },
   );
