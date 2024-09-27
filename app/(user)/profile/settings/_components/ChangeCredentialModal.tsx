@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import FormikInput from "@/components/FormikInput";
-import { useForgotPassword } from "@/hooks/useForgotPassword";
-import { useChangeEmail } from "@/hooks/useChangeEmail";
+import { useForgotPassword } from "@/hooks/auth/useForgotPassword";
+import { useChangeEmail } from "@/hooks/auth/useChangeEmail";
 
 interface ForgotPasswordModalProps {
   isOpen: boolean;

@@ -8,43 +8,11 @@ import { MultiStepFormValues } from "@/app/(auth)/_components/MultiStepForm";
 import { signIn as nextAuthSignIn, useSession } from "next-auth/react";
 import { useAlert } from "@/context/AlertContext";
 
-export function useAuth() {
+export function useGoogleLogin() {
   const [error, setError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { data: session, status, update } = useSession();
   const { showAlert } = useAlert();
-
-  const registerMutation = useMutation<
-    RegisterResponse,
-    Error,
-    { email: string; userType: UserType }
-  >({
-    mutationFn: ({ email, userType }) => authService.register(email, userType),
-    onSuccess: (data) => {
-      showAlert("success", data.message, "/");
-    },
-    onError: (error) => {
-      console.error("Registration failed:", error.message);
-      showAlert("error", "Registration failed. " + error.message);
-      setError(error);
-    },
-  });
-
-  const verifyMutation = useMutation<
-    any,
-    Error,
-    { token: string; values: MultiStepFormValues }
-  >({
-    mutationFn: ({ values, token }) => authService.verify(values, token),
-    onSuccess: (data) => {
-      showAlert("success", data.statusMessage, "/login");
-    },
-    onError: (error) => {
-      console.error("Verification failed:", error.message);
-      showAlert("error", "Verification failed. " + error.message);
-      setError(error);
-    },
-  });
 
   const handleGoogleLogin = async () => {
     try {
@@ -69,8 +37,6 @@ export function useAuth() {
   return {
     isLoading,
     error,
-    register: registerMutation.mutate,
-    verify: verifyMutation.mutate,
     googleLogin: handleGoogleLogin,
   };
 }

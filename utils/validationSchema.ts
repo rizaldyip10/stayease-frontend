@@ -1,7 +1,7 @@
 import * as yup from "yup";
 import { whiteSpaceRegex } from "@/constants/WhiteSpaceRegex";
 import { FormType } from "@/constants/Types";
-import { UserType } from "@/hooks/useSelectUserType";
+import { UserType } from "@/hooks/auth/useSelectUserType";
 export const getValidationSchema = (formType: FormType) => {
   switch (formType) {
     case "login":

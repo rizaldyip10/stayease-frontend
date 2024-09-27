@@ -8,6 +8,8 @@ import FormikInput from "@/components/FormikInput";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useVerifyAccount } from "@/hooks/auth/useVerifyAccount";
+import GlobalLoading from "@/components/GlobalLoading";
 
 export interface MultiStepFormValues {
   password: string;
@@ -21,21 +23,22 @@ export interface MultiStepFormValues {
 
 interface MultiStepFormProps {
   userType: UserType;
-  onSubmit: (
-    values: MultiStepFormValues,
-    token: string,
-    actions: FormikHelpers<MultiStepFormValues>,
-  ) => void;
+  // onSubmit: (
+  //   values: MultiStepFormValues,
+  //   token: string,
+  //   actions: FormikHelpers<MultiStepFormValues>,
+  // ) => void;
   token: string;
 }
 
 const MultiStepForm: React.FC<MultiStepFormProps> = ({
   userType,
-  onSubmit,
+  // onSubmit,
   token,
 }) => {
   const [step, setStep] = useState(1);
   const router = useRouter();
+  const { handleMultiStepSubmit, loading, error } = useVerifyAccount();
 
   const validationSchema = [
     yup.object().shape({
@@ -88,14 +91,12 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
       console.log("values: ", values);
       actions.setSubmitting(false);
     } else {
-      await onSubmit(values, token, actions);
+      await handleMultiStepSubmit(values, token, actions);
       console.log("values: {}, token: {}", values, token);
-      // TODO : implement loading screen and show result
-      setTimeout(() => {
-        router.push("/");
-      }, 5000);
     }
   };
+
+  if (loading) return <GlobalLoading fullPage />;
 
   const renderStep = (values: MultiStepFormValues) => {
     switch (step) {

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { useChangeEmail } from "@/hooks/useChangeEmail";
+import { useChangeEmail } from "@/hooks/auth/useChangeEmail";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";

@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useAuth } from "@/hooks/useAuth";
+import { useGoogleLogin } from "@/hooks/auth/useGoogleLogin";
 import { useSession } from "next-auth/react";
 import { signOut } from "@/auth";
 

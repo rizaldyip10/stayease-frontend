@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { useSelectUserType } from "@/hooks/useSelectUserType";
+import { useSelectUserType } from "@/hooks/auth/useSelectUserType";
 import FormInputs from "@/app/(auth)/_components/FormInputs";
 import Link from "next/link";
 

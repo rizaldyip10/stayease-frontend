@@ -1,17 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { FormType, UserType } from "@/constants/Types";
-import useAuthForm from "@/hooks/useAuthForm";
 import AuthCard from "@/app/(auth)/_components/AuthCard";
 import MultiStepForm from "@/app/(auth)/_components/MultiStepForm";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
+import { useGoogleLogin } from "@/hooks/auth/useGoogleLogin";
 import { FormikHelpers, FormikValues } from "formik";
 import { useSession } from "next-auth/react";
 import logger from "@/utils/logger";
 import ResetPassword from "@/app/(auth)/reset-password/_components/ResetPassword";
 import SelectUserForm from "@/app/(auth)/register/select-user-type/_components/SelectUserForm";
 import GlobalLoading from "@/components/GlobalLoading";
+import { useCredentialSubmission } from "@/hooks/auth/useCredentialSubmission";
 
 interface AuthFormProps {
   className?: string;
@@ -27,18 +27,15 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
 }) => {
   const [userType, setUserType] = useState<UserType>("USER");
   const {
-    isLoading: formLoading,
+    loading: formLoading,
     error: formError,
     handleSubmit,
-    handleMultiStepSubmit,
-  } = useAuthForm({
-    userType,
-  });
+  } = useCredentialSubmission(userType);
   const {
     googleLogin,
     isLoading: googleLoading,
     error: googleError,
-  } = useAuth();
+  } = useGoogleLogin();
   const { data: session } = useSession();
 
   const searchParams = useSearchParams();
@@ -83,11 +80,7 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
         <div className="overflow-hidden flex flex-col items-center justify-between text-left text-sm text-gray-900">
           <div className="flex flex-col items-center justify-start py-0 md:px-8">
             {formType === "verify" && token && newUserType ? (
-              <MultiStepForm
-                userType={newUserType}
-                onSubmit={handleMultiStepSubmit}
-                token={token}
-              />
+              <MultiStepForm userType={newUserType} token={token} />
             ) : formType === "forgotPassword" && token ? (
               <ResetPassword token={token} />
             ) : (
