@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -19,11 +19,13 @@ const RoomAvailabilityCalendar: React.FC<RoomAvailabilityCalendarProps> = ({
   onDateSelect,
   onEventClick,
 }) => {
+  const calendarRef = useRef(null);
   const { headerToolbar, events, renderEventContent } =
     useRoomAvailabilityCalendarConfig(
       availabilityData,
       onDateSelect,
       onEventClick,
+      calendarRef,
     );
 
   const isDateBeforeToday = (date: Date) => {
@@ -44,6 +46,7 @@ const RoomAvailabilityCalendar: React.FC<RoomAvailabilityCalendarProps> = ({
 
   return (
     <FullCalendar
+      ref={calendarRef}
       plugins={[
         dayGridPlugin,
         timeGridPlugin,
@@ -66,14 +69,6 @@ const RoomAvailabilityCalendar: React.FC<RoomAvailabilityCalendarProps> = ({
         dayGridMonth: {
           eventLimit: 3,
         },
-      }}
-      windowResize={({ view }) => {
-        const calendarApi = view.calendar;
-        if (window.innerWidth < 768) {
-          calendarApi.changeView("listMonth");
-        } else {
-          calendarApi.changeView("dayGridMonth");
-        }
       }}
     />
   );
