@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import RoomDetails from "@/app/(home)/properties/[propertyId]/rooms/[roomId]/_components/RoomDetails";
 import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
 import { useSearchParams } from "next/navigation";
+import PropertyDetailsSkeleton from "@/app/(home)/properties/[propertyId]/_components/PropertyDetailsSkeleton";
 
 export default function RoomDetailsPage({
   params,
@@ -27,7 +28,7 @@ export default function RoomDetailsPage({
   const room = currentProperty?.rooms?.find((room) => room.roomId === roomId);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <PropertyDetailsSkeleton type="room" />;
   }
 
   if (error) {

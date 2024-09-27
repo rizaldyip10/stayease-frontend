@@ -5,9 +5,15 @@ import MiniHero from "@/app/(home)/_components/landing-page/MiniHero";
 import LandingPageListings from "@/app/(home)/_components/landing-page/LandingPageListings";
 import Testimonials from "@/app/(home)/_components/landing-page/Testimonials";
 import ReservationSteps from "@/app/(home)/_components/landing-page/ReservationSteps";
+import { usePropertyListings } from "@/hooks/properties/usePropertyListings";
+import LandingPageSkeleton from "@/app/(home)/_components/landing-page/LandingPageSkeleton";
 
 const LandingPage = () => {
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const { isLoading } = usePropertyListings();
+
+  if (isLoading) {
+    return <LandingPageSkeleton />;
+  }
 
   return (
     <>

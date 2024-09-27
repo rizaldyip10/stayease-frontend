@@ -3,6 +3,7 @@ import React from "react";
 import PropertyDetails from "@/app/(home)/properties/[propertyId]/_components/PropertyDetails";
 import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
 import { notFound, useSearchParams } from "next/navigation";
+import PropertyDetailsSkeleton from "@/app/(home)/properties/[propertyId]/_components/PropertyDetailsSkeleton";
 
 export default function PropertyDetailsPage({
   params,
@@ -24,7 +25,7 @@ export default function PropertyDetailsPage({
   );
 
   if (isLoading) {
-    return <div>Loading property details...</div>;
+    return <PropertyDetailsSkeleton type="property" />;
   }
   if (error) {
     return <div>Error loading property details: {error.message}</div>;
