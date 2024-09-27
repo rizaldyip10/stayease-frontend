@@ -67,6 +67,7 @@ export const config = {
       getLowestDailyRate: "/rates/daily",
       getLowestDailyCumulativeRate: "/rates/daily/cumulative",
       updateRates: "/rates/{rateId}",
+      autoUpdateRates: "/rates/auto",
     },
     availability: {
       getTenantAvailability: "/properties/tenant/availability",
@@ -85,7 +86,7 @@ export const config = {
       uploadPayment: "/payments/payment-proof",
     },
     reports: {
-      availabilityReports: "/properties/tenant/availability"
-    }
+      availabilityReports: "/properties/tenant/availability",
+    },
   },
 };

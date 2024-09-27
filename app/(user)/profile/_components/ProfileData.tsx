@@ -3,6 +3,8 @@ import UserProfileForm from "@/app/(user)/profile/_components/UserProfileForm";
 import { useSession } from "next-auth/react";
 import TenantProfileForm from "@/app/(user)/profile/_components/TenantProfileForm";
 import { useProfile } from "@/context/ProfileContext";
+import ErrorComponent from "@/components/ErrorComponent";
+import GlobalLoading from "@/components/GlobalLoading";
 
 const ProfilePage: React.FC = () => {
   const {
@@ -17,12 +19,11 @@ const ProfilePage: React.FC = () => {
     toggleTenantEditing,
   } = useProfile();
 
-  const { data: sessions } = useSession();
+  const { data: sessions, status } = useSession();
   const isUser = sessions?.user?.userType === "USER";
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-  if (!profile) return <div>No profile data available</div>;
+  if (isLoading || !profile) return <GlobalLoading fullPage />;
+  if (error) return <ErrorComponent message={error.message} fullPage />;
 
   return (
     <div className="flex flex-col gap-4 container mx-auto p-4">

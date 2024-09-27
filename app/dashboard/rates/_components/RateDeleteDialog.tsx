@@ -11,10 +11,11 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useAlert } from "@/context/AlertContext";
-import { usePeakSeasonRate } from "@/hooks/reports/usePeakSeasonRate";
+import { usePeakSeasonRate } from "@/hooks/rates/usePeakSeasonRate";
 import { useRoomAvailability } from "@/hooks/reports/useRoomAvailability";
+import { isConfigOption } from "jackspeak";
 
 interface DeleteDialogProps {
   rateId?: number;
@@ -24,6 +25,7 @@ interface DeleteDialogProps {
   trigger?: React.ReactNode;
   isOpen?: boolean;
   onClose?: () => void;
+  onOpenChange?: (isOpen: boolean) => void;
 }
 
 const RateDeleteDialog: FC<DeleteDialogProps> = ({
@@ -32,13 +34,21 @@ const RateDeleteDialog: FC<DeleteDialogProps> = ({
   title = "Delete Rate Setting",
   description = "Are you sure you want to delete this rate setting?",
   trigger,
+  isOpen,
+  onClose,
+  onOpenChange,
 }) => {
   const { showAlert } = useAlert();
   const { deleteRate } = usePeakSeasonRate();
+  const [open, setOpen] = useState(isOpen);
+
   const handleDelete = async () => {
     if (rateId) {
       try {
         await deleteRate(rateId);
+        showAlert("success", "Rate setting deleted successfully");
+        setOpen(false);
+        if (onOpenChange) onOpenChange(false); // Notify parent component
       } catch (error) {
         console.log(error);
         showAlert("error", "Failed to delete rate setting");
@@ -46,8 +56,12 @@ const RateDeleteDialog: FC<DeleteDialogProps> = ({
     }
   };
 
+  useEffect(() => {
+    setOpen(isOpen);
+  }, [isOpen]);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         {!trigger ? (
           <Button variant="ghost" className="w-10 h-10 p-0">

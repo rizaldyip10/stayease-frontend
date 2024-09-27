@@ -7,8 +7,6 @@ import Testimonials from "@/app/(home)/_components/landing-page/Testimonials";
 import ReservationSteps from "@/app/(home)/_components/landing-page/ReservationSteps";
 
 const LandingPage = () => {
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
-
   return (
     <>
       <HeroSection className="flex flex-col items-center justify-between md:p-6 md:min-h-[695px] md:max-h-[695px] max-h-screen" />

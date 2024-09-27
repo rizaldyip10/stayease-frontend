@@ -4,28 +4,11 @@ import { AdjustedRatesType, LowestDailyRateType } from "@/constants/Property";
 import { format } from "date-fns";
 import { formatDate } from "@/utils/dateFormatter";
 import logger from "@/utils/logger";
-
-export interface RateResponse {
-  rateId: number;
-  startDate: Date;
-  endDate: Date;
-  adjustmentRate: number;
-  adjustmentType: string;
-  validFrom: Date;
-  reason: string;
-  propertySummary: {
-    propertyId: number;
-    propertyName: string;
-  };
-}
-
-export interface RateRequest {
-  startDate: Date;
-  endDate: Date;
-  adjustmentRate: number;
-  adjustmentType: string;
-  reason: string;
-}
+import {
+  AutoRateRequestType,
+  RateRequestType,
+  RateResponseType,
+} from "@/constants/Rates";
 
 const rateService = {
   getTenantRates: async () => {
@@ -106,8 +89,8 @@ const rateService = {
 
   setRate: async (
     propertyId: number,
-    values: RateRequest,
-  ): Promise<RateResponse> => {
+    values: RateRequestType,
+  ): Promise<RateResponseType> => {
     try {
       logger.info("Setting rate...");
       const response = await axiosInterceptor.post(
@@ -124,8 +107,8 @@ const rateService = {
 
   updateRate: async (
     rateId: number,
-    values: RateRequest,
-  ): Promise<RateResponse> => {
+    values: RateRequestType,
+  ): Promise<RateResponseType> => {
     try {
       logger.info("Updating rate..." + rateId);
       const url = config.endpoints.rates.updateRates.replace(
@@ -153,6 +136,46 @@ const rateService = {
       );
       const response = await axiosInterceptor.delete(url);
       return response.data.statusMessage;
+    } catch (error: any) {
+      throw error;
+    }
+  },
+
+  getAutoRateSetting: async (propertyId: number) => {
+    try {
+      const response = await axiosInterceptor.get(
+        config.endpoints.rates.autoUpdateRates,
+        { params: { propertyId } },
+      );
+      return response.data.data;
+    } catch (error: any) {
+      throw error;
+    }
+  },
+
+  setOrUpdateAutoRateSetting: async (
+    propertyId: number,
+    values: Partial<AutoRateRequestType>,
+  ) => {
+    try {
+      const response = await axiosInterceptor.put(
+        config.endpoints.rates.autoUpdateRates,
+        values,
+        { params: { propertyId } },
+      );
+      return response.data.data;
+    } catch (error: any) {
+      throw error;
+    }
+  },
+
+  deactivateAutoRateSetting: async (propertyId: number) => {
+    try {
+      const response = await axiosInterceptor.delete(
+        config.endpoints.rates.autoUpdateRates,
+        { params: { propertyId } },
+      );
+      return response.data.data;
     } catch (error: any) {
       throw error;
     }

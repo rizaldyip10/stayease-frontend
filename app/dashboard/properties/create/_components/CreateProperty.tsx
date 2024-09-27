@@ -2,19 +2,27 @@
 import { FieldArray, Form, Formik } from "formik";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createPropValidationSchema } from "@/utils/validationSchema";
 import PropertyForm from "@/app/dashboard/properties/create/_components/PropertyForm";
 import RoomForm from "@/app/dashboard/properties/create/_components/RoomForm";
 import { usePropertyCreation } from "@/hooks/properties/usePropertyCreation";
 import { createPropertyInitialValues } from "@/utils/PropertyInitialValues";
 import { usePropertyUtils } from "@/hooks/properties/usePropertyUtils";
+import GlobalLoading from "@/components/GlobalLoading";
 
 const CreateProperty = () => {
   const { setCategories, isLoading, error, handleSubmit, handleImageUpload } =
     usePropertyCreation();
   const { categories } = usePropertyUtils();
-  console.log("categories", categories);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center align-middle h-[200px]">
+        <GlobalLoading height={100} width={100} />
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4">

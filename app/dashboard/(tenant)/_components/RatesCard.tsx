@@ -1,9 +1,9 @@
 import React from "react";
-import { RateResponse } from "@/services/rateService";
+import { RateResponseType } from "@/constants/Rates";
 import { Card } from "@/components/ui/card";
 
 interface RatesCardProps {
-  rates: RateResponse[];
+  rates: RateResponseType[];
   isAutomatic?: boolean;
 }
 
@@ -19,7 +19,7 @@ const RatesCard: React.FC<RatesCardProps> = ({ rates, isAutomatic }) => {
   return (
     <>
       <p>{title}</p>
-      {rates.slice(0, 4).map((rate: RateResponse) => (
+      {rates.slice(0, 4).map((rate: RateResponseType) => (
         <Card key={rate.rateId} className="mt-2 p-4">
           <div className="flex flex-col md:flex-row gap-5 md:gap-0 justify-between items-center">
             <div className="w-full">

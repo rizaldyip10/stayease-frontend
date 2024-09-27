@@ -48,7 +48,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
     { name: "address", label: "Address", type: "text" },
     { name: "city", label: "City", type: "text" },
     { name: "country", label: "Country", type: "text" },
-    // { name: "categoryId", label: "Category", type: "text" },
   ];
 
   const handleLocationChange = (lat: number, lng: number) => {

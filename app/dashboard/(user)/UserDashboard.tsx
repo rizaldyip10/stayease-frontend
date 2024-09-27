@@ -7,19 +7,22 @@ import RecentActivity from "@/app/dashboard/(user)/_components/RecentActivity";
 import { CalendarDays, Home, MessageSquare, Star } from "lucide-react";
 import { useProfile } from "@/context/ProfileContext";
 import ProfileCard from "@/app/dashboard/(user)/_components/ProfileCard";
+import GlobalLoading from "@/components/GlobalLoading";
+import ErrorComponent from "@/components/ErrorComponent";
 
 const UserDashboard: React.FC = () => {
   const { profile, isLoading, error } = useProfile();
-  console.log("profile", profile);
 
-  if (!profile) return <div>No profile data available</div>;
+  if (!profile)
+    return (
+      <div className="flex items-center justify-center align-middle h-[200px]">
+        <GlobalLoading height={100} width={100} />
+      </div>
+    );
 
-  // !! TODO: DUMMY DATA - Replace with real data
-  const user = {
-    name: "Alice Smith",
-    email: "alice@example.com",
-    avatar: "/api/placeholder/150/150",
-  };
+  if (error) {
+    return <ErrorComponent message={error.message} fullPage />;
+  }
 
   // !! TODO: Replace with real data
   const stats = [
