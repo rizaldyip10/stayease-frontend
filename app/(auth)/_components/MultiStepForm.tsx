@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useVerifyAccount } from "@/hooks/auth/useVerifyAccount";
 import GlobalLoading from "@/components/GlobalLoading";
+import BackToHomeButton from "@/app/(auth)/_components/BackToHomeButton";
 
 export interface MultiStepFormValues {
   password: string;
@@ -238,13 +239,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ userType, token }) => {
               {step === (userType === "TENANT" ? 4 : 3) ? "Submit" : "Next"}
             </Button>
           </div>
-          <Button
-            variant="link"
-            className="text-blue-950 hover:underline"
-            asChild
-          >
-            <Link href="/">Back to Home</Link>
-          </Button>
+          <BackToHomeButton />
         </Form>
       )}
     </Formik>

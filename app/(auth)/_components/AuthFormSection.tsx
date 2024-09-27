@@ -8,8 +8,8 @@ import { useGoogleLogin } from "@/hooks/auth/useGoogleLogin";
 import { FormikHelpers, FormikValues } from "formik";
 import { useSession } from "next-auth/react";
 import logger from "@/utils/logger";
-import ResetPassword from "@/app/(auth)/reset-password/_components/ResetPassword";
-import SelectUserForm from "@/app/(auth)/register/select-user-type/_components/SelectUserForm";
+import ResetPassword from "@/app/(auth)/_components/ResetPassword";
+import SelectUserForm from "@/app/(auth)/_components/SelectUserForm";
 import GlobalLoading from "@/components/GlobalLoading";
 import { useCredentialSubmission } from "@/hooks/auth/useCredentialSubmission";
 

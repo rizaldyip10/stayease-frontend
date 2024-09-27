@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { getInitialValues } from "@/utils/authInitialValues";
 import { useGoogleLogin } from "@/hooks/auth/useGoogleLogin";
 import GlobalLoading from "@/components/GlobalLoading";
+import BackToHomeButton from "@/app/(auth)/_components/BackToHomeButton";
 
 interface AuthCardProps {
   formType: FormType;
@@ -111,9 +112,7 @@ const AuthCard: React.FC<AuthCardProps> = ({ formType }) => {
           {formType === "login" ? "Register" : "Login"}
         </Link>
       </div>
-      <Button variant="link" className="text-blue-950 hover:underline" asChild>
-        <Link href="/">Back to Home</Link>
-      </Button>
+      <BackToHomeButton />
     </div>
   );
 };
