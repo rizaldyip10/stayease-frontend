@@ -13,10 +13,16 @@ import QuickActions from "@/app/dashboard/(user)/_components/QuickActions";
 import { useProfile } from "@/context/ProfileContext";
 import ProfileCard from "@/app/dashboard/(user)/_components/ProfileCard";
 import { DashboardRatesSummary } from "@/app/dashboard/(tenant)/_components/RatesSummary";
+import GlobalLoading from "@/components/GlobalLoading";
 
 const TenantDashboard: React.FC = () => {
   const { profile, isLoading, error } = useProfile();
-  if (!profile) return <div>No profile data available</div>;
+  if (!profile)
+    return (
+      <div className="flex items-center justify-center align-middle h-[200px]">
+        <GlobalLoading height={100} width={100} />
+      </div>
+    );
 
   const fullName = profile?.firstName + " " + (profile?.lastName ?? "");
 

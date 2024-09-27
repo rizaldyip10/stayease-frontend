@@ -3,6 +3,7 @@ import { Status, Wrapper } from "@googlemaps/react-wrapper";
 import { MapRender } from "./MapRender";
 import { useGoogleMaps } from "@/hooks/utils/useGoogleMaps";
 import { AvailablePropertyType } from "@/constants/Property";
+import GlobalLoading from "@/components/GlobalLoading";
 
 interface MapComponentProps {
   initialCenter: { lat: number; lng: number };
@@ -45,7 +46,11 @@ const MapComponent: React.FC<MapComponentProps> = ({
   const render = (status: Status) => {
     switch (status) {
       case Status.LOADING:
-        return <div>Loading...</div>;
+        return (
+          <div className="flex items-center justify-center align-middle h-full">
+            <GlobalLoading height={50} width={50} />
+          </div>
+        );
       case Status.FAILURE:
         return <div>Error loading Google Maps</div>;
       case Status.SUCCESS:

@@ -2,13 +2,11 @@ import React, { useEffect, useState } from "react";
 import { usePeakSeasonRate } from "@/hooks/rates/usePeakSeasonRate";
 import RateTable from "@/app/dashboard/rates/_components/RateTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import PropertyTable from "@/app/dashboard/properties/_components/PropertyTable";
-import RoomTable from "@/app/dashboard/properties/_components/RoomTable";
 import { RateResponseType } from "@/constants/Rates";
-import { useTabContext } from "@/context/TabContext";
+import GlobalLoading from "@/components/GlobalLoading";
 
 const RatesTableSummary = () => {
-  const { rates, isLoading } = usePeakSeasonRate();
+  const { rates, isLoading, error } = usePeakSeasonRate();
   const [manualRates, setManualRates] = useState<RateResponseType[]>([]);
   const [automaticRates, setAutomaticRates] = useState<RateResponseType[]>([]);
 
@@ -21,6 +19,14 @@ const RatesTableSummary = () => {
       setManualRates(rates.filter((rate) => !filteredRates.includes(rate)));
     }
   }, [rates]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center align-middle h-[200px]">
+        <GlobalLoading height={100} width={100} />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">

@@ -7,6 +7,7 @@ import NoResultsFound from "@/components/NoResultsFound";
 import RoomAvailabilityCalendar from "@/app/dashboard/room-availability/_components/RoomAvailabilityCalendar";
 import ConfirmationDialog from "@/app/dashboard/room-availability/_components/ConfirmationDialog";
 import { useAlert } from "@/context/AlertContext";
+import GlobalLoading from "@/components/GlobalLoading";
 
 const RoomAvailability: React.FC = () => {
   const {
@@ -70,8 +71,14 @@ const RoomAvailability: React.FC = () => {
     setSelectedEvent(null);
   };
 
-  if (!availabilityData) return <NoResultsFound />;
-  if (isLoading) return <div>Loading...</div>;
+  if (!availabilityData || isLoading) {
+    return (
+      <div className="flex items-center justify-center align-middle h-[200px]">
+        <GlobalLoading height={100} width={100} />
+      </div>
+    );
+  }
+
   if (error) return <div>Error: {error.toString()}</div>;
 
   return (
