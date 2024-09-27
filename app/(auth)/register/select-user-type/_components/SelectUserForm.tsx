@@ -19,6 +19,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { useSelectUserType } from "@/hooks/useSelectUserType";
 import FormInputs from "@/app/(auth)/_components/FormInputs";
+import Link from "next/link";
 
 const SelectUserForm: React.FC = () => {
   const { initialValues, validationSchema, handleUserTypeSubmit } =
@@ -62,13 +63,20 @@ const SelectUserForm: React.FC = () => {
                   <FormInputs formType="userType" />
                 )}
               </CardContent>
-              <CardFooter>
+              <CardFooter className="flex flex-col gap-3">
                 <Button
                   type="submit"
                   className="w-full bg-blue-950 hover:bg-blue-900"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? "Processing..." : "Continue"}
+                </Button>
+                <Button
+                  variant="link"
+                  className="text-blue-950 hover:underline"
+                  asChild
+                >
+                  <Link href="/">Back to Home</Link>
                 </Button>
               </CardFooter>
             </Form>

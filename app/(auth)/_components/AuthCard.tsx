@@ -49,7 +49,7 @@ const AuthCard: React.FC<AuthCardProps> = ({
   return (
     <div className="w-96 max-sm:w-80 max-sm:px-5 flex flex-col items-center bg-white px-7 py-10 gap-5 md:gap-7">
       <div className="w-full flex flex-col items-center md:gap-3 gap-2 md:mb-5">
-        <Image src={logo} alt="logo" height={50} className="md:hidden mb-10" />
+        <Image src={logo} alt="logo" height={50} className="mb-10" />
         <h1 className="text-3xl font-bold text-blue-950 md:text-left">
           {formType === "login"
             ? "Login"
@@ -125,6 +125,9 @@ const AuthCard: React.FC<AuthCardProps> = ({
           {formType === "login" ? "Register" : "Login"}
         </Link>
       </div>
+      <Button variant="link" className="text-blue-950 hover:underline" asChild>
+        <Link href="/">Back to Home</Link>
+      </Button>
     </div>
   );
 };

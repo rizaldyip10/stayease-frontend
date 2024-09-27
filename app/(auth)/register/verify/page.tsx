@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import SidePicture from "@/app/(auth)/_components/SidePicture";
 import { notFound, useSearchParams } from "next/navigation";
 import { authService } from "@/services/authService";
+import AuthPage from "@/app/(auth)/_components/AuthPage";
 
 const VerificationPage: React.FC = () => {
   const searchParams = useSearchParams();
@@ -34,29 +35,11 @@ const VerificationPage: React.FC = () => {
   }
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        initial={{ opacity: 0, y: "-25px" }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: "25px" }}
-        transition={{ duration: 1, ease: "easeOut" }}
-        className="shadow-md rounded-lg w-full max-w-5xl mx-auto"
-      >
-        <div className="bg-white flex flex-row items-center justify-center p-5 my-auto">
-          <SidePicture
-            alt="verify"
-            src="/verify.webp"
-            className="hidden md:block md:w-3/5"
-          />
-          <div className="w-full md:w-2/5 h-full flex items-center justify-center">
-            <AuthFormSection
-              formType="verify"
-              className="form mb-2 w-full max-w-sm px-4"
-            />
-          </div>
-        </div>
-      </motion.div>
-    </AnimatePresence>
+    <AuthPage
+      formType="verify"
+      pictureSrc={`https://res.cloudinary.com/duxay6ujg/image/upload/v1726766691/verify_dp76xw.webp`}
+      sidePic="left"
+    />
   );
 };
 

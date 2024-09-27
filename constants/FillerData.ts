@@ -1,15 +1,23 @@
 export const heroImages = [
   {
-    src: "/sign-up-side-pic.webp",
+    src: "https://res.cloudinary.com/duxay6ujg/image/upload/v1727460058/register-pic_sah7oo.webp",
     alt: "Hero Image 1",
   },
   {
-    src: "/verify.webp",
+    src: "https://res.cloudinary.com/duxay6ujg/image/upload/v1726766691/verify_dp76xw.webp",
     alt: "Hero Image 2",
   },
   {
     src: "/login-pic.webp",
     alt: "Hero Image 3",
+  },
+  {
+    src: "https://res.cloudinary.com/duxay6ujg/image/upload/v1726766674/isabella-abreu-0lJDg5PhO0Q-unsplash_v2il9w.png",
+    alt: "Hero Image 4",
+  },
+  {
+    src: "https://res.cloudinary.com/duxay6ujg/image/upload/v1726642846/verify_mboavx.webp",
+    alt: "Hero Image 5",
   },
 ];
 

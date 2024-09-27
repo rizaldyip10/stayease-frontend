@@ -7,6 +7,7 @@ import { Form, Formik, FormikHelpers } from "formik";
 import FormikInput from "@/components/FormikInput";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export interface MultiStepFormValues {
   password: string;
@@ -162,7 +163,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
       // If not tenant, fall through to summary page
       case 4:
         return (
-          <div className="max-w-full space-y-4">
+          <div className="w-full space-y-4">
             <h2 className="text-xl font-bold">Summary</h2>
             <p>
               <strong>First Name:</strong> {values.firstName}
@@ -203,7 +204,12 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
       onSubmit={handleSubmit}
     >
       {({ isValid, dirty, isSubmitting, values }) => (
-        <Form className="space-y-7 min-w-lg">
+        <Form className="space-y-7 w-full flex flex-col justify-center">
+          <div>
+            <h1 className="text-xl font-semibold text-blue-950 text-center">
+              Complete your registration!
+            </h1>
+          </div>
           <div className="flex justify-center gap-7 mb-4">
             {[1, 2, 3, 4]
               .slice(0, userType === "TENANT" ? 4 : 3)
@@ -241,6 +247,13 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({
               {step === (userType === "TENANT" ? 4 : 3) ? "Submit" : "Next"}
             </Button>
           </div>
+          <Button
+            variant="link"
+            className="text-blue-950 hover:underline"
+            asChild
+          >
+            <Link href="/">Back to Home</Link>
+          </Button>
         </Form>
       )}
     </Formik>

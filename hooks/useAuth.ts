@@ -57,9 +57,9 @@ export function useAuth() {
           "/register/select-user-type",
         );
       } else {
-        showAlert("success", "Login successful.", "/");
+        showAlert("success", "Login successful.", "/dashboard");
       }
-    } catch (error:any) {
+    } catch (error: any) {
       console.error("Google login failed:", error);
       showAlert("error", "Google login failed. " + error);
       setError(error);

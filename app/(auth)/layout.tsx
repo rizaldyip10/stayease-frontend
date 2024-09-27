@@ -6,7 +6,7 @@ import { AnimatePresence } from "framer-motion";
 const AuthLayout = ({ children }: { children: ReactNode }) => {
   return (
     <AlertProvider>
-      <div className="w-full min-h-screen flex items-center justify-center bg-[#FAFAFA] py-5">
+      <div className="w-full min-h-screen md:h-[700px] flex items-center justify-center bg-[#FAFAFA] py-5">
         <AnimatePresence mode="wait">{children}</AnimatePresence>
       </div>
     </AlertProvider>

@@ -61,7 +61,7 @@ export const useSelectUserType = () => {
             firstName: response.firstName,
             lastName: response.lastName,
             userType: response.userType,
-            avatar: response.avatar,
+            avatar: response.avatarUrl,
             isVerified: response.isVerified,
             isOAuth2: response.isOAuth2,
             accessToken: response.token.accessToken,
@@ -77,13 +77,8 @@ export const useSelectUserType = () => {
         console.log("Updated session: ", session);
 
         showAlert("success", "Registration successful! Please sign in again.");
-        // TODO !! Figure this out
-        // setTimeout(() => {
-        //   router.replace("/dashboard");
-        //   redirect("/dashboard");
-        // }, 5000);
         setTimeout(() => {
-          signOut({ callbackUrl: "/login" });
+          signOut({ redirect: true });
         }, 3000);
       } catch (error: any) {
         logger.error("Registration failed:", error);

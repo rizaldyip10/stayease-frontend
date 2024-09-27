@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { FormType, UserType } from "@/constants/Types";
 import useAuthForm from "@/hooks/useAuthForm";
 import AuthCard from "@/app/(auth)/_components/AuthCard";
@@ -11,6 +10,8 @@ import { FormikHelpers, FormikValues } from "formik";
 import { useSession } from "next-auth/react";
 import logger from "@/utils/logger";
 import ResetPassword from "@/app/(auth)/reset-password/_components/ResetPassword";
+import SelectUserForm from "@/app/(auth)/register/select-user-type/_components/SelectUserForm";
+import GlobalLoading from "@/components/GlobalLoading";
 
 interface AuthFormProps {
   className?: string;
@@ -25,10 +26,19 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
   formType: FormType;
 }) => {
   const [userType, setUserType] = useState<UserType>("USER");
-  const { loading, error, handleSubmit, handleMultiStepSubmit } = useAuthForm({
+  const {
+    isLoading: formLoading,
+    error: formError,
+    handleSubmit,
+    handleMultiStepSubmit,
+  } = useAuthForm({
     userType,
   });
-  const { googleLogin } = useAuth();
+  const {
+    googleLogin,
+    isLoading: googleLoading,
+    error: googleError,
+  } = useAuth();
   const { data: session } = useSession();
 
   const searchParams = useSearchParams();
@@ -47,24 +57,21 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
   }, []);
 
   const router = useRouter();
-  if (session) {
+  if (session && formType !== "forgotPassword") {
     router.push("/dashboard");
     if (session.user.isNewUser) {
       router.push("/auth/register/select-user-type");
     }
   }
 
+  if (formType === "userType") return <SelectUserForm />;
+
+  if (formLoading) return <GlobalLoading fullPage />;
+
   return (
     <div className={className}>
-      <div className="md:grid grid-rows-[1fr_4fr_1fr] gap-5 shrink-0 max-h-svh">
+      <div className="md:grid grid-rows-[1fr_4fr_1fr] gap-3 shrink-0 h-full">
         <div className="md:mb-0">
-          <Image
-            src="/stayease-logo.webp"
-            alt="logo"
-            height={50}
-            width={150}
-            className="hidden md:block mx-auto shrink-0"
-          />
           {formType === "verify" && (
             <div>
               <p className="font-semibold text-appblue-900 text-xl text-center md:hidden">
@@ -90,7 +97,7 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
                 setUserType={setUserType}
                 onSubmit={onSubmit}
                 googleLogin={googleLogin}
-                loading={loading}
+                loading={formLoading}
               />
             )}
           </div>

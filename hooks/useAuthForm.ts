@@ -20,7 +20,7 @@ const useAuthForm = ({ userType }: UseAuthFormProps) => {
   const { handleUserTypeSubmit } = useSelectUserType();
 
   return {
-    loading: formLoading || multiStepLoading,
+    isLoading: formLoading || multiStepLoading,
     error: formError || multiStepError,
     handleSubmit,
     handleMultiStepSubmit,
