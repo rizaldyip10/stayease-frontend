@@ -4,6 +4,7 @@ import RateTable from "@/app/dashboard/rates/_components/RateTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RateResponseType } from "@/constants/Rates";
 import GlobalLoading from "@/components/GlobalLoading";
+import ErrorComponent from "@/components/ErrorComponent";
 
 const RatesTableSummary = () => {
   const { rates, isLoading, error } = usePeakSeasonRate();
@@ -26,6 +27,10 @@ const RatesTableSummary = () => {
         <GlobalLoading height={100} width={100} />
       </div>
     );
+  }
+
+  if (error) {
+    return <ErrorComponent message={error} fullPage />;
   }
 
   return (

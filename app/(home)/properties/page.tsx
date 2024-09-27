@@ -5,7 +5,7 @@ import PageWrapper from "@/components/PageWrapper";
 
 const PropertiesPage: React.FC = () => {
   return (
-    <PageWrapper>
+    <PageWrapper className="">
       <PropertyListings />
     </PageWrapper>
   );

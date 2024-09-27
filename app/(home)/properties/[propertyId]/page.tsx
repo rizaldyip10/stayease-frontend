@@ -4,6 +4,7 @@ import PropertyDetails from "@/app/(home)/properties/[propertyId]/_components/Pr
 import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
 import { notFound, useSearchParams } from "next/navigation";
 import PropertyDetailsSkeleton from "@/app/(home)/properties/[propertyId]/_components/PropertyDetailsSkeleton";
+import ErrorComponent from "@/components/ErrorComponent";
 
 export default function PropertyDetailsPage({
   params,
@@ -28,7 +29,7 @@ export default function PropertyDetailsPage({
     return <PropertyDetailsSkeleton type="property" />;
   }
   if (error) {
-    return <div>Error loading property details: {error.message}</div>;
+    return <ErrorComponent message={error.message} fullPage />;
   }
   if (!currentProperty) {
     return notFound();

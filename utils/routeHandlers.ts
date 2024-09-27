@@ -14,6 +14,8 @@ const publicRoutes = new Set([
   "/properties",
   "/properties/*",
   "/faq",
+  "/error-test",
+  "/unauthorized",
 ]);
 
 const routeHandlers = new Map<string, RouteHandler>([

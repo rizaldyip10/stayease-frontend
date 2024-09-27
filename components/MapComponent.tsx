@@ -4,6 +4,7 @@ import { MapRender } from "./MapRender";
 import { useGoogleMaps } from "@/hooks/utils/useGoogleMaps";
 import { AvailablePropertyType } from "@/constants/Property";
 import GlobalLoading from "@/components/GlobalLoading";
+import ErrorComponent from "@/components/ErrorComponent";
 
 interface MapComponentProps {
   initialCenter: { lat: number; lng: number };
@@ -52,7 +53,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
           </div>
         );
       case Status.FAILURE:
-        return <div>Error loading Google Maps</div>;
+        return <ErrorComponent message="Failed to load map" />;
       case Status.SUCCESS:
         return (
           <MapRender

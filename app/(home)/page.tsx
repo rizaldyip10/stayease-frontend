@@ -6,7 +6,7 @@ import PageWrapper from "@/components/PageWrapper";
 export default function Home() {
   return (
     <main>
-      <PageWrapper>
+      <PageWrapper className="">
         <LandingPage />
       </PageWrapper>
     </main>

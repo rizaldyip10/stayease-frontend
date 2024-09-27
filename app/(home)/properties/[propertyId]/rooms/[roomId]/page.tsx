@@ -5,6 +5,7 @@ import RoomDetails from "@/app/(home)/properties/[propertyId]/rooms/[roomId]/_co
 import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
 import { useSearchParams } from "next/navigation";
 import PropertyDetailsSkeleton from "@/app/(home)/properties/[propertyId]/_components/PropertyDetailsSkeleton";
+import ErrorComponent from "@/components/ErrorComponent";
 
 export default function RoomDetailsPage({
   params,
@@ -32,7 +33,7 @@ export default function RoomDetailsPage({
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <ErrorComponent message={error.message} fullPage />;
   }
 
   if (!room) {

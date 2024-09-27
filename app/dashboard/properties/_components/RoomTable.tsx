@@ -6,6 +6,7 @@ import { RoomColumns } from "@/app/dashboard/properties/_components/RoomTableCol
 import { useTenantRooms } from "@/hooks/properties/useTenantRooms";
 import GlobalLoading from "@/components/GlobalLoading";
 import React from "react";
+import ErrorComponent from "@/components/ErrorComponent";
 
 const RoomTable = () => {
   const { rooms, isLoading, error } = useTenantRooms();
@@ -16,6 +17,10 @@ const RoomTable = () => {
         <GlobalLoading height={100} width={100} />
       </div>
     );
+  }
+
+  if (error) {
+    return <ErrorComponent message={error.message} fullPage />;
   }
 
   return (

@@ -8,6 +8,7 @@ import RoomAvailabilityCalendar from "@/app/dashboard/room-availability/_compone
 import ConfirmationDialog from "@/app/dashboard/room-availability/_components/ConfirmationDialog";
 import { useAlert } from "@/context/AlertContext";
 import GlobalLoading from "@/components/GlobalLoading";
+import ErrorComponent from "@/components/ErrorComponent";
 
 const RoomAvailability: React.FC = () => {
   const {
@@ -79,7 +80,9 @@ const RoomAvailability: React.FC = () => {
     );
   }
 
-  if (error) return <div>Error: {error.toString()}</div>;
+  if (error) {
+    return <ErrorComponent message={error.toString()} fullPage />;
+  }
 
   return (
     <div className="container mx-auto p-4">

@@ -8,6 +8,7 @@ import { CalendarDays, Home, MessageSquare, Star } from "lucide-react";
 import { useProfile } from "@/context/ProfileContext";
 import ProfileCard from "@/app/dashboard/(user)/_components/ProfileCard";
 import GlobalLoading from "@/components/GlobalLoading";
+import ErrorComponent from "@/components/ErrorComponent";
 
 const UserDashboard: React.FC = () => {
   const { profile, isLoading, error } = useProfile();
@@ -18,6 +19,10 @@ const UserDashboard: React.FC = () => {
         <GlobalLoading height={100} width={100} />
       </div>
     );
+
+  if (error) {
+    return <ErrorComponent message={error.message} fullPage />;
+  }
 
   // !! TODO: Replace with real data
   const stats = [
