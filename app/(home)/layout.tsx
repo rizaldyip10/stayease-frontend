@@ -12,16 +12,7 @@ const RoutesLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="w-full flex flex-col items-center min-h-screen relative bg-[#FAFAFA]">
         <Navbar isDashboard={false} />
         <div className="w-full 2xl:w-[1400px] px-6 md:px-14 py-6">
-          <AnimatePresence mode="wait">
-            <motion.div
-              initial={{ opacity: 0, y: -25 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 25 }}
-              transition={{ duration: 1, ease: "anticipate" }}
-            >
-              {children}
-            </motion.div>
-          </AnimatePresence>
+          <AnimatePresence mode="wait">{children}</AnimatePresence>
         </div>
       </div>
       <ContactForm />
