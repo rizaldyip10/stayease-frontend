@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import * as yup from "yup";
 import authService from "@/services/authService";
@@ -15,9 +14,8 @@ export interface FormValues {
 }
 
 export const useSelectUserType = () => {
-  const router = useRouter();
   const { data: session, update } = useSession();
-  const { showAlert, alertInfo, hideAlert } = useAlert();
+  const { showAlert } = useAlert();
 
   const initialValues: FormValues = {
     userType: "",
@@ -92,7 +90,5 @@ export const useSelectUserType = () => {
     initialValues,
     validationSchema,
     handleUserTypeSubmit,
-    alertInfo,
-    hideAlert,
   };
 };

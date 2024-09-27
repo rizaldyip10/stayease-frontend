@@ -25,45 +25,21 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
   className?: string;
   formType: FormType;
 }) => {
-  const [userType, setUserType] = useState<UserType>("USER");
-  const {
-    loading: formLoading,
-    error: formError,
-    handleSubmit,
-  } = useCredentialSubmission(userType);
-  const {
-    googleLogin,
-    isLoading: googleLoading,
-    error: googleError,
-  } = useGoogleLogin();
   const { data: session } = useSession();
 
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const newUserType = searchParams.get("t") === "t" ? "TENANT" : "USER";
 
-  const onSubmit = (
-    values: FormikValues,
-    actions: FormikHelpers<FormikValues>,
-  ) => {
-    handleSubmit(values, actions, formType);
-  };
-
-  useEffect(() => {
-    logger.info("AuthFormSection", { session });
-  }, []);
-
   const router = useRouter();
   if (session && formType !== "forgotPassword") {
     router.push("/dashboard");
     if (session.user.isNewUser) {
-      router.push("/auth/register/select-user-type");
+      router.push("/register/select-user-type");
     }
   }
 
   if (formType === "userType") return <SelectUserForm />;
-
-  if (formLoading) return <GlobalLoading fullPage />;
 
   return (
     <div className={className}>
@@ -84,14 +60,7 @@ const AuthFormSection: React.FC<AuthFormProps> = ({
             ) : formType === "forgotPassword" && token ? (
               <ResetPassword token={token} />
             ) : (
-              <AuthCard
-                formType={formType}
-                userType={userType}
-                setUserType={setUserType}
-                onSubmit={onSubmit}
-                googleLogin={googleLogin}
-                loading={formLoading}
-              />
+              <AuthCard formType={formType} />
             )}
           </div>
         </div>

@@ -1,35 +1,37 @@
 import React from "react";
 import { FormType, UserType } from "@/constants/Types";
-import { Form, Formik, FormikHelpers, FormikValues } from "formik";
+import { Form, Formik, FormikValues } from "formik";
 import { Button } from "@/components/ui/button";
 import { getValidationSchema } from "@/utils/validationSchema";
 import FormInputs from "@/app/(auth)/_components/FormInputs";
 import ChangeCredentialButton from "@/app/(user)/profile/settings/_components/ChangeCredentialButton";
+import { useCredentialSubmission } from "@/hooks/auth/useCredentialSubmission";
+import GlobalLoading from "@/components/GlobalLoading";
 
 interface AuthFormProps {
   formType: FormType;
-  onSubmit: (
-    values: FormikValues,
-    actions: FormikHelpers<FormikValues>,
-  ) => void;
   initialValues: FormikValues;
   userType: UserType;
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({
   formType,
-  onSubmit,
   initialValues,
   userType,
 }) => {
   const schema = getValidationSchema(formType);
+  const { isLoading, error, handleSubmit } = useCredentialSubmission(userType);
+
+  if (isLoading) return <GlobalLoading fullPage />;
 
   return (
     <div className="w-full">
       <Formik
         initialValues={initialValues}
         validationSchema={schema}
-        onSubmit={onSubmit}
+        onSubmit={(values, actions) => {
+          handleSubmit(values, actions, formType);
+        }}
       >
         {({ isValid, dirty, isSubmitting }) => (
           <Form className="w-full flex flex-col gap-4">

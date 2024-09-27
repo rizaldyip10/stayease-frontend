@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
-import { Formik, Form, Field } from "formik";
+import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
 import { useForgotPassword } from "@/hooks/auth/useForgotPassword";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { getValidationSchema } from "@/utils/validationSchema";
 import FormInputs from "@/app/(auth)/_components/FormInputs";
 

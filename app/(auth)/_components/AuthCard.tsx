@@ -1,6 +1,6 @@
 "use client";
-import React from "react";
-import { AlertType, FormType, UserType } from "@/constants/Types";
+import React, { useState } from "react";
+import { FormType, UserType } from "@/constants/Types";
 import Image from "next/image";
 import logo from "@/assets/images/logo_horizontal.png";
 import { Button } from "@/components/ui/button";
@@ -10,33 +10,18 @@ import { FormikHelpers, FormikValues } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getInitialValues } from "@/utils/authInitialValues";
-import logger from "@/utils/logger";
-import ChangeCredentialButton from "@/app/(user)/profile/settings/_components/ChangeCredentialButton";
+import { useGoogleLogin } from "@/hooks/auth/useGoogleLogin";
+import GlobalLoading from "@/components/GlobalLoading";
 
 interface AuthCardProps {
   formType: FormType;
-  userType: UserType;
-  setUserType: React.Dispatch<React.SetStateAction<UserType>>;
-  onSubmit: (
-    values: FormikValues,
-    actions: FormikHelpers<FormikValues>,
-  ) => void;
-  googleLogin?: () => void;
-  loading: boolean;
 }
 
-const AuthCard: React.FC<AuthCardProps> = ({
-  formType,
-  userType,
-  setUserType,
-  onSubmit,
-  googleLogin,
-  loading,
-}) => {
+const AuthCard: React.FC<AuthCardProps> = ({ formType }) => {
+  const [userType, setUserType] = useState<UserType>("USER");
+  const { googleLogin, isLoading, error } = useGoogleLogin();
   const router = useRouter();
   const initialValues = getInitialValues(formType);
-
-  logger.debug("AuthCard", { formType, userType });
 
   const handleNavigation = (
     e: React.MouseEvent<HTMLAnchorElement>,
@@ -45,6 +30,8 @@ const AuthCard: React.FC<AuthCardProps> = ({
     e.preventDefault();
     router.push(path);
   };
+
+  if (isLoading) return <GlobalLoading fullPage />;
 
   return (
     <div className="w-96 max-sm:w-80 max-sm:px-5 flex flex-col items-center bg-white px-7 py-10 gap-5 md:gap-7">
@@ -88,7 +75,6 @@ const AuthCard: React.FC<AuthCardProps> = ({
       </div>
       <AuthForm
         formType={formType}
-        onSubmit={onSubmit}
         initialValues={initialValues}
         userType={userType}
       />

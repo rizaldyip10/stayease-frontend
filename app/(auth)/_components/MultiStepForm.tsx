@@ -23,21 +23,11 @@ export interface MultiStepFormValues {
 
 interface MultiStepFormProps {
   userType: UserType;
-  // onSubmit: (
-  //   values: MultiStepFormValues,
-  //   token: string,
-  //   actions: FormikHelpers<MultiStepFormValues>,
-  // ) => void;
   token: string;
 }
 
-const MultiStepForm: React.FC<MultiStepFormProps> = ({
-  userType,
-  // onSubmit,
-  token,
-}) => {
+const MultiStepForm: React.FC<MultiStepFormProps> = ({ userType, token }) => {
   const [step, setStep] = useState(1);
-  const router = useRouter();
   const { handleMultiStepSubmit, loading, error } = useVerifyAccount();
 
   const validationSchema = [

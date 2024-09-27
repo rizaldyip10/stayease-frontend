@@ -6,7 +6,7 @@ import { useAlert } from "@/context/AlertContext";
 import authService from "@/services/authService";
 
 export const useCredentialSubmission = (userType: UserType) => {
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { showAlert } = useAlert();
 
@@ -24,7 +24,7 @@ export const useCredentialSubmission = (userType: UserType) => {
   };
 
   const handleRegister = async (email: string) => {
-    setLoading(true);
+    setIsLoading(true);
     setError(null);
     try {
       const result = await authService.register(email, userType);
@@ -33,7 +33,7 @@ export const useCredentialSubmission = (userType: UserType) => {
       setError(error.message);
       showAlert("error", error.message);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -42,7 +42,7 @@ export const useCredentialSubmission = (userType: UserType) => {
     actions: FormikHelpers<FormikValues>,
     formType: FormType,
   ) => {
-    setLoading(true);
+    setIsLoading(true);
     setError(null);
     actions.setSubmitting(true);
 
@@ -57,10 +57,10 @@ export const useCredentialSubmission = (userType: UserType) => {
       showAlert("error", error.message);
       console.error("Error details:", error?.response?.data?.message);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
       actions.setSubmitting(false);
     }
   };
 
-  return { loading, error, handleSubmit };
+  return { isLoading, error, handleSubmit };
 };
