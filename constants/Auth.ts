@@ -66,9 +66,7 @@ export interface RefreshResponse {
 export interface TokenCheckResponse {
   statusCode: number;
   statusMessage: string;
-  data: {
-    isValid: boolean;
-  };
+  data: boolean;
 }
 
 export interface ForgotPasswordValues {

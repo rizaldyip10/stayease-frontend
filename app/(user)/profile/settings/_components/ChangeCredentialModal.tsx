@@ -57,6 +57,7 @@ const ChangeCredentialModal: React.FC<ForgotPasswordModalProps> = ({
   const buttonText = isPasswordReset
     ? "Send Reset Link"
     : "Send E-mail Verification Link";
+  const placeholder = isPasswordReset ? "Enter your email" : "Enter new email";
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -74,7 +75,7 @@ const ChangeCredentialModal: React.FC<ForgotPasswordModalProps> = ({
               <FormikInput
                 name="email"
                 type="email"
-                placeholder="Enter your email"
+                placeholder={placeholder}
                 className="w-full p-2 border rounded"
               />
               {error && (

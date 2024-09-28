@@ -6,32 +6,29 @@ import SidePicture from "@/app/(auth)/_components/SidePicture";
 import { notFound, useSearchParams } from "next/navigation";
 import { authService } from "@/services/authService";
 import AuthPage from "@/app/(auth)/_components/AuthPage";
+import ErrorComponent from "@/components/ErrorComponent";
+import GlobalLoading from "@/components/GlobalLoading";
+import { useCheckToken } from "@/hooks/auth/useCheckToken";
 
 const VerificationPage: React.FC = () => {
   const searchParams = useSearchParams();
-  const token = searchParams.get("token");
-  const [isValidToken, setIsValidToken] = useState<boolean | null>(null);
-  useEffect(() => {
-    const checkToken = async () => {
-      if (token) {
-        const response = await authService.checkToken(token);
-        if (response.statusCode === 200) {
-          setIsValidToken(true);
-        } else if (response.statusCode === 400) {
-          setIsValidToken(false);
+  const token = searchParams.get("token") || "";
 
-          // TODO: redirect to a specific error page?
-          notFound();
-        }
-      } else {
-        setIsValidToken(false);
-      }
-    };
-  }, [token]);
+  const { isTokenValid, isLoading, error } = useCheckToken({
+    formType: "verify",
+    token: token,
+  });
 
-  if (!token) {
-    notFound(); // This will trigger a 404 response
-    return null;
+  console.log("isTokenValid from page", isTokenValid);
+
+  if (isTokenValid === null) {
+    return <GlobalLoading fullPage />;
+  }
+
+  if (!isTokenValid) {
+    return (
+      <ErrorComponent message="Invalid token. Please make sure you follow the correct link sent to your email!" />
+    );
   }
 
   return (

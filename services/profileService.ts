@@ -1,6 +1,7 @@
 import { config } from "@/constants/url";
 import axiosInterceptor from "@/utils/axiosInterceptor";
 import logger from "@/utils/logger";
+import { TokenCheckResponse } from "@/constants/Auth";
 
 export interface UserProfile {
   id: string;
@@ -137,6 +138,21 @@ export const profileService = {
     } catch (error: any) {
       logger.error("Email change request failed", { error });
       throw error;
+    }
+  },
+
+  checkEmailChangeToken: async (token: string): Promise<TokenCheckResponse> => {
+    try {
+      logger.info("Checking email change token");
+      const response = await axiosInterceptor.post(
+        config.endpoints.users.checkToken,
+        token,
+      );
+      logger.info("Email change token is valid");
+      return response.data;
+    } catch (error: any) {
+      logger.error("Email change token is invalid", { error });
+      return error.response.data;
     }
   },
 

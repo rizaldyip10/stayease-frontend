@@ -41,12 +41,17 @@ export const authService = {
   },
 
   checkToken: async (token: string): Promise<TokenCheckResponse> => {
-    const response = await axiosInterceptor.post(
-      config.endpoints.registration.checkToken,
-      { token },
-    );
-    console.log("Calling check token endpoint, token: ", token);
-    return response.data;
+    try {
+      const response = await axiosInterceptor.post(
+        config.endpoints.registration.checkToken,
+        token,
+      );
+      console.log("Calling check token endpoint, token: ", token);
+      return response.data;
+    } catch (error: any) {
+      logger.error("Error checking token", { error });
+      return error.response.data;
+    }
   },
 
   verify: async (values: FormikValues, token: string): Promise<any> => {
@@ -114,24 +119,6 @@ export const authService = {
         values,
       });
       logError(error);
-      throw error;
-    }
-  },
-
-  reAuthenticate: async (googleToken: string) => {
-    try {
-      logger.info("Re-authenticating with Google");
-      const result = await signIn("google", {
-        token: { id_token: googleToken },
-        redirect: false,
-      });
-      if (result?.error) {
-        throw new Error(result.error);
-      }
-      logger.info("Re-authentication successful");
-      return result;
-    } catch (error) {
-      logger.error("Re-authentication failed", { error });
       throw error;
     }
   },
