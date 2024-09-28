@@ -28,7 +28,7 @@ export const useCredentialSubmission = (userType: UserType) => {
     setError(null);
     try {
       const result = await authService.register(email, userType);
-      showAlert("success", result.message);
+      showAlert("success", result.message, "/");
     } catch (error: any) {
       setError(error.message);
       showAlert("error", error.message);

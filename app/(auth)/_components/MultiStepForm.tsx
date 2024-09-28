@@ -1,16 +1,14 @@
 "use client";
 import React, { useState } from "react";
-import * as yup from "yup";
-import { whiteSpaceRegex } from "@/constants/WhiteSpaceRegex";
 import { UserType } from "@/constants/Types";
 import { Form, Formik, FormikHelpers } from "formik";
 import FormikInput from "@/components/FormikInput";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { useVerifyAccount } from "@/hooks/auth/useVerifyAccount";
-import GlobalLoading from "@/components/GlobalLoading";
 import BackToHomeButton from "@/app/(auth)/_components/BackToHomeButton";
+import { verifyValidationSchema } from "@/constants/ValidationSchema";
+import LoadingButton from "@/components/LoadingButton";
+import ErrorComponent from "@/components/ErrorComponent";
 
 export interface MultiStepFormValues {
   password: string;
@@ -29,39 +27,7 @@ interface MultiStepFormProps {
 
 const MultiStepForm: React.FC<MultiStepFormProps> = ({ userType, token }) => {
   const [step, setStep] = useState(1);
-  const { handleMultiStepSubmit, loading, error } = useVerifyAccount();
-
-  const validationSchema = [
-    yup.object().shape({
-      password: yup
-        .string()
-        .min(8, "Password must be at least 8 characters long")
-        .matches(/[a-z]/, "Password must contain at least one lowercase letter")
-        .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-        .matches(/[0-9]/, "Password must contain at least one number")
-        .matches(
-          /[!@#$%^&*(),.?":{}|<>]/,
-          "Password must contain at least one special character",
-        )
-        .matches(whiteSpaceRegex, "Please enter a valid password")
-        .required("Password is required"),
-      confirmPassword: yup
-        .string()
-        .oneOf([yup.ref("password")], "Passwords must match")
-        .required("Password confirmation is required"),
-    }),
-    yup.object({
-      firstName: yup.string().required("Required"),
-      lastName: yup.string().required("Required"),
-      phoneNumber: yup.string(),
-    }),
-    userType === "TENANT"
-      ? yup.object({
-          businessName: yup.string().required("Required"),
-          taxId: yup.string(),
-        })
-      : yup.object({}),
-  ];
+  const { handleMultiStepSubmit, isLoading, error } = useVerifyAccount();
 
   const initialValues = {
     password: "",
@@ -87,7 +53,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ userType, token }) => {
     }
   };
 
-  if (loading) return <GlobalLoading fullPage />;
+  if (error) return <ErrorComponent message={error} fullPage />;
 
   const renderStep = (values: MultiStepFormValues) => {
     switch (step) {
@@ -192,7 +158,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ userType, token }) => {
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={validationSchema[step - 1]}
+      validationSchema={verifyValidationSchema(userType)[step - 1]}
       onSubmit={handleSubmit}
     >
       {({ isValid, dirty, isSubmitting, values }) => (
@@ -220,24 +186,31 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ userType, token }) => {
           </div>
           <div className="w-full flex flex-col gap-4">{renderStep(values)}</div>
           <div className="flex justify-between mt-6">
-            {step > 1 && (
-              <Button
-                type="button"
-                onClick={() => setStep(step - 1)}
-                variant="outline"
-                className="bg-blue-950 w-1/2 text-white text-center"
-                disabled={!(isValid && dirty) || isSubmitting}
-              >
-                Back
-              </Button>
+            {step === (userType === "TENANT" ? 4 : 3) &&
+            (isLoading || isSubmitting) ? (
+              <LoadingButton title="Submitting..." />
+            ) : (
+              <>
+                {step > 1 && (
+                  <Button
+                    type="button"
+                    onClick={() => setStep(step - 1)}
+                    variant="outline"
+                    className="bg-blue-950 w-1/2 text-white text-center"
+                    disabled={!(isValid && dirty) || isSubmitting}
+                  >
+                    Back
+                  </Button>
+                )}
+                <Button
+                  type="submit"
+                  className="bg-blue-950 w-1/2 text-white mx-auto"
+                  disabled={!(isValid && dirty) || isSubmitting}
+                >
+                  {step === (userType === "TENANT" ? 4 : 3) ? "Submit" : "Next"}
+                </Button>
+              </>
             )}
-            <Button
-              type="submit"
-              className="bg-blue-950 w-1/2 text-white mx-auto"
-              disabled={!(isValid && dirty) || isSubmitting}
-            >
-              {step === (userType === "TENANT" ? 4 : 3) ? "Submit" : "Next"}
-            </Button>
           </div>
           <BackToHomeButton />
         </Form>

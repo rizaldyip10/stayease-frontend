@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { AutoRateRequestType, AutoRateResponseType } from "@/constants/Rates";
 import { Switch } from "@/components/ui/switch";
-import { autoRateSettingValidationSchema } from "@/utils/validationSchema";
+import { autoRateSettingValidationSchema } from "@/constants/ValidationSchema";
 import RateDeleteDialog from "@/app/dashboard/rates/_components/RateDeleteDialog";
 import TypeSelect from "@/components/TypeSelect";
 

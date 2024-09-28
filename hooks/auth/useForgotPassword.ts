@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useAlert } from "@/context/AlertContext";
-import { useRouter } from "next/navigation";
 import authService from "@/services/authService";
 import { ForgotPasswordValues } from "@/constants/Auth";
 
@@ -9,7 +8,6 @@ export const useForgotPassword = () => {
   const [error, setError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const { showAlert } = useAlert();
-  const router = useRouter();
 
   const forgotPassword = async (email: string): Promise<any> => {
     setIsLoading(true);
@@ -25,11 +23,7 @@ export const useForgotPassword = () => {
       );
       return response;
     } catch (err: any) {
-      if (err.response && err.response.data && err.response.data.message) {
-        setError(err.response.data.message);
-      } else {
-        setError("Failed to send reset link. Please try again.");
-      }
+      setError(err.response.data.message);
       showAlert("error", "Failed to send reset link. Please try again.");
     } finally {
       setIsLoading(false);
@@ -54,16 +48,12 @@ export const useForgotPassword = () => {
       );
       return response;
     } catch (err: any) {
-      if (err.response && err.response.data && err.response.data.message) {
-        setError(err.response.data.message);
-      } else {
-        setError("Failed to reset password. Please try again.");
-      }
+      setError(err.response.data.message);
       showAlert("error", "Failed to reset password. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  return { isLoading, error, forgotPassword, resetPassword };
+  return { isSuccess, isLoading, error, forgotPassword, resetPassword };
 };

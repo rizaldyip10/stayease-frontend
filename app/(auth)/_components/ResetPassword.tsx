@@ -3,7 +3,7 @@ import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
 import { useForgotPassword } from "@/hooks/auth/useForgotPassword";
 import { Button } from "@/components/ui/button";
-import { getValidationSchema } from "@/utils/validationSchema";
+import { getValidationSchema } from "@/constants/ValidationSchema";
 import FormInputs from "@/app/(auth)/_components/FormInputs";
 
 interface ResetPasswordProps {

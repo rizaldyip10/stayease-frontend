@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import * as yup from "yup";
 import authService from "@/services/authService";
@@ -14,6 +14,8 @@ export interface FormValues {
 }
 
 export const useSelectUserType = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { data: session, update } = useSession();
   const { showAlert } = useAlert();
 
@@ -39,6 +41,8 @@ export const useSelectUserType = () => {
 
   const handleUserTypeSubmit = useCallback(
     async (values: FormValues) => {
+      setIsLoading(true);
+      setError(null);
       try {
         const response = await authService.registerOAuth2({
           googleToken: session?.user.googleToken,
@@ -81,6 +85,8 @@ export const useSelectUserType = () => {
       } catch (error: any) {
         logger.error("Registration failed:", error);
         showAlert("error", "Registration failed. Please try again.");
+      } finally {
+        setIsLoading(false);
       }
     },
     [session, update, showAlert],
@@ -90,5 +96,7 @@ export const useSelectUserType = () => {
     initialValues,
     validationSchema,
     handleUserTypeSubmit,
+    isLoading,
+    error,
   };
 };

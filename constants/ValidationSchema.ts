@@ -36,6 +36,38 @@ export const registerSchema = yup.object().shape({
     .required("Please enter your email"),
 });
 
+export const verifyValidationSchema = (userType: UserType) => [
+  yup.object().shape({
+    password: yup
+      .string()
+      .min(8, "Password must be at least 8 characters long")
+      .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+      .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .matches(/[0-9]/, "Password must contain at least one number")
+      .matches(
+        /[!@#$%^&*(),.?":{}|<>]/,
+        "Password must contain at least one special character",
+      )
+      .matches(whiteSpaceRegex, "Please enter a valid password")
+      .required("Password is required"),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("password")], "Passwords must match")
+      .required("Password confirmation is required"),
+  }),
+  yup.object({
+    firstName: yup.string().required("Required"),
+    lastName: yup.string().required("Required"),
+    phoneNumber: yup.string(),
+  }),
+  userType === "TENANT"
+    ? yup.object({
+        businessName: yup.string().required("Required"),
+        taxId: yup.string(),
+      })
+    : yup.object({}),
+];
+
 export const userTypeSelectSchema = yup.object().shape({
   userType: yup
     .string()

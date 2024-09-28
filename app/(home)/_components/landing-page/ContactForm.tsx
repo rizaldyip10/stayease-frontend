@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { contactFormValidationSchema } from "@/utils/validationSchema";
+import { contactFormValidationSchema } from "@/constants/ValidationSchema";
 
 const sanitizeInput = (input: string) => {
   return input.replace(/<\/?[^>]+(>|$)/g, "");

@@ -3,7 +3,7 @@ import { FieldArray, Form, Formik } from "formik";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { createPropValidationSchema } from "@/utils/validationSchema";
+import { createPropValidationSchema } from "@/constants/ValidationSchema";
 import PropertyForm from "@/app/dashboard/properties/create/_components/PropertyForm";
 import RoomForm from "@/app/dashboard/properties/create/_components/RoomForm";
 import { usePropertyCreation } from "@/hooks/properties/usePropertyCreation";

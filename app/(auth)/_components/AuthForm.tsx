@@ -2,11 +2,11 @@ import React from "react";
 import { FormType, UserType } from "@/constants/Types";
 import { Form, Formik, FormikValues } from "formik";
 import { Button } from "@/components/ui/button";
-import { getValidationSchema } from "@/utils/validationSchema";
+import { getValidationSchema } from "@/constants/ValidationSchema";
 import FormInputs from "@/app/(auth)/_components/FormInputs";
 import ChangeCredentialButton from "@/app/(user)/profile/settings/_components/ChangeCredentialButton";
 import { useCredentialSubmission } from "@/hooks/auth/useCredentialSubmission";
-import GlobalLoading from "@/components/GlobalLoading";
+import LoadingButton from "@/components/LoadingButton";
 
 interface AuthFormProps {
   formType: FormType;
@@ -22,7 +22,13 @@ const AuthForm: React.FC<AuthFormProps> = ({
   const schema = getValidationSchema(formType);
   const { isLoading, error, handleSubmit } = useCredentialSubmission(userType);
 
-  if (isLoading) return <GlobalLoading fullPage />;
+  const buttonTitle =
+    formType === "register"
+      ? `Create Account as a ${userType.toLowerCase().charAt(0).toUpperCase() + userType.toLowerCase().slice(1)}`
+      : "Login to your Account";
+
+  const loadingButtonTitle =
+    formType === "register" ? "Creating Account..." : "Logging in...";
 
   return (
     <div className="w-full">
@@ -36,18 +42,17 @@ const AuthForm: React.FC<AuthFormProps> = ({
         {({ isValid, dirty, isSubmitting }) => (
           <Form className="w-full flex flex-col gap-4">
             <FormInputs formType={formType} />
-            <Button
-              type="submit"
-              className="bg-blue-950 w-full text-white"
-              disabled={!(isValid && dirty) || isSubmitting}
-            >
-              {isSubmitting
-                ? "Submitting..."
-                : formType === "register"
-                  ? "Create Account as a " +
-                    `${userType.toLowerCase().charAt(0).toUpperCase() + userType.toLowerCase().slice(1)}`
-                  : "Login to your Account"}
-            </Button>
+            {isLoading || isSubmitting ? (
+              <LoadingButton title={loadingButtonTitle} />
+            ) : (
+              <Button
+                type="submit"
+                className="bg-blue-950 w-full text-white"
+                disabled={!(isValid && dirty)}
+              >
+                {buttonTitle}
+              </Button>
+            )}
           </Form>
         )}
       </Formik>

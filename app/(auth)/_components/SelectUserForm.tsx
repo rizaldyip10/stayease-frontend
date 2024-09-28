@@ -20,10 +20,19 @@ import { Label } from "@/components/ui/label";
 import { useSelectUserType } from "@/hooks/auth/useSelectUserType";
 import FormInputs from "@/app/(auth)/_components/FormInputs";
 import BackToHomeButton from "@/app/(auth)/_components/BackToHomeButton";
+import LoadingButton from "@/components/LoadingButton";
+import ErrorComponent from "@/components/ErrorComponent";
 
 const SelectUserForm: React.FC = () => {
-  const { initialValues, validationSchema, handleUserTypeSubmit } =
-    useSelectUserType();
+  const {
+    initialValues,
+    validationSchema,
+    handleUserTypeSubmit,
+    isLoading,
+    error,
+  } = useSelectUserType();
+
+  if (error) return <ErrorComponent message={error} fullPage />;
 
   return (
     <div className="flex items-center justify-center min-h-screen">
@@ -45,7 +54,7 @@ const SelectUserForm: React.FC = () => {
             <Form>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="userType">User Type</Label>
+                  <Label htmlFor="userType">Register as</Label>
                   <Select
                     onValueChange={(value) => setFieldValue("userType", value)}
                     value={values.userType}
@@ -64,13 +73,16 @@ const SelectUserForm: React.FC = () => {
                 )}
               </CardContent>
               <CardFooter className="flex flex-col gap-3">
-                <Button
-                  type="submit"
-                  className="w-full bg-blue-950 hover:bg-blue-900"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Processing..." : "Continue"}
-                </Button>
+                {isLoading || isSubmitting ? (
+                  <LoadingButton title="Creating account..." />
+                ) : (
+                  <Button
+                    type="submit"
+                    className="w-full bg-blue-950 hover:bg-blue-900"
+                  >
+                    Submit
+                  </Button>
+                )}
                 <BackToHomeButton />
               </CardFooter>
             </Form>

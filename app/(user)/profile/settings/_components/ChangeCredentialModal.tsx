@@ -1,5 +1,5 @@
 import React from "react";
-import { Formik, Form, FormikValues } from "formik";
+import { Form, Formik } from "formik";
 import * as yup from "yup";
 import {
   Dialog,
@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import FormikInput from "@/components/FormikInput";
 import { useForgotPassword } from "@/hooks/auth/useForgotPassword";
 import { useChangeEmail } from "@/hooks/auth/useChangeEmail";
+import LoadingButton from "@/components/LoadingButton";
 
 interface ForgotPasswordModalProps {
   isOpen: boolean;
@@ -79,13 +80,16 @@ const ChangeCredentialModal: React.FC<ForgotPasswordModalProps> = ({
               {error && (
                 <div className="text-red-500 text-sm mt-1">{error}</div>
               )}
-              <Button
-                type="submit"
-                disabled={isSubmitting || isLoading}
-                className="w-full bg-blue-950 text-white hover:bg-blue-900"
-              >
-                {isSubmitting || isLoading ? "Sending..." : buttonText}
-              </Button>
+              {isLoading || isSubmitting ? (
+                <LoadingButton title="Sending request..." />
+              ) : (
+                <Button
+                  type="submit"
+                  className="w-full bg-blue-950 text-white hover:bg-blue-900"
+                >
+                  {buttonText}
+                </Button>
+              )}
             </Form>
           )}
         </Formik>

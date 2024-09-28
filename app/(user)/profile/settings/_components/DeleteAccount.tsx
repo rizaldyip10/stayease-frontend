@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,23 +10,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { profileService } from "@/services/profileService";
-import { useAlert } from "@/context/AlertContext";
 import { TiUserDeleteOutline } from "react-icons/ti";
+import { useDeleteAccount } from "@/hooks/auth/useDeleteAccount";
+import LoadingButton from "@/components/LoadingButton";
 
 const DeleteAccount: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { showAlert } = useAlert();
-
-  const handleDeleteAccount = async () => {
-    try {
-      await profileService.deleteAccount();
-      showAlert("success", "Account deleted successfully");
-      setIsOpen(false);
-    } catch (error: any) {
-      showAlert("error", error.message);
-    }
-  };
+  const { isOpen, setIsOpen, handleDeleteAccount, isLoading, error } =
+    useDeleteAccount();
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -50,12 +40,18 @@ const DeleteAccount: React.FC = () => {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setIsOpen(false)}>
-            Cancel
-          </Button>
-          <Button variant="destructive" onClick={handleDeleteAccount}>
-            Yes, delete my account
-          </Button>
+          {isLoading ? (
+            <LoadingButton title="Deleting account..." />
+          ) : (
+            <>
+              <Button variant="outline" onClick={() => setIsOpen(false)}>
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={handleDeleteAccount}>
+                Yes, delete my account
+              </Button>
+            </>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

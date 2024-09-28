@@ -5,7 +5,7 @@ import authService from "@/services/authService";
 import { useAlert } from "@/context/AlertContext";
 
 export const useVerifyAccount = () => {
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { showAlert } = useAlert();
 
@@ -14,7 +14,7 @@ export const useVerifyAccount = () => {
     token: string,
     actions: FormikHelpers<MultiStepFormValues>,
   ) => {
-    setLoading(true);
+    setIsLoading(true);
     setError(null);
     try {
       const response = await authService.verify(values, token);
@@ -24,10 +24,10 @@ export const useVerifyAccount = () => {
       console.error("Error during registration verification:", error);
       showAlert("error", error.message);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
       actions.setSubmitting(false);
     }
   };
 
-  return { loading, error, handleMultiStepSubmit };
+  return { isLoading, error, handleMultiStepSubmit };
 };
