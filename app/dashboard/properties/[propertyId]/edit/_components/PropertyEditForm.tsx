@@ -1,26 +1,25 @@
 import React from "react";
-import { Formik, Form, FieldArray } from "formik";
+import { FieldArray, Form, Formik } from "formik";
 import { Button } from "@/components/ui/button";
-import { PropertyAndRoomType, RoomType } from "@/constants/Property";
+import { PropertyAndRoomType } from "@/constants/Property";
 import PropertyFormFields from "@/app/dashboard/properties/[propertyId]/edit/_components/PropertyEditFields";
 import RoomEditForm from "@/app/dashboard/properties/[propertyId]/edit/_components/RoomEditForm";
 import { usePropertyEdit } from "@/hooks/properties/usePropertyEdit";
 import LoadingButton from "@/components/LoadingButton";
 
 interface PropertyEditFormProps {
-  property: PropertyAndRoomType | null;
-  rooms: RoomType[];
+  property: PropertyAndRoomType | undefined;
 }
 
-const PropertyEditForm: React.FC<PropertyEditFormProps> = ({
-  property,
-  rooms,
-}) => {
+const PropertyEditForm: React.FC<PropertyEditFormProps> = ({ property }) => {
   const { handleSubmit, isLoading } = usePropertyEdit(property?.id || 0);
+
+  const rooms = property?.rooms || [];
+
   const initialValues = {
     property: {
       ...property,
-      categoryId: property?.category,
+      name: property?.propertyName || "",
     },
     rooms: rooms,
   };

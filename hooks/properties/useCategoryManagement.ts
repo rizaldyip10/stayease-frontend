@@ -25,6 +25,14 @@ export const useCategoryManagement = (initialCategoryId?: number) => {
     }
   }, [categories, initialCategoryId]);
 
+  const findCategoryId = useCallback(
+    (categoryName: string) => {
+      const category = categories?.find((cat) => cat.name === categoryName);
+      return category?.id;
+    },
+    [categories],
+  );
+
   const handleSelectChange = useCallback(
     (value: string) => {
       setIsCreatingNew(value === "new");
@@ -65,6 +73,7 @@ export const useCategoryManagement = (initialCategoryId?: number) => {
 
   return {
     categories,
+    findCategoryId,
     selectedCategory,
     isCreatingNew,
     isLoading,

@@ -1,12 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { ErrorMessage, Field, useFormikContext } from "formik";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ImageUpload from "@/app/dashboard/properties/create/_components/ImageUpload";
 import CategoryDropdown from "@/app/dashboard/properties/create/_components/CategoryDropdown";
-import propertyService from "@/services/propertyService";
-import { CategoryType } from "@/constants/Property";
 import MapComponent from "@/components/MapComponent";
 
 export interface PropertyFormValues {
@@ -23,11 +21,6 @@ export interface PropertyFormValues {
   };
 }
 
-interface PropertyFormProps {
-  setCategories: React.Dispatch<React.SetStateAction<CategoryType[]>>;
-  categories: CategoryType[] | undefined;
-}
-
 const propertyFields = [
   { name: "name", label: "Name", type: "text" },
   { name: "description", label: "Description", type: "text" },
@@ -36,34 +29,13 @@ const propertyFields = [
   { name: "country", label: "Country", type: "text" },
 ];
 
-const PropertyForm: React.FC<PropertyFormProps> = ({
-  categories,
-  setCategories,
-}) => {
+const PropertyForm: React.FC = () => {
   const { values, setFieldValue } = useFormikContext<PropertyFormValues>();
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
   const handleLocationChange = (lat: number, lng: number) => {
     setFieldValue("property.latitude", lat);
     setFieldValue("property.longitude", lng);
     console.log("Location changed to:", lat, lng);
-  };
-
-  const handleCategorySelect = (categoryId: string | number) => {
-    setSelectedCategory(Number(categoryId));
-  };
-
-  const handleCreateNewCategory = async (categoryName: string) => {
-    try {
-      const newCategory = await propertyService.createCategory({
-        name: categoryName,
-      });
-      // TODO : Update form state or perform any other necessary actions
-      setSelectedCategory(newCategory.id);
-    } catch (error) {
-      console.error("Failed to create new category:", error);
-      // TODO : Handle error
-    }
   };
 
   useEffect(() => {

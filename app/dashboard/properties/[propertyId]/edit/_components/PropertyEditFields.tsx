@@ -6,9 +6,11 @@ import { Textarea } from "@/components/ui/textarea";
 import ImageUpload from "@/app/dashboard/properties/create/_components/ImageUpload";
 import MapComponent from "@/components/MapComponent";
 import CategoryDropdown from "@/app/dashboard/properties/create/_components/CategoryDropdown";
+import { useCategoryManagement } from "@/hooks/properties/useCategoryManagement";
 
 const PropertyFormFields: React.FC = () => {
-  const { values, setFieldValue } = useFormikContext<any>();
+  const { values } = useFormikContext<any>();
+  const { findCategoryId } = useCategoryManagement();
 
   const editableFields = [
     { name: "name", label: "Name", component: Input },
@@ -37,7 +39,9 @@ const PropertyFormFields: React.FC = () => {
             />
           </div>
         ))}
-        <CategoryDropdown initialCategoryId={values.property.categoryId} />
+        <CategoryDropdown
+          initialCategoryId={findCategoryId(values.property.category)}
+        />
       </div>
 
       <div>

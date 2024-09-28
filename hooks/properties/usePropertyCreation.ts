@@ -34,7 +34,6 @@ type FormValues = {
 };
 
 export const usePropertyCreation = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { showAlert } = useAlert();
@@ -89,7 +88,6 @@ export const usePropertyCreation = () => {
   };
 
   return {
-    setCategories,
     isLoading,
     error,
     handleSubmit,

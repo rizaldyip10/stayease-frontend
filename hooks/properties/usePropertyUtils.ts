@@ -6,6 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export const usePropertyUtils = () => {
   const queryClient = useQueryClient();
+
   const {
     data: properties,
     error: propertiesError,
@@ -25,7 +26,6 @@ export const usePropertyUtils = () => {
     data: categories,
     error: categoriesError,
     isLoading: categoriesIsLoading,
-    setData: setCategories,
   } = useFetchData<CategoryType[]>(
     "categories",
     propertyService.getAllCategories,
