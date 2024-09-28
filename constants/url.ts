@@ -17,6 +17,7 @@ export const config = {
     password: {
       forgot: "/password/forgot",
       reset: "/password/reset",
+      checkToken: "/password/check-token",
     },
     registration: {
       register: "/register",
