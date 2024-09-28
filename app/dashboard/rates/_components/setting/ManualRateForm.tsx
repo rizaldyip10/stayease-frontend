@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { CustomDatePicker } from "@/components/CustomDatePicker";
 import { RateRequestType } from "@/constants/Rates";
-import { manualRateValidationSchema } from "@/utils/validationSchema";
+import { manualRateValidationSchema } from "@/constants/ValidationSchema";
 import { formatDate } from "@/utils/dateFormatter";
 import TypeSelect from "@/components/TypeSelect";
 import { typeItems } from "@/app/dashboard/rates/_components/setting/AutomaticRateForm";

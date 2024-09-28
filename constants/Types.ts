@@ -4,5 +4,6 @@ export type FormType =
   | "register"
   | "verify"
   | "userType"
-  | "forgotPassword";
+  | "forgotPassword"
+  | "changeEmail";
 export type AlertType = "success" | "error";
