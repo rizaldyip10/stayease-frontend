@@ -2,7 +2,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import RoomDetails from "@/app/(home)/properties/[propertyId]/rooms/[roomId]/_components/RoomDetails";
-import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
+import { usePropertyCurrentDetails } from "@/hooks/properties/usePropertyCurrentDetails";
 import { useSearchParams } from "next/navigation";
 import PropertyDetailsSkeleton from "@/app/(home)/properties/[propertyId]/_components/PropertyDetailsSkeleton";
 import ErrorComponent from "@/components/ErrorComponent";
@@ -20,7 +20,7 @@ export default function RoomDetailsPage({
   const checkInDate = searchParams.get("checkInDate");
   const date = checkInDate ? new Date(checkInDate) : new Date();
 
-  const { currentProperty, isLoading, error } = usePropertyDetails(
+  const { currentProperty, isLoading, error } = usePropertyCurrentDetails(
     propertyId,
     date,
     roomId,

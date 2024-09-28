@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import PropertyDetails from "@/app/(home)/properties/[propertyId]/_components/PropertyDetails";
-import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
+import { usePropertyCurrentDetails } from "@/hooks/properties/usePropertyCurrentDetails";
 import { notFound, useSearchParams } from "next/navigation";
 import PropertyDetailsSkeleton from "@/app/(home)/properties/[propertyId]/_components/PropertyDetailsSkeleton";
 import ErrorComponent from "@/components/ErrorComponent";
@@ -20,7 +20,7 @@ export default function PropertyDetailsPage({
 
   const propertyId = parseInt(params.propertyId, 10);
 
-  const { currentProperty, error, isLoading } = usePropertyDetails(
+  const { currentProperty, error, isLoading } = usePropertyCurrentDetails(
     propertyId,
     date,
   );

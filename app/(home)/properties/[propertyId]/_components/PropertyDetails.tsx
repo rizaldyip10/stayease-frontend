@@ -13,7 +13,7 @@ import { useBookingValues } from "@/hooks/transactions/useBookingValues";
 import RoomCard from "@/app/(home)/properties/[propertyId]/_components/RoomCard";
 import AvailabilityCalendar from "@/app/(home)/properties/[propertyId]/_components/AvailabilityCalendar";
 import { CurrentAvailablePropertyType } from "@/constants/Property";
-import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
+import { usePropertyCurrentDetails } from "@/hooks/properties/usePropertyCurrentDetails";
 import PropertyHeader from "@/app/(home)/properties/[propertyId]/_components/PropertyHeader";
 import { useDateSelection } from "@/hooks/useDateSelection";
 import MapComponent from "@/components/MapComponent";
@@ -43,7 +43,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
   } = useDateSelection();
 
   // Use the hook to refetch data when selectedDate changes
-  const { currentProperty, isLoading, error } = usePropertyDetails(
+  const { currentProperty, isLoading, error } = usePropertyCurrentDetails(
     propertyId,
     selectedDate,
   );

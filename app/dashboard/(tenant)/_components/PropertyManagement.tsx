@@ -8,7 +8,7 @@ import {
   RoomWithAdjustedRatesType,
   PropertyAndRoomType,
 } from "@/constants/Property";
-import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
+import { usePropertyCurrentDetails } from "@/hooks/properties/usePropertyCurrentDetails";
 import { currencyFormatter } from "@/utils/CurrencyFormatter";
 import Link from "next/link";
 import RoomTab from "@/app/dashboard/(tenant)/_components/RoomTab";

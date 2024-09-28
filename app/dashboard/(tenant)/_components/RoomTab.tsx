@@ -3,7 +3,7 @@ import { RoomWithAdjustedRatesType } from "@/constants/Property";
 import { Card } from "@/components/ui/card";
 import { currencyFormatter } from "@/utils/CurrencyFormatter";
 import { Button } from "@/components/ui/button";
-import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
+import { usePropertyCurrentDetails } from "@/hooks/properties/usePropertyCurrentDetails";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
@@ -12,7 +12,7 @@ interface RoomTabProps {
 }
 
 const RoomTab: React.FC<RoomTabProps> = ({ propertyId }) => {
-  const { currentProperty } = usePropertyDetails(propertyId, new Date());
+  const { currentProperty } = usePropertyCurrentDetails(propertyId, new Date());
 
   const hasAdjustment = currentProperty?.rooms?.some(
     (room: RoomWithAdjustedRatesType) => room.adjustedPrice !== room.basePrice,
