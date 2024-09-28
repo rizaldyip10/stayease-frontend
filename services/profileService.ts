@@ -1,7 +1,6 @@
 import { config } from "@/constants/url";
 import axiosInterceptor from "@/utils/axiosInterceptor";
 import logger from "@/utils/logger";
-import { signOut } from "@/auth";
 
 export interface UserProfile {
   id: string;
@@ -159,7 +158,6 @@ export const profileService = {
       logger.info("Deleting account");
       await axiosInterceptor.delete(config.endpoints.users.delete);
       logger.info("Account deletion successful");
-      await signOut({ redirect: true });
     } catch (error: any) {
       logger.error("Account deletion failed", { error });
       throw error;

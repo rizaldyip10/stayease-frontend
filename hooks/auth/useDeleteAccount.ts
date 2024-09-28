@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useAlert } from "@/context/AlertContext";
 import { profileService } from "@/services/profileService";
-import { signOut } from "@/auth";
+import { useSignOut } from "@/hooks/auth/useSignOut";
 
 export const useDeleteAccount = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const { showAlert } = useAlert();
+  const { handleSignOut } = useSignOut();
 
   const handleDeleteAccount = async () => {
     setIsLoading(true);
@@ -21,7 +22,7 @@ export const useDeleteAccount = () => {
     } finally {
       setIsLoading(false);
       setIsOpen(false);
-      await signOut({ redirect: true });
+      await handleSignOut({ redirect: true });
     }
   };
 

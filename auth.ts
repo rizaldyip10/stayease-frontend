@@ -125,24 +125,3 @@ export const {
   auth,
   signIn,
 } = NextAuth(nextAuthConfig);
-
-// Custom signOut function
-export const signOut = async (options?: {
-  callbackUrl?: string;
-  redirect?: boolean;
-}) => {
-  try {
-    // Call backend logout endpoint
-    const session = await getSession();
-    const email = session?.user?.email;
-    await authService.logout(email);
-    logger.info("Backend logout successful");
-  } catch (error) {
-    logger.error("Backend logout failed", { error });
-  } finally {
-    const event = new Event("visibilitychange");
-    document.dispatchEvent(event);
-  }
-  // Perform the original signOut from next-auth
-  return nextAuthSignOut(options);
-};
