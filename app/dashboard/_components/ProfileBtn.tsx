@@ -13,18 +13,17 @@ import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RxDashboard } from "react-icons/rx";
 import { useSession } from "next-auth/react";
-import { signOut } from "@/auth";
-
-interface ProfileBtnProps {
-  isDashboard: boolean;
-}
-
+import { useSignOut } from "@/hooks/auth/useSignOut";
+import GlobalLoading from "@/components/GlobalLoading";
 const ProfileBtn: React.FC = () => {
   const { data: session } = useSession();
+  const { handleSignOut, isLoading } = useSignOut();
 
   const initials =
     (session?.user?.firstName?.[0] ?? "") +
     (session?.user?.lastName?.[0] ?? "");
+
+  if (isLoading) return <GlobalLoading fullPage />;
 
   return (
     <DropdownMenu>
@@ -61,9 +60,9 @@ const ProfileBtn: React.FC = () => {
         </DropdownMenuItem>
         <DropdownMenuItem className="text-xs flex items-center text-red-700 gap-1">
           <Link
-            href="/"
-            onClick={() => signOut({ redirect: true })}
-            className="flex gap-1"
+            href="#"
+            onClick={() => handleSignOut({ redirect: true, callbackUrl: "/" })}
+            className="flex gap-1 text-red-700"
           >
             <LogOut className="w-4 h-4 text-red-700" />
             Log Out

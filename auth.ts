@@ -5,13 +5,11 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { config } from "@/constants/url";
 import axiosInterceptor from "@/utils/axiosInterceptor";
 import logger from "@/utils/logger";
-import { getSession, signOut as nextAuthSignOut } from "next-auth/react";
 import {
   handleGoogleSignIn,
   handleJwtCallback,
   handleSessionCallback,
 } from "@/utils/authHelpers";
-import authService from "@/services/authService";
 
 interface AuthCallbacks {
   handleGoogleSignIn: (params: {
