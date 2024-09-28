@@ -15,7 +15,6 @@ const PropertyFormFields: React.FC = () => {
     selectedCategory,
     handleCategorySelect,
     handleCreateNewCategory,
-    handleImageUpload,
     isLoading,
     error,
   } = usePropertyEdit(values.property.id);
@@ -68,12 +67,7 @@ const PropertyFormFields: React.FC = () => {
 
       <div>
         <Label>Property Image</Label>
-        <ImageUpload
-          name="property.imageUrl"
-          onImageUpload={(file) =>
-            handleImageUpload(file, "property.imageUrl", setFieldValue)
-          }
-        />
+        <ImageUpload fieldName="property.imageUrl" uploadType="property" />
       </div>
 
       <div className="space-y-2">

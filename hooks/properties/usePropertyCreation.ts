@@ -38,26 +38,6 @@ export const usePropertyCreation = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { showAlert } = useAlert();
-
-  const handleImageUpload = useCallback(
-    async (
-      file: File,
-      fieldName: string,
-      setFieldValue: (field: string, value: any) => void,
-    ): Promise<void> => {
-      try {
-        const imageUrl = await propertyService.uploadImage(file);
-        console.log("Image uploaded successfully, url:", imageUrl);
-        setFieldValue(fieldName, imageUrl);
-        showAlert("success", "Image uploaded successfully");
-      } catch (error) {
-        console.error("Error uploading image: ", error);
-        showAlert("error", "Failed to upload image");
-      }
-    },
-    [showAlert],
-  );
-
   const handleSubmit = async (
     values: FormValues,
     formikHelpers: FormikHelpers<FormValues>,
@@ -125,6 +105,5 @@ export const usePropertyCreation = () => {
     isLoading,
     error,
     handleSubmit,
-    handleImageUpload,
   };
 };

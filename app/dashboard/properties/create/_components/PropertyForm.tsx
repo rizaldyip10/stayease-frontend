@@ -24,31 +24,25 @@ interface PropertyFormValues {
 }
 
 interface PropertyFormProps {
-  onImageUpload: (
-    file: File,
-    fieldName: string,
-    setFieldValue: (field: string, value: any) => void,
-  ) => Promise<void>;
   setCategories: React.Dispatch<React.SetStateAction<CategoryType[]>>;
   categories: CategoryType[] | undefined;
 }
 
+const propertyFields = [
+  { name: "name", label: "Name", type: "text" },
+  { name: "description", label: "Description", type: "text" },
+  { name: "address", label: "Address", type: "text" },
+  { name: "city", label: "City", type: "text" },
+  { name: "country", label: "Country", type: "text" },
+];
+
 const PropertyForm: React.FC<PropertyFormProps> = ({
-  onImageUpload,
   categories,
   setCategories,
 }) => {
   const { values, setFieldValue } = useFormikContext<PropertyFormValues>();
   useState<google.maps.places.Autocomplete | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-
-  const propertyFields = [
-    { name: "name", label: "Name", type: "text" },
-    { name: "description", label: "Description", type: "text" },
-    { name: "address", label: "Address", type: "text" },
-    { name: "city", label: "City", type: "text" },
-    { name: "country", label: "Country", type: "text" },
-  ];
 
   const handleLocationChange = (lat: number, lng: number) => {
     setFieldValue("property.latitude", lat);
@@ -129,7 +123,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
       </div>
       <div className="mt-4">
         <Label>Property Image</Label>
-        <ImageUpload name="property.imageUrl" onImageUpload={onImageUpload} />
+        <ImageUpload fieldName="property.imageUrl" uploadType="property" />
       </div>
     </div>
   );

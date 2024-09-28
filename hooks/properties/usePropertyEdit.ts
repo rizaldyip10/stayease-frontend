@@ -28,7 +28,6 @@ export const usePropertyEdit = (propertyId: number) => {
     usePropertyData(propertyId);
   const { categories } = usePropertyUtils();
   const { alertInfo, hideAlert, showAlert } = useAlert();
-  const { handleImageUpload } = useImageUpload("property");
   const { selectedCategory, handleCategorySelect, handleCreateNewCategory } =
     useCategoryManagement(categories ?? []);
 
@@ -73,7 +72,6 @@ export const usePropertyEdit = (propertyId: number) => {
     selectedCategory,
     handleCategorySelect,
     handleCreateNewCategory,
-    handleImageUpload,
     handleSubmit,
     handleRemoveRoom,
   };

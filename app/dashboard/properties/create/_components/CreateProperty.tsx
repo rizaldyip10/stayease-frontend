@@ -12,7 +12,7 @@ import { usePropertyUtils } from "@/hooks/properties/usePropertyUtils";
 import GlobalLoading from "@/components/GlobalLoading";
 
 const CreateProperty = () => {
-  const { setCategories, isLoading, error, handleSubmit, handleImageUpload } =
+  const { setCategories, isLoading, error, handleSubmit } =
     usePropertyCreation();
   const { categories } = usePropertyUtils();
 
@@ -35,7 +35,6 @@ const CreateProperty = () => {
         {({ values, isSubmitting }) => (
           <Form className="flex flex-col">
             <PropertyForm
-              onImageUpload={handleImageUpload}
               categories={categories}
               setCategories={setCategories}
             />
@@ -46,7 +45,6 @@ const CreateProperty = () => {
                     <RoomForm
                       key={index}
                       index={index}
-                      onImageUpload={handleImageUpload}
                       onRemove={() => remove(index)}
                     />
                   ))}
