@@ -15,27 +15,35 @@ export const useSignOut = () => {
   }) => {
     setIsLoading(true);
     setError(null);
+
     try {
-      // Call backend logout endpoint
       const session = await getSession();
       const email = session?.user?.email;
+
       await authService.logout(email);
       logger.info("Backend logout successful");
-      showAlert("success", "You have been logged out!");
-    } catch (error: any) {
-      logger.error("Backend logout failed", { error });
-      setError(
-        error.response?.data?.message ||
-          error.message ||
-          "An error occurred while logging out",
-      );
-      showAlert("error", error ? error : "An error occurred while logging out");
-    } finally {
+
+      await signOut(options);
       const event = new Event("visibilitychange");
       document.dispatchEvent(event);
+      showAlert("success", "You have been logged out!");
+    } catch (error: any) {
+      if (error.response) {
+        logger.error("Backend logout failed", { error });
+        setError(
+          error.response.data?.message || "An error occurred while logging out",
+        );
+      } else {
+        logger.error("Frontend logout failed", { error });
+        setError("An error occurred while logging out");
+      }
+      showAlert(
+        "error",
+        error.message || "An error occurred while logging out",
+      );
+    } finally {
+      setIsLoading(false);
     }
-    // Perform the original signOut from next-auth
-    return signOut(options);
   };
 
   return { isLoading, error, handleSignOut };
