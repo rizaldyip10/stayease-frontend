@@ -19,8 +19,6 @@ const VerificationPage: React.FC = () => {
     token: token,
   });
 
-  console.log("isTokenValid from page", isTokenValid);
-
   if (isTokenValid === null) {
     return <GlobalLoading fullPage />;
   }

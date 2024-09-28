@@ -220,6 +220,21 @@ export const authService = {
     }
   },
 
+  checkPasswordToken: async (token: string): Promise<TokenCheckResponse> => {
+    try {
+      logger.info("Checking password reset token");
+      const response = await axiosInterceptor.post(
+        config.endpoints.password.checkToken,
+        token,
+      );
+      logger.info("Password reset token is valid");
+      return response.data;
+    } catch (error: any) {
+      logger.error("Password reset token is invalid", { error });
+      return error.response.data;
+    }
+  },
+
   resetPassword: async (
     token: string,
     values: ForgotPasswordValues,
