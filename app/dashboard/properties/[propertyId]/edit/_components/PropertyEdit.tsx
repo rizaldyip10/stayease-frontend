@@ -2,13 +2,13 @@ import React from "react";
 import PropertyEditForm from "./PropertyEditForm";
 import { usePropertyEdit } from "@/hooks/properties/usePropertyEdit";
 import GlobalLoading from "@/components/GlobalLoading";
+import { usePropertyData } from "@/hooks/properties/usePropertyData";
 
 interface PropertyEditProps {
   propertyId: number;
 }
 const PropertyEdit: React.FC<PropertyEditProps> = ({ propertyId }) => {
-  const { property, rooms, isLoading, error, handleSubmit } =
-    usePropertyEdit(propertyId);
+  const { property, rooms, isLoading, error } = usePropertyData(propertyId);
 
   if (isLoading) {
     return (
@@ -23,11 +23,7 @@ const PropertyEdit: React.FC<PropertyEditProps> = ({ propertyId }) => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4 text-blue-950">Edit Property</h1>
-      <PropertyEditForm
-        property={property}
-        rooms={rooms}
-        onSubmit={handleSubmit}
-      />
+      <PropertyEditForm property={property} rooms={rooms} />
     </div>
   );
 };

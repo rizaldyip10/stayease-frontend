@@ -1,23 +1,14 @@
-import React, { useEffect } from "react";
-import { Field, ErrorMessage, useFormikContext } from "formik";
+import React from "react";
+import { ErrorMessage, Field, useFormikContext } from "formik";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import CategoryDropdown from "@/app/dashboard/properties/[propertyId]/edit/_components/CategoryDropdown";
 import ImageUpload from "@/app/dashboard/properties/create/_components/ImageUpload";
 import MapComponent from "@/components/MapComponent";
-import { usePropertyEdit } from "@/hooks/properties/usePropertyEdit";
+import CategoryDropdown from "@/app/dashboard/properties/create/_components/CategoryDropdown";
 
 const PropertyFormFields: React.FC = () => {
   const { values, setFieldValue } = useFormikContext<any>();
-  const {
-    categories,
-    selectedCategory,
-    handleCategorySelect,
-    handleCreateNewCategory,
-    isLoading,
-    error,
-  } = usePropertyEdit(values.property.id);
 
   const editableFields = [
     { name: "name", label: "Name", component: Input },
@@ -31,14 +22,6 @@ const PropertyFormFields: React.FC = () => {
   ];
 
   console.log("values:", values);
-
-  useEffect(() => {
-    console.log("Parent component rendered");
-    console.log("Categories:", categories);
-    console.log("Selected Category:", selectedCategory);
-    console.log("Is Loading:", isLoading);
-    console.log("Error:", error);
-  }, [categories, selectedCategory, isLoading, error]);
 
   return (
     <div className="space-y-6">
@@ -54,15 +37,7 @@ const PropertyFormFields: React.FC = () => {
             />
           </div>
         ))}
-        <CategoryDropdown
-          categories={categories}
-          selectedCategory={selectedCategory}
-          onSelect={(categoryId) => {
-            setFieldValue("property.categoryId", categoryId);
-            handleCategorySelect(categoryId);
-          }}
-          onCreateNew={handleCreateNewCategory}
-        />
+        <CategoryDropdown initialCategoryId={values.property.categoryId} />
       </div>
 
       <div>

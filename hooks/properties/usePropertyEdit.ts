@@ -24,12 +24,9 @@ type PropertyEditFormValues = {
 };
 
 export const usePropertyEdit = (propertyId: number) => {
-  const { property, rooms, isLoading, error, updateProperty, updateRooms } =
+  const { isLoading, error, updateProperty, updateRooms } =
     usePropertyData(propertyId);
-  const { categories } = usePropertyUtils();
-  const { alertInfo, hideAlert, showAlert } = useAlert();
-  const { selectedCategory, handleCategorySelect, handleCreateNewCategory } =
-    useCategoryManagement(categories ?? []);
+  const { showAlert } = useAlert();
 
   const router = useRouter();
 
@@ -62,16 +59,8 @@ export const usePropertyEdit = (propertyId: number) => {
   };
 
   return {
-    property,
-    rooms,
     isLoading,
     error,
-    alertInfo,
-    hideAlert,
-    categories,
-    selectedCategory,
-    handleCategorySelect,
-    handleCreateNewCategory,
     handleSubmit,
     handleRemoveRoom,
   };

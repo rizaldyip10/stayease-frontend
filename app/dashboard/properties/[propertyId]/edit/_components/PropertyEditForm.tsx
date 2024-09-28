@@ -4,18 +4,19 @@ import { Button } from "@/components/ui/button";
 import { PropertyAndRoomType, RoomType } from "@/constants/Property";
 import PropertyFormFields from "@/app/dashboard/properties/[propertyId]/edit/_components/PropertyEditFields";
 import RoomEditForm from "@/app/dashboard/properties/[propertyId]/edit/_components/RoomEditForm";
+import { usePropertyEdit } from "@/hooks/properties/usePropertyEdit";
+import LoadingButton from "@/components/LoadingButton";
 
 interface PropertyEditFormProps {
   property: PropertyAndRoomType | null;
   rooms: RoomType[];
-  onSubmit: (values: any) => Promise<void>;
 }
 
 const PropertyEditForm: React.FC<PropertyEditFormProps> = ({
   property,
   rooms,
-  onSubmit,
 }) => {
+  const { handleSubmit, isLoading } = usePropertyEdit(property?.id || 0);
   const initialValues = {
     property: {
       ...property,
@@ -25,7 +26,7 @@ const PropertyEditForm: React.FC<PropertyEditFormProps> = ({
   };
 
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit}>
+    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
       {({ values, isSubmitting }) => (
         <Form className="space-y-8">
           <PropertyFormFields />
@@ -58,13 +59,19 @@ const PropertyEditForm: React.FC<PropertyEditFormProps> = ({
               </div>
             )}
           </FieldArray>
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            className="bg-blue-950 text-white hover:bg-blue-900"
-          >
-            {isSubmitting ? "Updating..." : "Update Property"}
-          </Button>
+          {isLoading || isSubmitting ? (
+            <div className="w-1/4">
+              <LoadingButton title="Updating..." />
+            </div>
+          ) : (
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="bg-blue-950 text-white hover:bg-blue-900"
+            >
+              Update Property
+            </Button>
+          )}
         </Form>
       )}
     </Formik>
