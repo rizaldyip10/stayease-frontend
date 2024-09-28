@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import propertyService from "@/services/propertyService";
 import {
-  AdjustedRatesType,
+  RoomWithAdjustedRatesType,
   CurrentAvailablePropertyType,
 } from "@/constants/Property";
 import { useMemo } from "react";
@@ -39,7 +39,7 @@ export const usePropertyDetails = (
     data: room,
     error: roomError,
     isLoading: roomIsLoading,
-  } = useQuery<AdjustedRatesType, Error>({
+  } = useQuery<RoomWithAdjustedRatesType, Error>({
     queryKey: ["room", propertyId, roomId, memoizedDate],
     queryFn: () => propertyService.getCurrentRoom(propertyId, roomId!, date),
     enabled: !!roomId,

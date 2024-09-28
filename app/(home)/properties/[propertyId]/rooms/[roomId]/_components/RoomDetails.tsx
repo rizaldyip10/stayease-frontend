@@ -12,12 +12,12 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { format, isValid, parseISO } from "date-fns";
 import { useBookingValues } from "@/hooks/transactions/useBookingValues";
-import { AdjustedRatesType } from "@/constants/Property";
+import { RoomWithAdjustedRatesType } from "@/constants/Property";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 interface RoomDetailsProps {
-  room: AdjustedRatesType;
+  room: RoomWithAdjustedRatesType;
 }
 
 const RoomDetailsComponent: React.FC<RoomDetailsProps> = ({ room }) => {

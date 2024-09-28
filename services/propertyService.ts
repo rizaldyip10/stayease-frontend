@@ -1,7 +1,7 @@
 import { config } from "@/constants/url";
 import axiosInterceptor from "@/utils/axiosInterceptor";
 import {
-  AdjustedRatesType,
+  RoomWithAdjustedRatesType,
   AvailablePropertyType,
   CategoryType,
   CurrentAvailablePropertyType,
@@ -193,7 +193,7 @@ const propertyService = {
     propertyId: number,
     roomId: number,
     date: Date,
-  ): Promise<AdjustedRatesType> => {
+  ): Promise<RoomWithAdjustedRatesType> => {
     const url = config.endpoints.propertyUtils.getCurrentRoom
       .replace("{propertyId}", propertyId.toString())
       .replace("{roomId}", roomId.toString());

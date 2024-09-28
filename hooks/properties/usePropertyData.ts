@@ -38,10 +38,6 @@ export const usePropertyData = (propertyId: number) => {
       (cat) => cat.name === propertyData.category,
     )?.id;
 
-    // if (!categoryId) {
-    //   throw new Error("Invalid category");
-    // }
-
     const updatedPropertyData = {
       ...propertyData,
       categoryId: categoryId,

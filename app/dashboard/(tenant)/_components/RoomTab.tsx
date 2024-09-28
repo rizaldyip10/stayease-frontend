@@ -1,5 +1,5 @@
 import React from "react";
-import { AdjustedRatesType } from "@/constants/Property";
+import { RoomWithAdjustedRatesType } from "@/constants/Property";
 import { Card } from "@/components/ui/card";
 import { currencyFormatter } from "@/utils/CurrencyFormatter";
 import { Button } from "@/components/ui/button";
@@ -15,12 +15,12 @@ const RoomTab: React.FC<RoomTabProps> = ({ propertyId }) => {
   const { currentProperty } = usePropertyDetails(propertyId, new Date());
 
   const hasAdjustment = currentProperty?.rooms?.some(
-    (room: AdjustedRatesType) => room.adjustedPrice !== room.basePrice,
+    (room: RoomWithAdjustedRatesType) => room.adjustedPrice !== room.basePrice,
   );
 
   return (
     <div className="space-y-4">
-      {currentProperty?.rooms?.map((room: AdjustedRatesType) => (
+      {currentProperty?.rooms?.map((room: RoomWithAdjustedRatesType) => (
         <Card key={room.roomId} className="p-4">
           <div className="flex justify-between items-center">
             <div>

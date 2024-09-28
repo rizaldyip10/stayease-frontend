@@ -4,7 +4,10 @@ import { Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AdjustedRatesType, PropertyAndRoomType } from "@/constants/Property";
+import {
+  RoomWithAdjustedRatesType,
+  PropertyAndRoomType,
+} from "@/constants/Property";
 import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
 import { currencyFormatter } from "@/utils/CurrencyFormatter";
 import Link from "next/link";
