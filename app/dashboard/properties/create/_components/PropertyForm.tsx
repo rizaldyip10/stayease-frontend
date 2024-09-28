@@ -9,7 +9,7 @@ import propertyService from "@/services/propertyService";
 import { CategoryType } from "@/constants/Property";
 import MapComponent from "@/components/MapComponent";
 
-interface PropertyFormValues {
+export interface PropertyFormValues {
   property: {
     name: string;
     description: string;
@@ -41,7 +41,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
   setCategories,
 }) => {
   const { values, setFieldValue } = useFormikContext<PropertyFormValues>();
-  useState<google.maps.places.Autocomplete | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
   const handleLocationChange = (lat: number, lng: number) => {
@@ -90,12 +89,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             />
           </div>
         ))}
-        <CategoryDropdown
-          onSelect={handleCategorySelect}
-          onCreateNew={handleCreateNewCategory}
-          categories={categories}
-          setCategories={setCategories}
-        />
+        <CategoryDropdown />
       </div>
       <div className="mt-4 mb-10">
         <Label>Location</Label>

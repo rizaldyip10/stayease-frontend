@@ -45,21 +45,9 @@ export const usePropertyCreation = () => {
     setIsLoading(true);
     setError(null);
     try {
-      // Step 1: Create new category if needed
-      let categoryId: number | string = values.property.categoryId;
-      if (values.category.name) {
-        const response = await propertyService.createCategory({
-          name: values.category.name,
-        });
-        console.log("New category created:", response);
-        categoryId = response.id;
-        showAlert("success", "Category created successfully");
-      }
-
-      // Step 2: Create property (image already uploaded)
+      // Step 1: Create property (image already uploaded)
       const propertyData = {
         ...values.property,
-        categoryId,
         longitude: Number(values.property.longitude),
         latitude: Number(values.property.latitude),
       };
@@ -68,7 +56,7 @@ export const usePropertyCreation = () => {
       const newPropertyId = propertyResponse.id;
       console.log("Property created successfully:", propertyResponse);
 
-      // Step 3: Create rooms (images already uploaded)
+      // Step 2: Create rooms (images already uploaded)
       for (const room of values.rooms) {
         try {
           await propertyService.createRoom(newPropertyId, room);

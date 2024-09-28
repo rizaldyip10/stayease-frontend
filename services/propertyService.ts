@@ -134,11 +134,19 @@ const propertyService = {
   },
 
   createCategory: async (data: any): Promise<CategoryType> => {
-    const response = await axiosInterceptor.post(
-      config.endpoints.properties.createCategory,
-      data,
-    );
-    return response.data.data;
+    try {
+      const response = await axiosInterceptor.post(
+        config.endpoints.properties.createCategory,
+        data,
+      );
+      return response.data.data;
+    } catch (error: any) {
+      console.error(
+        "Failed to create new category:",
+        error.response.data.message,
+      );
+      throw error;
+    }
   },
 
   updateCategory: async (
