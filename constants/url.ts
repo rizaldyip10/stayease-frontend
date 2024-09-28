@@ -28,6 +28,7 @@ export const config = {
       tenant: "/users/profile/tenant",
       avatar: "/users/profile/avatar",
       email: "/users/profile/email",
+      checkToken: "/users/profile/email/check-token",
       delete: "/users",
     },
     properties: {

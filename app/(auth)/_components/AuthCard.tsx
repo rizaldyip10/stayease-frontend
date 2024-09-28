@@ -1,6 +1,6 @@
 "use client";
-import React from "react";
-import { AlertType, FormType, UserType } from "@/constants/Types";
+import React, { useState } from "react";
+import { FormType, UserType } from "@/constants/Types";
 import Image from "next/image";
 import logo from "@/assets/images/logo_horizontal.png";
 import { Button } from "@/components/ui/button";
@@ -10,33 +10,19 @@ import { FormikHelpers, FormikValues } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getInitialValues } from "@/utils/authInitialValues";
-import logger from "@/utils/logger";
-import ChangeCredentialButton from "@/app/(user)/profile/settings/_components/ChangeCredentialButton";
+import { useGoogleLogin } from "@/hooks/auth/useGoogleLogin";
+import GlobalLoading from "@/components/GlobalLoading";
+import BackToHomeButton from "@/app/(auth)/_components/BackToHomeButton";
 
 interface AuthCardProps {
   formType: FormType;
-  userType: UserType;
-  setUserType: React.Dispatch<React.SetStateAction<UserType>>;
-  onSubmit: (
-    values: FormikValues,
-    actions: FormikHelpers<FormikValues>,
-  ) => void;
-  googleLogin?: () => void;
-  loading: boolean;
 }
 
-const AuthCard: React.FC<AuthCardProps> = ({
-  formType,
-  userType,
-  setUserType,
-  onSubmit,
-  googleLogin,
-  loading,
-}) => {
+const AuthCard: React.FC<AuthCardProps> = ({ formType }) => {
+  const [userType, setUserType] = useState<UserType>("USER");
+  const { googleLogin, isLoading, error } = useGoogleLogin();
   const router = useRouter();
   const initialValues = getInitialValues(formType);
-
-  logger.debug("AuthCard", { formType, userType });
 
   const handleNavigation = (
     e: React.MouseEvent<HTMLAnchorElement>,
@@ -46,10 +32,12 @@ const AuthCard: React.FC<AuthCardProps> = ({
     router.push(path);
   };
 
+  if (isLoading) return <GlobalLoading fullPage />;
+
   return (
     <div className="w-96 max-sm:w-80 max-sm:px-5 flex flex-col items-center bg-white px-7 py-10 gap-5 md:gap-7">
       <div className="w-full flex flex-col items-center md:gap-3 gap-2 md:mb-5">
-        <Image src={logo} alt="logo" height={50} className="md:hidden mb-10" />
+        <Image src={logo} alt="logo" height={50} className="mb-10" />
         <h1 className="text-3xl font-bold text-blue-950 md:text-left">
           {formType === "login"
             ? "Login"
@@ -88,7 +76,6 @@ const AuthCard: React.FC<AuthCardProps> = ({
       </div>
       <AuthForm
         formType={formType}
-        onSubmit={onSubmit}
         initialValues={initialValues}
         userType={userType}
       />
@@ -125,6 +112,7 @@ const AuthCard: React.FC<AuthCardProps> = ({
           {formType === "login" ? "Register" : "Login"}
         </Link>
       </div>
+      <BackToHomeButton />
     </div>
   );
 };

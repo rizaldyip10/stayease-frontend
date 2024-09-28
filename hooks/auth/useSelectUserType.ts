@@ -1,5 +1,4 @@
-import { useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import * as yup from "yup";
 import authService from "@/services/authService";
@@ -15,9 +14,10 @@ export interface FormValues {
 }
 
 export const useSelectUserType = () => {
-  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { data: session, update } = useSession();
-  const { showAlert, alertInfo, hideAlert } = useAlert();
+  const { showAlert } = useAlert();
 
   const initialValues: FormValues = {
     userType: "",
@@ -41,6 +41,8 @@ export const useSelectUserType = () => {
 
   const handleUserTypeSubmit = useCallback(
     async (values: FormValues) => {
+      setIsLoading(true);
+      setError(null);
       try {
         const response = await authService.registerOAuth2({
           googleToken: session?.user.googleToken,
@@ -61,7 +63,7 @@ export const useSelectUserType = () => {
             firstName: response.firstName,
             lastName: response.lastName,
             userType: response.userType,
-            avatar: response.avatar,
+            avatar: response.avatarUrl,
             isVerified: response.isVerified,
             isOAuth2: response.isOAuth2,
             accessToken: response.token.accessToken,
@@ -77,17 +79,14 @@ export const useSelectUserType = () => {
         console.log("Updated session: ", session);
 
         showAlert("success", "Registration successful! Please sign in again.");
-        // TODO !! Figure this out
-        // setTimeout(() => {
-        //   router.replace("/dashboard");
-        //   redirect("/dashboard");
-        // }, 5000);
         setTimeout(() => {
-          signOut({ callbackUrl: "/login" });
+          signOut({ redirect: true });
         }, 3000);
       } catch (error: any) {
         logger.error("Registration failed:", error);
         showAlert("error", "Registration failed. Please try again.");
+      } finally {
+        setIsLoading(false);
       }
     },
     [session, update, showAlert],
@@ -97,7 +96,7 @@ export const useSelectUserType = () => {
     initialValues,
     validationSchema,
     handleUserTypeSubmit,
-    alertInfo,
-    hideAlert,
+    isLoading,
+    error,
   };
 };

@@ -1,20 +1,46 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { useChangeEmail } from "@/hooks/useChangeEmail";
+import { useChangeEmail } from "@/hooks/auth/useChangeEmail";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
+import { useCheckToken } from "@/hooks/auth/useCheckToken";
+import GlobalLoading from "@/components/GlobalLoading";
+import ErrorComponent from "@/components/ErrorComponent";
 
 const VerifyEmail: React.FC = () => {
-  const { completeChangeEmail, isLoading, error } = useChangeEmail();
+  const {
+    completeChangeEmail,
+    isLoading: isChangeEmailLoading,
+    error: changeEmailError,
+  } = useChangeEmail();
   const [isVerified, setIsVerified] = useState(false);
   const [initialized, setInitialized] = useState(false);
 
   const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+  const token = searchParams.get("token") || "";
+
+  const {
+    isTokenValid,
+    isLoading: isTokenLoading,
+    error: tokenError,
+  } = useCheckToken({
+    formType: "changeEmail",
+    token: token,
+  });
+
+  if (isTokenValid === null || isTokenLoading) {
+    return <GlobalLoading fullPage />;
+  }
+
+  if (!isTokenValid) {
+    return (
+      <ErrorComponent message="Invalid token. Please make sure you follow the correct link sent to your email!" />
+    );
+  }
 
   if (!token) {
     const router = useRouter();
@@ -33,10 +59,6 @@ const VerifyEmail: React.FC = () => {
     }
   };
 
-  // if (isLoading) {
-  //   return <div>Verifying email change...</div>;
-  // }
-
   return (
     <div className="container mx-auto p-4">
       <Card>
@@ -50,7 +72,7 @@ const VerifyEmail: React.FC = () => {
                 Click the button below to confirm your request to change email
                 address. You will be logged out once your change is confirmed.
               </p>
-              {isLoading ? (
+              {isChangeEmailLoading ? (
                 <Button disabled>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Verifying...
@@ -79,7 +101,7 @@ const VerifyEmail: React.FC = () => {
               </div>
             ) : (
               <p className="text-red-600">
-                {error ||
+                {changeEmailError ||
                   "Failed to verify email change. Please try again or contact support."}
               </p>
             )

@@ -2,13 +2,12 @@ import { useState } from "react";
 import { FormType, UserType } from "@/constants/Types";
 import { FormikHelpers, FormikValues } from "formik";
 import { signIn } from "next-auth/react";
-import { useAuth } from "@/hooks/useAuth";
 import { useAlert } from "@/context/AlertContext";
+import authService from "@/services/authService";
 
 export const useCredentialSubmission = (userType: UserType) => {
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { register, verify } = useAuth();
   const { showAlert } = useAlert();
 
   const handleLogin = async (values: FormikValues) => {
@@ -25,11 +24,17 @@ export const useCredentialSubmission = (userType: UserType) => {
   };
 
   const handleRegister = async (email: string) => {
-    await register({ email, userType });
-    showAlert(
-      "success",
-      "Registration successful! Please check your email for further instructions!",
-    );
+    setIsLoading(true);
+    setError(null);
+    try {
+      const result = await authService.register(email, userType);
+      showAlert("success", result.message, "/");
+    } catch (error: any) {
+      setError(error.message);
+      showAlert("error", error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSubmit = async (
@@ -37,8 +42,9 @@ export const useCredentialSubmission = (userType: UserType) => {
     actions: FormikHelpers<FormikValues>,
     formType: FormType,
   ) => {
-    setLoading(true);
+    setIsLoading(true);
     setError(null);
+    actions.setSubmitting(true);
 
     try {
       if (formType === "login") {
@@ -51,10 +57,10 @@ export const useCredentialSubmission = (userType: UserType) => {
       showAlert("error", error.message);
       console.error("Error details:", error?.response?.data?.message);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
       actions.setSubmitting(false);
     }
   };
 
-  return { loading, error, handleSubmit };
+  return { isLoading, error, handleSubmit };
 };
