@@ -13,6 +13,7 @@ import PropertyListingCard from "@/components/PropertyListingCard";
 import CustomPagination from "@/app/(home)/properties/_components/CustomPagination";
 import NoResultsFound from "@/components/NoResultsFound";
 import MapComponent from "@/components/MapComponent";
+import ErrorComponent from "@/components/ErrorComponent";
 
 const PropertyListings: React.FC = () => {
   const { categories, cities } = usePropertyUtils();
@@ -34,7 +35,6 @@ const PropertyListings: React.FC = () => {
 
   const handleLocationChange = useCallback((lat: number, lng: number) => {
     setMapCenter({ lat, lng });
-    // You might want to update filters or fetch new properties based on this location
   }, []);
 
   const handleFilterChange = useCallback(
@@ -47,8 +47,6 @@ const PropertyListings: React.FC = () => {
   const handleResetFilters = useCallback(() => {
     resetFilters();
   }, [resetFilters]);
-
-  if (error) return <div>Error: {error}</div>;
 
   const hasResults = properties && properties.length > 0;
 

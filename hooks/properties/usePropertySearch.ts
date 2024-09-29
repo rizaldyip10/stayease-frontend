@@ -1,7 +1,8 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { FilterOptions } from "@/hooks/properties/usePropertyListings";
-import { format, isValid, parseISO } from "date-fns";
+import { isValid, parseISO } from "date-fns";
+import { buildUrl } from "@/utils/urlBuilder";
 
 export const usePropertySearch = () => {
   const searchParams = useSearchParams();
@@ -43,31 +44,18 @@ export const usePropertySearch = () => {
     initializeFiltersFromURL();
   }, [initializeFiltersFromURL]);
 
-  const updateSearchParams = useCallback((filters: Partial<FilterOptions>) => {
-    const newSearchParams = new URLSearchParams();
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== "") {
-        if (value instanceof Date) {
-          const dateString = format(value, "yyyy-MM-dd");
-          newSearchParams.set(key, dateString);
-        } else {
-          newSearchParams.set(key, value.toString());
-        }
-      }
-    });
-    return newSearchParams;
-  }, []);
-
-  const handleSearch = useCallback(
-    (filters: Partial<FilterOptions>) => {
-      console.log("Search filters:", filters);
-      const newSearchParams = updateSearchParams(filters);
-      const newUrl = `/properties?${newSearchParams.toString()}`;
-      console.log("New URL:", newUrl);
+  const handleRedirect = useCallback(
+    (
+      filters: Partial<FilterOptions>,
+      basePath: string,
+      propertyId?: string,
+      roomId?: string,
+    ) => {
+      const newUrl = buildUrl(basePath, filters, { propertyId, roomId });
       router.push(newUrl);
     },
-    [updateSearchParams, router],
+    [router],
   );
 
-  return { urlFilters, updateSearchParams, handleSearch };
+  return { urlFilters, handleRedirect };
 };
