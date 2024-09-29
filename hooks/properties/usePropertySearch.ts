@@ -2,7 +2,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { FilterOptions } from "@/hooks/properties/usePropertyListings";
 import { format, isValid, parseISO } from "date-fns";
-import { buildUrl } from "@/utils/urlBuilder";
+import { buildSearchParams, buildUrl } from "@/utils/urlBuilder";
 
 export const usePropertySearch = () => {
   const searchParams = useSearchParams();
@@ -44,6 +44,13 @@ export const usePropertySearch = () => {
     initializeFiltersFromURL();
   }, [initializeFiltersFromURL]);
 
+  const updateSearchParams = useCallback(
+    (filters: Partial<FilterOptions>) => {
+      const newSearchParams = buildSearchParams(filters);
+    },
+    [router],
+  );
+
   const handleRedirect = useCallback(
     (
       filters: Partial<FilterOptions>,
@@ -57,5 +64,5 @@ export const usePropertySearch = () => {
     [router],
   );
 
-  return { urlFilters, handleRedirect };
+  return { urlFilters, handleRedirect, updateSearchParams };
 };

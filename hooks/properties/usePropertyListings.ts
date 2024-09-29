@@ -4,6 +4,7 @@ import propertyService from "@/services/propertyService";
 import { useDebounce } from "use-debounce";
 import { usePropertySearch } from "./usePropertySearch";
 import { useFetchData } from "@/hooks/utils/useFetchData";
+import { useQueryClient } from "@tanstack/react-query";
 
 export interface FilterOptions {
   city?: string;
@@ -45,6 +46,7 @@ export const usePropertyListings = () => {
   });
   const [debouncedFilters] = useDebounce(filters, 1000);
   const { urlFilters, updateSearchParams } = usePropertySearch();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     setFilters((prev) => ({ ...prev, ...urlFilters }));
@@ -112,6 +114,16 @@ export const usePropertyListings = () => {
   const updatePage = useCallback((newPage: number) => {
     setPagination((prev) => ({ ...prev, currentPage: newPage }));
   }, []);
+
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ["property-listings"] });
+  }, [
+    debouncedFilters,
+    sort,
+    pagination.currentPage,
+    pagination.size,
+    queryClient,
+  ]);
 
   return {
     properties,
