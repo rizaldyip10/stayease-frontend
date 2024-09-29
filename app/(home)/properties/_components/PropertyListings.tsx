@@ -13,7 +13,6 @@ import PropertyListingCard from "@/components/PropertyListingCard";
 import CustomPagination from "@/app/(home)/properties/_components/CustomPagination";
 import NoResultsFound from "@/components/NoResultsFound";
 import MapComponent from "@/components/MapComponent";
-import ErrorComponent from "@/components/ErrorComponent";
 
 const PropertyListings: React.FC = () => {
   const { categories, cities } = usePropertyUtils();

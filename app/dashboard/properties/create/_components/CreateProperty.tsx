@@ -15,11 +15,7 @@ const CreateProperty = () => {
   const { isLoading, error, handleSubmit } = usePropertyCreation();
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center align-middle h-[200px]">
-        <GlobalLoading height={100} width={100} />
-      </div>
-    );
+    return <GlobalLoading fullPage />;
   }
 
   if (error) return <ErrorComponent message={error} />;

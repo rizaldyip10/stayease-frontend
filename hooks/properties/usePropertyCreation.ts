@@ -3,6 +3,7 @@ import { useCallback, useState } from "react";
 import { FormikHelpers } from "formik";
 import propertyService from "@/services/propertyService";
 import { useAlert } from "@/context/AlertContext";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Category {
   id: number;
@@ -37,6 +38,8 @@ export const usePropertyCreation = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { showAlert } = useAlert();
+
+  const queryClient = useQueryClient();
   const handleSubmit = async (
     values: FormValues,
     formikHelpers: FormikHelpers<FormValues>,
@@ -73,6 +76,9 @@ export const usePropertyCreation = () => {
         "Property and rooms created successfully",
         "/dashboard/properties",
       );
+      await queryClient.invalidateQueries({
+        queryKey: ["get-tenant-properties"],
+      });
     } catch (error) {
       setError("Failed to create property and rooms");
       console.error("Error submitting form:", error);

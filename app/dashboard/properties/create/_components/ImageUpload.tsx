@@ -1,9 +1,10 @@
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { useField, useFormikContext } from "formik";
+import { ErrorMessage, useField, useFormikContext } from "formik";
 import Image from "next/image";
 import { useImageUpload } from "@/hooks/utils/useImageUpload";
 import { Loader2 } from "lucide-react";
+import Error from "next/error";
 
 const MAX_FILE_SIZE = 1024 * 1024;
 
@@ -49,29 +50,36 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   });
 
   return (
-    <div
-      {...getRootProps()}
-      className="border-2 border-dashed p-4 text-center cursor-pointer"
-    >
-      <input {...getInputProps()} />
-      {isDragActive ? (
-        <p>Drop the image here ...</p>
-      ) : isLoading ? (
-        <Loader2 className="mx-auto w-10 h-10 text-blue-950 animate-spin" />
-      ) : (
-        <p>Drag and drop an image here, or click to select an image</p>
-      )}
-      {field.value && (
-        <div className="mt-2 relative w-full h-40">
-          <Image
-            src={field.value}
-            alt="Preview"
-            layout="fill"
-            objectFit="contain"
-          />
-        </div>
-      )}
-    </div>
+    <>
+      <div
+        {...getRootProps()}
+        className="border-2 border-dashed p-4 text-center cursor-pointer"
+      >
+        <input {...getInputProps()} />
+        {isDragActive ? (
+          <p>Drop the image here ...</p>
+        ) : isLoading ? (
+          <Loader2 className="mx-auto w-10 h-10 text-blue-950 animate-spin" />
+        ) : (
+          <p>Drag and drop an image here, or click to select an image</p>
+        )}
+        {field.value && (
+          <div className="mt-2 relative w-full h-40">
+            <Image
+              src={field.value}
+              alt="Preview"
+              layout="fill"
+              objectFit="contain"
+            />
+          </div>
+        )}
+        <ErrorMessage
+          name={fieldName}
+          component="div"
+          className="text-red-500"
+        />
+      </div>
+    </>
   );
 };
 

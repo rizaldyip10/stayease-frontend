@@ -5,7 +5,7 @@ import { PropertyAndRoomType } from "@/constants/Property";
 import PropertyFormFields from "@/app/dashboard/properties/[propertyId]/edit/_components/PropertyEditFields";
 import RoomEditForm from "@/app/dashboard/properties/[propertyId]/edit/_components/RoomEditForm";
 import { usePropertyEdit } from "@/hooks/properties/usePropertyEdit";
-import LoadingButton from "@/components/LoadingButton";
+import GlobalLoading from "@/components/GlobalLoading";
 
 interface PropertyEditFormProps {
   property: PropertyAndRoomType | undefined;
@@ -23,6 +23,10 @@ const PropertyEditForm: React.FC<PropertyEditFormProps> = ({ property }) => {
     },
     rooms: rooms,
   };
+
+  if (isLoading) {
+    return <GlobalLoading fullPage />;
+  }
 
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
@@ -58,19 +62,13 @@ const PropertyEditForm: React.FC<PropertyEditFormProps> = ({ property }) => {
               </div>
             )}
           </FieldArray>
-          {isLoading || isSubmitting ? (
-            <div className="w-1/4">
-              <LoadingButton title="Updating..." />
-            </div>
-          ) : (
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="bg-blue-950 text-white hover:bg-blue-900"
-            >
-              Update Property
-            </Button>
-          )}
+          <Button
+            type="submit"
+            disabled={isSubmitting || isLoading}
+            className="bg-blue-950 text-white hover:bg-blue-900"
+          >
+            Update Property
+          </Button>
         </Form>
       )}
     </Formik>
