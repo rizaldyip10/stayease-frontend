@@ -2,21 +2,22 @@ import { useBookingValues } from "@/hooks/transactions/useBookingValues";
 import { useCallback, useState, useEffect } from "react";
 import { format, isValid } from "date-fns";
 
-export const useDateSelection = () => {
+export const useDateSelection = ({
+  startDate,
+  endDate,
+}: {
+  startDate?: string;
+  endDate?: string;
+}) => {
   const { bookingValues, setBookingInfo } = useBookingValues();
-
   const [selectedDate, setSelectedDate] = useState<Date>(() =>
-    bookingValues.checkInDate
-      ? new Date(bookingValues.checkInDate)
-      : new Date(),
+    startDate ? new Date(startDate) : new Date(),
   );
   const [checkInDate, setCheckInDate] = useState<Date | undefined>(() =>
-    bookingValues.checkInDate ? new Date(bookingValues.checkInDate) : undefined,
+    startDate ? new Date(startDate) : undefined,
   );
   const [checkOutDate, setCheckOutDate] = useState<Date | undefined>(() =>
-    bookingValues.checkOutDate
-      ? new Date(bookingValues.checkOutDate)
-      : undefined,
+    endDate ? new Date(endDate) : undefined,
   );
   const [isSelectingCheckOut, setIsSelectingCheckOut] =
     useState<boolean>(false);

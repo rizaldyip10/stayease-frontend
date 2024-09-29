@@ -6,6 +6,21 @@ export const buildUrl = (
   filters: Partial<FilterOptions>,
   params: Record<string, string | undefined> = {},
 ) => {
+  const newSearchParams = buildSearchParams(filters);
+
+  let url = basePath;
+  Object.entries(params).forEach(([key, value]) => {
+    if (value) {
+      url = url.replace(`{${key}}`, value);
+    }
+  });
+
+  return `${url}?${newSearchParams.toString()}`;
+};
+
+export const buildSearchParams = (
+  filters: Partial<FilterOptions>,
+): URLSearchParams => {
   const newSearchParams = new URLSearchParams();
   Object.entries(filters).forEach(([key, value]) => {
     if (value !== undefined && value !== "") {
@@ -17,13 +32,5 @@ export const buildUrl = (
       }
     }
   });
-
-  let url = basePath;
-  Object.entries(params).forEach(([key, value]) => {
-    if (value) {
-      url = url.replace(`{${key}}`, value);
-    }
-  });
-
-  return `${url}?${newSearchParams.toString()}`;
+  return newSearchParams;
 };

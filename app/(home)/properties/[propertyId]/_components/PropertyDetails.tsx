@@ -18,6 +18,7 @@ import PropertyHeader from "@/app/(home)/properties/[propertyId]/_components/Pro
 import { useDateSelection } from "@/hooks/useDateSelection";
 import MapComponent from "@/components/MapComponent";
 import PropertyDetailsSkeleton from "@/app/(home)/properties/[propertyId]/_components/PropertyDetailsSkeleton";
+import { useSearchParams } from "next/navigation";
 
 interface PropertyDetailsProps {
   property: CurrentAvailablePropertyType;
@@ -28,6 +29,9 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
   property,
   propertyId,
 }) => {
+  const searchParams = useSearchParams();
+  const startDate = searchParams.get("startDate") || undefined;
+  const endDate = searchParams.get("endDate") || undefined;
   const { bookingValues, setBookingInfo } = useBookingValues();
   const {
     selectedDate,
@@ -40,7 +44,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
     handleReset,
     handleConfirm,
     setIsCalendarOpen,
-  } = useDateSelection();
+  } = useDateSelection({ startDate, endDate });
 
   // Use the hook to refetch data when selectedDate changes
   const { currentProperty, isLoading, error } = usePropertyCurrentDetails(

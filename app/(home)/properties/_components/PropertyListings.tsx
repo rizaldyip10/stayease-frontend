@@ -103,6 +103,7 @@ const PropertyListings: React.FC = () => {
                   <PropertyListingCard
                     key={property.propertyId}
                     property={property}
+                    currentFilters={filters}
                   />
                 ))}
               </div>

@@ -13,8 +13,8 @@ export default function PropertyDetailsPage({
 }) {
   const searchParams = useSearchParams();
 
-  const checkInDate = searchParams.get("checkInDate");
-  const date = checkInDate ? new Date(checkInDate) : new Date();
+  const startDate = searchParams.get("startDate");
+  const date = startDate ? new Date(startDate) : new Date();
   const timezone = date.getTimezoneOffset();
   console.log("timezone", timezone);
 

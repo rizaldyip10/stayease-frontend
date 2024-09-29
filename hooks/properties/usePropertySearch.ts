@@ -1,7 +1,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { FilterOptions } from "@/hooks/properties/usePropertyListings";
-import { isValid, parseISO } from "date-fns";
+import { format, isValid, parseISO } from "date-fns";
 import { buildUrl } from "@/utils/urlBuilder";
 
 export const usePropertySearch = () => {

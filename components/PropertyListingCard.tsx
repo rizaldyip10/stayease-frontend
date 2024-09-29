@@ -4,12 +4,18 @@ import { AvailablePropertyType } from "@/constants/Property";
 import Image from "next/image";
 import Link from "next/link";
 import { useBookingValues } from "@/hooks/transactions/useBookingValues";
+import { FilterOptions } from "@/hooks/properties/usePropertyListings";
+import { buildSearchParams } from "@/utils/urlBuilder";
 
 interface PropertyCardProps {
   property: AvailablePropertyType;
+  currentFilters: Partial<FilterOptions>;
 }
 
-const PropertyListingCard: React.FC<PropertyCardProps> = (property) => {
+const PropertyListingCard: React.FC<PropertyCardProps> = ({
+  property,
+  currentFilters,
+}) => {
   const {
     propertyId,
     imageUrl,
@@ -17,9 +23,7 @@ const PropertyListingCard: React.FC<PropertyCardProps> = (property) => {
     address,
     tenant,
     lowestAdjustedPrice,
-  } = property.property;
-
-  const { bookingValues } = useBookingValues();
+  } = property;
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("id-ID", {
@@ -30,14 +34,24 @@ const PropertyListingCard: React.FC<PropertyCardProps> = (property) => {
     }).format(price);
   };
 
-  // Construct the URL with the date range
-  const propertyUrl = `/properties/${propertyId}?${new URLSearchParams(
-    Object.fromEntries(
-      Object.entries(bookingValues).filter(
-        ([key, value]) => value !== null && value !== undefined,
-      ),
-    ),
-  ).toString()}`;
+  const filterOptions = buildSearchParams({
+    startDate: currentFilters.startDate,
+    endDate: currentFilters.endDate,
+  });
+
+  console.log("options:", filterOptions);
+
+  // // Construct the URL with the date range
+  // const propertyUrl = `/properties/${propertyId}?${new URLSearchParams(
+  //   Object.fromEntries(
+  //     Object.entries(filterOptions)
+  //       .filter(([key, value]) => value !== null && value !== undefined)
+  //       .map(([key, value]) => [key, String(value)]),
+  //   ),
+  // ).toString()}`;
+
+  const propertyUrl = `/properties/${propertyId}?${filterOptions.toString()}`;
+  console.log("propertyUrl:", propertyUrl);
 
   return (
     <Link href={propertyUrl} passHref className="block h-full">
