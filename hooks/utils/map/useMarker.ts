@@ -15,12 +15,14 @@ export const useMarker = ({
   viewOnly,
   onLocationChange,
 }: MarkerConfig) => {
-  const markerRef = useRef<google.maps.Marker | null>(null);
+  const markerRef = useRef<google.maps.marker.AdvancedMarkerElement | null>(
+    null,
+  );
 
   const updateMarkerAndMap = useCallback(
     (newPosition: google.maps.LatLngLiteral) => {
       if (mapRef.current && markerRef.current) {
-        markerRef.current.setPosition(newPosition);
+        markerRef.current.position = new google.maps.LatLng(newPosition);
         mapRef.current.panTo(newPosition);
         onLocationChange(newPosition);
       }
@@ -31,21 +33,26 @@ export const useMarker = ({
   const initMarker = useCallback(() => {
     if (!mapRef.current || markerRef.current) return;
 
-    markerRef.current = new google.maps.Marker({
+    const iconElement = document.createElement("img");
+    iconElement.src = "http://maps.google.com/mapfiles/ms/icons/pink-dot.png";
+    iconElement.alt = "You are here";
+
+    markerRef.current = new google.maps.marker.AdvancedMarkerElement({
       map: mapRef.current,
       position: initialCenter,
-      draggable: isEditable && !viewOnly,
-      icon:
-        isEditable && viewOnly
-          ? "http://maps.google.com/mapfiles/ms/icons/pink-dot.png"
-          : undefined,
+      gmpDraggable: isEditable && !viewOnly,
+      content: isEditable && viewOnly ? iconElement : undefined,
       title: isEditable && viewOnly ? "You are here" : undefined,
     });
 
     if (isEditable) {
       markerRef.current.addListener("dragend", () => {
-        const newPosition = markerRef.current?.getPosition()?.toJSON();
-        if (newPosition) {
+        const position = markerRef.current?.position as google.maps.LatLng;
+        if (position) {
+          const newPosition = {
+            lat: position.lat(),
+            lng: position.lng(),
+          };
           onLocationChange(newPosition);
         }
       });

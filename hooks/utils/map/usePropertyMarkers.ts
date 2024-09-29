@@ -11,23 +11,32 @@ export const usePropertyMarkers = ({
   mapRef,
   properties,
 }: PropertyMarkersConfig) => {
-  const propertyMarkersRef = useRef<google.maps.Marker[]>([]);
+  const propertyMarkersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>(
+    [],
+  );
 
   useEffect(() => {
     if (!mapRef.current || !properties) return;
 
     // Clear existing markers
     propertyMarkersRef.current.forEach((marker) => {
-      marker.setMap(null);
+      marker.map = null;
     });
     propertyMarkersRef.current = [];
 
     // Create new markers
     properties.forEach((property) => {
-      const marker = new google.maps.Marker({
+      const iconElement = document.createElement("img");
+      iconElement.src = property.imageUrl;
+      iconElement.alt = property.propertyName;
+      iconElement.style.width = "32px";
+      iconElement.style.height = "32px";
+
+      const marker = new google.maps.marker.AdvancedMarkerElement({
         position: { lat: property.latitude, lng: property.longitude },
         map: mapRef.current,
         title: property.propertyName,
+        content: iconElement,
       });
       propertyMarkersRef.current.push(marker);
 
@@ -95,7 +104,7 @@ const generateInfoWindowContent = (property: AvailablePropertyType) =>
 
 const addMarkerListeners = (
   mapRef: React.MutableRefObject<google.maps.Map | null>,
-  marker: google.maps.Marker,
+  marker: google.maps.marker.AdvancedMarkerElement,
   infoWindow: google.maps.InfoWindow,
   propertyId: string,
 ) => {
