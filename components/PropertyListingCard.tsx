@@ -3,7 +3,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AvailablePropertyType } from "@/constants/Property";
 import Image from "next/image";
 import Link from "next/link";
-import { useBookingValues } from "@/hooks/transactions/useBookingValues";
 import { FilterOptions } from "@/hooks/properties/usePropertyListings";
 import { buildSearchParams } from "@/utils/urlBuilder";
 
@@ -34,24 +33,16 @@ const PropertyListingCard: React.FC<PropertyCardProps> = ({
     }).format(price);
   };
 
-  const filterOptions = buildSearchParams({
-    startDate: currentFilters.startDate,
-    endDate: currentFilters.endDate,
-  });
+  let propertyUrl = `/properties/${propertyId}`;
 
-  console.log("options:", filterOptions);
-
-  // // Construct the URL with the date range
-  // const propertyUrl = `/properties/${propertyId}?${new URLSearchParams(
-  //   Object.fromEntries(
-  //     Object.entries(filterOptions)
-  //       .filter(([key, value]) => value !== null && value !== undefined)
-  //       .map(([key, value]) => [key, String(value)]),
-  //   ),
-  // ).toString()}`;
-
-  const propertyUrl = `/properties/${propertyId}?${filterOptions.toString()}`;
-  console.log("propertyUrl:", propertyUrl);
+  if (currentFilters) {
+    const filterOptions = buildSearchParams({
+      startDate: currentFilters.startDate,
+      endDate: currentFilters.endDate,
+    });
+    console.log("options:", filterOptions);
+    propertyUrl = `/properties/${propertyId}?${filterOptions.toString()}`;
+  }
 
   return (
     <Link href={propertyUrl} passHref className="block h-full">

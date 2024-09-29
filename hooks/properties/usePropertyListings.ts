@@ -3,7 +3,6 @@ import { useCallback, useEffect, useState } from "react";
 import propertyService from "@/services/propertyService";
 import { useDebounce } from "use-debounce";
 import { usePropertySearch } from "./usePropertySearch";
-import { useFetchData } from "@/hooks/utils/useFetchData";
 import { useQueryClient } from "@tanstack/react-query";
 
 export interface FilterOptions {
@@ -33,6 +32,8 @@ const initialFilters: FilterOptions = {
 
 export const usePropertyListings = () => {
   const [properties, setProperties] = useState<AvailablePropertyType[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<FilterOptions>(initialFilters);
   const [sort, setSort] = useState<SortOption>({
     sortBy: "",
@@ -59,40 +60,42 @@ export const usePropertyListings = () => {
     updateSearchParams({});
   }, [updateSearchParams]);
 
-  const {
-    data: fetchedListings,
-    error,
-    isLoading,
-  } = useFetchData<AvailablePropertyType[]>("property-listings", async () => {
-    const result = await propertyService.sortAndFilter(
-      debouncedFilters.startDate,
-      debouncedFilters.endDate,
-      debouncedFilters.city,
-      debouncedFilters.categoryId
-        ? Number(debouncedFilters.categoryId)
-        : undefined,
-      debouncedFilters.searchTerm,
-      debouncedFilters.minPrice,
-      debouncedFilters.maxPrice,
-      pagination.currentPage,
-      pagination.size,
-      sort.sortBy,
-      sort.sortDirection,
-    );
-    setPagination((prev) => ({
-      ...prev,
-      currentPage: result.currentPage,
-      totalPages: result.totalPages,
-      totalElements: result.totalElements,
-    }));
-    return result.content;
-  });
+  const fetchPropertyListings = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const result = await propertyService.sortAndFilter(
+        debouncedFilters.startDate,
+        debouncedFilters.endDate,
+        debouncedFilters.city,
+        debouncedFilters.categoryId
+          ? Number(debouncedFilters.categoryId)
+          : undefined,
+        debouncedFilters.searchTerm,
+        debouncedFilters.minPrice,
+        debouncedFilters.maxPrice,
+        pagination.currentPage,
+        pagination.size,
+        sort.sortBy,
+        sort.sortDirection,
+      );
+      setProperties(result.content);
+      setPagination((prev) => ({
+        ...prev,
+        currentPage: result.currentPage,
+        totalPages: result.totalPages,
+        totalElements: result.totalElements,
+      }));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "An error occurred");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [debouncedFilters, pagination.currentPage, pagination.size, sort]);
 
   useEffect(() => {
-    if (fetchedListings) {
-      setProperties(fetchedListings);
-    }
-  }, [fetchedListings]);
+    fetchPropertyListings();
+  }, [fetchPropertyListings]);
 
   const updateFilters = useCallback(
     (newFilters: Partial<FilterOptions>) => {

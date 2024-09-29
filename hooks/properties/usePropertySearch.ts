@@ -47,6 +47,7 @@ export const usePropertySearch = () => {
   const updateSearchParams = useCallback(
     (filters: Partial<FilterOptions>) => {
       const newSearchParams = buildSearchParams(filters);
+      return newSearchParams;
     },
     [router],
   );
