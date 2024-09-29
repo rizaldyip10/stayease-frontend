@@ -44,7 +44,7 @@ export const usePropertyListings = () => {
     size: 10,
   });
   const [debouncedFilters] = useDebounce(filters, 1000);
-  const { urlFilters, updateSearchParams, bookingValues } = usePropertySearch();
+  const { urlFilters, updateSearchParams } = usePropertySearch();
 
   useEffect(() => {
     setFilters((prev) => ({ ...prev, ...urlFilters }));
@@ -124,6 +124,5 @@ export const usePropertyListings = () => {
     updateSort,
     updatePage,
     resetFilters,
-    bookingValues,
   };
 };

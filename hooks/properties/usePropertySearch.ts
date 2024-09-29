@@ -1,14 +1,12 @@
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { FilterOptions } from "@/hooks/properties/usePropertyListings";
-import { parseISO, isValid, format } from "date-fns";
-import { useBookingValues } from "@/hooks/transactions/useBookingValues";
+import { format, isValid, parseISO } from "date-fns";
 
 export const usePropertySearch = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [urlFilters, setUrlFilters] = useState<Partial<FilterOptions>>({});
-  const { bookingValues, setBookingInfo } = useBookingValues();
 
   const initializeFiltersFromURL = useCallback(() => {
     const newFilters: Partial<FilterOptions> = {};
@@ -27,48 +25,38 @@ export const usePropertySearch = () => {
       const parsedStartDate = parseISO(startDate);
       if (isValid(parsedStartDate)) {
         newFilters.startDate = parsedStartDate;
-        setBookingInfo({ checkInDate: format(parsedStartDate, "yyyy-MM-dd") });
       }
     }
     if (endDate) {
       const parsedEndDate = parseISO(endDate);
       if (isValid(parsedEndDate)) {
         newFilters.endDate = parsedEndDate;
-        setBookingInfo({ checkOutDate: format(parsedEndDate, "yyyy-MM-dd") });
       }
     }
     if (categoryId) newFilters.categoryId = categoryId;
     if (searchTerm) newFilters.searchTerm = searchTerm;
 
     setUrlFilters(newFilters);
-  }, [searchParams, setBookingInfo]);
+  }, [searchParams, setUrlFilters]);
 
   useEffect(() => {
     initializeFiltersFromURL();
   }, [initializeFiltersFromURL]);
 
-  const updateSearchParams = useCallback(
-    (filters: Partial<FilterOptions>) => {
-      const newSearchParams = new URLSearchParams();
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined && value !== "") {
-          if (value instanceof Date) {
-            const dateString = format(value, "yyyy-MM-dd");
-            newSearchParams.set(key, dateString);
-            if (key === "startDate") {
-              setBookingInfo({ checkInDate: dateString });
-            } else if (key === "endDate") {
-              setBookingInfo({ checkOutDate: dateString });
-            }
-          } else {
-            newSearchParams.set(key, value.toString());
-          }
+  const updateSearchParams = useCallback((filters: Partial<FilterOptions>) => {
+    const newSearchParams = new URLSearchParams();
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== "") {
+        if (value instanceof Date) {
+          const dateString = format(value, "yyyy-MM-dd");
+          newSearchParams.set(key, dateString);
+        } else {
+          newSearchParams.set(key, value.toString());
         }
-      });
-      return newSearchParams;
-    },
-    [setBookingInfo],
-  );
+      }
+    });
+    return newSearchParams;
+  }, []);
 
   const handleSearch = useCallback(
     (filters: Partial<FilterOptions>) => {
@@ -81,5 +69,5 @@ export const usePropertySearch = () => {
     [updateSearchParams, router],
   );
 
-  return { urlFilters, updateSearchParams, bookingValues, handleSearch };
+  return { urlFilters, updateSearchParams, handleSearch };
 };

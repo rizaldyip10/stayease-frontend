@@ -13,8 +13,8 @@ interface HeroSearchBarProps {
 }
 
 const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
-  const { cities, categories, isLoading, error } = usePropertyUtils();
   const isDesktop: boolean = useMediaQuery("(min-width: 768px)");
+  const { cities, isLoading, error } = usePropertyUtils();
   const { handleSearch } = usePropertySearch();
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [budget, setBudget] = useState<string>("");
