@@ -3,7 +3,6 @@ import { useCallback, useEffect, useState } from "react";
 import propertyService from "@/services/propertyService";
 import { useDebounce } from "use-debounce";
 import { usePropertySearch } from "./usePropertySearch";
-import { useQueryClient } from "@tanstack/react-query";
 
 export interface FilterOptions {
   city?: string;
@@ -30,24 +29,27 @@ const initialFilters: FilterOptions = {
   searchTerm: "",
 };
 
+const initialSort: SortOption = {
+  sortBy: "",
+  sortDirection: "",
+};
+
+const initialPagination = {
+  currentPage: 0,
+  totalPages: 1,
+  totalElements: 0,
+  size: 10,
+};
+
 export const usePropertyListings = () => {
   const [properties, setProperties] = useState<AvailablePropertyType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<FilterOptions>(initialFilters);
-  const [sort, setSort] = useState<SortOption>({
-    sortBy: "",
-    sortDirection: "",
-  });
-  const [pagination, setPagination] = useState({
-    currentPage: 0,
-    totalPages: 1,
-    totalElements: 0,
-    size: 10,
-  });
+  const [sort, setSort] = useState<SortOption>(initialSort);
+  const [pagination, setPagination] = useState(initialPagination);
   const [debouncedFilters] = useDebounce(filters, 1000);
   const { urlFilters, updateSearchParams } = usePropertySearch();
-  const queryClient = useQueryClient();
 
   useEffect(() => {
     setFilters((prev) => ({ ...prev, ...urlFilters }));
@@ -117,16 +119,6 @@ export const usePropertyListings = () => {
   const updatePage = useCallback((newPage: number) => {
     setPagination((prev) => ({ ...prev, currentPage: newPage }));
   }, []);
-
-  useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: ["property-listings"] });
-  }, [
-    debouncedFilters,
-    sort,
-    pagination.currentPage,
-    pagination.size,
-    queryClient,
-  ]);
 
   return {
     properties,

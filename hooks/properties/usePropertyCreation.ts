@@ -50,24 +50,12 @@ export const usePropertyCreation = () => {
       // Step 1: Create property (image already uploaded)
       const propertyData = {
         ...values.property,
+        categoryId: Number(values.property.categoryId),
         longitude: Number(values.property.longitude),
         latitude: Number(values.property.latitude),
       };
-      const propertyResponse =
-        await propertyService.createProperty(propertyData);
-      const newPropertyId = propertyResponse.id;
-      console.log("Property created successfully:", propertyResponse);
-
-      // Step 2: Create rooms (images already uploaded)
-      for (const room of values.rooms) {
-        try {
-          await propertyService.createRoom(newPropertyId, room);
-          console.log("Room created successfully:", room);
-        } catch (error) {
-          console.error(`Error creating room:`, error);
-          setError(`Failed to create room: ${room.name}`);
-        }
-      }
+      const newPropertyId = await createProperty(propertyData);
+      await createRooms(newPropertyId, values.rooms);
 
       console.log("Property and rooms created successfully");
       formikHelpers.setSubmitting(false);
@@ -77,7 +65,7 @@ export const usePropertyCreation = () => {
         "/dashboard/properties",
       );
       await queryClient.invalidateQueries({
-        queryKey: ["get-tenant-properties"],
+        queryKey: ["get-tenant-properties", "get-tenant-room"],
       });
     } catch (error) {
       setError("Failed to create property and rooms");
@@ -98,4 +86,22 @@ export const usePropertyCreation = () => {
     error,
     handleSubmit,
   };
+};
+
+const createProperty = async (propertyData: FormValues["property"]) => {
+  const propertyResponse = await propertyService.createProperty(propertyData);
+  console.log("Property created successfully:", propertyResponse);
+  return propertyResponse.id;
+};
+
+const createRooms = async (propertyId: number, rooms: FormValues["rooms"]) => {
+  for (const room of rooms) {
+    try {
+      await propertyService.createRoom(propertyId, room);
+      console.log("Room created successfully:", room);
+    } catch (error) {
+      console.error(`Error creating room:`, error);
+      throw new Error(`Failed to create room: ${room.name}`);
+    }
+  }
 };
