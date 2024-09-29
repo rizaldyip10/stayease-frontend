@@ -3,6 +3,7 @@ import { CategoryType } from "@/constants/Property";
 import propertyService from "@/services/propertyService";
 import { useAlert } from "@/context/AlertContext";
 import { usePropertyUtils } from "@/hooks/properties/usePropertyUtils";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const useCategoryManagement = (initialCategoryId?: number) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -11,8 +12,9 @@ export const useCategoryManagement = (initialCategoryId?: number) => {
   const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(
     null,
   );
-  const { categories, fetchCategories } = usePropertyUtils();
+  const { categories } = usePropertyUtils();
   const { showAlert } = useAlert();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (categories && initialCategoryId) {
@@ -52,10 +54,10 @@ export const useCategoryManagement = (initialCategoryId?: number) => {
         const newCategory = await propertyService.createCategory({
           name: categoryName,
         });
+        await queryClient.invalidateQueries({ queryKey: ["categories"] });
 
         showAlert("success", "New category created successfully");
         setSelectedCategory(newCategory);
-        fetchCategories();
         setIsCreatingNew(false);
         return newCategory;
       } catch (error: any) {
@@ -68,7 +70,7 @@ export const useCategoryManagement = (initialCategoryId?: number) => {
         setIsLoading(false);
       }
     },
-    [showAlert, fetchCategories],
+    [showAlert, queryClient],
   );
 
   return {

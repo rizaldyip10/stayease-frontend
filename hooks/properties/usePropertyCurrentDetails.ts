@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import propertyService from "@/services/propertyService";
 import {
   CurrentAvailablePropertyType,

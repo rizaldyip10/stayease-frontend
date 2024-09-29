@@ -2,11 +2,8 @@
 import propertyService from "@/services/propertyService";
 import { useFetchData } from "@/hooks/utils/useFetchData";
 import { CategoryType, PropertyAndRoomType } from "@/constants/Property";
-import { useQueryClient } from "@tanstack/react-query";
 
 export const usePropertyUtils = () => {
-  const queryClient = useQueryClient();
-
   const {
     data: properties,
     error: propertiesError,
@@ -45,15 +42,10 @@ export const usePropertyUtils = () => {
   const error =
     propertiesError || citiesError || categoriesError || imagesError;
 
-  const fetchCategories = async () => {
-    await queryClient.invalidateQueries({ queryKey: ["categories"] });
-  };
-
   return {
     properties,
     cities,
     categories,
-    fetchCategories,
     images,
     isLoading,
     error,

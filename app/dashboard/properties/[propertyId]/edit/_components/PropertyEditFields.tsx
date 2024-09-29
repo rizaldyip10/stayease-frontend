@@ -24,6 +24,7 @@ const PropertyFormFields: React.FC = () => {
   ];
 
   console.log("values:", values);
+  console.log("findCategoryId:", findCategoryId(values.property.category));
 
   return (
     <div className="space-y-6">
