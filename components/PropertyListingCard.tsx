@@ -40,7 +40,6 @@ const PropertyListingCard: React.FC<PropertyCardProps> = ({
       startDate: currentFilters.startDate,
       endDate: currentFilters.endDate,
     });
-    console.log("options:", filterOptions);
     propertyUrl = `/properties/${propertyId}?${filterOptions.toString()}`;
   }
 

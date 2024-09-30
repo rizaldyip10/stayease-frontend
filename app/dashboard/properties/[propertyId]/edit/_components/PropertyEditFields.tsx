@@ -23,9 +23,6 @@ const PropertyFormFields: React.FC = () => {
     { name: "country", label: "Country" },
   ];
 
-  console.log("values:", values);
-  console.log("findCategoryId:", findCategoryId(values.property.category));
-
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

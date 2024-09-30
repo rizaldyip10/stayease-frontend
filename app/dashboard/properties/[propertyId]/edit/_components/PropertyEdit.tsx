@@ -18,7 +18,7 @@ const PropertyEdit: React.FC<PropertyEditProps> = ({ propertyId }) => {
     );
   }
 
-  if (error) return <ErrorComponent message={error.message} />;
+  if (error) return <ErrorComponent message={error} />;
 
   return (
     <div className="container mx-auto p-4">

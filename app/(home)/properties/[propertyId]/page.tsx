@@ -16,7 +16,6 @@ export default function PropertyDetailsPage({
   const startDate = searchParams.get("startDate");
   const date = startDate ? new Date(startDate) : new Date();
   const timezone = date.getTimezoneOffset();
-  console.log("timezone", timezone);
 
   const propertyId = parseInt(params.propertyId, 10);
 
