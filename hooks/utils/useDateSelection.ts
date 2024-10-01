@@ -10,9 +10,6 @@ export const useDateSelection = ({
   endDate?: string;
 }) => {
   const { bookingValues, setBookingInfo } = useBookingValues();
-  const [selectedDate, setSelectedDate] = useState<Date>(() =>
-    startDate ? new Date(startDate) : new Date(),
-  );
   const [checkInDate, setCheckInDate] = useState<Date | undefined>(() =>
     startDate ? new Date(startDate) : undefined,
   );
@@ -21,13 +18,11 @@ export const useDateSelection = ({
   );
   const [isSelectingCheckOut, setIsSelectingCheckOut] =
     useState<boolean>(false);
-  const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
 
   // Update local state when bookingValues change
   useEffect(() => {
     if (bookingValues.checkInDate) {
       setCheckInDate(new Date(bookingValues.checkInDate));
-      setSelectedDate(new Date(bookingValues.checkInDate));
     }
     if (bookingValues.checkOutDate) {
       setCheckOutDate(new Date(bookingValues.checkOutDate));
@@ -52,7 +47,6 @@ export const useDateSelection = ({
               checkInDate: formattedDate,
               checkOutDate: undefined,
             });
-            setSelectedDate(date);
           }
         }
       } else {
@@ -67,32 +61,18 @@ export const useDateSelection = ({
     [isSelectingCheckOut, checkInDate, setBookingInfo],
   );
 
-  const handleDateChange = useCallback((date: Date) => {
-    setSelectedDate(date);
-  }, []);
-
   const handleReset = useCallback(() => {
     setCheckInDate(undefined);
     setCheckOutDate(undefined);
     setIsSelectingCheckOut(false);
     setBookingInfo({ checkInDate: null, checkOutDate: undefined });
-    setSelectedDate(new Date());
   }, [setBookingInfo]);
 
-  const handleConfirm = useCallback(() => {
-    setIsCalendarOpen(false);
-  }, []);
-
   return {
-    selectedDate,
     checkInDate,
     checkOutDate,
     isSelectingCheckOut,
-    isCalendarOpen,
     handleDateSelect,
-    handleDateChange,
     handleReset,
-    handleConfirm,
-    setIsCalendarOpen,
   };
 };
