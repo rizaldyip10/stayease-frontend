@@ -1,7 +1,7 @@
 import { config } from "@/constants/url";
 import axiosInterceptor from "@/utils/axiosInterceptor";
 import {
-  AdjustedRatesType,
+  RoomWithAdjustedRatesType,
   AvailablePropertyType,
   CategoryType,
   CurrentAvailablePropertyType,
@@ -134,11 +134,19 @@ const propertyService = {
   },
 
   createCategory: async (data: any): Promise<CategoryType> => {
-    const response = await axiosInterceptor.post(
-      config.endpoints.properties.createCategory,
-      data,
-    );
-    return response.data.data;
+    try {
+      const response = await axiosInterceptor.post(
+        config.endpoints.properties.createCategory,
+        data,
+      );
+      return response.data.data;
+    } catch (error: any) {
+      console.error(
+        "Failed to create new category:",
+        error.response.data.message,
+      );
+      throw error;
+    }
   },
 
   updateCategory: async (
@@ -193,7 +201,7 @@ const propertyService = {
     propertyId: number,
     roomId: number,
     date: Date,
-  ): Promise<AdjustedRatesType> => {
+  ): Promise<RoomWithAdjustedRatesType> => {
     const url = config.endpoints.propertyUtils.getCurrentRoom
       .replace("{propertyId}", propertyId.toString())
       .replace("{roomId}", roomId.toString());

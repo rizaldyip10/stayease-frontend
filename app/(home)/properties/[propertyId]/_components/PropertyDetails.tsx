@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,13 +11,14 @@ import {
 } from "@/components/ui/popover";
 import { useBookingValues } from "@/hooks/transactions/useBookingValues";
 import RoomCard from "@/app/(home)/properties/[propertyId]/_components/RoomCard";
-import AvailabilityCalendar from "@/app/(home)/properties/[propertyId]/_components/AvailabilityCalendar";
+import PriceCalendar from "@/app/(home)/properties/[propertyId]/_components/PriceCalendar";
 import { CurrentAvailablePropertyType } from "@/constants/Property";
-import { usePropertyDetails } from "@/hooks/properties/usePropertyDetails";
+import { usePropertyCurrentDetails } from "@/hooks/properties/usePropertyCurrentDetails";
 import PropertyHeader from "@/app/(home)/properties/[propertyId]/_components/PropertyHeader";
-import { useDateSelection } from "@/hooks/useDateSelection";
+import { useDateSelection } from "@/hooks/utils/useDateSelection";
 import MapComponent from "@/components/MapComponent";
 import PropertyDetailsSkeleton from "@/app/(home)/properties/[propertyId]/_components/PropertyDetailsSkeleton";
+import { useSearchParams } from "next/navigation";
 
 interface PropertyDetailsProps {
   property: CurrentAvailablePropertyType;
@@ -28,28 +29,30 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
   property,
   propertyId,
 }) => {
+  const searchParams = useSearchParams();
+  const startDate = searchParams.get("startDate") || undefined;
+  const endDate = searchParams.get("endDate") || undefined;
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const { bookingValues, setBookingInfo } = useBookingValues();
   const {
-    selectedDate,
     checkInDate,
     checkOutDate,
     isSelectingCheckOut,
-    isCalendarOpen,
     handleDateSelect,
-    handleDateChange,
     handleReset,
-    handleConfirm,
-    setIsCalendarOpen,
-  } = useDateSelection();
+  } = useDateSelection({ startDate, endDate });
 
   // Use the hook to refetch data when selectedDate changes
-  const { currentProperty, isLoading, error } = usePropertyDetails(
+  const { currentProperty, isLoading, error } = usePropertyCurrentDetails(
     propertyId,
-    selectedDate,
+    checkInDate ? checkInDate : new Date(),
   );
 
+  // to refer to the room cards
   const mapRef = useRef<HTMLDivElement>(null);
 
+  // to display the current property
+  // (property will be refetched if day is changed, bc room availability changes)
   const displayProperty = currentProperty || property;
   const availableRooms = useMemo(
     () => displayProperty?.rooms || [],
@@ -145,18 +148,14 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0">
-                      <AvailabilityCalendar
+                      <PriceCalendar
                         propertyId={displayProperty.id}
                         onSelect={handleDateSelect}
                         onReset={handleReset}
-                        onConfirm={handleConfirm}
-                        selected={
-                          isSelectingCheckOut ? checkOutDate : checkInDate
-                        }
+                        onConfirm={() => setIsCalendarOpen(false)}
                         isCheckOut={isSelectingCheckOut}
                         checkInDate={checkInDate}
                         checkOutDate={checkOutDate}
-                        onDateChange={handleDateChange}
                       />
                     </PopoverContent>
                   </Popover>

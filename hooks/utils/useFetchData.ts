@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 export const useFetchData = <T>(
   key: string,
   queryFn: () => Promise<T>,
   options?: { enabled?: boolean },
 ) => {
+  const [stateData, setData] = useState<T | null>(null);
   const { data, error, isLoading } = useQuery<T, Error>({
     queryKey: [key],
     queryFn,
@@ -13,5 +15,5 @@ export const useFetchData = <T>(
     ...options,
   });
 
-  return { data, error, isLoading };
+  return { data, error, isLoading, setData };
 };

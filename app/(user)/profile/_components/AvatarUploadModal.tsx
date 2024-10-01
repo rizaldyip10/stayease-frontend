@@ -6,11 +6,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import ImageDropZone from "@/components/ImageDropZone";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAlert } from "@/context/AlertContext";
 import { useSession } from "next-auth/react";
 
 interface AvatarUploadModalProps {

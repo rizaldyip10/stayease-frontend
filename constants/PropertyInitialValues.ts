@@ -1,5 +1,3 @@
-import { PropertyAndRoomType } from "@/constants/Property";
-
 export const createPropertyInitialValues = {
   property: {
     name: "",
@@ -24,4 +22,21 @@ export const createPropertyInitialValues = {
   category: {
     name: "",
   },
+};
+
+export type PropertyEditFormValues = {
+  property: {
+    name: string;
+    description: string;
+    categoryId: number;
+    imageUrl: string;
+  };
+  rooms: {
+    name: string;
+    description: string;
+    basePrice: number;
+    capacity: number;
+    imageUrl: string;
+  }[];
+  category: string;
 };

@@ -1,78 +1,85 @@
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { useField, useFormikContext } from "formik";
+import { ErrorMessage, useField, useFormikContext } from "formik";
 import Image from "next/image";
+import { useImageUpload } from "@/hooks/utils/useImageUpload";
+import { Loader2 } from "lucide-react";
+import Error from "next/error";
+
+const MAX_FILE_SIZE = 1024 * 1024;
 
 interface ImageUploadProps {
-  name: string;
-  onImageUpload: (
-    file: File,
-    fieldName: string,
-    setFieldValue: (field: string, value: any) => void,
-  ) => Promise<void>;
+  fieldName: string;
+  uploadType: "profile" | "property";
+  acceptedFileTypes?: Record<string, string[]>;
+  maxFileSize?: number;
+  multiple?: boolean;
 }
-
-const ImageUpload: React.FC<ImageUploadProps> = ({ name, onImageUpload }) => {
-  const [field] = useField(name);
+const ImageUpload: React.FC<ImageUploadProps> = ({
+  fieldName,
+  uploadType,
+  acceptedFileTypes = {
+    "image/jpeg": [".jpg", ".jpeg"],
+    "image/png": [".png"],
+  },
+  maxFileSize = MAX_FILE_SIZE,
+  multiple = false,
+}) => {
+  const [field] = useField(fieldName);
   const { setFieldValue } = useFormikContext();
+  const { onDrop, isLoading, error, file } = useImageUpload(uploadType);
 
-  const onDrop = useCallback(
-    async (acceptedFiles: File[]) => {
-      const file = acceptedFiles[0];
-      if (file) {
-        if (file.size > 1024 * 1024) {
-          alert("File size must be less than 1MB");
-          return;
-        }
-        if (!["image/jpeg", "image/png", "image/gif"].includes(file.type)) {
-          alert("Only jpg, jpeg, png, and gif files are allowed");
-          return;
-        }
-        try {
-          console.log("Uploading image...");
-          await onImageUpload(file, name, setFieldValue);
-        } catch (error) {
-          console.error("Failed to upload image:", error);
-          alert("Failed to upload image");
-        }
-      }
+  const handleDrop = useCallback(
+    (acceptedFiles: File[], rejectedFiles: any[]) => {
+      onDrop(
+        acceptedFiles,
+        rejectedFiles,
+        maxFileSize,
+        setFieldValue,
+        fieldName,
+      );
     },
-    [onImageUpload, name, setFieldValue],
+    [onDrop, maxFileSize, setFieldValue],
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: {
-      "image/jpeg": [".jpg", ".jpeg"],
-      "image/png": [".png"],
-      "image/gif": [".gif"],
-    },
-    maxSize: 1024 * 1024,
-    multiple: false,
+    onDrop: handleDrop,
+    accept: acceptedFileTypes,
+    maxSize: maxFileSize,
+    multiple,
   });
 
   return (
-    <div
-      {...getRootProps()}
-      className="border-2 border-dashed p-4 text-center cursor-pointer"
-    >
-      <input {...getInputProps()} />
-      {isDragActive ? (
-        <p>Drop the image here ...</p>
-      ) : (
-        <p>Drag and drop an image here, or click to select an image</p>
-      )}
-      {field.value && (
-        <div className="mt-2 relative w-full h-40">
-          <Image
-            src={field.value}
-            alt="Preview"
-            layout="fill"
-            objectFit="contain"
-          />
-        </div>
-      )}
-    </div>
+    <>
+      <div
+        {...getRootProps()}
+        className="border-2 border-dashed p-4 text-center cursor-pointer"
+      >
+        <input {...getInputProps()} />
+        {isDragActive ? (
+          <p>Drop the image here ...</p>
+        ) : isLoading ? (
+          <Loader2 className="mx-auto w-10 h-10 text-blue-950 animate-spin" />
+        ) : (
+          <p>Drag and drop an image here, or click to select an image</p>
+        )}
+        {field.value && (
+          <div className="mt-2 relative w-full h-40">
+            <Image
+              src={field.value}
+              alt="Preview"
+              layout="fill"
+              objectFit="contain"
+            />
+          </div>
+        )}
+        <ErrorMessage
+          name={fieldName}
+          component="div"
+          className="text-red-500"
+        />
+      </div>
+    </>
   );
 };
 

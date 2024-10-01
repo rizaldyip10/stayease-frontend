@@ -1,31 +1,35 @@
 import React from "react";
-import { Formik, Form, FieldArray } from "formik";
+import { FieldArray, Form, Formik } from "formik";
 import { Button } from "@/components/ui/button";
-import { PropertyAndRoomType, RoomType } from "@/constants/Property";
+import { PropertyAndRoomType } from "@/constants/Property";
 import PropertyFormFields from "@/app/dashboard/properties/[propertyId]/edit/_components/PropertyEditFields";
 import RoomEditForm from "@/app/dashboard/properties/[propertyId]/edit/_components/RoomEditForm";
+import { usePropertyEdit } from "@/hooks/properties/usePropertyEdit";
+import GlobalLoading from "@/components/GlobalLoading";
 
 interface PropertyEditFormProps {
-  property: PropertyAndRoomType | null;
-  rooms: RoomType[];
-  onSubmit: (values: any) => Promise<void>;
+  property: PropertyAndRoomType | undefined;
 }
 
-const PropertyEditForm: React.FC<PropertyEditFormProps> = ({
-  property,
-  rooms,
-  onSubmit,
-}) => {
+const PropertyEditForm: React.FC<PropertyEditFormProps> = ({ property }) => {
+  const { handleSubmit, isLoading } = usePropertyEdit(property?.id || 0);
+
+  const rooms = property?.rooms || [];
+
   const initialValues = {
     property: {
       ...property,
-      categoryId: property?.category,
+      name: property?.propertyName || "",
     },
     rooms: rooms,
   };
 
+  if (isLoading) {
+    return <GlobalLoading fullPage />;
+  }
+
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit}>
+    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
       {({ values, isSubmitting }) => (
         <Form className="space-y-8">
           <PropertyFormFields />
@@ -60,10 +64,10 @@ const PropertyEditForm: React.FC<PropertyEditFormProps> = ({
           </FieldArray>
           <Button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isLoading}
             className="bg-blue-950 text-white hover:bg-blue-900"
           >
-            {isSubmitting ? "Updating..." : "Update Property"}
+            Update Property
           </Button>
         </Form>
       )}

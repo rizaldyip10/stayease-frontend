@@ -2,27 +2,23 @@
 import { FieldArray, Form, Formik } from "formik";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { createPropValidationSchema } from "@/constants/ValidationSchema";
 import PropertyForm from "@/app/dashboard/properties/create/_components/PropertyForm";
 import RoomForm from "@/app/dashboard/properties/create/_components/RoomForm";
 import { usePropertyCreation } from "@/hooks/properties/usePropertyCreation";
-import { createPropertyInitialValues } from "@/utils/PropertyInitialValues";
-import { usePropertyUtils } from "@/hooks/properties/usePropertyUtils";
+import { createPropertyInitialValues } from "@/constants/PropertyInitialValues";
 import GlobalLoading from "@/components/GlobalLoading";
+import ErrorComponent from "@/components/ErrorComponent";
 
 const CreateProperty = () => {
-  const { setCategories, isLoading, error, handleSubmit, handleImageUpload } =
-    usePropertyCreation();
-  const { categories } = usePropertyUtils();
+  const { isLoading, error, handleSubmit } = usePropertyCreation();
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center align-middle h-[200px]">
-        <GlobalLoading height={100} width={100} />
-      </div>
-    );
+    return <GlobalLoading fullPage />;
   }
+
+  if (error) return <ErrorComponent message={error} />;
 
   return (
     <div className="container mx-auto p-4">
@@ -34,11 +30,7 @@ const CreateProperty = () => {
       >
         {({ values, isSubmitting }) => (
           <Form className="flex flex-col">
-            <PropertyForm
-              onImageUpload={handleImageUpload}
-              categories={categories}
-              setCategories={setCategories}
-            />
+            <PropertyForm />
             <FieldArray name="rooms">
               {({ push, remove }) => (
                 <>
@@ -46,7 +38,6 @@ const CreateProperty = () => {
                     <RoomForm
                       key={index}
                       index={index}
-                      onImageUpload={handleImageUpload}
                       onRemove={() => remove(index)}
                     />
                   ))}

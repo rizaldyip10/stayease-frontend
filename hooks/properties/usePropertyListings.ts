@@ -3,7 +3,6 @@ import { useCallback, useEffect, useState } from "react";
 import propertyService from "@/services/propertyService";
 import { useDebounce } from "use-debounce";
 import { usePropertySearch } from "./usePropertySearch";
-import { useFetchData } from "@/hooks/utils/useFetchData";
 
 export interface FilterOptions {
   city?: string;
@@ -30,21 +29,27 @@ const initialFilters: FilterOptions = {
   searchTerm: "",
 };
 
+const initialSort: SortOption = {
+  sortBy: "",
+  sortDirection: "",
+};
+
+const initialPagination = {
+  currentPage: 0,
+  totalPages: 1,
+  totalElements: 0,
+  size: 10,
+};
+
 export const usePropertyListings = () => {
   const [properties, setProperties] = useState<AvailablePropertyType[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<FilterOptions>(initialFilters);
-  const [sort, setSort] = useState<SortOption>({
-    sortBy: "",
-    sortDirection: "",
-  });
-  const [pagination, setPagination] = useState({
-    currentPage: 0,
-    totalPages: 1,
-    totalElements: 0,
-    size: 10,
-  });
+  const [sort, setSort] = useState<SortOption>(initialSort);
+  const [pagination, setPagination] = useState(initialPagination);
   const [debouncedFilters] = useDebounce(filters, 1000);
-  const { urlFilters, updateSearchParams, bookingValues } = usePropertySearch();
+  const { urlFilters, updateSearchParams } = usePropertySearch();
 
   useEffect(() => {
     setFilters((prev) => ({ ...prev, ...urlFilters }));
@@ -57,40 +62,42 @@ export const usePropertyListings = () => {
     updateSearchParams({});
   }, [updateSearchParams]);
 
-  const {
-    data: fetchedListings,
-    error,
-    isLoading,
-  } = useFetchData<AvailablePropertyType[]>("property-listings", async () => {
-    const result = await propertyService.sortAndFilter(
-      debouncedFilters.startDate,
-      debouncedFilters.endDate,
-      debouncedFilters.city,
-      debouncedFilters.categoryId
-        ? Number(debouncedFilters.categoryId)
-        : undefined,
-      debouncedFilters.searchTerm,
-      debouncedFilters.minPrice,
-      debouncedFilters.maxPrice,
-      pagination.currentPage,
-      pagination.size,
-      sort.sortBy,
-      sort.sortDirection,
-    );
-    setPagination((prev) => ({
-      ...prev,
-      currentPage: result.currentPage,
-      totalPages: result.totalPages,
-      totalElements: result.totalElements,
-    }));
-    return result.content;
-  });
+  const fetchPropertyListings = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const result = await propertyService.sortAndFilter(
+        debouncedFilters.startDate,
+        debouncedFilters.endDate,
+        debouncedFilters.city,
+        debouncedFilters.categoryId
+          ? Number(debouncedFilters.categoryId)
+          : undefined,
+        debouncedFilters.searchTerm,
+        debouncedFilters.minPrice,
+        debouncedFilters.maxPrice,
+        pagination.currentPage,
+        pagination.size,
+        sort.sortBy,
+        sort.sortDirection,
+      );
+      setProperties(result.content);
+      setPagination((prev) => ({
+        ...prev,
+        currentPage: result.currentPage,
+        totalPages: result.totalPages,
+        totalElements: result.totalElements,
+      }));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "An error occurred");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [debouncedFilters, pagination.currentPage, pagination.size, sort]);
 
   useEffect(() => {
-    if (fetchedListings) {
-      setProperties(fetchedListings);
-    }
-  }, [fetchedListings]);
+    fetchPropertyListings();
+  }, [fetchPropertyListings]);
 
   const updateFilters = useCallback(
     (newFilters: Partial<FilterOptions>) => {
@@ -124,6 +131,5 @@ export const usePropertyListings = () => {
     updateSort,
     updatePage,
     resetFilters,
-    bookingValues,
   };
 };

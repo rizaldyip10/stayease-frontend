@@ -34,7 +34,6 @@ const PropertyListings: React.FC = () => {
 
   const handleLocationChange = useCallback((lat: number, lng: number) => {
     setMapCenter({ lat, lng });
-    // You might want to update filters or fetch new properties based on this location
   }, []);
 
   const handleFilterChange = useCallback(
@@ -47,8 +46,6 @@ const PropertyListings: React.FC = () => {
   const handleResetFilters = useCallback(() => {
     resetFilters();
   }, [resetFilters]);
-
-  if (error) return <div>Error: {error}</div>;
 
   const hasResults = properties && properties.length > 0;
 
@@ -105,6 +102,7 @@ const PropertyListings: React.FC = () => {
                   <PropertyListingCard
                     key={property.propertyId}
                     property={property}
+                    currentFilters={filters}
                   />
                 ))}
               </div>

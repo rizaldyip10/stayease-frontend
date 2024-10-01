@@ -1,77 +1,72 @@
-import { useEffect, useState } from "react";
-import {
-  CategoryType,
-  PropertyAndRoomType,
-  RoomType,
-} from "@/constants/Property";
+import { PropertyAndRoomType } from "@/constants/Property";
 import propertyService from "@/services/propertyService";
+import { useFetchData } from "@/hooks/utils/useFetchData";
+import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { handleAsyncRequest } from "@/utils/handleAsyncRequest";
+import { useAlert } from "@/context/AlertContext";
 
 export const usePropertyData = (propertyId: number) => {
-  const [property, setProperty] = useState<PropertyAndRoomType | null>(null);
-  const [rooms, setRooms] = useState<RoomType[]>([]);
-  const [categories, setCategories] = useState<CategoryType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchPropertyAndRooms = async () => {
-      try {
-        const [propertyData, categoriesData] = await Promise.all([
-          propertyService.getPropertyById(propertyId),
-          propertyService.getAllCategories(),
-        ]);
+  const queryClient = useQueryClient();
+  const { showAlert } = useAlert();
 
-        setProperty(propertyData);
-        setRooms(propertyData?.rooms ?? []);
-        setCategories(categoriesData);
-      } catch (err) {
-        setError("Failed to fetch property data");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchPropertyAndRooms();
-  }, [propertyId]);
+  const {
+    data: propertyById,
+    error: propertyError,
+    isLoading: propertyIsLoading,
+  } = useFetchData<PropertyAndRoomType>(`propertyById-${propertyId}`, () =>
+    propertyService.getPropertyById(propertyId),
+  );
 
-  const updateProperty = async (propertyData: any) => {
-    const categoryId = categories.find(
-      (cat) => cat.name === propertyData.category,
-    )?.id;
-
-    // if (!categoryId) {
-    //   throw new Error("Invalid category");
-    // }
-
-    const updatedPropertyData = {
-      ...propertyData,
-      categoryId: categoryId,
-    };
-
-    console.log("updatedPropertyData", updatedPropertyData);
-
-    const updatedProperty = await propertyService.updateProperty(
-      propertyId,
-      updatedPropertyData,
-    );
-    setProperty(updatedProperty);
+  const fetchPropertyById = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: [`propertyById-${propertyId}`],
+    });
   };
 
-  const updateRooms = async (roomsData: any[]) => {
-    for (const room of roomsData) {
-      if (room.id) {
-        await propertyService.updateRoom(propertyId, room.id, room);
-      } else {
-        await propertyService.createRoom(propertyId, room);
-      }
-    }
+  const {
+    data: isOwner,
+    error: ownerError,
+    isLoading: ownerIsLoading,
+  } = useFetchData<boolean>(`isPropertyOwner-${propertyId}`, () =>
+    propertyService.checkPropertyOwnership(propertyId),
+  );
+
+  const deleteProperty = async () => {
+    await handleAsyncRequest(
+      setIsLoading,
+      setError,
+      () => propertyService.deleteProperty(propertyId),
+      () => showAlert("success", "Property deleted successfully"),
+      (error) =>
+        showAlert("error", error.message ?? "Failed to delete property"),
+    );
+    await queryClient.invalidateQueries({
+      queryKey: ["get-tenant-properties"],
+    });
+  };
+
+  const deleteRoom = async (roomId: number) => {
+    await handleAsyncRequest(
+      setIsLoading,
+      setError,
+      () => propertyService.deleteRoom(propertyId, roomId),
+      () => showAlert("success", "Room deleted successfully"),
+      (error) => showAlert("error", error.message ?? "Failed to delete room"),
+    );
+    await queryClient.invalidateQueries({ queryKey: ["get-tenant-room"] });
   };
 
   return {
-    property,
-    rooms,
+    propertyById,
+    isOwner,
+    fetchPropertyById,
+    deleteProperty,
+    deleteRoom,
     isLoading,
     error,
-    updateProperty,
-    updateRooms,
   };
 };
