@@ -9,10 +9,14 @@ import {
 import React from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { signOut } from "@/auth";
+import { useSignOut } from "@/hooks/auth/useSignOut";
+import GlobalLoading from "@/components/GlobalLoading";
 
 const ProfileBtn = () => {
   const { data: session } = useSession();
+  const { handleSignOut, isLoading } = useSignOut();
+
+  if (isLoading) return <GlobalLoading fullPage />;
 
   return (
     <DropdownMenu>
@@ -32,7 +36,12 @@ const ProfileBtn = () => {
               <Link href="/settings">Settings</Link>
             </DropdownMenuItem>
             <DropdownMenuItem className="text-xs flex items-center text-blue-950 gap-1">
-              <Link href="/" onClick={() => signOut()}>
+              <Link
+                href="#"
+                onClick={() =>
+                  handleSignOut({ redirect: true, callbackUrl: "/" })
+                }
+              >
                 Logout
               </Link>
             </DropdownMenuItem>

@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { BsHouseCheckFill } from "react-icons/bs";
+import { GiLockedDoor } from "react-icons/gi";
 
 const Unauthorized: React.FC = () => {
   return (
@@ -12,16 +14,10 @@ const Unauthorized: React.FC = () => {
         Oops! Looks like you&apos;re not{" "}
         <span className="font-semibold italic">checked in</span> yet.
       </p>
-      <Image
-        src="/house-lock.svg"
-        alt="Unauthorized"
-        className="mb-8 h-64 w-64"
-        width={256}
-        height={256}
-      />
+      <GiLockedDoor className="w-60 h-60 text-blue-950 mb-12" />
       <Link
         href="/login"
-        className="bg-blue-950 text-white px-6 py-2 rounded hover:bg-blue-900"
+        className="px-6 py-2 rounded-md bg-blue-950 drop-shadow-xl text-white hover:border-blue-950 hover:border-2 hover:bg-gray-200 hover:text-blue-950 active:bg-blue-800"
       >
         Log In or Sign Up
       </Link>

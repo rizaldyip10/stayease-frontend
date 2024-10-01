@@ -1,10 +1,11 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import propertyService from "@/services/propertyService";
 import UnauthorizedPropertyAccess from "@/app/dashboard/properties/[propertyId]/edit/_components/UnauthorizedProperty";
 import PropertyEdit from "@/app/dashboard/properties/[propertyId]/edit/_components/PropertyEdit";
+import GlobalLoading from "@/components/GlobalLoading";
 
 export default function PropertyEditPage({
   params,
@@ -51,7 +52,11 @@ export default function PropertyEditPage({
   }
 
   if (isOwner === null) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center align-middle h-[200px]">
+        <GlobalLoading height={100} width={100} />
+      </div>
+    );
   }
 
   if (!isOwner) {

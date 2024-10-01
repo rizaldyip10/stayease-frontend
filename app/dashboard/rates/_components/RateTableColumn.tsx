@@ -2,13 +2,14 @@ import * as React from "react";
 import { ColumnDef } from "@tanstack/table-core";
 import { ArrowUpDown, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { RateResponse } from "@/services/rateService";
+import { RateResponseType } from "@/constants/Rates";
 import { formatDate } from "@/utils/dateFormatter";
 import RateDeleteDialog from "@/app/dashboard/rates/_components/RateDeleteDialog";
 import { currencyFormatter } from "@/utils/CurrencyFormatter";
 import RateSettingDialog from "@/app/dashboard/rates/_components/setting/RateSettingDialog";
+import { useState } from "react";
 
-export const RateColumns: ColumnDef<RateResponse>[] = [
+export const RateColumns: ColumnDef<RateResponseType>[] = [
   {
     id: "propertyName",
     accessorKey: "propertySummary.propertyName",
@@ -94,6 +95,7 @@ export const RateColumns: ColumnDef<RateResponse>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const rate = row.original;
+      const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
       return (
         <div className="flex items-center gap-2">
           <RateSettingDialog
@@ -105,7 +107,11 @@ export const RateColumns: ColumnDef<RateResponse>[] = [
               </Button>
             }
           />
-          <RateDeleteDialog rateId={rate.rateId} />
+          <RateDeleteDialog
+            rateId={rate.rateId}
+            isOpen={isDeleteDialogOpen}
+            onOpenChange={setIsDeleteDialogOpen}
+          />
         </div>
       );
     },

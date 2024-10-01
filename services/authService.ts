@@ -41,12 +41,17 @@ export const authService = {
   },
 
   checkToken: async (token: string): Promise<TokenCheckResponse> => {
-    const response = await axiosInterceptor.post(
-      config.endpoints.registration.checkToken,
-      { token },
-    );
-    console.log("Calling check token endpoint, token: ", token);
-    return response.data;
+    try {
+      const response = await axiosInterceptor.post(
+        config.endpoints.registration.checkToken,
+        token,
+      );
+      console.log("Calling check token endpoint, token: ", token);
+      return response.data;
+    } catch (error: any) {
+      logger.error("Error checking token", { error });
+      return error.response.data;
+    }
   },
 
   verify: async (values: FormikValues, token: string): Promise<any> => {
@@ -118,24 +123,6 @@ export const authService = {
     }
   },
 
-  reAuthenticate: async (googleToken: string) => {
-    try {
-      logger.info("Re-authenticating with Google");
-      const result = await signIn("google", {
-        token: { id_token: googleToken },
-        redirect: false,
-      });
-      if (result?.error) {
-        throw new Error(result.error);
-      }
-      logger.info("Re-authentication successful");
-      return result;
-    } catch (error) {
-      logger.error("Re-authentication failed", { error });
-      throw error;
-    }
-  },
-
   exchangeCode: async (code: string): Promise<AuthResponse> => {
     try {
       logger.info("Exchanging code for tokens");
@@ -200,7 +187,7 @@ export const authService = {
   logout: async (email: string | undefined): Promise<void> => {
     try {
       logger.info("Logging out user");
-      await axiosInterceptor.post(config.endpoints.auth.logout, email);
+      await axiosInterceptor.post(config.endpoints.auth.logout, { email });
       logger.info("Logout successful");
     } catch (error: any) {
       logger.error("Logout failed", { error });
@@ -230,6 +217,21 @@ export const authService = {
         logger.error("Forgot password failed", { error, email });
         throw error;
       }
+    }
+  },
+
+  checkPasswordToken: async (token: string): Promise<TokenCheckResponse> => {
+    try {
+      logger.info("Checking password reset token");
+      const response = await axiosInterceptor.post(
+        config.endpoints.password.checkToken,
+        token,
+      );
+      logger.info("Password reset token is valid");
+      return response.data;
+    } catch (error: any) {
+      logger.error("Password reset token is invalid", { error });
+      return error.response.data;
     }
   },
 

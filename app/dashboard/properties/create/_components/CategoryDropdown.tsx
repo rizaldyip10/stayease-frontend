@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
-import { ErrorMessage, Field, useFormikContext } from "formik";
+import { ErrorMessage, Field } from "formik";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import CustomSelect from "@/components/CustomSelect";
 import { CategoryType } from "@/constants/Property";
 
 interface CategoryDropdownProps {
@@ -24,35 +23,6 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   );
   const [newCategoryName, setNewCategoryName] = useState("");
   const [isCreatingNew, setIsCreatingNew] = useState(false);
-  const { setFieldValue } = useFormikContext();
-
-  console.log("categories in dropdown", categories);
-  // const handleSelectChange = (value: string) => {
-  //   setSelectedCategory(value);
-  //   if (value === "new") {
-  //     setIsCreatingNew(true);
-  //   } else if (value !== "select") {
-  //     onSelect(value);
-  //     setFieldValue("property.categoryId", value);
-  //   }
-  // };
-  //
-  // const handleCreateNewCategory = async () => {
-  //   if (newCategoryName.trim()) {
-  //     try {
-  //       const newCategory = await onCreateNew(newCategoryName.trim());
-  //       if (newCategory) {
-  //         setCategories((prev) => [...prev!, newCategory]);
-  //         setSelectedCategory(newCategory.id.toString());
-  //         setFieldValue("property.categoryId", newCategory.id);
-  //       }
-  //       setIsCreatingNew(false);
-  //     } catch (error) {
-  //       console.error("Failed to create new category:", error);
-  //     }
-  //     setNewCategoryName("");
-  //   }
-  // };
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
@@ -86,12 +56,6 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
       {!isCreatingNew ? (
         <div className="flex flex-col gap-2.5">
           <Label htmlFor="property.categoryId">Category</Label>
-          {/*<CustomSelect*/}
-          {/*  title="Select a category"*/}
-          {/*  value={selectedCategory}*/}
-          {/*  onChange={handleSelectChange}*/}
-          {/*  options={selectOptions}*/}
-          {/*/>*/}
           <select
             value={selectedCategory}
             onChange={handleSelectChange}

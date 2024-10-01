@@ -1,24 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Formik, Form, Field, ErrorMessage, FieldProps } from "formik";
-import * as yup from "yup";
+import React, { useState } from "react";
+import { ErrorMessage, Field, FieldProps, Form, Formik } from "formik";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { CustomDatePicker } from "@/components/CustomDatePicker";
-import { RateRequest } from "@/services/rateService";
-import { manualRateValidationSchema } from "@/utils/validationSchema";
+import { RateRequestType } from "@/constants/Rates";
+import { manualRateValidationSchema } from "@/constants/ValidationSchema";
 import { formatDate } from "@/utils/dateFormatter";
+import TypeSelect from "@/components/TypeSelect";
+import { typeItems } from "@/app/dashboard/rates/_components/setting/AutomaticRateForm";
 
 interface ManualRateFormProps {
-  onSubmit: (data: RateRequest) => void;
-  initialData?: RateRequest;
+  onSubmit: (data: RateRequestType) => void;
+  initialData?: RateRequestType;
 }
 export const ManualRateForm: React.FC<ManualRateFormProps> = ({
   onSubmit,
@@ -57,7 +51,6 @@ export const ManualRateForm: React.FC<ManualRateFormProps> = ({
       setFieldValue("endDate", formatDate(date));
     }
   };
-
   return (
     <Formik
       initialValues={
@@ -131,29 +124,11 @@ export const ManualRateForm: React.FC<ManualRateFormProps> = ({
               />
             </div>
             <div className="flex-1">
-              <Label htmlFor="adjustmentType">Adjustment Type</Label>
-              <Field name="adjustmentType">
-                {({ field }: FieldProps) => (
-                  <Select
-                    onValueChange={(value) =>
-                      setFieldValue("adjustmentType", value)
-                    }
-                    value={field.value}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="PERCENTAGE">Percentage</SelectItem>
-                      <SelectItem value="FIXED">Fixed Amount</SelectItem>
-                    </SelectContent>
-                  </Select>
-                )}
-              </Field>
-              <ErrorMessage
+              <TypeSelect
                 name="adjustmentType"
-                component="div"
-                className="text-red-500 text-sm"
+                label="Adjustment Type"
+                placeholder="Select type"
+                options={typeItems}
               />
             </div>
           </div>

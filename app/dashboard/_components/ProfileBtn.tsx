@@ -10,30 +10,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import React from "react";
 import Link from "next/link";
-import { signOut } from "@/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RxDashboard } from "react-icons/rx";
-import { useProfile } from "@/context/ProfileContext";
 import { useSession } from "next-auth/react";
-
-interface ProfileBtnProps {
-  isDashboard: boolean;
-}
-
+import { useSignOut } from "@/hooks/auth/useSignOut";
+import GlobalLoading from "@/components/GlobalLoading";
 const ProfileBtn: React.FC = () => {
-  // const { profile, isLoading, error } = useProfile();
   const { data: session } = useSession();
-
-  console.log("session: ", session);
-
-  // const initials =
-  //   (profile?.firstName?.[0] ?? "") + (profile?.lastName?.[0] ?? "");
+  const { handleSignOut, isLoading } = useSignOut();
 
   const initials =
     (session?.user?.firstName?.[0] ?? "") +
     (session?.user?.lastName?.[0] ?? "");
 
-  // console.log("profile: ", profile);
+  if (isLoading) return <GlobalLoading fullPage />;
 
   return (
     <DropdownMenu>
@@ -69,7 +59,11 @@ const ProfileBtn: React.FC = () => {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="text-xs flex items-center text-red-700 gap-1">
-          <Link href="/" onClick={() => signOut()} className="flex gap-1">
+          <Link
+            href="#"
+            onClick={() => handleSignOut({ redirect: true, callbackUrl: "/" })}
+            className="flex gap-1 text-red-700"
+          >
             <LogOut className="w-4 h-4 text-red-700" />
             Log Out
           </Link>

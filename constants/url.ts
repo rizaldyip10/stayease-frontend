@@ -17,6 +17,7 @@ export const config = {
     password: {
       forgot: "/password/forgot",
       reset: "/password/reset",
+      checkToken: "/password/check-token",
     },
     registration: {
       register: "/register",
@@ -28,6 +29,7 @@ export const config = {
       tenant: "/users/profile/tenant",
       avatar: "/users/profile/avatar",
       email: "/users/profile/email",
+      checkToken: "/users/profile/email/check-token",
       delete: "/users",
     },
     properties: {
@@ -67,6 +69,7 @@ export const config = {
       getLowestDailyRate: "/rates/daily",
       getLowestDailyCumulativeRate: "/rates/daily/cumulative",
       updateRates: "/rates/{rateId}",
+      autoUpdateRates: "/rates/auto",
     },
     availability: {
       getTenantAvailability: "/properties/tenant/availability",
@@ -85,7 +88,7 @@ export const config = {
       uploadPayment: "/payments/payment-proof",
     },
     reports: {
-      availabilityReports: "/properties/tenant/availability"
-    }
+      availabilityReports: "/properties/tenant/availability",
+    },
   },
 };

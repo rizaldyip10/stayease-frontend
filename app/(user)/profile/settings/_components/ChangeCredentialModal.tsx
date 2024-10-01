@@ -1,5 +1,5 @@
 import React from "react";
-import { Formik, Form, FormikValues } from "formik";
+import { Form, Formik } from "formik";
 import * as yup from "yup";
 import {
   Dialog,
@@ -9,8 +9,9 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import FormikInput from "@/components/FormikInput";
-import { useForgotPassword } from "@/hooks/useForgotPassword";
-import { useChangeEmail } from "@/hooks/useChangeEmail";
+import { useForgotPassword } from "@/hooks/auth/useForgotPassword";
+import { useChangeEmail } from "@/hooks/auth/useChangeEmail";
+import LoadingButton from "@/components/LoadingButton";
 
 interface ForgotPasswordModalProps {
   isOpen: boolean;
@@ -47,7 +48,7 @@ const ChangeCredentialModal: React.FC<ForgotPasswordModalProps> = ({
     setSubmitting(false);
     console.log("error", res);
     console.log("emailError", emailError);
-    if (res.statusCode == 200) {
+    if (!error && !emailError) {
       onClose();
     }
   };
@@ -56,6 +57,7 @@ const ChangeCredentialModal: React.FC<ForgotPasswordModalProps> = ({
   const buttonText = isPasswordReset
     ? "Send Reset Link"
     : "Send E-mail Verification Link";
+  const placeholder = isPasswordReset ? "Enter your email" : "Enter new email";
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -73,19 +75,22 @@ const ChangeCredentialModal: React.FC<ForgotPasswordModalProps> = ({
               <FormikInput
                 name="email"
                 type="email"
-                placeholder="Enter your email"
+                placeholder={placeholder}
                 className="w-full p-2 border rounded"
               />
               {error && (
                 <div className="text-red-500 text-sm mt-1">{error}</div>
               )}
-              <Button
-                type="submit"
-                disabled={isSubmitting || isLoading}
-                className="w-full bg-blue-950 text-white hover:bg-blue-900"
-              >
-                {isSubmitting || isLoading ? "Sending..." : buttonText}
-              </Button>
+              {isLoading || isSubmitting ? (
+                <LoadingButton title="Sending request..." />
+              ) : (
+                <Button
+                  type="submit"
+                  className="w-full bg-blue-950 text-white hover:bg-blue-900"
+                >
+                  {buttonText}
+                </Button>
+              )}
             </Form>
           )}
         </Formik>

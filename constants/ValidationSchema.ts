@@ -1,7 +1,7 @@
 import * as yup from "yup";
 import { whiteSpaceRegex } from "@/constants/WhiteSpaceRegex";
 import { FormType } from "@/constants/Types";
-import { UserType } from "@/hooks/useSelectUserType";
+import { UserType } from "@/hooks/auth/useSelectUserType";
 export const getValidationSchema = (formType: FormType) => {
   switch (formType) {
     case "login":
@@ -35,6 +35,38 @@ export const registerSchema = yup.object().shape({
     .email("Please enter a valid email")
     .required("Please enter your email"),
 });
+
+export const verifyValidationSchema = (userType: UserType) => [
+  yup.object().shape({
+    password: yup
+      .string()
+      .min(8, "Password must be at least 8 characters long")
+      .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+      .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .matches(/[0-9]/, "Password must contain at least one number")
+      .matches(
+        /[!@#$%^&*(),.?":{}|<>]/,
+        "Password must contain at least one special character",
+      )
+      .matches(whiteSpaceRegex, "Please enter a valid password")
+      .required("Password is required"),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("password")], "Passwords must match")
+      .required("Password confirmation is required"),
+  }),
+  yup.object({
+    firstName: yup.string().required("Required"),
+    lastName: yup.string().required("Required"),
+    phoneNumber: yup.string(),
+  }),
+  userType === "TENANT"
+    ? yup.object({
+        businessName: yup.string().required("Required"),
+        taxId: yup.string(),
+      })
+    : yup.object({}),
+];
 
 export const userTypeSelectSchema = yup.object().shape({
   userType: yup
@@ -138,29 +170,59 @@ export const manualRateValidationSchema = yup.object().shape({
     .min(5, "Reason must be at least 5 characters"),
 });
 
-export const automaticRateValidationSchema = yup
+export const autoRateSettingValidationSchema = yup
   .object()
   .shape({
-    holidayRate: yup.number().min(0, "Must be a positive number"),
-    holidayRateType: yup
+    useAutoRates: yup.boolean(),
+    holidayAdjustmentRate: yup
+      .number()
+      .nullable()
+      .when("useAutoRates", {
+        is: true,
+        then: (schema) => schema.min(0, "Must be a positive number or empty"),
+        otherwise: (schema) => schema.strip(),
+      }),
+    holidayAdjustmentType: yup
       .string()
-      .oneOf(["PERCENTAGE", "FIXED"], "Invalid rate type"),
-    weekendRate: yup.number().min(0, "Must be a positive number"),
-    weekendRateType: yup
+      .nullable()
+      .when("holidayAdjustmentRate", {
+        is: (val: number | null) => val !== null && val > 0,
+        then: (schema) =>
+          schema.required(
+            "Holiday adjustment rate type is required when rate is set",
+          ),
+        otherwise: (schema) => schema.nullable(),
+      }),
+    longWeekendAdjustmentRate: yup
+      .number()
+      .nullable()
+      .when("useAutoRates", {
+        is: true,
+        then: (schema) => schema.min(0, "Must be a positive number or empty"),
+        otherwise: (schema) => schema.strip(),
+      }),
+    longWeekendAdjustmentType: yup
       .string()
-      .oneOf(["PERCENTAGE", "FIXED"], "Invalid rate type"),
+      .nullable()
+      .when("longWeekendAdjustmentRate", {
+        is: (val: number | null) => val !== null && val > 0,
+        then: (schema) =>
+          schema.required(
+            "Long weekend adjustment rate type is required when rate is set",
+          ),
+        otherwise: (schema) => schema.nullable(),
+      }),
   })
   .test(
     "at-least-one-rate",
-    "At least one rate (Holiday or Weekend) must be set",
+    "At least one of Holiday or Long Weekend rate must be set when auto rate is enabled",
     function (values) {
-      return (
-        (values.holidayRate !== undefined &&
-          values.holidayRate > 0 &&
-          !!values.holidayRateType) ||
-        (values.weekendRate !== undefined &&
-          values.weekendRate > 0 &&
-          !!values.weekendRateType)
-      );
+      if (values.useAutoRates) {
+        return (
+          (values.holidayAdjustmentRate ?? 0) > 0 ||
+          (values.longWeekendAdjustmentRate ?? 0) > 0
+        );
+      }
+      return true;
     },
   );

@@ -1,15 +1,17 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import CustomSelect from "@/components/CustomSelect";
 import { ManualRateForm } from "./ManualRateForm";
-import { RateRequest, RateResponse } from "@/services/rateService";
-import { usePeakSeasonRate } from "@/hooks/reports/usePeakSeasonRate";
-import logger from "@/utils/logger";
+import { AutomaticRateForm } from "./AutomaticRateForm";
+import { RateResponseType } from "@/constants/Rates";
 import { useTenantProperties } from "@/hooks/properties/useTenantProperties";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useRatesManagement } from "@/hooks/rates/useRatesManagement";
+import { usePeakSeasonRate } from "@/hooks/rates/usePeakSeasonRate";
 
 interface RatesManagementProps {
   isEditing: boolean;
-  selectedRate?: RateResponse;
+  selectedRate?: RateResponseType;
   onClose: () => void;
 }
 
@@ -18,65 +20,29 @@ export const RatesManagement: React.FC<RatesManagementProps> = ({
   selectedRate,
   onClose,
 }) => {
-  const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(
-    null,
-  );
-  const [error, setError] = useState<string | null>(null);
   const { properties } = useTenantProperties();
-  const { createRate, updateRate } = usePeakSeasonRate();
+  const { fetchRates } = usePeakSeasonRate();
+  const {
+    selectedPropertyId,
+    error,
+    autoRateSetting,
+    isLoading,
+    handlePropertyChange,
+    handleManualSubmit,
+    handleAutoSubmit,
+  } = useRatesManagement(
+    () => {
+      onClose();
+      fetchRates();
+    },
+    isEditing ? selectedRate?.propertySummary.propertyId : undefined,
+  );
 
   const propertyOptions =
     properties?.map((property) => ({
       value: property.id.toString(),
       label: property.propertyName,
     })) || [];
-
-  useEffect(() => {
-    if (isEditing && selectedRate) {
-      setSelectedPropertyId(selectedRate.propertySummary.propertyId);
-    }
-  }, [isEditing, selectedRate]);
-
-  const handleSubmit = useCallback(
-    (data: RateRequest) => {
-      if (isEditing && selectedRate) {
-        try {
-          updateRate(selectedRate.rateId, data);
-          onClose();
-        } catch (error) {
-          logger.error("Error updating rate");
-        }
-      } else if (!isEditing && selectedPropertyId) {
-        logger.info("Creating new rate for property ID:", {
-          id: selectedPropertyId,
-        });
-        try {
-          createRate(selectedPropertyId, data);
-          logger.info("Rate created successfully");
-          onClose();
-        } catch (error) {
-          logger.error("Error creating rate");
-        }
-      } else {
-        setError("Please select a property to apply the rate to");
-      }
-    },
-    [isEditing, selectedRate, selectedPropertyId, createRate, updateRate],
-  );
-
-  const handlePropertyChange = useCallback(
-    (value: string) => {
-      if (!isEditing) {
-        if (!value) {
-          setError("Please select a property");
-        } else {
-          setSelectedPropertyId(Number(value));
-          setError(null);
-        }
-      }
-    },
-    [isEditing],
-  );
 
   return (
     <Card className="w-full">
@@ -97,20 +63,41 @@ export const RatesManagement: React.FC<RatesManagementProps> = ({
             />
             {error && <p className="text-left text-red-600 text-sm">{error}</p>}
           </div>
-          <ManualRateForm
-            onSubmit={handleSubmit}
-            initialData={
-              isEditing && selectedRate
-                ? {
-                    startDate: new Date(selectedRate.startDate),
-                    endDate: new Date(selectedRate.endDate),
-                    adjustmentRate: selectedRate.adjustmentRate,
-                    adjustmentType: selectedRate.adjustmentType,
-                    reason: selectedRate.reason,
-                  }
-                : undefined
-            }
-          />
+          <Tabs defaultValue="manual">
+            <TabsList>
+              <TabsTrigger value="manual">Manual Rate</TabsTrigger>
+              <TabsTrigger value="auto">Automatic Rate</TabsTrigger>
+            </TabsList>
+            <TabsContent value="manual">
+              <ManualRateForm
+                onSubmit={(data) =>
+                  handleManualSubmit(data, isEditing, selectedRate?.rateId)
+                }
+                initialData={
+                  isEditing && selectedRate
+                    ? {
+                        startDate: new Date(selectedRate.startDate),
+                        endDate: new Date(selectedRate.endDate),
+                        adjustmentRate: selectedRate.adjustmentRate,
+                        adjustmentType: selectedRate.adjustmentType,
+                        reason: selectedRate.reason,
+                      }
+                    : undefined
+                }
+              />
+            </TabsContent>
+            <TabsContent value="auto">
+              {isLoading ? (
+                <div>Loading automatic rate settings...</div>
+              ) : (
+                <AutomaticRateForm
+                  onSubmit={handleAutoSubmit}
+                  initialData={autoRateSetting || undefined}
+                  propertyId={selectedPropertyId || 0}
+                />
+              )}
+            </TabsContent>
+          </Tabs>
         </div>
       </CardContent>
     </Card>

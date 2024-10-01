@@ -19,6 +19,7 @@ export const useRoomAvailabilityCalendarConfig = (
   availabilityData: TenantRoomAvailabilityType[],
   onDateSelect: (start: Date, end: Date) => void,
   onEventClick: (eventInfo: any) => void,
+  calendarRef: React.RefObject<any>,
 ) => {
   const [headerToolbar, setHeaderToolbar] = useState({
     left: "prev today",
@@ -27,27 +28,25 @@ export const useRoomAvailabilityCalendarConfig = (
   });
 
   useEffect(() => {
-    const updateHeaderToolbar = () => {
-      if (window.innerWidth < 768) {
-        setHeaderToolbar({
-          left: "prev",
-          center: "title",
-          right: "next",
-        });
-      } else {
-        setHeaderToolbar({
-          left: "prev today",
-          center: "title",
-          right: "today next",
-        });
+    const updateCalendar = () => {
+      const isMobile = window.innerWidth < 768;
+      setHeaderToolbar({
+        left: isMobile ? "prev" : "prev today",
+        center: "title",
+        right: isMobile ? "next" : "today next",
+      });
+
+      const calendarApi = calendarRef.current?.getApi();
+      if (calendarApi) {
+        calendarApi.changeView(isMobile ? "listMonth" : "dayGridMonth");
       }
     };
 
-    updateHeaderToolbar();
-    window.addEventListener("resize", updateHeaderToolbar);
+    updateCalendar();
+    window.addEventListener("resize", updateCalendar);
 
     return () => {
-      window.removeEventListener("resize", updateHeaderToolbar);
+      window.removeEventListener("resize", updateCalendar);
     };
   }, []);
 

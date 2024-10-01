@@ -5,14 +5,11 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { config } from "@/constants/url";
 import axiosInterceptor from "@/utils/axiosInterceptor";
 import logger from "@/utils/logger";
-import { getSession, signOut as nextAuthSignOut } from "next-auth/react";
 import {
   handleGoogleSignIn,
   handleJwtCallback,
   handleSessionCallback,
 } from "@/utils/authHelpers";
-import { redirect } from "next/navigation";
-import authService from "@/services/authService";
 
 interface AuthCallbacks {
   handleGoogleSignIn: (params: {
@@ -126,22 +123,3 @@ export const {
   auth,
   signIn,
 } = NextAuth(nextAuthConfig);
-
-// Custom signOut function
-export const signOut = async (options?: {
-  callbackUrl?: string;
-  redirect?: boolean;
-}) => {
-  try {
-    // Call backend logout endpoint
-    const session = await getSession();
-    const email = session?.user?.email;
-    await authService.logout(email);
-    logger.info("Backend logout successful");
-  } catch (error) {
-    logger.error("Backend logout failed", { error });
-  }
-
-  // Perform the original signOut from next-auth
-  return nextAuthSignOut(options);
-};

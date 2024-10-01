@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useAlert } from "@/context/AlertContext";
-import { signOut } from "@/auth";
 import { profileService } from "@/services/profileService";
 import { handleError } from "@/utils/errorHandler";
+import { useSignOut } from "@/hooks/auth/useSignOut";
 
 export const useChangeEmail = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { showAlert } = useAlert();
+  const { handleSignOut } = useSignOut();
 
   const initiateChangeEmail = async (email: string) => {
     setIsLoading(true);
@@ -36,7 +37,7 @@ export const useChangeEmail = () => {
     try {
       await profileService.verifyEmailChange(token);
       showAlert("success", "Email change successful");
-      await signOut({ redirect: true });
+      await handleSignOut({ redirect: true });
     } catch (err: any) {
       handleError(
         err,

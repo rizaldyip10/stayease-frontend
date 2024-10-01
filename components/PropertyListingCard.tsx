@@ -40,8 +40,8 @@ const PropertyListingCard: React.FC<PropertyCardProps> = (property) => {
   ).toString()}`;
 
   return (
-    <Link href={propertyUrl} passHref>
-      <Card className="overflow-hidden transition-shadow duration-300 hover:shadow-lg cursor-pointer">
+    <Link href={propertyUrl} passHref className="block h-full">
+      <Card className="overflow-hidden transition-shadow duration-300 hover:shadow-lg cursor-pointer h-full flex flex-col">
         <div className="relative h-48">
           <Image
             src={imageUrl}
@@ -50,21 +50,27 @@ const PropertyListingCard: React.FC<PropertyCardProps> = (property) => {
             objectFit="cover"
           />
         </div>
-        <CardContent className="p-4">
-          <div className="flex justify-between items-start mb-2">
-            <h3 className="text-xl font-semibold text-blue-950">
-              {propertyName}
-            </h3>
-            <span className="text-xs text-gray-500">By: {tenant}</span>
+        <CardContent className="p-4 flex flex-col justify-between flex-grow">
+          <div>
+            <div className="flex justify-between items-start mb-2">
+              <h3 className="text-xl font-semibold text-blue-950 line-clamp-1">
+                {propertyName}
+              </h3>
+              <span className="text-xs text-gray-500 whitespace-nowrap ml-2">
+                By: {tenant}
+              </span>
+            </div>
+            <p className="text-sm text-gray-600 mb-2 line-clamp-2">{address}</p>
           </div>
-          <p className="text-sm text-gray-600 mb-2">{address}</p>
-          <p className="text-lg font-bold text-blue-950">
-            <span className="text-xs font-light text-gray-600">
-              Starts from{" "}
-            </span>
-            {formatPrice(lowestAdjustedPrice)}
-            <span className="text-xs font-light"> / night</span>
-          </p>
+          <div className="mt-auto">
+            <p className="text-lg font-bold text-blue-950">
+              <span className="text-xs font-light text-gray-600 mr-0.5">
+                Starts from{" "}
+              </span>
+              <span>{formatPrice(lowestAdjustedPrice)}</span>
+              <span className="text-xs font-light"> / night</span>
+            </p>
+          </div>
         </CardContent>
       </Card>
     </Link>
