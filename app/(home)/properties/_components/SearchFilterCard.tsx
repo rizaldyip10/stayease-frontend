@@ -28,7 +28,7 @@ const SearchFilterCard: React.FC<SearchFilterCardProps> = ({
   const [checkOutOpen, setCheckOutOpen] = useState(false);
 
   const handleInputChange = (field: keyof FilterOptions, value: any) => {
-    onFilterChange({ [field]: value });
+    onFilterChange({ ...filters, [field]: value });
   };
 
   const today = new Date();

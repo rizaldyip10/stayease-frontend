@@ -1,6 +1,11 @@
 import { FilterOptions } from "@/hooks/properties/usePropertyListings";
-import { format } from "date-fns";
+import { format, isValid, parseISO } from "date-fns";
 
+const parseDate = (dateString: string | null): Date | undefined => {
+  if (!dateString) return undefined;
+  const parsedDate = parseISO(dateString);
+  return isValid(parsedDate) ? parsedDate : undefined;
+};
 export const buildUrl = (
   basePath: string,
   filters: Partial<FilterOptions>,
@@ -33,4 +38,27 @@ export const buildSearchParams = (
     }
   });
   return newSearchParams;
+};
+
+export const getFilterFromParams = (
+  searchParams: URLSearchParams,
+): Partial<FilterOptions> => {
+  const newFilters: Partial<FilterOptions> = {};
+  const city = searchParams.get("city");
+  const minPrice = searchParams.get("minPrice");
+  const maxPrice = searchParams.get("maxPrice");
+  const startDate = searchParams.get("startDate");
+  const endDate = searchParams.get("endDate");
+  const categoryId = searchParams.get("categoryId");
+  const searchTerm = searchParams.get("searchTerm");
+
+  if (city) newFilters.city = city;
+  if (minPrice) newFilters.minPrice = parseInt(minPrice);
+  if (maxPrice) newFilters.maxPrice = parseInt(maxPrice);
+  newFilters.startDate = parseDate(startDate);
+  newFilters.endDate = parseDate(endDate);
+  if (categoryId) newFilters.categoryId = categoryId;
+  if (searchTerm) newFilters.searchTerm = searchTerm;
+
+  return newFilters;
 };
