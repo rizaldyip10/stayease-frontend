@@ -11,6 +11,7 @@ import {
 } from "@/constants/Property";
 import { format } from "date-fns";
 import { formatDate } from "@/utils/dateFormatter";
+import logger from "@/utils/logger";
 
 const propertyService = {
   getAllProperties: async (): Promise<PropertyAndRoomType[]> => {
@@ -40,17 +41,39 @@ const propertyService = {
   },
 
   getTenantProperties: async (): Promise<PropertyAndRoomType[]> => {
-    const response = await axiosInterceptor.get(
-      config.endpoints.properties.getTenantProperties,
-    );
-    return response.data.data;
+    try {
+      const response = await axiosInterceptor.get(
+        config.endpoints.properties.getTenantProperties,
+      );
+      return response.data.data;
+    } catch (error: any) {
+      if (error.response.status === 404) {
+        return [];
+      }
+      logger.error(
+        "Failed to fetch tenant properties:",
+        error.response.data.message,
+      );
+      throw error;
+    }
   },
 
   getTenantRooms: async (): Promise<RoomType[]> => {
-    const response = await axiosInterceptor.get(
-      config.endpoints.properties.getTenantRooms,
-    );
-    return response.data.data;
+    try {
+      const response = await axiosInterceptor.get(
+        config.endpoints.properties.getTenantRooms,
+      );
+      return response.data.data;
+    } catch (error: any) {
+      if (error.response.status === 404) {
+        return [];
+      }
+      logger.error(
+        "Failed to fetch tenant rooms:",
+        error.response.data.message,
+      );
+      throw error;
+    }
   },
 
   createProperty: async (
@@ -68,7 +91,6 @@ const propertyService = {
     formData.append("image", file);
     const url = config.endpoints.properties.uploadImage;
     const response = await axiosInterceptor.post(url, formData);
-    console.log("Image uploaded successfully, response: ", response);
     return response.data.data.imageUrl;
   },
 
@@ -97,11 +119,27 @@ const propertyService = {
     propertyId: number,
     roomId: number,
   ): Promise<RoomType> => {
-    const url = config.endpoints.propertyUtils.getRoom
-      .replace("{propertyId}", propertyId.toString())
-      .replace("{roomId}", roomId.toString());
-    const response = await axiosInterceptor.get(url);
-    return response.data.data;
+    try {
+      const url = config.endpoints.propertyUtils.getRoom
+        .replace("{propertyId}", propertyId.toString())
+        .replace("{roomId}", roomId.toString());
+      const response = await axiosInterceptor.get(url);
+      return response.data.data;
+    } catch (error: any) {
+      if (error.response.status === 404) {
+        return {
+          id: 0,
+          name: "",
+          description: "",
+          capacity: 0,
+          basePrice: 0,
+          imageUrl: "",
+          propertySummary: { propertyId: 0, propertyName: "" },
+        };
+      }
+      logger.error("Failed to fetch room:", error.response.data.message);
+      throw error;
+    }
   },
 
   createRoom: async (propertyId: number, data: any): Promise<RoomType> => {
@@ -186,15 +224,40 @@ const propertyService = {
     propertyId: number;
     date: Date;
   }): Promise<CurrentAvailablePropertyType> => {
-    const url =
-      config.endpoints.propertyUtils.getCurrentAvailableProperty.replace(
-        "{propertyId}",
-        propertyId.toString(),
+    try {
+      const url =
+        config.endpoints.propertyUtils.getCurrentAvailableProperty.replace(
+          "{propertyId}",
+          propertyId.toString(),
+        );
+      const response = await axiosInterceptor.get(url, {
+        params: { date: formatDate(date) },
+      });
+      return response.data.data;
+    } catch (error: any) {
+      if (error.response.status === 404) {
+        return {
+          id: 0,
+          tenant: "",
+          category: "",
+          propertyName: "",
+          description: "",
+          imageUrl: "",
+          address: "",
+          city: "",
+          country: "",
+          latitude: 0,
+          longitude: 0,
+          rooms: [],
+          unavailableRooms: [],
+        };
+      }
+      logger.error(
+        "Failed to fetch current available property:",
+        error.response.data.message,
       );
-    const response = await axiosInterceptor.get(url, {
-      params: { date: formatDate(date) },
-    });
-    return response.data.data;
+      throw error;
+    }
   },
 
   getCurrentRoom: async (
@@ -202,13 +265,33 @@ const propertyService = {
     roomId: number,
     date: Date,
   ): Promise<RoomWithAdjustedRatesType> => {
-    const url = config.endpoints.propertyUtils.getCurrentRoom
-      .replace("{propertyId}", propertyId.toString())
-      .replace("{roomId}", roomId.toString());
-    const response = await axiosInterceptor.get(url, {
-      params: { date: formatDate(date) },
-    });
-    return response.data.data;
+    try {
+      const url = config.endpoints.propertyUtils.getCurrentRoom
+        .replace("{propertyId}", propertyId.toString())
+        .replace("{roomId}", roomId.toString());
+      const response = await axiosInterceptor.get(url, {
+        params: { date: formatDate(date) },
+      });
+      return response.data.data;
+    } catch (error: any) {
+      if (error.response.status === 404) {
+        return {
+          propertyId: 0,
+          propertyName: "",
+          roomId: 0,
+          roomName: "",
+          imageUrl: "",
+          roomCapacity: 0,
+          roomDescription: "",
+          basePrice: 0,
+          adjustedPrice: 0,
+          date: new Date(),
+          isAvailable: false,
+        };
+      }
+      logger.error("Failed to fetch room:", error.response.data.message);
+      throw error;
+    }
   },
 
   sortAndFilter: async (
@@ -231,22 +314,35 @@ const propertyService = {
       ? searchTerm.replace(/ /g, "%")
       : undefined;
     const url = config.endpoints.propertyListings.sortAndFilter;
-    const response = await axiosInterceptor.get(url, {
-      params: {
-        startDate: formattedStartDate,
-        endDate: formattedEndDate,
-        city: formattedCity,
-        categoryId,
-        searchTerm: formattedSearchTerm,
-        minPrice,
-        maxPrice,
-        page,
-        size,
-        sortBy,
-        sortDirection,
-      },
-    });
-    return response.data.data;
+    try {
+      const response = await axiosInterceptor.get(url, {
+        params: {
+          startDate: formattedStartDate,
+          endDate: formattedEndDate,
+          city: formattedCity,
+          categoryId,
+          searchTerm: formattedSearchTerm,
+          minPrice,
+          maxPrice,
+          page,
+          size,
+          sortBy,
+          sortDirection,
+        },
+      });
+      return response.data.data;
+    } catch (error: any) {
+      if (error.response.status === 404) {
+        return {
+          totalPages: 0,
+          currentPage: 0,
+          totalElements: 0,
+          content: [],
+        };
+      }
+      logger.error("Failed to fetch properties:", error.response.data.message);
+      throw error;
+    }
   },
 
   getAllAvailablePropertiesOnDate: async (
@@ -262,27 +358,49 @@ const propertyService = {
   },
 
   getAllCategories: async (): Promise<CategoryType[]> => {
-    const response = await axiosInterceptor.get(
-      config.endpoints.propertyListings.getAllCategories,
-    );
-    return response.data.data;
+    try {
+      const response = await axiosInterceptor.get(
+        config.endpoints.propertyListings.getAllCategories,
+      );
+      return response.data.data;
+    } catch (error: any) {
+      if (error.response.status === 404) {
+        return [];
+      }
+      logger.error("Failed to fetch categories:", error.response.data.message);
+      throw error;
+    }
   },
 
   getAllCities: async (): Promise<string[]> => {
-    const response = await axiosInterceptor.get(
-      config.endpoints.propertyListings.getAllCities,
-    );
-    return response.data.data;
+    try {
+      const response = await axiosInterceptor.get(
+        config.endpoints.propertyListings.getAllCities,
+      );
+      return response.data.data;
+    } catch (error: any) {
+      if (error.response.status === 404) {
+        return [];
+      }
+      logger.error("Failed to fetch cities:", error.response.data.message);
+      throw error;
+    }
   },
 
   getAllImages: async (): Promise<string[]> => {
-    const response = await axiosInterceptor.get(
-      config.endpoints.propertyListings.getAllImages,
-    );
-    return response.data.data;
+    try {
+      const response = await axiosInterceptor.get(
+        config.endpoints.propertyListings.getAllImages,
+      );
+      return response.data.data;
+    } catch (error: any) {
+      if (error.response.status === 404) {
+        return [];
+      }
+      logger.error("Failed to fetch images:", error.response.data.message);
+      throw error;
+    }
   },
-
-  // Add other methods as needed (create, update, delete)
 };
 
 export default propertyService;

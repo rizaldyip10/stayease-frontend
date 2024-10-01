@@ -37,6 +37,10 @@ export const availabilityService = {
       const response = await axiosInterceptor.get(url);
       return await response.data.data;
     } catch (error: any) {
+      if (error.response.status === 404) {
+        return [];
+      }
+      console.error("Error fetching tenant room availability", error);
       throw error.response.data;
     }
   },
