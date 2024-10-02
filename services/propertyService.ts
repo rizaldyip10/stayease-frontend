@@ -174,7 +174,7 @@ const propertyService = {
   createCategory: async (data: any): Promise<CategoryType> => {
     try {
       const response = await axiosInterceptor.post(
-        config.endpoints.properties.createCategory,
+        config.endpoints.categories.createCategory,
         data,
       );
       return response.data.data;
@@ -191,7 +191,7 @@ const propertyService = {
     categoryId: number,
     data: any,
   ): Promise<CategoryType> => {
-    const url = config.endpoints.properties.updateCategory.replace(
+    const url = config.endpoints.categories.updateCategory.replace(
       "{categoryId}",
       categoryId.toString(),
     );
@@ -200,7 +200,7 @@ const propertyService = {
   },
 
   deleteCategory: async (categoryId: number): Promise<CategoryType> => {
-    const url = config.endpoints.properties.deleteCategory.replace(
+    const url = config.endpoints.categories.deleteCategory.replace(
       "{categoryId}",
       categoryId.toString(),
     );
@@ -360,7 +360,7 @@ const propertyService = {
   getAllCategories: async (): Promise<CategoryType[]> => {
     try {
       const response = await axiosInterceptor.get(
-        config.endpoints.propertyListings.getAllCategories,
+        config.endpoints.categories.getAllCategories,
       );
       return response.data.data;
     } catch (error: any) {
