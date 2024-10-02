@@ -16,8 +16,10 @@ import { useAlert } from "@/context/AlertContext";
 import { usePeakSeasonRate } from "@/hooks/rates/usePeakSeasonRate";
 import { useRoomAvailability } from "@/hooks/reports/useRoomAvailability";
 import { isConfigOption } from "jackspeak";
+import { useAutoRateSetting } from "@/hooks/rates/useAutoRateSetting";
 
 interface DeleteDialogProps {
+  propertyId?: number;
   rateId?: number;
   onConfirm?: () => void;
   title?: string;
@@ -29,6 +31,7 @@ interface DeleteDialogProps {
 }
 
 const RateDeleteDialog: FC<DeleteDialogProps> = ({
+  propertyId,
   rateId,
   onConfirm,
   title = "Delete Rate Setting",
@@ -38,21 +41,26 @@ const RateDeleteDialog: FC<DeleteDialogProps> = ({
   onClose,
   onOpenChange,
 }) => {
-  const { showAlert } = useAlert();
   const { deleteRate } = usePeakSeasonRate();
+  const { deactivateAutoRateSetting } = useAutoRateSetting(propertyId ?? 0);
   const [open, setOpen] = useState(isOpen);
 
   const handleDelete = async () => {
-    if (rateId) {
-      try {
+    try {
+      if (rateId) {
         await deleteRate(rateId);
-        showAlert("success", "Rate setting deleted successfully");
-        setOpen(false);
-        if (onOpenChange) onOpenChange(false); // Notify parent component
-      } catch (error) {
-        console.log(error);
-        showAlert("error", "Failed to delete rate setting");
+      } else if (propertyId) {
+        await deactivateAutoRateSetting();
       }
+      setOpen(false);
+      if (onConfirm) {
+        onConfirm();
+      }
+    } catch (error) {
+      console.error(
+        "Error deleting rate or deactivating auto rate setting:",
+        error,
+      );
     }
   };
 
@@ -71,22 +79,16 @@ const RateDeleteDialog: FC<DeleteDialogProps> = ({
           trigger
         )}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent aria-describedby="Delete Dialog">
         <DialogTitle>{title}</DialogTitle>
         <DialogDescription>{description}</DialogDescription>
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="link">Cancel</Button>
           </DialogClose>
-          {onConfirm ? (
-            <Button variant="destructive" onClick={() => onConfirm()}>
-              Confirm
-            </Button>
-          ) : (
-            <Button className="bg-blue-950" onClick={handleDelete}>
-              Delete
-            </Button>
-          )}
+          <Button className="bg-blue-950" onClick={handleDelete}>
+            Delete
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

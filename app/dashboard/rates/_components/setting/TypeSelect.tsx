@@ -37,14 +37,11 @@ const TypeSelect: React.FC<TypeSelectProps> = ({
         </SelectTrigger>
         <SelectContent>
           <SelectContent>
-            {options?.map((option) => {
-              console.log(option.label); // Debugging line
-              return (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              );
-            })}
+            {options?.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </SelectContent>
       </Select>

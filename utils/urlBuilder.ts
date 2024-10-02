@@ -28,7 +28,7 @@ export const buildSearchParams = (
 ): URLSearchParams => {
   const newSearchParams = new URLSearchParams();
   Object.entries(filters).forEach(([key, value]) => {
-    if (value !== undefined && value !== "") {
+    if (value !== undefined && value !== "" && value !== 0) {
       if (value instanceof Date) {
         const dateString = format(value, "yyyy-MM-dd");
         newSearchParams.set(key, dateString);

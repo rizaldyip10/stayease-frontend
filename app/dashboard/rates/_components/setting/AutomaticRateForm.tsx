@@ -7,7 +7,7 @@ import { AutoRateRequestType, AutoRateResponseType } from "@/constants/Rates";
 import { Switch } from "@/components/ui/switch";
 import { autoRateSettingValidationSchema } from "@/constants/ValidationSchema";
 import RateDeleteDialog from "@/app/dashboard/rates/_components/RateDeleteDialog";
-import TypeSelect from "@/components/TypeSelect";
+import TypeSelect from "@/app/dashboard/rates/_components/setting/TypeSelect";
 
 export const typeItems = [
   { value: "PERCENTAGE", label: "Percentage" },
@@ -15,12 +15,14 @@ export const typeItems = [
 ];
 
 interface AutomaticRateFormProps {
+  onClose: () => void;
   onSubmit: (data: AutoRateRequestType) => void;
   initialData?: AutoRateResponseType;
   propertyId: number;
 }
 
 export const AutomaticRateForm: React.FC<AutomaticRateFormProps> = ({
+  onClose,
   onSubmit,
   initialData,
   propertyId,
@@ -52,6 +54,7 @@ export const AutomaticRateForm: React.FC<AutomaticRateFormProps> = ({
       onSubmit(formValues);
     }
     setShowConfirmDialog(false);
+    onClose();
   };
 
   return (
@@ -155,6 +158,7 @@ export const AutomaticRateForm: React.FC<AutomaticRateFormProps> = ({
             )}
             {initialData && !values.useAutoRates ? (
               <RateDeleteDialog
+                propertyId={propertyId}
                 isOpen={showConfirmDialog}
                 onOpenChange={setShowConfirmDialog}
                 onConfirm={handleConfirmDisable}
