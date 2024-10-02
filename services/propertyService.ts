@@ -15,29 +15,65 @@ import logger from "@/utils/logger";
 
 const propertyService = {
   getAllProperties: async (): Promise<PropertyAndRoomType[]> => {
-    const response = await axiosInterceptor.get(
-      config.endpoints.propertyUtils.getAllProperties,
-    );
-    return response.data.data;
+    try {
+      const response = await axiosInterceptor.get(
+        config.endpoints.propertyUtils.getAllProperties,
+      );
+      return response.data.data;
+    } catch (error: any) {
+      if (error.response.status === 404) {
+        return [];
+      }
+      logger.error("Failed to fetch properties:", error.response.data.message);
+      throw error;
+    }
   },
 
   getPropertyById: async (propertyId: number): Promise<PropertyAndRoomType> => {
-    const url = config.endpoints.propertyUtils.getProperty.replace(
-      "{propertyId}",
-      propertyId.toString(),
-    );
-    console.log("Type of propertyId:", typeof propertyId);
-    const response = await axiosInterceptor.get(url);
-    return response.data.data;
+    try {
+      const url = config.endpoints.propertyUtils.getProperty.replace(
+        "{propertyId}",
+        propertyId.toString(),
+      );
+      const response = await axiosInterceptor.get(url);
+      return response.data.data;
+    } catch (error: any) {
+      if (error.response.status === 404) {
+        return {
+          id: 0,
+          tenant: "",
+          category: "",
+          propertyName: "",
+          description: "",
+          address: "",
+          city: "",
+          country: "",
+          latitude: 0,
+          longitude: 0,
+          imageUrl: "",
+          rooms: [],
+        };
+      }
+      logger.error("Failed to fetch property:", error.response.data.message);
+      throw error;
+    }
   },
 
   getRoomsByPropertyId: async (propertyId: number): Promise<RoomType[]> => {
-    const url = config.endpoints.propertyUtils.getRooms.replace(
-      "{propertyId}",
-      propertyId.toString(),
-    );
-    const response = await axiosInterceptor.get(url);
-    return response.data.data;
+    try {
+      const url = config.endpoints.propertyUtils.getRooms.replace(
+        "{propertyId}",
+        propertyId.toString(),
+      );
+      const response = await axiosInterceptor.get(url);
+      return response.data.data;
+    } catch (error: any) {
+      if (error.response.status === 404) {
+        return [];
+      }
+      logger.error("Failed to fetch rooms:", error.response.data.message);
+      throw error;
+    }
   },
 
   getTenantProperties: async (): Promise<PropertyAndRoomType[]> => {
@@ -79,40 +115,62 @@ const propertyService = {
   createProperty: async (
     data: Partial<PropertyAndRoomType>,
   ): Promise<PropertyAndRoomType> => {
-    const response = await axiosInterceptor.post(
-      config.endpoints.properties.createProperty,
-      data,
-    );
-    return response.data.data;
+    try {
+      const response = await axiosInterceptor.post(
+        config.endpoints.properties.createProperty,
+        data,
+      );
+      return response.data.data;
+    } catch (error: any) {
+      logger.error(
+        "Failed to create new property:",
+        error.response.data.message,
+      );
+      throw error;
+    }
   },
 
   uploadImage: async (file: File): Promise<string> => {
-    const formData = new FormData();
-    formData.append("image", file);
-    const url = config.endpoints.properties.uploadImage;
-    const response = await axiosInterceptor.post(url, formData);
-    return response.data.data.imageUrl;
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+      const url = config.endpoints.properties.uploadImage;
+      const response = await axiosInterceptor.post(url, formData);
+      return response.data.data.imageUrl;
+    } catch (error: any) {
+      logger.error("Failed to upload image:", error.response.data.message);
+      throw error;
+    }
   },
 
   updateProperty: async (
     propertyId: number,
     data: any,
   ): Promise<PropertyAndRoomType> => {
-    const url = config.endpoints.properties.updateProperty.replace(
-      "{propertyId}",
-      propertyId.toString(),
-    );
-    const response = await axiosInterceptor.put(url, data);
-    return response.data.data;
+    try {
+      const url = config.endpoints.properties.updateProperty.replace(
+        "{propertyId}",
+        propertyId.toString(),
+      );
+      const response = await axiosInterceptor.put(url, data);
+      return response.data.data;
+    } catch (error: any) {
+      logger.error("Failed to update property:", error.response.data.message);
+      throw error;
+    }
   },
 
-  deleteProperty: async (propertyId: number): Promise<PropertyAndRoomType> => {
-    const url = config.endpoints.properties.deleteProperty.replace(
-      "{propertyId}",
-      propertyId.toString(),
-    );
-    const response = await axiosInterceptor.delete(url);
-    return response.data.data;
+  deleteProperty: async (propertyId: number) => {
+    try {
+      const url = config.endpoints.properties.deleteProperty.replace(
+        "{propertyId}",
+        propertyId.toString(),
+      );
+      await axiosInterceptor.delete(url);
+    } catch (error: any) {
+      logger.error("Failed to delete property:", error.response.data.message);
+      throw error;
+    }
   },
 
   getRoomById: async (
@@ -143,12 +201,17 @@ const propertyService = {
   },
 
   createRoom: async (propertyId: number, data: any): Promise<RoomType> => {
-    const url = config.endpoints.properties.createRoom.replace(
-      "{propertyId}",
-      propertyId.toString(),
-    );
-    const response = await axiosInterceptor.post(url, data);
-    return response.data.data;
+    try {
+      const url = config.endpoints.properties.createRoom.replace(
+        "{propertyId}",
+        propertyId.toString(),
+      );
+      const response = await axiosInterceptor.post(url, data);
+      return response.data.data;
+    } catch (error: any) {
+      logger.error("Failed to create new room:", error.response.data.message);
+      throw error;
+    }
   },
 
   updateRoom: async (
@@ -156,19 +219,29 @@ const propertyService = {
     roomId: number,
     data: any,
   ): Promise<RoomType> => {
-    const url = config.endpoints.properties.updateRoom
-      .replace("{propertyId}", propertyId.toString())
-      .replace("{roomId}", roomId.toString());
-    const response = await axiosInterceptor.put(url, data);
-    return response.data.data;
+    try {
+      const url = config.endpoints.properties.updateRoom
+        .replace("{propertyId}", propertyId.toString())
+        .replace("{roomId}", roomId.toString());
+      const response = await axiosInterceptor.put(url, data);
+      return response.data.data;
+    } catch (error: any) {
+      logger.error("Failed to update room:", error.response.data.message);
+      throw error;
+    }
   },
 
-  deleteRoom: async (propertyId: number, roomId: number): Promise<RoomType> => {
-    const url = config.endpoints.properties.deleteRoom
-      .replace("{propertyId}", propertyId.toString())
-      .replace("{roomId}", roomId.toString());
-    const response = await axiosInterceptor.delete(url);
-    return response.data.data;
+  deleteRoom: async (propertyId: number, roomId: number) => {
+    try {
+      const url = config.endpoints.properties.deleteRoom
+        .replace("{propertyId}", propertyId.toString())
+        .replace("{roomId}", roomId.toString());
+      const response = await axiosInterceptor.delete(url);
+      return response.data.data;
+    } catch (error: any) {
+      logger.error("Failed to delete room:", error.response.data.message);
+      throw error;
+    }
   },
 
   createCategory: async (data: any): Promise<CategoryType> => {
@@ -209,12 +282,20 @@ const propertyService = {
   },
 
   checkPropertyOwnership: async (propertyId: number): Promise<boolean> => {
-    const url = config.endpoints.propertyUtils.checkPropertyOwnership.replace(
-      "{propertyId}",
-      propertyId.toString(),
-    );
-    const response = await axiosInterceptor.get(url);
-    return response.data.data;
+    try {
+      const url = config.endpoints.propertyUtils.checkPropertyOwnership.replace(
+        "{propertyId}",
+        propertyId.toString(),
+      );
+      const response = await axiosInterceptor.get(url);
+      return response.data.data;
+    } catch (error: any) {
+      logger.error(
+        "Failed to check property ownership:",
+        error.response.data.message,
+      );
+      throw error;
+    }
   },
 
   getCurrentAvailableProperty: async ({
