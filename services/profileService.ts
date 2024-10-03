@@ -2,43 +2,13 @@ import { config } from "@/constants/url";
 import axiosInterceptor from "@/utils/axiosInterceptor";
 import logger from "@/utils/logger";
 import { TokenCheckResponse } from "@/constants/Auth";
-
-export interface UserProfile {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber?: string;
-  avatarUrl?: string;
-  joinedAt: Date;
-  userType: string;
-  tenantInfo?: {
-    businessName: string;
-    taxId?: string;
-    registeredDate: Date;
-  };
-}
-
-export interface TenantProfile {
-  businessName: string;
-  taxId?: string;
-  registeredDate: Date;
-}
-
-export interface UserImage {
-  avatarUrl: string;
-}
-
-export interface UserImageResponse {
-  data: UserImage;
-}
-
-export interface UpdateProfile {
-  firstName: string;
-  lastName: string;
-  phoneNumber?: string;
-  avatar?: string;
-}
+import {
+  TenantProfile,
+  UpdateProfile,
+  UserImage,
+  UserImageResponse,
+  UserProfile,
+} from "@/constants/Users";
 
 const transformUserProfile = (res: any): UserProfile => ({
   id: res.data.id,

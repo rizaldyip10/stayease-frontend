@@ -6,4 +6,4 @@ export type FormType =
   | "userType"
   | "forgotPassword"
   | "changeEmail";
-export type AlertType = "success" | "error";
+export type AlertType = "success" | "error" | "info" | "warn";
