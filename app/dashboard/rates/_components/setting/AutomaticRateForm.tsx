@@ -27,7 +27,6 @@ export const AutomaticRateForm: React.FC<AutomaticRateFormProps> = ({
   initialData,
   propertyId,
 }) => {
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [formValues, setFormValues] = useState<AutoRateRequestType | null>(
     null,
   );
@@ -42,7 +41,6 @@ export const AutomaticRateForm: React.FC<AutomaticRateFormProps> = ({
 
   const handleSubmit = (values: AutoRateRequestType) => {
     if (!values.useAutoRates && initialData?.useAutoRates) {
-      setShowConfirmDialog(true);
       setFormValues(values);
     } else {
       onSubmit(values);
@@ -53,7 +51,6 @@ export const AutomaticRateForm: React.FC<AutomaticRateFormProps> = ({
     if (formValues) {
       onSubmit(formValues);
     }
-    setShowConfirmDialog(false);
     onClose();
   };
 
@@ -159,8 +156,6 @@ export const AutomaticRateForm: React.FC<AutomaticRateFormProps> = ({
             {initialData && !values.useAutoRates ? (
               <RateDeleteDialog
                 propertyId={propertyId}
-                isOpen={showConfirmDialog}
-                onOpenChange={setShowConfirmDialog}
                 onConfirm={handleConfirmDisable}
                 title="Confirm Disable Auto Rates"
                 description="Are you sure you want to disable automatic rate adjustments? This will remove all current auto rate settings."
