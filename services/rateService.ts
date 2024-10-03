@@ -21,6 +21,10 @@ const rateService = {
       );
       return response.data.data;
     } catch (error: any) {
+      if (error.response.status === 404) {
+        return [];
+      }
+      logger.error("Error fetching tenant rates", error);
       throw error;
     }
   },

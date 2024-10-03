@@ -48,7 +48,7 @@ export const useMarker = ({
     if (isEditable) {
       markerRef.current.addListener("dragend", () => {
         const position = markerRef.current?.position as google.maps.LatLng;
-        if (position) {
+        if (position instanceof google.maps.LatLng) {
           const newPosition = {
             lat: position.lat(),
             lng: position.lng(),

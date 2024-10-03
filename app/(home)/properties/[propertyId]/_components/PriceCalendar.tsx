@@ -80,7 +80,7 @@ const PriceCalendar: React.FC<PriceCalendarProps> = ({
             </div>
           )}
           <div className="text-xs text-gray-500 mt-2">
-            <p>* Bold dates have available prices</p>
+            <p>* Estimated lowest price</p>
             <p>* Red dates indicate adjusted rates</p>
             <p>
               {isCheckOut

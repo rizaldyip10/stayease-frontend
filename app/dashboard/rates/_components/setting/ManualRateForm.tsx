@@ -7,7 +7,7 @@ import { CustomDatePicker } from "@/components/CustomDatePicker";
 import { RateRequestType } from "@/constants/Rates";
 import { manualRateValidationSchema } from "@/constants/ValidationSchema";
 import { formatDate } from "@/utils/dateFormatter";
-import TypeSelect from "@/components/TypeSelect";
+import TypeSelect from "@/app/dashboard/rates/_components/setting/TypeSelect";
 import { typeItems } from "@/app/dashboard/rates/_components/setting/AutomaticRateForm";
 
 interface ManualRateFormProps {
@@ -23,7 +23,10 @@ export const ManualRateForm: React.FC<ManualRateFormProps> = ({
 
   const minDate = new Date();
   minDate.setHours(0, 0, 0, 0);
-  const endMinDate = new Date(minDate.getTime() + 24 * 60 * 60 * 1000); // Add one day
+  const [endMinDate, setEndMinDate] = useState(
+    new Date(minDate.getTime() + 24 * 60 * 60 * 1000),
+  ); // Add one day
+
   const handleStartDateChange = (
     date: Date | undefined,
     setFieldValue: (
@@ -35,6 +38,7 @@ export const ManualRateForm: React.FC<ManualRateFormProps> = ({
     setIsStartDateOpen(false);
     if (date) {
       setFieldValue("startDate", formatDate(date));
+      setEndMinDate(new Date(date.getTime() + 24 * 60 * 60 * 1000)); // Add one day
       setIsEndDateOpen(true);
     }
   };

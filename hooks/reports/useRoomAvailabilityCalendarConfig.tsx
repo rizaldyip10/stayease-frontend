@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { EventContentArg } from "@fullcalendar/core";
-import { TenantRoomAvailabilityType } from "@/services/availabilityService";
+import { TenantRoomAvailability } from "@/constants/RoomAvailability";
 
 const colorPalette = [
   "#FF6B6B",
@@ -16,7 +16,7 @@ const colorPalette = [
 ];
 
 export const useRoomAvailabilityCalendarConfig = (
-  availabilityData: TenantRoomAvailabilityType[],
+  availabilityData: TenantRoomAvailability[],
   onDateSelect: (start: Date, end: Date) => void,
   onEventClick: (eventInfo: any) => void,
   calendarRef: React.RefObject<any>,

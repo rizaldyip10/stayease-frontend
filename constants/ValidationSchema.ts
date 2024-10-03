@@ -167,7 +167,15 @@ export const manualRateValidationSchema = yup.object().shape({
   reason: yup
     .string()
     .required("Reason is required")
-    .min(5, "Reason must be at least 5 characters"),
+    .min(3, "Reason must be at least 5 characters")
+    .test(
+      "not-including-automatic",
+      `Reason cannot include the word "Automatic"`,
+      function (value) {
+        const forbiddenReasons = /\bautomatic\b/i;
+        return !forbiddenReasons.test(value);
+      },
+    ),
 });
 
 export const autoRateSettingValidationSchema = yup

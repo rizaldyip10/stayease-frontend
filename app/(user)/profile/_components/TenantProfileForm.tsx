@@ -1,7 +1,7 @@
 import React from "react";
 import { Formik, Form } from "formik";
 import ProfileFormField from "@/app/(user)/profile/_components/ProfileFormField";
-import { TenantProfile } from "@/services/profileService";
+import { TenantProfile } from "@/constants/Users";
 
 interface TenantProfileFormProps {
   tenantInfo: TenantProfile;

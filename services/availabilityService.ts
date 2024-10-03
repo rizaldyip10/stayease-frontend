@@ -2,41 +2,23 @@ import { config } from "@/constants/url";
 import axiosInterceptor from "@/utils/axiosInterceptor";
 import { formatDate } from "@/utils/dateFormatter";
 import logger from "@/utils/logger";
-
-export interface TenantRoomAvailabilityType {
-  id: number;
-  name: string;
-  propertySummary: {
-    propertyId: number;
-    propertyName: string;
-    imageUrl: string;
-  };
-  roomAvailability: AvailabilityResponse[];
-}
-
-export interface AvailabilityRequest {
-  startDate: Date;
-  endDate: Date;
-}
-
-export interface AvailabilityResponse {
-  id: number;
-  startDate: Date;
-  endDate: Date;
-  isAvailable: boolean;
-  isManual: boolean;
-  roomId: number;
-}
+import {
+  AvailabilityRequest,
+  AvailabilityResponse,
+  TenantRoomAvailability,
+} from "@/constants/RoomAvailability";
 
 export const availabilityService = {
-  getTenantRoomAvailability: async (): Promise<
-    TenantRoomAvailabilityType[]
-  > => {
+  getTenantRoomAvailability: async (): Promise<TenantRoomAvailability[]> => {
     try {
       const url = config.endpoints.availability.getTenantAvailability;
       const response = await axiosInterceptor.get(url);
       return await response.data.data;
     } catch (error: any) {
+      if (error.response.status === 404) {
+        return [];
+      }
+      console.error("Error fetching tenant room availability", error);
       throw error.response.data;
     }
   },

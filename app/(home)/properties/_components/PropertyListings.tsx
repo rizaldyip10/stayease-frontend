@@ -1,9 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { usePropertyUtils } from "@/hooks/properties/usePropertyUtils";
-import {
-  FilterOptions,
-  usePropertyListings,
-} from "@/hooks/properties/usePropertyListings";
+import { usePropertyListings } from "@/hooks/properties/usePropertyListings";
 import SearchFilterCard from "@/app/(home)/properties/_components/SearchFilterCard";
 import { Button } from "@/components/ui/button";
 import { FilterIcon } from "lucide-react";
@@ -36,17 +33,6 @@ const PropertyListings: React.FC = () => {
     setMapCenter({ lat, lng });
   }, []);
 
-  const handleFilterChange = useCallback(
-    (newFilters: Partial<FilterOptions>) => {
-      updateFilters(newFilters);
-    },
-    [updateFilters],
-  );
-
-  const handleResetFilters = useCallback(() => {
-    resetFilters();
-  }, [resetFilters]);
-
   const hasResults = properties && properties.length > 0;
 
   return (
@@ -59,8 +45,8 @@ const PropertyListings: React.FC = () => {
             cities={cities}
             categories={categories}
             filters={filters}
-            onFilterChange={handleFilterChange}
-            onResetFilters={handleResetFilters}
+            onFilterChange={updateFilters}
+            onResetFilters={resetFilters}
           />
         </div>
 

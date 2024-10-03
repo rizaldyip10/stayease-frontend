@@ -3,9 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ChangeEvent, FC } from "react";
-import { useRouter } from "next/navigation";
 import RateSettingDialog from "@/app/dashboard/rates/_components/setting/RateSettingDialog";
-import { Plus } from "lucide-react";
+import { MdEditNote } from "react-icons/md";
 
 interface RateTableHeaderProps {
   value: string;
@@ -13,7 +12,6 @@ interface RateTableHeaderProps {
 }
 
 const RateTableHeaders: FC<RateTableHeaderProps> = ({ value, onChange }) => {
-  const router = useRouter();
   return (
     <div className="w-full flex flex-col md:flex-row justify-between md:items-center gap-2">
       <div className="flex flex-col md:flex-row md:items-center gap-2">
@@ -21,7 +19,7 @@ const RateTableHeaders: FC<RateTableHeaderProps> = ({ value, onChange }) => {
           isEditing={false}
           trigger={
             <Button className="bg-blue-950 text-appgray hover:bg-appgray hover:text-blue-950 w-full md:w-auto">
-              <Plus className="mr-2 h-4 w-4" /> Set New Rate
+              <MdEditNote className="mr-2 h-4 w-4 text-bold" /> Set / Edit Rate
             </Button>
           }
         />

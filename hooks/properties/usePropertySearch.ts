@@ -1,30 +1,43 @@
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
-import { FilterOptions } from "@/hooks/properties/usePropertyListings";
-import { isValid, parseISO } from "date-fns";
-import { buildSearchParams, buildUrl } from "@/utils/urlBuilder";
+import { useCallback } from "react";
+import {
+  FilterOptions,
+  initialFilters,
+} from "@/hooks/properties/usePropertyListings";
+import {
+  buildSearchParams,
+  buildUrl,
+  getFilterFromParams,
+} from "@/utils/urlBuilder";
 
 export const usePropertySearch = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [urlFilters, setUrlFilters] = useState<Partial<FilterOptions>>({});
 
-  const initializeFiltersFromURL = useCallback(() => {
-    setUrlFilters(getFilterFromParams(searchParams));
-  }, [searchParams, setUrlFilters]);
+  // Get filters from URL parameters
+  const getUrlFilters = useCallback(() => {
+    const filters = getFilterFromParams(searchParams);
+    return {
+      ...initialFilters,
+      ...Object.fromEntries(
+        Object.entries(filters).map(([key, value]) => [
+          key,
+          value ?? initialFilters[key as keyof FilterOptions],
+        ]),
+      ),
+    };
+  }, [searchParams]);
 
-  useEffect(() => {
-    initializeFiltersFromURL();
-  }, [initializeFiltersFromURL]);
-
+  // Update URL parameters with new filters
   const updateSearchParams = useCallback(
     (filters: Partial<FilterOptions>) => {
-      const newSearchParams = buildSearchParams(filters);
-      return newSearchParams;
+      const newParams = buildSearchParams(filters);
+      router.replace(`/properties?${newParams.toString()}`, { scroll: false });
     },
     [router],
   );
 
+  // Handle redirect with filters and optional property/room IDs
   const handleRedirect = useCallback(
     (
       filters: Partial<FilterOptions>,
@@ -38,34 +51,5 @@ export const usePropertySearch = () => {
     [router],
   );
 
-  return { urlFilters, handleRedirect, updateSearchParams };
-};
-
-const parseDate = (dateString: string | null): Date | undefined => {
-  if (!dateString) return undefined;
-  const parsedDate = parseISO(dateString);
-  return isValid(parsedDate) ? parsedDate : undefined;
-};
-
-const getFilterFromParams = (
-  searchParams: URLSearchParams,
-): Partial<FilterOptions> => {
-  const newFilters: Partial<FilterOptions> = {};
-  const city = searchParams.get("city");
-  const minPrice = searchParams.get("minPrice");
-  const maxPrice = searchParams.get("maxPrice");
-  const startDate = searchParams.get("startDate");
-  const endDate = searchParams.get("endDate");
-  const categoryId = searchParams.get("categoryId");
-  const searchTerm = searchParams.get("searchTerm");
-
-  if (city) newFilters.city = city;
-  if (minPrice) newFilters.minPrice = parseInt(minPrice);
-  if (maxPrice) newFilters.maxPrice = parseInt(maxPrice);
-  newFilters.startDate = parseDate(startDate);
-  newFilters.endDate = parseDate(endDate);
-  if (categoryId) newFilters.categoryId = categoryId;
-  if (searchTerm) newFilters.searchTerm = searchTerm;
-
-  return newFilters;
+  return { getUrlFilters, handleRedirect, updateSearchParams };
 };
