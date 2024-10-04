@@ -9,7 +9,6 @@ import {
 import { RatesManagement } from "./RatesManagement";
 import { RateResponseType } from "@/constants/Rates";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import GlobalLoading from "@/components/GlobalLoading";
 
 interface RateDialogProps {
   isEditing: boolean;
