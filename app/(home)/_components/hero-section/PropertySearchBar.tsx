@@ -13,20 +13,23 @@ interface HeroSearchBarProps {
 }
 
 const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
-  const { cities, categories, isLoading, error } = usePropertyUtils();
   const isDesktop: boolean = useMediaQuery("(min-width: 768px)");
-  const { handleSearch } = usePropertySearch();
+  const { cities, isLoading, error } = usePropertyUtils();
+  const { handleRedirect } = usePropertySearch();
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [budget, setBudget] = useState<string>("");
   const [date, setDate] = useState<Date | undefined>(undefined);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    handleSearch({
-      city: selectedCity,
-      maxPrice: budget ? parseInt(budget, 10) : undefined,
-      startDate: date,
-    });
+    handleRedirect(
+      {
+        city: selectedCity,
+        maxPrice: budget ? parseInt(budget, 10) : undefined,
+        startDate: date,
+      },
+      "/properties",
+    );
   };
 
   const choices: { value: string; label: string }[] =

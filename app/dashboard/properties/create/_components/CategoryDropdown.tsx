@@ -1,55 +1,46 @@
-import React, { useState } from "react";
+import React from "react";
 import { Label } from "@/components/ui/label";
-import { ErrorMessage, Field } from "formik";
+import { ErrorMessage, Field, useFormikContext } from "formik";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CategoryType } from "@/constants/Property";
+import { useCategoryManagement } from "@/hooks/properties/useCategoryManagement";
+import LoadingButton from "@/components/LoadingButton";
 
 interface CategoryDropdownProps {
-  categories: CategoryType[] | undefined;
-  setCategories: React.Dispatch<React.SetStateAction<CategoryType[]>>;
-  onSelect: (categoryId: string) => void;
-  onCreateNew: (categoryName: string) => Promise<void>;
+  initialCategoryId?: number;
 }
 
 const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
-  categories,
-  setCategories,
-  onSelect,
-  onCreateNew,
+  initialCategoryId,
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string | number>(
-    "select",
-  );
-  const [newCategoryName, setNewCategoryName] = useState("");
-  const [isCreatingNew, setIsCreatingNew] = useState(false);
+  const { setFieldValue, values } = useFormikContext<any>();
+  const {
+    categories,
+    selectedCategory,
+    isCreatingNew,
+    handleSelectChange,
+    handleCreateNewCategory,
+    setIsCreatingNew,
+    isLoading,
+  } = useCategoryManagement(initialCategoryId);
 
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
-    if (value === "new") {
-      setIsCreatingNew(true);
-    } else {
-      setSelectedCategory(Number(value));
-      onSelect(value);
+    handleSelectChange(value);
+    if (value !== "new") {
+      setFieldValue("property.categoryId", Number(value));
     }
   };
 
-  const handleCreateNewCategory = () => {
-    if (newCategoryName.trim()) {
-      onCreateNew(newCategoryName.trim());
-      setNewCategoryName("");
-      setIsCreatingNew(false);
+  const onCreateNew = async () => {
+    const categoryName = values.category.name.trim();
+    if (categoryName) {
+      const newCategory = await handleCreateNewCategory(categoryName);
+      if (newCategory) {
+        await setFieldValue("property.categoryId", newCategory.id);
+      }
     }
   };
-
-  const selectOptions = [
-    { value: "select", label: "Select a category" },
-    { value: "new", label: "Create new category" },
-    ...(categories?.map((category) => ({
-      value: category.id.toString(),
-      label: category.name,
-    })) ?? []),
-  ];
 
   return (
     <div>
@@ -57,8 +48,8 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
         <div className="flex flex-col gap-2.5">
           <Label htmlFor="property.categoryId">Category</Label>
           <select
-            value={selectedCategory}
-            onChange={handleSelectChange}
+            value={selectedCategory?.id || ""}
+            onChange={onSelectChange}
             className="h-full p-2 border rounded-lg"
           >
             <option value="">Select a category</option>
@@ -87,18 +78,25 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
             />
           </div>
           <div className="flex flex-row gap-3">
-            <Button
-              onClick={handleCreateNewCategory}
-              className="bg-blue-950 hover:bg-gray-100 hover:text-blue-950"
-            >
-              Create
-            </Button>
-            <Button
-              onClick={() => setIsCreatingNew(false)}
-              className="bg-appcancel hover:bg-appgray hover:text-appcancel"
-            >
-              Cancel
-            </Button>
+            {isLoading ? (
+              <LoadingButton title="Creating category.." />
+            ) : (
+              <>
+                <Button
+                  type="submit"
+                  onClick={onCreateNew}
+                  className="bg-blue-950 hover:bg-gray-100 hover:text-blue-950"
+                >
+                  Create
+                </Button>
+                <Button
+                  onClick={() => setIsCreatingNew(false)}
+                  className="bg-appcancel hover:bg-appgray hover:text-appcancel"
+                >
+                  Cancel
+                </Button>
+              </>
+            )}
           </div>
         </div>
       )}

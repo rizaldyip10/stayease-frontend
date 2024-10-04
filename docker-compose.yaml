@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  nextjs:
+    image: stayease-fe-app:latest
+    build:
+      context: .
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+    command: ${COMMAND:-yarn dev}  # Default to production command
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+# * command for dev
+# yarn docker:dev
+# or
+# cross-env NODE_ENV=development COMMAND="yarn dev" docker-compose up --build
+
+# * command for dev
+# yarn docker:prod
+# or
+# docker-compose up --build

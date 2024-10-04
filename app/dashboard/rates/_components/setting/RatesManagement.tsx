@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import CustomSelect from "@/components/CustomSelect";
 import { ManualRateForm } from "./ManualRateForm";
@@ -7,7 +7,7 @@ import { RateResponseType } from "@/constants/Rates";
 import { useTenantProperties } from "@/hooks/properties/useTenantProperties";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRatesManagement } from "@/hooks/rates/useRatesManagement";
-import { usePeakSeasonRate } from "@/hooks/rates/usePeakSeasonRate";
+import GlobalLoading from "@/components/GlobalLoading";
 
 interface RatesManagementProps {
   isEditing: boolean;
@@ -21,7 +21,6 @@ export const RatesManagement: React.FC<RatesManagementProps> = ({
   onClose,
 }) => {
   const { properties } = useTenantProperties();
-  const { fetchRates } = usePeakSeasonRate();
   const {
     selectedPropertyId,
     error,
@@ -33,7 +32,6 @@ export const RatesManagement: React.FC<RatesManagementProps> = ({
   } = useRatesManagement(
     () => {
       onClose();
-      fetchRates();
     },
     isEditing ? selectedRate?.propertySummary.propertyId : undefined,
   );
@@ -84,18 +82,17 @@ export const RatesManagement: React.FC<RatesManagementProps> = ({
                       }
                     : undefined
                 }
+                isLoading={isLoading}
               />
             </TabsContent>
             <TabsContent value="auto">
-              {isLoading ? (
-                <div>Loading automatic rate settings...</div>
-              ) : (
-                <AutomaticRateForm
-                  onSubmit={handleAutoSubmit}
-                  initialData={autoRateSetting || undefined}
-                  propertyId={selectedPropertyId || 0}
-                />
-              )}
+              <AutomaticRateForm
+                onSubmit={handleAutoSubmit}
+                onClose={onClose}
+                initialData={autoRateSetting || undefined}
+                propertyId={selectedPropertyId ?? 0}
+                isLoading={isLoading}
+              />
             </TabsContent>
           </Tabs>
         </div>

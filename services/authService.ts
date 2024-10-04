@@ -2,14 +2,13 @@ import { config } from "@/constants/url";
 import { UserType } from "@/constants/Types";
 import axiosInterceptor from "@/utils/axiosInterceptor";
 import {
-  RefreshResponse,
-  ExchangeCodeRequest,
-  RegisterResponse,
   AuthResponse,
-  TokenCheckResponse,
+  ExchangeCodeRequest,
   ForgotPasswordValues,
+  RefreshResponse,
+  RegisterResponse,
+  TokenCheckResponse,
 } from "@/constants/Auth";
-import { signIn } from "@/auth";
 
 import logger from "@/utils/logger";
 import { FormikValues } from "formik";

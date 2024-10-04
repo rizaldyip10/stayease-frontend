@@ -1,8 +1,4 @@
-import {
-  profileService,
-  TenantProfile,
-  UserProfile,
-} from "@/services/profileService";
+import { profileService } from "@/services/profileService";
 import { createContext, useContext, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useImageUpload } from "@/hooks/utils/useImageUpload";
@@ -10,6 +6,7 @@ import { useFetchData } from "@/hooks/utils/useFetchData";
 import { useEditData } from "@/hooks/utils/useEditData";
 import { queryClient } from "@/lib/queryClient";
 import { useAlert } from "./AlertContext";
+import { TenantProfile, UserProfile } from "@/constants/Users";
 
 export interface ProfileContextType {
   profile: UserProfile | null;

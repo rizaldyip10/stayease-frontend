@@ -1,11 +1,9 @@
 import { useState } from "react";
-import {
-  availabilityService,
-  TenantRoomAvailabilityType,
-} from "@/services/availabilityService";
+import { TenantRoomAvailability } from "@/constants/RoomAvailability";
 import { useAlert } from "@/context/AlertContext";
 import { useFetchData } from "@/hooks/utils/useFetchData";
 import { useRouter } from "next/navigation";
+import { availabilityService } from "@/services/availabilityService";
 
 export const useRoomAvailability = () => {
   const [error, setError] = useState<string | null>(null);
@@ -16,12 +14,9 @@ export const useRoomAvailability = () => {
     data: availabilityData,
     error: dataError,
     isLoading: dataLoading,
-  } = useFetchData<TenantRoomAvailabilityType[]>(
-    "availabilityData",
-    async () => {
-      return availabilityService.getTenantRoomAvailability();
-    },
-  );
+  } = useFetchData<TenantRoomAvailability[]>("availabilityData", async () => {
+    return availabilityService.getTenantRoomAvailability();
+  });
 
   const setAvailability = async (
     roomId: number,

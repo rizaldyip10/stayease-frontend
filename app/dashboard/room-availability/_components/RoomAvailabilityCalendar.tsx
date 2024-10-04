@@ -5,11 +5,11 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from "@fullcalendar/list";
 import multiMonthPlugin from "@fullcalendar/multimonth";
-import { TenantRoomAvailabilityType } from "@/services/availabilityService";
+import { TenantRoomAvailability } from "@/constants/RoomAvailability";
 import { useRoomAvailabilityCalendarConfig } from "@/hooks/reports/useRoomAvailabilityCalendarConfig";
 
 interface RoomAvailabilityCalendarProps {
-  availabilityData: TenantRoomAvailabilityType[];
+  availabilityData: TenantRoomAvailability[];
   onDateSelect: (start: Date, end: Date) => void;
   onEventClick: (eventInfo: any) => void;
 }

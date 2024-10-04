@@ -40,7 +40,7 @@ const AvailabilityForm: React.FC<AvailabilityFormProps> = ({
     endDate: "",
   });
   const { properties } = useTenantProperties();
-  const { rooms } = usePropertyData(
+  const { propertyById } = usePropertyData(
     selectedPropertyId ? parseInt(selectedPropertyId) : 0,
   );
 
@@ -127,7 +127,7 @@ const AvailabilityForm: React.FC<AvailabilityFormProps> = ({
             <Label htmlFor="roomId">Room</Label>
             <CustomSelect
               title="Select Room"
-              options={rooms?.map((room) => ({
+              options={propertyById?.rooms?.map((room) => ({
                 label: room.name,
                 value: room.id.toString(),
               }))}

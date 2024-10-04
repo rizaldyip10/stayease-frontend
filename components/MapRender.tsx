@@ -11,8 +11,10 @@ interface MapRenderProps {
   initSearchBox: () => void;
   getCurrentLocation: () => void;
   mapRef: React.MutableRefObject<google.maps.Map | null>;
-  markerRef: React.MutableRefObject<google.maps.Marker | null>;
-  propertyMarkersRef: React.MutableRefObject<google.maps.Marker[]>;
+  markerRef: React.MutableRefObject<google.maps.marker.AdvancedMarkerElement | null>;
+  propertyMarkersRef: React.MutableRefObject<
+    google.maps.marker.AdvancedMarkerElement[]
+  >;
 }
 
 export const MapRender: React.FC<MapRenderProps> = ({
@@ -35,12 +37,12 @@ export const MapRender: React.FC<MapRenderProps> = ({
   const updateMarkerAndMap = useCallback(
     (newPosition: google.maps.LatLngLiteral) => {
       if (mapRef.current && markerRef.current) {
-        markerRef.current.setPosition(newPosition);
+        markerRef.current.position = new google.maps.LatLng(newPosition);
         mapRef.current.panTo(newPosition);
         onLocationChange(newPosition);
       }
     },
-    [onLocationChange],
+    [onLocationChange, mapRef, markerRef],
   );
 
   useEffect(() => {
@@ -61,16 +63,9 @@ export const MapRender: React.FC<MapRenderProps> = ({
     viewOnly,
   ]);
 
-  // useEffect(() => {
-  //   if (mapRef.current && markerRef.current) {
-  //     mapRef.current.setCenter(center);
-  //     markerRef.current.setPosition(center);
-  //   }
-  // }, [center, mapRef, markerRef]);
-
   useEffect(() => {
     updateMarkerAndMap(center);
-  }, []);
+  }, [center, updateMarkerAndMap]);
 
   return (
     <div style={{ height: "100%", width: "100%", position: "relative" }}>

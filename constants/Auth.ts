@@ -1,5 +1,3 @@
-import { TenantType } from "@/constants/Users";
-
 export type SocialLoginRequest = {
   provider: string;
   providerUserId: string;
@@ -23,10 +21,6 @@ export interface User {
   joinedAt: Date;
   isVerified: boolean;
   isOAuth2: boolean;
-}
-
-export interface UserTenant extends User {
-  tenantInfo?: TenantType;
 }
 
 export interface AuthResponse {

@@ -1,10 +1,13 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import propertyService from "@/services/propertyService";
 import { profileService } from "@/services/profileService";
 import { useAlert } from "@/context/AlertContext";
 
 type ImageUploaderType = "profile" | "property";
 export const useImageUpload = (type: ImageUploaderType) => {
+  const [file, setFile] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { showAlert } = useAlert();
 
   const handleImageUpload = useCallback(
@@ -13,6 +16,8 @@ export const useImageUpload = (type: ImageUploaderType) => {
       fieldName: string,
       setFieldValue: (field: string, value: any) => void,
     ): Promise<string> => {
+      setIsLoading(true);
+      setError(null);
       try {
         const uploadFunction =
           type === "profile"
@@ -24,12 +29,48 @@ export const useImageUpload = (type: ImageUploaderType) => {
         return imageUrl;
       } catch (error) {
         console.error("Error uploading image: ", error);
+        setError("Failed to upload image");
         showAlert("error", "Failed to upload image");
         throw error;
+      } finally {
+        setIsLoading(false);
       }
     },
     [showAlert, type],
   );
 
-  return { handleImageUpload };
+  const onDrop = useCallback(
+    async (
+      acceptedFiles: File[],
+      rejectedFiles: any[],
+      maxFileSize: number,
+      setFieldValue: (field: string, value: any) => void,
+      fieldName: string,
+    ) => {
+      if (rejectedFiles.length > 0) {
+        if (rejectedFiles[0].file.size > maxFileSize) {
+          setError(
+            `File is too large. Maximum size is ${maxFileSize / 1024 / 1024}MB.`,
+          );
+          showAlert(
+            "error",
+            error?.toString() || "File is too large. Maximum size is 1MB.",
+          );
+        } else {
+          setError("Please upload only accepted file types.");
+          showAlert(
+            "error",
+            error?.toString() || "Please upload only accepted file types.",
+          );
+        }
+      } else if (acceptedFiles.length > 0) {
+        await handleImageUpload(acceptedFiles[0], fieldName, setFieldValue);
+        setFile(acceptedFiles[0]);
+        setError(null);
+      }
+    },
+    [handleImageUpload, showAlert, error],
+  );
+
+  return { handleImageUpload, onDrop, file, isLoading, error };
 };

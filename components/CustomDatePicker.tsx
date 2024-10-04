@@ -51,7 +51,7 @@ export function CustomDatePicker({
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar
           mode="single"
-          selected={date}
+          selected={minDate}
           onSelect={handleSelect}
           initialFocus
           disabled={(date) => (minDate ? date < minDate : false)}

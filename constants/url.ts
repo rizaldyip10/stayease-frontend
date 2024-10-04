@@ -41,9 +41,6 @@ export const config = {
       createRoom: "/properties/{propertyId}/rooms",
       updateRoom: "/properties/{propertyId}/rooms/{roomId}",
       deleteRoom: "/properties/{propertyId}/rooms/{roomId}",
-      createCategory: "/properties/categories",
-      updateCategory: "/properties/categories/{categoryId}",
-      deleteCategory: "/properties/categories/{categoryId}",
       uploadImage: "/properties/upload-image",
     },
     propertyUtils: {
@@ -60,9 +57,14 @@ export const config = {
     propertyListings: {
       sortAndFilter: "/properties/listings",
       getAllAvailablePropertiesOnDate: "/properties/available",
-      getAllCategories: "/properties/categories",
       getAllCities: "/properties/cities",
       getAllImages: "/properties/images",
+    },
+    categories: {
+      getAllCategories: "/categories",
+      createCategory: "/categories",
+      updateCategory: "/categories/{categoryId}",
+      deleteCategory: "/categories/{categoryId}",
     },
     rates: {
       baseRoute: "/rates",
