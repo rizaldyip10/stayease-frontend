@@ -41,7 +41,7 @@ const ContactForm = () => {
           Have questions or doubts?
         </h2>
         <p className="text-xl text-gray-300 mb-8 text-center">
-          Don't Hesitate, Contact Us
+          Don&apos;t Hesitate, Contact Us
         </p>
         <Formik
           initialValues={{ fullName: "", email: "", message: "" }}
@@ -107,8 +107,8 @@ const ContactForm = () => {
           <DialogHeader>
             <DialogTitle>Message Received</DialogTitle>
             <DialogDescription>
-              Thank you for reaching out. We've received your message and will
-              contact you back soon.
+              Thank you for reaching out. We&apos;ve received your message and
+              will contact you back soon.
             </DialogDescription>
           </DialogHeader>
           <Button onClick={() => setIsDialogOpen(false)}>Close</Button>

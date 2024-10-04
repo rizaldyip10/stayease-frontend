@@ -13,14 +13,14 @@ const CTASection: React.FC<CTASectionProps> = ({ ctaRef }) => {
           <div className="md:w-1/2 mb-6 md:mb-0">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               StayEase – your go-to hub for finding the perfect room, studio, or
-              apartment, whether you're traveling for work, vacation, or a short
-              stay.
+              apartment, whether you&apos;re traveling for work, vacation, or a
+              short stay.
             </h1>
           </div>
           <div className="md:w-1/2 md:pl-8">
             <p className="text-lg text-gray-600 mb-4">
               Coming to town for a new job, an extended trip, or just a change
-              of scenery? We've got a variety of places that will suit your
+              of scenery? We&apos;ve got a variety of places that will suit your
               needs!
             </p>
             <p className="text-lg text-gray-600 mb-4">
@@ -37,7 +37,7 @@ const CTASection: React.FC<CTASectionProps> = ({ ctaRef }) => {
               variant="link"
               className="text-blue-600 p-0"
             >
-              "Show more ↓"
+              Show more ↓
             </Button>
           </div>
         </div>

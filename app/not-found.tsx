@@ -11,7 +11,7 @@ const NotFound = () => {
       <TbHomeSearch className="w-72 h-72 text-blue-950" />
       <div className="text-center text-lg text-blue-950 mb-3 flex flex-col gap-3">
         <p className="text-3xl font-semibold">
-          The page you're looking found is not here.
+          The page you&apos;re looking found is not here.
         </p>
         <p>Let’s get you back to finding your perfect stay!</p>
       </div>

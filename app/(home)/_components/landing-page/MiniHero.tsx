@@ -42,11 +42,11 @@ const MiniHero = () => {
             <span className="font-light tracking-wide">Ease</span>
           </h2>
           <p className="text-gray-600 mb-4">
-            At StayEase, we're all about helping you find the ideal room or
-            apartment, whether you're traveling for work, leisure, or just need
-            a temporary home. With a wide selection of comfortable and
-            affordable options, we've made it easier for you to find a place to
-            stay, hassle-free.
+            At StayEase, we&apos;re all about helping you find the ideal room or
+            apartment, whether you&apos;re traveling for work, leisure, or just
+            need a temporary home. With a wide selection of comfortable and
+            affordable options, we&apos;ve made it easier for you to find a
+            place to stay, hassle-free.
           </p>
           <p className="text-gray-600 mb-4">
             Our goal is to simplify the search for short-term accommodations,
