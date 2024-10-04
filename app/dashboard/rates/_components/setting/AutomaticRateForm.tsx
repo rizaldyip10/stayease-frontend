@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { autoRateSettingValidationSchema } from "@/constants/ValidationSchema";
 import RateDeleteDialog from "@/app/dashboard/rates/_components/RateDeleteDialog";
 import TypeSelect from "@/app/dashboard/rates/_components/setting/TypeSelect";
+import LoadingButton from "@/components/LoadingButton";
 
 export const typeItems = [
   { value: "PERCENTAGE", label: "Percentage" },
@@ -19,6 +20,7 @@ interface AutomaticRateFormProps {
   onSubmit: (data: AutoRateRequestType) => void;
   initialData?: AutoRateResponseType;
   propertyId: number;
+  isLoading: boolean;
 }
 
 export const AutomaticRateForm: React.FC<AutomaticRateFormProps> = ({
@@ -26,6 +28,7 @@ export const AutomaticRateForm: React.FC<AutomaticRateFormProps> = ({
   onSubmit,
   initialData,
   propertyId,
+  isLoading,
 }) => {
   const [formValues, setFormValues] = useState<AutoRateRequestType | null>(
     null,
@@ -61,7 +64,7 @@ export const AutomaticRateForm: React.FC<AutomaticRateFormProps> = ({
         validationSchema={autoRateSettingValidationSchema}
         onSubmit={handleSubmit}
       >
-        {({ values, setFieldValue }) => (
+        {({ values, setFieldValue, isSubmitting }) => (
           <Form className="space-y-6">
             <div className="flex items-center space-x-2">
               <Switch
@@ -157,14 +160,18 @@ export const AutomaticRateForm: React.FC<AutomaticRateFormProps> = ({
               <RateDeleteDialog
                 propertyId={propertyId}
                 onConfirm={handleConfirmDisable}
-                title="Confirm Disable Auto Rates"
-                description="Are you sure you want to disable automatic rate adjustments? This will remove all current auto rate settings."
+                title="Confirm Deactivate Auto Rates"
+                description="Are you sure you want to deactivate automatic rate adjustments for this property? This will remove all current auto rate settings."
                 trigger={
                   <Button variant="destructive" className="w-full">
-                    Disable Automatic Rates
+                    Deactivate Automatic Rates
                   </Button>
                 }
               />
+            ) : isLoading || isSubmitting ? (
+              <div className="flex justify-end">
+                <LoadingButton title="Setting up automatic rate adjustments..." />
+              </div>
             ) : (
               <Button
                 type="submit"

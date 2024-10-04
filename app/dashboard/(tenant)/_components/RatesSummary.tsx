@@ -7,6 +7,7 @@ import { usePeakSeasonRate } from "@/hooks/rates/usePeakSeasonRate";
 import { GearIcon } from "@radix-ui/react-icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import RatesCard from "@/app/dashboard/(tenant)/_components/RatesCard";
+import GlobalLoading from "@/components/GlobalLoading";
 
 interface DashboardRatesSummaryProps {
   className?: string;
@@ -47,7 +48,11 @@ export const DashboardRatesSummary: React.FC<DashboardRatesSummaryProps> = ({
             <TabsTrigger value="manual">Manual Rates</TabsTrigger>
             <TabsTrigger value="automatic">Automatic Rates</TabsTrigger>
           </TabsList>
-          {isLoading && <p>Loading rates...</p>}
+          {isLoading && (
+            <div className="flex items-center justify-center align-middle h-[200px]">
+              <GlobalLoading height={100} width={100} />
+            </div>
+          )}
           <TabsContent value="manual">
             <RatesCard rates={manualRates} />
           </TabsContent>

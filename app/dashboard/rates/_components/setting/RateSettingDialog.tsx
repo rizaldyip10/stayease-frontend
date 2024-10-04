@@ -9,27 +9,23 @@ import {
 import { RatesManagement } from "./RatesManagement";
 import { RateResponseType } from "@/constants/Rates";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import GlobalLoading from "@/components/GlobalLoading";
 
 interface RateDialogProps {
   isEditing: boolean;
   selectedRate?: RateResponseType;
   trigger: React.ReactNode;
-  onSuccess?: () => void;
 }
 
 const RateSettingDialog: React.FC<RateDialogProps> = ({
   isEditing,
   selectedRate,
   trigger,
-  onSuccess,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClose = () => {
     setIsOpen(false);
-    if (onSuccess) {
-      onSuccess();
-    }
   };
 
   return (

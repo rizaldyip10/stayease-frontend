@@ -17,6 +17,7 @@ import { usePeakSeasonRate } from "@/hooks/rates/usePeakSeasonRate";
 import { useRoomAvailability } from "@/hooks/reports/useRoomAvailability";
 import { isConfigOption } from "jackspeak";
 import { useAutoRateSetting } from "@/hooks/rates/useAutoRateSetting";
+import LoadingButton from "@/components/LoadingButton";
 
 interface DeleteDialogProps {
   propertyId?: number;
@@ -35,8 +36,9 @@ const RateDeleteDialog: FC<DeleteDialogProps> = ({
   description = "Are you sure you want to delete this rate setting?",
   trigger,
 }) => {
-  const { deleteRate } = usePeakSeasonRate();
-  const { deactivateAutoRateSetting } = useAutoRateSetting(propertyId ?? 0);
+  const { deleteRate, isLoading } = usePeakSeasonRate();
+  const { deactivateAutoRateSetting, isLoading: autoIsLoading } =
+    useAutoRateSetting(propertyId ?? 0);
   const [open, setOpen] = useState(false);
 
   const handleDelete = async () => {
@@ -77,12 +79,22 @@ const RateDeleteDialog: FC<DeleteDialogProps> = ({
         <DialogTitle>{title}</DialogTitle>
         <DialogDescription>{description}</DialogDescription>
         <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="link">Cancel</Button>
-          </DialogClose>
-          <Button className="bg-blue-950" onClick={handleDelete}>
-            Delete
-          </Button>
+          {isLoading || autoIsLoading ? (
+            <div className="flex justify-end">
+              <LoadingButton
+                title={rateId ? "Deleting..." : "Deactivating..."}
+              />
+            </div>
+          ) : (
+            <>
+              <DialogClose asChild>
+                <Button variant="link">Cancel</Button>
+              </DialogClose>
+              <Button className="bg-blue-950" onClick={handleDelete}>
+                Delete
+              </Button>
+            </>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

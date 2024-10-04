@@ -9,14 +9,18 @@ import { manualRateValidationSchema } from "@/constants/ValidationSchema";
 import { formatDate } from "@/utils/dateFormatter";
 import TypeSelect from "@/app/dashboard/rates/_components/setting/TypeSelect";
 import { typeItems } from "@/app/dashboard/rates/_components/setting/AutomaticRateForm";
+import GlobalLoading from "@/components/GlobalLoading";
+import LoadingButton from "@/components/LoadingButton";
 
 interface ManualRateFormProps {
   onSubmit: (data: RateRequestType) => void;
   initialData?: RateRequestType;
+  isLoading: boolean;
 }
 export const ManualRateForm: React.FC<ManualRateFormProps> = ({
   onSubmit,
   initialData,
+  isLoading,
 }) => {
   const [isStartDateOpen, setIsStartDateOpen] = useState(false);
   const [isEndDateOpen, setIsEndDateOpen] = useState(false);
@@ -69,7 +73,7 @@ export const ManualRateForm: React.FC<ManualRateFormProps> = ({
       validationSchema={manualRateValidationSchema}
       onSubmit={onSubmit}
     >
-      {({ values, setFieldValue }) => (
+      {({ values, setFieldValue, isSubmitting }) => (
         <Form className="space-y-4">
           <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
             <div className="flex-1">
@@ -145,12 +149,18 @@ export const ManualRateForm: React.FC<ManualRateFormProps> = ({
               className="text-red-500 text-sm"
             />
           </div>
-          <Button
-            type="submit"
-            className="w-full bg-blue-950 text-appgray hover:bg-appgray hover:text-blue-950 mt-5"
-          >
-            {initialData ? "Update Rate" : "Set Rate"}
-          </Button>
+          {isLoading || isSubmitting ? (
+            <div className="flex justify-end">
+              <LoadingButton title="Setting new rate..." />
+            </div>
+          ) : (
+            <Button
+              type="submit"
+              className="w-full bg-blue-950 text-appgray hover:bg-appgray hover:text-blue-950 mt-5"
+            >
+              {initialData ? "Update Rate" : "Set Rate"}
+            </Button>
+          )}
         </Form>
       )}
     </Formik>
