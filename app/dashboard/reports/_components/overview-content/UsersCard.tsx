@@ -2,8 +2,20 @@
 
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {User} from "lucide-react";
+import {UsersDiffType} from "@/constants/Reports";
+import {FC} from "react";
 
-const UsersCard = () => {
+interface UserCardProps {
+    usersDiff: UsersDiffType;
+}
+
+const UsersCard: FC<UserCardProps> = ({ usersDiff }) => {
+    let diff;
+    if (usersDiff.usersDiffPercent >= 0) {
+        diff = `+ ${usersDiff.usersDiffPercent}`;
+    } else {
+        diff = `${usersDiff.usersDiffPercent}`;
+    }
     return (
         <Card className="text-blue-950">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -13,9 +25,9 @@ const UsersCard = () => {
                 <User className="h-4 w-4 text-muted-foreground text-blue-950" />
             </CardHeader>
             <CardContent>
-                <div className="text-2xl font-bold">50</div>
+                <div className="text-2xl font-bold">{ usersDiff.usersThisMonth }</div>
                 <p className="text-xs text-muted-foreground">
-                    +180.1% from last month
+                    { diff }% from last month
                 </p>
             </CardContent>
         </Card>

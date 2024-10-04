@@ -1,22 +1,22 @@
 "use client";
 
-import {RecentSales} from "@/app/dashboard/reports/_components/overview-content/RecentSales";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import PopularRoomsList from "@/app/dashboard/reports/_components/properties-content/PopularRoomsList";
 
-const SalesCard = () => {
+const PopularRoomsCard = () => {
     return (
         <Card className="col-span-3 text-blue-950">
             <CardHeader>
                 <CardTitle>Recent Sales</CardTitle>
                 <CardDescription>
-                    You made 265 sales this month.
+                    Your popular rooms
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <RecentSales />
+                <PopularRoomsList />
             </CardContent>
         </Card>
     );
 };
 
-export default SalesCard;
+export default PopularRoomsCard;

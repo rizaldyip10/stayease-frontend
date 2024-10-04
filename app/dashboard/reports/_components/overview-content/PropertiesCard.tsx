@@ -2,8 +2,13 @@
 
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Building2} from "lucide-react";
+import {FC} from "react";
 
-const PropertiesCard = () => {
+interface PropertiesCardProps {
+    totalProperties: number;
+}
+
+const PropertiesCard: FC<PropertiesCardProps> = ({ totalProperties }) => {
     return (
         <Card className="text-blue-950">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -13,7 +18,7 @@ const PropertiesCard = () => {
                 <Building2 className="h-4 w-4 text-muted-foreground text-blue-950" />
             </CardHeader>
             <CardContent>
-                <div className="text-2xl font-bold">10</div>
+                <div className="text-2xl font-bold">{ totalProperties }</div>
             </CardContent>
         </Card>
     );

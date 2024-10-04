@@ -14,7 +14,6 @@ import { useEffect } from "react";
 import { calculateDaysBetweenDates } from "@/utils/datesDifference";
 import { useRoomDetail } from "@/hooks/properties/useRoomDetail";
 import { transactionService } from "@/services/transactionService";
-import { getAccessToken, setAccessToken } from "@/utils/axiosInterceptor";
 
 const BookingForm = () => {
   const router = useRouter();
@@ -98,10 +97,6 @@ const BookingForm = () => {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    setAccessToken(getAccessToken());
-  }, []);
 
   return (
     <div className="w-full flex flex-col gap-3">
