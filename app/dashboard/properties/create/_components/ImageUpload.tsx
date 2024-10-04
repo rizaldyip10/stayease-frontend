@@ -39,7 +39,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         fieldName,
       );
     },
-    [onDrop, maxFileSize, setFieldValue],
+    [onDrop, maxFileSize, setFieldValue, fieldName],
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

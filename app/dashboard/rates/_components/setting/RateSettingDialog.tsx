@@ -14,22 +14,17 @@ interface RateDialogProps {
   isEditing: boolean;
   selectedRate?: RateResponseType;
   trigger: React.ReactNode;
-  onSuccess?: () => void;
 }
 
 const RateSettingDialog: React.FC<RateDialogProps> = ({
   isEditing,
   selectedRate,
   trigger,
-  onSuccess,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClose = () => {
     setIsOpen(false);
-    if (onSuccess) {
-      onSuccess();
-    }
   };
 
   return (

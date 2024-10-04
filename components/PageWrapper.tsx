@@ -5,7 +5,7 @@ const PageWrapper = ({
   className,
 }: {
   children: React.ReactNode;
-  className: string;
+  className?: string;
 }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}

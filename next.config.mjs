@@ -19,7 +19,8 @@ const nextConfig = {
                 hostname: 'randomuser.me'
             }
         ]
-    }
+    },
+    output: 'standalone'
 };
 
 export default nextConfig;

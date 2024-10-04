@@ -42,7 +42,7 @@ export const MapRender: React.FC<MapRenderProps> = ({
         onLocationChange(newPosition);
       }
     },
-    [onLocationChange],
+    [onLocationChange, mapRef, markerRef],
   );
 
   useEffect(() => {
@@ -63,16 +63,9 @@ export const MapRender: React.FC<MapRenderProps> = ({
     viewOnly,
   ]);
 
-  // useEffect(() => {
-  //   if (mapRef.current && markerRef.current) {
-  //     mapRef.current.setCenter(center);
-  //     markerRef.current.setPosition(center);
-  //   }
-  // }, [center, mapRef, markerRef]);
-
   useEffect(() => {
     updateMarkerAndMap(center);
-  }, []);
+  }, [center, updateMarkerAndMap]);
 
   return (
     <div style={{ height: "100%", width: "100%", position: "relative" }}>

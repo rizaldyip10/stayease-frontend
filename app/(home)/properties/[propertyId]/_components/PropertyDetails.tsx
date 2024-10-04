@@ -68,7 +68,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
       checkInDate: undefined,
       checkOutDate: undefined,
     });
-  }, []);
+  }, [setBookingInfo]);
 
   if (isLoading) return <PropertyDetailsSkeleton type="property" />;
   if (error) return <div>Error updating: {error.message}</div>;

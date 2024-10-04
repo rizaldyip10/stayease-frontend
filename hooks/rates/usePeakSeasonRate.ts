@@ -34,7 +34,7 @@ export const usePeakSeasonRate = () => {
           queryKey: [`rates-tenantId-${session?.user?.id}`],
         });
         logger.info("Rate created successfully", response);
-        showAlert("success", "Rate created successfully", "/dashboard/rates");
+        showAlert("success", "Rate created successfully");
       } catch (error) {
         setError("Failed to create rate");
         console.error("Error creating rate:", error);

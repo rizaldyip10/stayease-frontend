@@ -15,7 +15,7 @@ const Testimonials = () => {
     <div className="bg-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-bold text-blue-950 mb-8 text-center">
-          That's What Our Clients Say
+          That&apos;s What Our Clients Say
         </h2>
         <Carousel className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto">
           <CarouselContent>

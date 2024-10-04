@@ -7,6 +7,7 @@ import { RateResponseType } from "@/constants/Rates";
 import { useTenantProperties } from "@/hooks/properties/useTenantProperties";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRatesManagement } from "@/hooks/rates/useRatesManagement";
+import GlobalLoading from "@/components/GlobalLoading";
 
 interface RatesManagementProps {
   isEditing: boolean;
@@ -81,19 +82,17 @@ export const RatesManagement: React.FC<RatesManagementProps> = ({
                       }
                     : undefined
                 }
+                isLoading={isLoading}
               />
             </TabsContent>
             <TabsContent value="auto">
-              {isLoading ? (
-                <div>Loading automatic rate settings...</div>
-              ) : (
-                <AutomaticRateForm
-                  onSubmit={handleAutoSubmit}
-                  onClose={onClose}
-                  initialData={autoRateSetting || undefined}
-                  propertyId={selectedPropertyId ?? 0}
-                />
-              )}
+              <AutomaticRateForm
+                onSubmit={handleAutoSubmit}
+                onClose={onClose}
+                initialData={autoRateSetting || undefined}
+                propertyId={selectedPropertyId ?? 0}
+                isLoading={isLoading}
+              />
             </TabsContent>
           </Tabs>
         </div>

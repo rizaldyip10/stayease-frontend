@@ -17,6 +17,7 @@ import { usePeakSeasonRate } from "@/hooks/rates/usePeakSeasonRate";
 import { useRoomAvailability } from "@/hooks/reports/useRoomAvailability";
 import { isConfigOption } from "jackspeak";
 import { useAutoRateSetting } from "@/hooks/rates/useAutoRateSetting";
+import LoadingButton from "@/components/LoadingButton";
 
 interface DeleteDialogProps {
   propertyId?: number;
@@ -25,9 +26,6 @@ interface DeleteDialogProps {
   title?: string;
   description?: string;
   trigger?: React.ReactNode;
-  isOpen?: boolean;
-  onClose?: () => void;
-  onOpenChange?: (isOpen: boolean) => void;
 }
 
 const RateDeleteDialog: FC<DeleteDialogProps> = ({
@@ -37,13 +35,11 @@ const RateDeleteDialog: FC<DeleteDialogProps> = ({
   title = "Delete Rate Setting",
   description = "Are you sure you want to delete this rate setting?",
   trigger,
-  isOpen,
-  onClose,
-  onOpenChange,
 }) => {
-  const { deleteRate } = usePeakSeasonRate();
-  const { deactivateAutoRateSetting } = useAutoRateSetting(propertyId ?? 0);
-  const [open, setOpen] = useState(isOpen);
+  const { deleteRate, isLoading } = usePeakSeasonRate();
+  const { deactivateAutoRateSetting, isLoading: autoIsLoading } =
+    useAutoRateSetting(propertyId ?? 0);
+  const [open, setOpen] = useState(false);
 
   const handleDelete = async () => {
     try {
@@ -65,11 +61,11 @@ const RateDeleteDialog: FC<DeleteDialogProps> = ({
   };
 
   useEffect(() => {
-    setOpen(isOpen);
-  }, [isOpen]);
+    setOpen((prev) => (open !== undefined ? open : prev));
+  }, [open]);
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {!trigger ? (
           <Button variant="ghost" className="w-10 h-10 p-0">
@@ -83,12 +79,22 @@ const RateDeleteDialog: FC<DeleteDialogProps> = ({
         <DialogTitle>{title}</DialogTitle>
         <DialogDescription>{description}</DialogDescription>
         <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="link">Cancel</Button>
-          </DialogClose>
-          <Button className="bg-blue-950" onClick={handleDelete}>
-            Delete
-          </Button>
+          {isLoading || autoIsLoading ? (
+            <div className="flex justify-end">
+              <LoadingButton
+                title={rateId ? "Deleting..." : "Deactivating..."}
+              />
+            </div>
+          ) : (
+            <>
+              <DialogClose asChild>
+                <Button variant="link">Cancel</Button>
+              </DialogClose>
+              <Button className="bg-blue-950" onClick={handleDelete}>
+                Delete
+              </Button>
+            </>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>
