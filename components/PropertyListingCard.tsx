@@ -50,7 +50,7 @@ const PropertyListingCard: React.FC<PropertyCardProps> = ({
           <Image
             src={imageUrl}
             alt={`${propertyName}`}
-            layout="fill"
+            fill
             objectFit="cover"
           />
         </div>

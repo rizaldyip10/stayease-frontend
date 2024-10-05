@@ -15,6 +15,7 @@ interface MapRenderProps {
   propertyMarkersRef: React.MutableRefObject<
     google.maps.marker.AdvancedMarkerElement[]
   >;
+  updateMarkerAndMap: (newPosition: google.maps.LatLngLiteral) => void;
 }
 
 export const MapRender: React.FC<MapRenderProps> = ({
@@ -30,20 +31,10 @@ export const MapRender: React.FC<MapRenderProps> = ({
   mapRef,
   markerRef,
   propertyMarkersRef,
+  updateMarkerAndMap,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
-
-  const updateMarkerAndMap = useCallback(
-    (newPosition: google.maps.LatLngLiteral) => {
-      if (mapRef.current && markerRef.current) {
-        markerRef.current.position = new google.maps.LatLng(newPosition);
-        mapRef.current.panTo(newPosition);
-        onLocationChange(newPosition);
-      }
-    },
-    [onLocationChange, mapRef, markerRef],
-  );
 
   useEffect(() => {
     if (mapContainerRef.current) {

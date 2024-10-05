@@ -30,6 +30,28 @@ export const useMarker = ({
     [mapRef, onLocationChange],
   );
 
+  const handleMarkerDragEnd = () => {
+    const position = markerRef.current?.position;
+    if (position) {
+      if (
+        position &&
+        typeof position.lat === "number" &&
+        typeof position.lng === "number"
+      ) {
+        updateMarkerAndMap({ lat: position.lat, lng: position.lng });
+      }
+    } else {
+      console.error("Marker position is null or undefined");
+    }
+  };
+
+  const handleMapClick = (e: google.maps.MapMouseEvent) => {
+    const clickedPosition = e.latLng?.toJSON();
+    if (clickedPosition) {
+      onLocationChange(clickedPosition);
+    }
+  };
+
   const initMarker = useCallback(() => {
     if (!mapRef.current || markerRef.current) return;
 
@@ -46,25 +68,19 @@ export const useMarker = ({
     });
 
     if (isEditable) {
-      markerRef.current.addListener("dragend", () => {
-        const position = markerRef.current?.position as google.maps.LatLng;
-        if (position instanceof google.maps.LatLng) {
-          const newPosition = {
-            lat: position.lat(),
-            lng: position.lng(),
-          };
-          onLocationChange(newPosition);
-        }
-      });
+      markerRef.current.addListener("dragend", handleMarkerDragEnd);
 
-      mapRef.current.addListener("click", (e: google.maps.MapMouseEvent) => {
-        const clickedPosition = e.latLng?.toJSON();
-        if (clickedPosition) {
-          onLocationChange(clickedPosition);
-        }
-      });
+      mapRef.current.addListener("click", handleMapClick);
     }
-  }, [mapRef, initialCenter, isEditable, onLocationChange]);
+  }, [
+    mapRef,
+    initialCenter,
+    isEditable,
+    onLocationChange,
+    handleMarkerDragEnd,
+    handleMapClick,
+    viewOnly,
+  ]);
 
   return { markerRef, initMarker, updateMarkerAndMap };
 };

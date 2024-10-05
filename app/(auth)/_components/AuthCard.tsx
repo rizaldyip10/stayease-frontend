@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { FormType, UserType } from "@/constants/Types";
 import Image from "next/image";
-import logo from "@/assets/images/logo_horizontal.png";
+import logo from "@/public/stayease-logo.webp";
 import { Button } from "@/components/ui/button";
 import googleLogo from "@/assets/icons/google-icon.png";
 import AuthForm from "@/app/(auth)/_components/AuthForm";

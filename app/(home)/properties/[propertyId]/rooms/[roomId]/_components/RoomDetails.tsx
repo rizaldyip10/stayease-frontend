@@ -73,7 +73,7 @@ const RoomDetailsComponent: React.FC<RoomDetailsProps> = ({ room }) => {
             <Image
               src={room.imageUrl || "/api/placeholder/800/400"}
               alt={room.roomName}
-              layout="fill"
+              fill
               objectFit="cover"
               className="rounded-lg"
             />

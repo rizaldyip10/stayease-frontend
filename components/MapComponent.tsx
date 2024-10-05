@@ -36,6 +36,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
     mapRef,
     markerRef,
     propertyMarkersRef,
+    updateMarkerAndMap,
   } = useGoogleMaps({
     initialCenter,
     onLocationChange,
@@ -69,6 +70,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
             mapRef={mapRef}
             markerRef={markerRef}
             propertyMarkersRef={propertyMarkersRef}
+            updateMarkerAndMap={updateMarkerAndMap}
           />
         );
     }

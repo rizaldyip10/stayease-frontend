@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface TeamMember {
   name: string;
@@ -58,13 +59,12 @@ const Teams: React.FC = () => {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 md:gap-8">
           {team.map((member, index) => (
             <div key={index} className="text-center">
-              <Image
-                src={member.avatar}
-                alt={member.name}
-                width={100}
-                height={100}
-                className="rounded-full mx-auto mb-4"
-              />
+              <Avatar className="w-20 h-20 mx-auto">
+                <AvatarImage src={member?.avatar} alt="avatar" />
+                <AvatarFallback className="text-4xl">
+                  {member?.name[0]}
+                </AvatarFallback>
+              </Avatar>
               <h3 className="font-semibold text-gray-800 text-sm md:text-base">
                 {member.name}
               </h3>

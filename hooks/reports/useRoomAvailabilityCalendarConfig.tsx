@@ -55,7 +55,7 @@ export const useRoomAvailabilityCalendarConfig = (
       // One day added to the end date to ensure it is included in the range
       const endDate = new Date(availability.endDate);
       endDate.setDate(endDate.getDate() + 1); // Move to the next day
-      endDate.setHours(0, 0, 0, 0); // Set time to 00:00
+      endDate.setHours(23, 59, 59, 999); // Set time to end of day
 
       return {
         id: availability.id.toString(),

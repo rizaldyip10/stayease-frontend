@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { ErrorMessage, Field, useFormikContext } from "formik";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -32,15 +32,14 @@ const propertyFields = [
 const PropertyForm: React.FC = () => {
   const { values, setFieldValue } = useFormikContext<PropertyFormValues>();
 
-  const handleLocationChange = (lat: number, lng: number) => {
-    setFieldValue("property.latitude", lat);
-    setFieldValue("property.longitude", lng);
-    console.log("Location changed to:", lat, lng);
-  };
-
-  useEffect(() => {
-    console.log("Field values:", values);
-  }, [setFieldValue, values]);
+  const handleLocationChange = useCallback(
+    (lat: number, lng: number) => {
+      setFieldValue("property.latitude", lat);
+      setFieldValue("property.longitude", lng);
+      console.log("Location changed to:", lat, lng);
+    },
+    [setFieldValue],
+  );
 
   return (
     <div className="mb-4">

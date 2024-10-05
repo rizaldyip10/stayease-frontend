@@ -15,11 +15,11 @@ const MiniHero = () => {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center">
         <div className="side-picture h-[500px] md:w-1/2 hidden md:block mb-8 md:mb-0">
           <div className="relative w-full h-full">
-            <div className="w-2/3 h-2/3">
+            <div className="relative w-2/3 h-2/3">
               <Image
                 src={`https://res.cloudinary.com/duxay6ujg/image/upload/v1726767340/Mask_group_1_wc5ilc.png`}
                 alt="Building"
-                layout="fill"
+                fill
                 objectFit="scale-down"
                 className=""
               />
@@ -28,7 +28,7 @@ const MiniHero = () => {
               <Image
                 src={`https://res.cloudinary.com/duxay6ujg/image/upload/v1726767340/catarina-carvalho-cqMwRNd0i7I-unsplash_aimgbo.png`}
                 alt="Door"
-                layout="fill"
+                fill
                 objectFit="scale-down"
                 className=""
               />
