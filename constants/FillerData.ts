@@ -8,7 +8,7 @@ export const heroImages = [
     alt: "Hero Image 2",
   },
   {
-    src: "/login-pic.webp",
+    src: "https://res.cloudinary.com/duxay6ujg/image/upload/v1728102116/login-pic_js0mdl.webp",
     alt: "Hero Image 3",
   },
   {
