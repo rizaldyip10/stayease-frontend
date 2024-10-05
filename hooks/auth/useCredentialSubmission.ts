@@ -55,7 +55,7 @@ export const useCredentialSubmission = (userType: UserType) => {
     } catch (error: any) {
       setError("An error occurred");
       showAlert("error", error.message);
-      console.error("Error details:", error?.response?.data?.message);
+      console.error("Error details:", error);
     } finally {
       setIsLoading(false);
       actions.setSubmitting(false);

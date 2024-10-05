@@ -1,4 +1,4 @@
-import logo from "@/assets/images/logo_horizontal.png";
+import logo from "@/public/stayease-logo.webp";
 import Image from "next/image";
 import SidebarRoutes from "@/app/dashboard/_components/SidebarRoutes";
 import Link from "next/link";

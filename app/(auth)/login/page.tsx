@@ -1,10 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
-import SidePicture from "@/app/(auth)/_components/SidePicture";
-import { AnimatePresence, motion } from "framer-motion";
-import { useSession } from "next-auth/react";
-import AuthFormSection from "@/app/(auth)/_components/AuthFormSection";
-import PageWrapper from "@/components/PageWrapper";
+import React from "react";
 import AuthPage from "@/app/(auth)/_components/AuthPage";
 
 const LogIn: React.FC = () => {
@@ -12,7 +7,7 @@ const LogIn: React.FC = () => {
     <div>
       <AuthPage
         formType="login"
-        pictureSrc={`/login-pic.webp`}
+        pictureSrc={`https://res.cloudinary.com/duxay6ujg/image/upload/v1728102116/login-pic_js0mdl.webp`}
         sidePic="left"
       />
     </div>
