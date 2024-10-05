@@ -1,3 +1,8 @@
+# This Dockerfile is used to build a production image for deployment purposes
+# Commands without docker-compose:
+# Command to build the image: docker build -t (image name:tag) .
+# Command to run the image: docker run -p 3000:3000 --env-file (env file name) (image name:tag)
+
 # Use the official Node.js image as the base image
 FROM node:18-alpine AS base
 
