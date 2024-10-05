@@ -17,9 +17,9 @@ RUN yarn build
 
 # Setup production image
 FROM base AS runner
-ENV NODE_ENV=production
+ENV LOCAL_ENV=true
 
-# Install curl and other necessary packages for debugging purposes
+# Install curl for debugging purposes
 RUN apk add --no-cache libc6-compat vips-dev gcc g++ make python3 curl
 
 # Copy necessary files
