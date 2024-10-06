@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import authService from "@/services/authService";
 import { FormType } from "@/constants/Types";
 import { profileService } from "@/services/profileService";
+import { passwordService } from "@/services/passwordService";
 
 export const useCheckToken = ({
   formType,
@@ -18,7 +19,7 @@ export const useCheckToken = ({
     formType === "changeEmail"
       ? profileService.checkEmailChangeToken
       : formType === "forgotPassword"
-        ? authService.checkPasswordToken
+        ? passwordService.checkPasswordToken
         : authService.checkToken;
 
   const checkIsTokenValid = async () => {
