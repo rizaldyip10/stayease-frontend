@@ -4,18 +4,14 @@ import React, { useCallback, useEffect, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
 import { format, isValid, parseISO } from "date-fns";
 import { useBookingValues } from "@/hooks/transactions/useBookingValues";
 import { RoomWithAdjustedRatesType } from "@/constants/Property";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { usePropertySearch } from "@/hooks/properties/usePropertySearch";
+import CheckInCalendar from "@/app/(home)/properties/[propertyId]/rooms/[roomId]/_components/CheckInCalendar";
+import { currencyFormatter } from "@/utils/CurrencyFormatter";
 
 interface RoomDetailsProps {
   room: RoomWithAdjustedRatesType;
@@ -37,11 +33,6 @@ const RoomDetailsComponent: React.FC<RoomDetailsProps> = ({ room }) => {
       });
     }
   }, [searchParams, setBookingInfo]);
-  const formatDate = useCallback((dateString: string | null) => {
-    if (!dateString) return null;
-    const date = parseISO(dateString);
-    return isValid(date) ? format(date, "PPP") : null;
-  }, []);
 
   const handleDateSelect = useCallback(
     (field: "checkInDate" | "checkOutDate") => (date: Date | undefined) => {
@@ -84,15 +75,6 @@ const RoomDetailsComponent: React.FC<RoomDetailsProps> = ({ room }) => {
       `/book?checkInDate=${bookingValues.checkInDate}&checkOutDate=${bookingValues.checkOutDate}&roomId=${room.roomId}`,
     );
   }, [room.roomId, bookingValues, router]);
-
-  const formatPrice = useCallback((price: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(price);
-  }, []);
 
   const priceInfo = useMemo(() => {
     const priceChange = room.adjustedPrice - room.basePrice;
@@ -141,12 +123,12 @@ const RoomDetailsComponent: React.FC<RoomDetailsProps> = ({ room }) => {
                   Estimated price per night:
                 </p>
                 <h2 className="text-3xl font-bold mb-2">
-                  {formatPrice(room.adjustedPrice)}
+                  {currencyFormatter(room.adjustedPrice)}
                 </h2>
                 {priceInfo.priceChange !== 0 && (
                   <div>
                     <p className="text-sm text-gray-500 line-through">
-                      {formatPrice(room.basePrice)}
+                      {currencyFormatter(room.basePrice)}
                     </p>
                     <p
                       className={`text-sm ${priceInfo.isIncrease ? "text-red-600" : "text-green-600"}`}
@@ -157,63 +139,13 @@ const RoomDetailsComponent: React.FC<RoomDetailsProps> = ({ room }) => {
                   </div>
                 )}
               </div>
-              <div className="space-y-4 mb-4">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start">
-                      <span className="mr-auto">
-                        {formatDate(bookingValues.checkInDate) ||
-                          "Check-in Date"}
-                      </span>
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={
-                        bookingValues.checkInDate
-                          ? parseISO(bookingValues.checkInDate)
-                          : undefined
-                      }
-                      onSelect={handleDateSelect("checkInDate")}
-                      initialFocus
-                      disabled={(date) => date < new Date()}
-                    />
-                  </PopoverContent>
-                </Popover>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start">
-                      <span className="mr-auto">
-                        {formatDate(bookingValues.checkOutDate) ||
-                          "Check-out Date"}
-                      </span>
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={
-                        bookingValues.checkOutDate
-                          ? parseISO(bookingValues.checkOutDate)
-                          : undefined
-                      }
-                      onSelect={handleDateSelect("checkOutDate")}
-                      initialFocus
-                      disabled={(date) => date < new Date()}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <div className="flex justify-end">
-                <Button
-                  variant="link"
-                  onClick={resetFilters}
-                  className="underline -mt-5 text-xs"
-                >
-                  Reset dates
-                </Button>
-              </div>
+
+              <CheckInCalendar
+                bookingValues={bookingValues}
+                handleDateSelect={handleDateSelect}
+                resetFilters={resetFilters}
+              />
+
               <Button
                 className="w-full"
                 onClick={handleBookNow}
@@ -221,6 +153,7 @@ const RoomDetailsComponent: React.FC<RoomDetailsProps> = ({ room }) => {
               >
                 {room.isAvailable ? "Book Now" : "Not Available"}
               </Button>
+
               {!room.isAvailable && (
                 <p className="text-red-500 mt-2 text-sm text-center">
                   This room is not available for the selected date.
