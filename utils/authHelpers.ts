@@ -149,6 +149,10 @@ async function shouldRefreshTokens(token: any) {
   const isAccessTokenNearExpiry = authService.isAccessTokenNearExpiry(token);
   const isRefreshTokenNearExpiry =
     token.expiresAt && token.expiresAt - Date.now() < 15 * 60 * 1000;
+  logger.debug("Token expiry check", {
+    isAccessTokenNearExpiry,
+    isRefreshTokenNearExpiry,
+  });
   return isAccessTokenNearExpiry || isRefreshTokenNearExpiry;
 }
 

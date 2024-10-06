@@ -83,9 +83,7 @@ export const authService = {
     if (!token || !token.accessToken) return true;
     try {
       const decoded = JSON.parse(atob(token.accessToken.split(".")[1]));
-      const isNearExpiry = decoded.exp * 1000 < Date.now() + 5 * 60 * 1000;
-      logger.debug("Access token expiry check", { isNearExpiry });
-      return isNearExpiry;
+      return decoded.exp * 1000 < Date.now() + 5 * 60 * 1000;
     } catch (error) {
       logger.error("Error decoding accessToken", { error });
       return true;
