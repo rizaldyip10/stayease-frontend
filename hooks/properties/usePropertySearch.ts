@@ -31,8 +31,11 @@ export const usePropertySearch = () => {
   // Update URL parameters with new filters
   const updateSearchParams = useCallback(
     (filters: Partial<FilterOptions>) => {
+      const currentPath = new URL(window.location.href).pathname;
       const newParams = buildSearchParams(filters);
-      router.replace(`/properties?${newParams.toString()}`, { scroll: false });
+      router.replace(`${currentPath}?${newParams.toString()}`, {
+        scroll: false,
+      });
     },
     [router],
   );
@@ -51,5 +54,9 @@ export const usePropertySearch = () => {
     [router],
   );
 
-  return { getUrlFilters, handleRedirect, updateSearchParams };
+  const resetFilters = useCallback(() => {
+    updateSearchParams(initialFilters);
+  }, [updateSearchParams]);
+
+  return { getUrlFilters, handleRedirect, updateSearchParams, resetFilters };
 };

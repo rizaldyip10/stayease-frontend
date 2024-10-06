@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,31 +9,25 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useBookingValues } from "@/hooks/transactions/useBookingValues";
 import RoomCard from "@/app/(home)/properties/[propertyId]/_components/RoomCard";
 import PriceCalendar from "@/app/(home)/properties/[propertyId]/_components/PriceCalendar";
 import { CurrentAvailablePropertyType } from "@/constants/Property";
-import { usePropertyCurrentDetails } from "@/hooks/properties/usePropertyCurrentDetails";
 import PropertyHeader from "@/app/(home)/properties/[propertyId]/_components/PropertyHeader";
 import { useDateSelection } from "@/hooks/utils/useDateSelection";
 import MapComponent from "@/components/MapComponent";
-import PropertyDetailsSkeleton from "@/app/(home)/properties/[propertyId]/_components/PropertyDetailsSkeleton";
 import { useSearchParams } from "next/navigation";
 
 interface PropertyDetailsProps {
-  property: CurrentAvailablePropertyType;
-  propertyId: number;
+  currentProperty: CurrentAvailablePropertyType;
 }
 
 const PropertyDetails: React.FC<PropertyDetailsProps> = ({
-  property,
-  propertyId,
+  currentProperty,
 }) => {
   const searchParams = useSearchParams();
   const startDate = searchParams.get("startDate") || undefined;
   const endDate = searchParams.get("endDate") || undefined;
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  const { bookingValues, setBookingInfo } = useBookingValues();
   const {
     checkInDate,
     checkOutDate,
@@ -42,42 +36,23 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
     handleReset,
   } = useDateSelection({ startDate, endDate });
 
-  // Use the hook to refetch data when selectedDate changes
-  const { currentProperty, isLoading, error } = usePropertyCurrentDetails(
-    propertyId,
-    checkInDate ? checkInDate : new Date(),
-  );
-
   // to refer to the room cards
   const mapRef = useRef<HTMLDivElement>(null);
 
-  // to display the current property
-  // (property will be refetched if day is changed, bc room availability changes)
-  const displayProperty = currentProperty || property;
   const availableRooms = useMemo(
-    () => displayProperty?.rooms || [],
-    [displayProperty],
+    () => currentProperty?.rooms || [],
+    [currentProperty],
   );
   const unavailableRooms = useMemo(
-    () => displayProperty?.unavailableRooms || [],
-    [displayProperty],
+    () => currentProperty?.unavailableRooms || [],
+    [currentProperty],
   );
-
-  useEffect(() => {
-    setBookingInfo({
-      checkInDate: undefined,
-      checkOutDate: undefined,
-    });
-  }, [setBookingInfo]);
-
-  if (isLoading) return <PropertyDetailsSkeleton type="property" />;
-  if (error) return <div>Error updating: {error.message}</div>;
 
   return (
     <div className="container md:relative mx-auto p-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2">
-          <PropertyHeader property={displayProperty} />
+          <PropertyHeader property={currentProperty!} />
 
           <Tabs defaultValue="description">
             <TabsList>
@@ -85,23 +60,23 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
               <TabsTrigger value="facilities">Info</TabsTrigger>
             </TabsList>
             <TabsContent value="description">
-              <p>{displayProperty.description}</p>
+              <p>{currentProperty?.description}</p>
             </TabsContent>
             <TabsContent value="facilities">
               <ul>
-                <li>Address: {displayProperty.address}</li>
-                <li>City: {displayProperty.city}</li>
-                <li>Country: {displayProperty.country}</li>
-                <li>Rooms: {property?.rooms?.length}</li>
+                <li>Address: {currentProperty?.address}</li>
+                <li>City: {currentProperty?.city}</li>
+                <li>Country: {currentProperty?.country}</li>
+                <li>Rooms: {currentProperty?.rooms?.length}</li>
                 <li>
                   Total capacity:{" "}
-                  {property?.rooms?.reduce(
+                  {currentProperty?.rooms?.reduce(
                     (acc, room) => acc + room.roomCapacity,
                     0,
                   )}
                 </li>
                 <li className="text-sm mt-6">
-                  Leased by: {displayProperty.tenant}
+                  Leased by: {currentProperty?.tenant}
                 </li>
               </ul>
             </TabsContent>
@@ -112,8 +87,8 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
             <div id="map" className="w-full h-64 bg-gray-200 mb-4">
               <MapComponent
                 initialCenter={{
-                  lat: displayProperty.latitude,
-                  lng: displayProperty.longitude,
+                  lat: currentProperty?.latitude || 0,
+                  lng: currentProperty?.longitude || 0,
                 }}
                 onLocationChange={() => {}} // No-op function as we don't need to change location
                 isEditable={false}
@@ -121,8 +96,8 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
               />
             </div>
             <p>
-              {displayProperty.address}, {displayProperty.city},{" "}
-              {displayProperty.country}
+              {currentProperty?.address}, {currentProperty?.city},{" "}
+              {currentProperty?.country}
             </p>
           </div>
         </div>
@@ -149,7 +124,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0">
                       <PriceCalendar
-                        propertyId={displayProperty.id}
+                        propertyId={currentProperty?.id || 0}
                         onSelect={handleDateSelect}
                         onReset={handleReset}
                         onConfirm={() => setIsCalendarOpen(false)}
@@ -195,12 +170,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
             {availableRooms
               ?.sort((a, b) => a.basePrice - b.basePrice)
               .map((room) => (
-                <RoomCard
-                  key={room.roomId}
-                  room={room}
-                  bookingValues={bookingValues}
-                  isAvailable={true}
-                />
+                <RoomCard key={room.roomId} room={room} isAvailable={true} />
               ))}
             {unavailableRooms.length > 0 && (
               <>
@@ -209,12 +179,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
                 </h2>
 
                 {unavailableRooms?.map((room) => (
-                  <RoomCard
-                    key={room.roomId}
-                    room={room}
-                    bookingValues={bookingValues}
-                    isAvailable={false}
-                  />
+                  <RoomCard key={room.roomId} room={room} isAvailable={false} />
                 ))}
               </>
             )}

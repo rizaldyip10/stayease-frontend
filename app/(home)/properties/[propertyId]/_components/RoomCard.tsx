@@ -7,25 +7,17 @@ import {
   UnavailableRoomType,
 } from "@/constants/Property";
 import Image from "next/image";
+import { usePropertySearch } from "@/hooks/properties/usePropertySearch";
+import { buildSearchParams } from "@/utils/urlBuilder";
 
 interface RoomCardProps {
   room: RoomWithAdjustedRatesType | UnavailableRoomType;
-  bookingValues: Record<string, string>;
   isAvailable: boolean;
 }
 
-const RoomCard: React.FC<RoomCardProps> = ({
-  room,
-  bookingValues,
-  isAvailable,
-}) => {
-  const roomDetailsUrl = `/properties/${room.propertyId}/rooms/${room.roomId}?${new URLSearchParams(
-    Object.fromEntries(
-      Object.entries(bookingValues).filter(
-        ([key, value]) => value !== null && value !== undefined,
-      ),
-    ),
-  ).toString()}`;
+const RoomCard: React.FC<RoomCardProps> = ({ room, isAvailable }) => {
+  const { getUrlFilters } = usePropertySearch();
+  const roomDetailsUrl = `/properties/${room.propertyId}/rooms/${room.roomId}?${buildSearchParams(getUrlFilters())}`;
 
   return (
     <Card
