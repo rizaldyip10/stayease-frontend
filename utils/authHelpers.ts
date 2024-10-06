@@ -1,13 +1,14 @@
 import authService from "@/services/authService";
 import logger from "@/utils/logger";
 import { AuthResponse } from "@/constants/Auth";
+import { oAuth2Service } from "@/services/oAuth2Service";
 
 export async function handleGoogleSignIn({ user, account, profile }: any) {
   if (account?.provider === "google") {
     logger.info("Google sign in initiated", { email: user.email });
     try {
       const userExists = user.email
-        ? await authService.checkUserExists(user.email)
+        ? await oAuth2Service.checkUserExists(user.email)
         : false;
       if (!userExists) {
         user.googleToken = account.id_token;
@@ -18,7 +19,7 @@ export async function handleGoogleSignIn({ user, account, profile }: any) {
         return true;
       }
       if (account.id_token) {
-        const authResponse = await authService.exchangeCode(account.id_token);
+        const authResponse = await oAuth2Service.exchangeCode(account.id_token);
         Object.assign(user, authResponse);
         user.googleToken = undefined;
         user.isNewUser = false;
