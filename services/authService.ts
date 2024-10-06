@@ -3,8 +3,6 @@ import { UserType } from "@/constants/Types";
 import axiosInterceptor from "@/utils/axiosInterceptor";
 import {
   AuthResponse,
-  ExchangeCodeRequest,
-  ForgotPasswordValues,
   RefreshResponse,
   RegisterResponse,
   TokenCheckResponse,
@@ -13,7 +11,6 @@ import {
 import logger from "@/utils/logger";
 import { FormikValues } from "formik";
 import { logError } from "@/utils/errorHandler";
-import axios from "axios";
 
 export const authService = {
   register: async (

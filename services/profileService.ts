@@ -116,7 +116,7 @@ export const profileService = {
       logger.info("Checking email change token");
       const response = await axiosInterceptor.post(
         config.endpoints.users.checkToken,
-        token,
+          {token},
       );
       logger.info("Email change token is valid");
       return response.data;
