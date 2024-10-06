@@ -43,7 +43,7 @@ export const authService = {
     try {
       const response = await axiosInterceptor.post(
         config.endpoints.registration.checkToken,
-        token,
+        { token },
       );
       console.log("Calling check token endpoint, token: ", token);
       return response.data;
@@ -88,7 +88,7 @@ export const authService = {
       logger.info("Checking if user exists", { email });
       const response = await axiosInterceptor.post(
         config.endpoints.oauth2.checkUserExists,
-        email,
+        { email },
       );
       logger.info("User existence check complete", {
         email,
@@ -127,7 +127,7 @@ export const authService = {
       logger.info("Exchanging code for tokens");
       const response = await axiosInterceptor.post(
         config.endpoints.oauth2.exchangeCode,
-        code,
+        { token: code },
       );
       logger.info("Code exchange successful");
       return response.data.data;
@@ -156,7 +156,7 @@ export const authService = {
       logger.info("Refreshing both tokens");
       const response = await axiosInterceptor.post(
         config.endpoints.auth.refreshToken,
-        refreshToken,
+        { token: refreshToken },
       );
       logger.info("Both tokens refreshed successfully");
       return response.data.data;
@@ -173,7 +173,7 @@ export const authService = {
       logger.info("Refreshing access token");
       const response = await axiosInterceptor.post(
         config.endpoints.auth.refreshAccessToken,
-        refreshToken,
+        { token: refreshToken },
       );
       logger.info("Access token refreshed successfully");
       return response.data.data;
@@ -196,12 +196,11 @@ export const authService = {
 
   forgotPassword: async (email: string): Promise<any> => {
     try {
-      logger.info("Initiating forgot password", { email });
       const res = await axiosInterceptor.post(
         config.endpoints.password.forgot,
         { email },
       );
-      logger.info("Forgot password successful", { email });
+      logger.info("Forgot password request sent", { email });
       return res.data;
     } catch (error: any) {
       try {
@@ -210,7 +209,6 @@ export const authService = {
           { email },
         );
         logger.info("Unlogged user requesting for forgot password", { email });
-        logger.info("Forgot password successful", response.data);
         return response.data;
       } catch (error: any) {
         logger.error("Forgot password failed", { error, email });
@@ -224,7 +222,7 @@ export const authService = {
       logger.info("Checking password reset token");
       const response = await axiosInterceptor.post(
         config.endpoints.password.checkToken,
-        token,
+        { token },
       );
       logger.info("Password reset token is valid");
       return response.data;
