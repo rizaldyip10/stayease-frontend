@@ -1,17 +1,12 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { FormType, UserType } from "@/constants/Types";
+import React from "react";
+import { FormType } from "@/constants/Types";
 import AuthCard from "@/app/(auth)/_components/AuthCard";
 import MultiStepForm from "@/app/(auth)/_components/MultiStepForm";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useGoogleLogin } from "@/hooks/auth/useGoogleLogin";
-import { FormikHelpers, FormikValues } from "formik";
 import { useSession } from "next-auth/react";
-import logger from "@/utils/logger";
 import ResetPassword from "@/app/(auth)/_components/ResetPassword";
 import SelectUserForm from "@/app/(auth)/_components/SelectUserForm";
-import GlobalLoading from "@/components/GlobalLoading";
-import { useCredentialSubmission } from "@/hooks/auth/useCredentialSubmission";
 
 interface AuthFormProps {
   className?: string;
