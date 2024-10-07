@@ -60,3 +60,14 @@ export type ReportStatsType = {
   label: string;
   value: number | null | undefined;
 };
+
+export type UserOverviewStatsType = {
+    upcomingTrips: number;
+    pastStays: number;
+};
+
+export type UserStatsType = {
+    icon: LucideIcon;
+    label: string;
+    value: number | null | undefined;
+};

@@ -6,7 +6,7 @@ import {
     MonthlySalesType,
     OverviewSummaryTypes,
     PopularRoomType, PropertySalesType,
-    ReportsQueryType
+    ReportsQueryType, UserOverviewStatsType
 } from "@/constants/Reports";
 import {BookingDataType} from "@/constants/Booking";
 
@@ -72,6 +72,15 @@ export const reportService = {
             const {data} = await axiosInterceptor.get(config.endpoints.reports.propertySales, {
                 params: query
             });
+            return data.data;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    },
+    getUserStats: async (): Promise<UserOverviewStatsType> => {
+        try {
+            const {data} = await axiosInterceptor.get(config.endpoints.reports.userStats);
             return data.data;
         } catch (error) {
             console.log(error);

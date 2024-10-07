@@ -94,7 +94,8 @@ export const config = {
       recentTrx: "/reports/overview/recent-completed-transactions",
       dailySales: "/reports/properties",
       popularRooms: "/reports/properties/popular",
-      propertySales: "/reports/properties/sales"
+      propertySales: "/reports/properties/sales",
+      userStats: "/reports/user-stats"
     },
   },
 };

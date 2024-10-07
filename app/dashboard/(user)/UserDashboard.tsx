@@ -9,9 +9,11 @@ import { useProfile } from "@/context/ProfileContext";
 import ProfileCard from "@/app/dashboard/(user)/_components/ProfileCard";
 import GlobalLoading from "@/components/GlobalLoading";
 import ErrorComponent from "@/components/ErrorComponent";
+import {useUserStats} from "@/hooks/reports/useUserStats";
 
 const UserDashboard: React.FC = () => {
   const { profile, isLoading, error } = useProfile();
+  const { userStats } = useUserStats();
 
   if (!profile)
     return (
@@ -26,18 +28,8 @@ const UserDashboard: React.FC = () => {
 
   // !! TODO: Replace with real data
   const stats = [
-    { icon: <Home className="h-4 w-4" />, label: "Upcoming Trips", value: "2" },
-    {
-      icon: <CalendarDays className="h-4 w-4" />,
-      label: "Past Stays",
-      value: "5",
-    },
-    {
-      icon: <MessageSquare className="h-4 w-4" />,
-      label: "Messages",
-      value: "3",
-    },
-    { icon: <Star className="h-4 w-4" />, label: "Avg. Rating", value: "4.9" },
+    { icon: Home, label: "Upcoming Trips", value: userStats?.upcomingTrips },
+    { icon: CalendarDays, label: "Past Stays", value: userStats?.pastStays }
   ];
 
   const actions = [
