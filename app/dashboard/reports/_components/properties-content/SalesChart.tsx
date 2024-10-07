@@ -3,13 +3,17 @@
 import {Line, LineChart, ResponsiveContainer, XAxis, YAxis} from "recharts";
 import {useDailySales} from "@/hooks/reports/usePropertiesReport";
 import {currencyFormatter} from "@/utils/CurrencyFormatter";
+import {useReportParams} from "@/hooks/reports/useReportParams";
 
 const SalesChart = () => {
+    const { reportParams } = useReportParams();
     const {
         dailySales,
         dailySalesIsLoading,
         dailySalesError
-    } = useDailySales();
+    } = useDailySales(reportParams);
+
+    console.log(reportParams.month)
 
     if (dailySalesIsLoading || !dailySales) return <>Loading...</>
     if (dailySalesError) return <>Something went wrong</>

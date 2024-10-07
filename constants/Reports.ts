@@ -2,6 +2,12 @@ export type OverviewSummaryTypes = {
     trxDiff: TrxDiffType;
     usersDiff: UsersDiffType;
     totalProperties: number;
+    revenueDiff: RevenueDiffType;
+};
+
+export type RevenueDiffType = {
+    revenueThisMonth: number;
+    revenueDiffPercent: number;
 };
 
 export type TrxDiffType = {
@@ -32,6 +38,17 @@ export type DailySalesType = {
 };
 
 export type ReportsQueryType = {
-    month: string;
-    year: string;
+    month: string | null;
+    year: string | null;
+    propertyId: number | null;
+};
+
+export type PropertySalesType = {
+    revenue: number;
+    tax: number;
+};
+
+export type PropertiesSelectType = {
+    id: number;
+    propertyName: string;
 }

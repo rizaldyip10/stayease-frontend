@@ -9,34 +9,43 @@ import {
     SelectValue
 } from "@/components/ui/select";
 import {FC} from "react";
+import {useReportParams} from "@/hooks/reports/useReportParams";
+import {useQueryClient} from "@tanstack/react-query";
 
 const months = [
-    {id: 1, month: "january"},
-    {id: 2, month: "february"},
-    {id: 3, month: "march"},
-    {id: 4, month: "april"},
-    {id: 5, month: "may"},
-    {id: 6, month: "june"},
-    {id: 7, month: "july"},
-    {id: 8, month: "august"},
-    {id: 9, month: "september"},
-    {id: 10, month: "october"},
-    {id: 11, month: "november"},
-    {id: 12, month: "december"},
+    {id: 1, month: "January"},
+    {id: 2, month: "February"},
+    {id: 3, month: "March"},
+    {id: 4, month: "April"},
+    {id: 5, month: "May"},
+    {id: 6, month: "June"},
+    {id: 7, month: "July"},
+    {id: 8, month: "August"},
+    {id: 9, month: "September"},
+    {id: 10, month: "October"},
+    {id: 11, month: "November"},
+    {id: 12, month: "December"},
 ];
 
 const MonthSelection: FC = () => {
+    const queryClient = useQueryClient();
+    const {reportParams, handleParamsChange} = useReportParams();
+
     const date = new Date();
     const thisMonth = date.getMonth();
 
     const handleSelectMonth = (selectedMonth: string) => {
-        console.log(selectedMonth);
-    }
+        handleParamsChange({month: selectedMonth});
+        queryClient.invalidateQueries({queryKey: ["get-daily-sales"]});
+
+    };
+
+    const placeholder = reportParams.month ? reportParams.month : months[thisMonth].month;
 
     return (
         <Select onValueChange={handleSelectMonth}>
             <SelectTrigger className="w-52">
-                <SelectValue placeholder={months[thisMonth].month} className="text-blue-950 capitalize" />
+                <SelectValue placeholder={placeholder} className="text-blue-950 capitalize" />
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>

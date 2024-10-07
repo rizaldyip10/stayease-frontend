@@ -18,7 +18,7 @@ const SalesSummary = () => {
     if (summaryError) return <>Something went wrong</>
     return (
         <div className="w-full grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <RevenueCard />
+            <RevenueCard revenueDiff={summary.revenueDiff} />
             <PaidCompleteTrxCard trxDiff={summary.trxDiff} />
             <UsersCard usersDiff={summary.usersDiff} />
             <PropertiesCard totalProperties={summary.totalProperties} />

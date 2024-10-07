@@ -5,7 +5,7 @@ import {
     DailySalesType,
     MonthlySalesType,
     OverviewSummaryTypes,
-    PopularRoomType,
+    PopularRoomType, PropertySalesType,
     ReportsQueryType
 } from "@/constants/Reports";
 import {BookingDataType} from "@/constants/Booking";
@@ -59,6 +59,17 @@ export const reportService = {
     getDailySales: async (query?: Partial<ReportsQueryType>): Promise<DailySalesType[]> => {
         try {
             const {data} = await axiosInterceptor.get(config.endpoints.reports.dailySales, {
+                params: query
+            });
+            return data.data;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    },
+    getPropertiesSales: async (query?: Partial<ReportsQueryType>): Promise<PropertySalesType> => {
+        try {
+            const {data} = await axiosInterceptor.get(config.endpoints.reports.propertySales, {
                 params: query
             });
             return data.data;

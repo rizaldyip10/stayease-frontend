@@ -6,7 +6,7 @@ import SalesChart from "@/app/dashboard/reports/_components/properties-content/S
 const DailySalesCard = () => {
     return (
         <Card className="col-span-4 text-blue-950">
-            <CardHeader>
+            <CardHeader className="w-full flex flex-row justify-between items-center">
                 <CardTitle>Month Sales</CardTitle>
             </CardHeader>
             <CardContent className="pl-2">
