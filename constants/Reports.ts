@@ -1,3 +1,5 @@
+import {LucideIcon} from "lucide-react";
+
 export type OverviewSummaryTypes = {
     trxDiff: TrxDiffType;
     usersDiff: UsersDiffType;
@@ -51,4 +53,10 @@ export type PropertySalesType = {
 export type PropertiesSelectType = {
     id: number;
     propertyName: string;
-}
+};
+
+export type ReportStatsType = {
+  icon: LucideIcon;
+  label: string;
+  value: number | null | undefined;
+};
