@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useProfile } from "@/context/ProfileContext";
 import {
   Dialog,
@@ -9,7 +9,8 @@ import {
 import { Button } from "@/components/ui/button";
 import ImageDropZone from "@/components/ImageDropZone";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useSession } from "next-auth/react";
+import { useAvatarUpload } from "@/hooks/utils/useAvatarUpload";
+import LoadingButton from "@/components/LoadingButton";
 
 interface AvatarUploadModalProps {
   isOpen: boolean;
@@ -20,65 +21,15 @@ const AvatarUploadModal: React.FC<AvatarUploadModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const { profile, uploadAvatar, removeAvatar } = useProfile();
-  const { data: session } = useSession();
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | undefined>(
-    session?.user?.avatarUrl,
-  );
-  const [isUploading, setIsUploading] = useState(false);
-
-  const resetState = () => {
-    setSelectedFile(null);
-    setPreviewUrl(session?.user?.avatarUrl);
-  };
-
-  useEffect(() => {
-    if (!isOpen) {
-      resetState();
-    }
-  }, [isOpen]);
-
-  const handleFileChange = (file: File | null) => {
-    if (file) {
-      setSelectedFile(file);
-      const reader = new FileReader();
-      reader.onload = () => {
-        setPreviewUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setSelectedFile(null);
-      setPreviewUrl(undefined);
-    }
-  };
-
-  const handleUpload = async () => {
-    if (!selectedFile) return;
-
-    setIsUploading(true);
-    try {
-      await uploadAvatar(selectedFile);
-      onClose();
-    } catch (error) {
-      console.error("Error uploading avatar:", error);
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  const handleRemove = async () => {
-    setIsUploading(true);
-    try {
-      await removeAvatar();
-      setPreviewUrl(undefined);
-      onClose();
-    } catch (error) {
-      console.error("Error removing avatar:", error);
-    } finally {
-      setIsUploading(false);
-    }
-  };
+  const { profile } = useProfile();
+  const {
+    selectedFile,
+    previewUrl,
+    isUploading,
+    handleFileChange,
+    handleUpload,
+    handleRemove,
+  } = useAvatarUpload(isOpen, onClose);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -89,10 +40,7 @@ const AvatarUploadModal: React.FC<AvatarUploadModalProps> = ({
         <div className="flex flex-col items-center gap-5">
           <div className="w-32 h-32 relative rounded-full overflow-hidden">
             <Avatar className="w-full h-full">
-              <AvatarImage
-                src={previewUrl || profile?.avatarUrl || ""}
-                alt="avatar"
-              />
+              <AvatarImage src={previewUrl} alt="avatar" />
               <AvatarFallback className="text-4xl">
                 {" "}
                 {profile?.firstName[0]}
@@ -101,12 +49,16 @@ const AvatarUploadModal: React.FC<AvatarUploadModalProps> = ({
           </div>
           <ImageDropZone onFileChange={handleFileChange} />
           <div className="flex gap-2">
-            <Button
-              onClick={handleUpload}
-              disabled={isUploading || !selectedFile}
-            >
-              {isUploading ? "Uploading..." : "Upload"}
-            </Button>
+            {isUploading ? (
+              <LoadingButton title="Uploading.." />
+            ) : (
+              <Button
+                onClick={handleUpload}
+                disabled={isUploading || !selectedFile}
+              >
+                Upload
+              </Button>
+            )}
             <Button
               onClick={handleRemove}
               disabled={isUploading}
