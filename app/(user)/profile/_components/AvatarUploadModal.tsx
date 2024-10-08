@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useProfile } from "@/context/ProfileContext";
 import {
   Dialog,
@@ -27,6 +27,17 @@ const AvatarUploadModal: React.FC<AvatarUploadModalProps> = ({
     session?.user?.avatarUrl,
   );
   const [isUploading, setIsUploading] = useState(false);
+
+  const resetState = () => {
+    setSelectedFile(null);
+    setPreviewUrl(session?.user?.avatarUrl);
+  };
+
+  useEffect(() => {
+    if (!isOpen) {
+      resetState();
+    }
+  }, [isOpen]);
 
   const handleFileChange = (file: File | null) => {
     if (file) {
