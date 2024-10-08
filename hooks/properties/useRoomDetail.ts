@@ -1,7 +1,7 @@
 "use client";
 
-import {useQuery} from "@tanstack/react-query";
-import {RoomType} from "@/constants/Property";
+import { useQuery } from "@tanstack/react-query";
+import { RoomType } from "@/constants/Property";
 import propertyService from "@/services/propertyService";
 
 export const useRoomDetail = (propertyId: number, roomId: number) => {

@@ -1,5 +1,5 @@
 import { AvailablePropertyType } from "@/constants/Property";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import propertyService from "@/services/propertyService";
 import { usePropertySearch } from "./usePropertySearch";
 import { buildSearchParams } from "@/utils/urlBuilder";

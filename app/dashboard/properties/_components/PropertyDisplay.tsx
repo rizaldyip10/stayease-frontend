@@ -1,6 +1,6 @@
 "use client";
 
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PropertyTable from "@/app/dashboard/properties/_components/PropertyTable";
 import RoomTable from "@/app/dashboard/properties/_components/RoomTable";
 

@@ -4,7 +4,7 @@ import Navbar from "@/app/(user)/_components/Navbar";
 import Footer from "@/app/(user)/_components/footer/Footer";
 import ContactForm from "@/app/(home)/_components/landing-page/ContactForm";
 import { AlertProvider } from "@/context/AlertContext";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 
 const RoutesLayout = ({ children }: { children: React.ReactNode }) => {
   return (

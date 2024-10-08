@@ -4,7 +4,6 @@ import { ErrorMessage, useField, useFormikContext } from "formik";
 import Image from "next/image";
 import { useImageUpload } from "@/hooks/utils/useImageUpload";
 import { Loader2 } from "lucide-react";
-import Error from "next/error";
 
 const MAX_FILE_SIZE = 1024 * 1024;
 
