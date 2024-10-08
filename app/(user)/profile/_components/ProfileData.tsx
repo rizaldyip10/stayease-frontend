@@ -19,8 +19,8 @@ const ProfilePage: React.FC = () => {
     toggleTenantEditing,
   } = useProfile();
 
-  const { data: sessions, status } = useSession();
-  const isUser = sessions?.user?.userType === "USER";
+  const { data: session, status } = useSession();
+  const isUser = session?.user?.userType === "USER";
 
   if (isLoading || !profile) return <ProfilePageSkeleton />;
   if (error) return <ErrorComponent message={error.message} fullPage />;
