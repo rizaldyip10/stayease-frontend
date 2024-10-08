@@ -7,9 +7,7 @@ export async function handleGoogleSignIn({ user, account, profile }: any) {
   if (account?.provider === "google") {
     logger.info("Google sign in initiated", { email: user.email });
     try {
-      const userExists = user.email
-        ? await oAuth2Service.checkUserExists(user.email)
-        : false;
+      const userExists = await oAuth2Service.checkUserExists(user.email);
       if (!userExists) {
         user.googleToken = account.id_token;
         user.isNewUser = true;

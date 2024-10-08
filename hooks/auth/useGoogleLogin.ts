@@ -22,7 +22,7 @@ export function useGoogleLogin() {
           "/register/select-user-type",
         );
       } else {
-        showAlert("success", "Login successful.", "/dashboard");
+        showAlert("info", "Redirecting to consent page...");
       }
     } catch (error: any) {
       console.error("Google login failed:", error);

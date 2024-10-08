@@ -5,7 +5,7 @@ import { logError } from "@/utils/errorHandler";
 import { AuthResponse, ExchangeCodeRequest } from "@/constants/Auth";
 
 export const oAuth2Service = {
-  checkUserExists: async (email: string): Promise<boolean> => {
+  checkUserExists: async (email: string): Promise<boolean | undefined> => {
     try {
       logger.info("Checking if user exists", { email });
       const response = await axiosInterceptor.post(
@@ -19,8 +19,7 @@ export const oAuth2Service = {
       return response.data.data;
     } catch (error: any) {
       logger.error("User existence check failed", { error, email });
-      logError(error);
-      return false;
+      throw error;
     }
   },
 
