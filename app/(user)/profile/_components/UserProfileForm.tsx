@@ -1,5 +1,5 @@
 import React from "react";
-import { Formik, Form } from "formik";
+import { Form, Formik } from "formik";
 import ProfileFormField from "@/app/(user)/profile/_components/ProfileFormField";
 import { UserProfile } from "@/constants/Users";
 

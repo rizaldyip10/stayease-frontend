@@ -1,6 +1,6 @@
 "use client";
 
-import { SidebarRoutesType, userMenuRoutes } from "@/constants/Routes";
+import { SidebarRoutesType } from "@/constants/Routes";
 import { FC } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
