@@ -25,7 +25,7 @@ export const useChangeEmail = () => {
         "Failed to send reset link. Please try again.",
         setError,
       );
-      showAlert("error", err);
+      setError(err);
     } finally {
       setIsLoading(false);
     }

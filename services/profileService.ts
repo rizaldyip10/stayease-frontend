@@ -107,7 +107,7 @@ export const profileService = {
       logger.info("Email change request successful");
     } catch (error: any) {
       logger.error("Email change request failed", { error });
-      throw error.response.data.statusMessage;
+      throw error.response.data.message;
     }
   },
 
@@ -122,7 +122,7 @@ export const profileService = {
       return response.data;
     } catch (error: any) {
       logger.error("Email change token is invalid", { error });
-      return error.response.data.statusMessage;
+      return error.response.data.message;
     }
   },
 
@@ -135,7 +135,7 @@ export const profileService = {
       logger.info("Email change verification successful");
     } catch (error: any) {
       logger.error("Email change verification failed", { error });
-      throw error.response.data.statusMessage;
+      throw error.response.data.message;
     }
   },
 
@@ -146,7 +146,7 @@ export const profileService = {
       logger.info("Account deletion successful");
     } catch (error: any) {
       logger.error("Account deletion failed", { error });
-      throw error.response.data.statusMessage;
+      throw error.response.data.message;
     }
   },
 };

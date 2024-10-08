@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import authService from "@/services/authService";
 import { FormType } from "@/constants/Types";
 import { profileService } from "@/services/profileService";
@@ -22,7 +22,7 @@ export const useCheckToken = ({
         ? passwordService.checkPasswordToken
         : authService.checkToken;
 
-  const checkIsTokenValid = async () => {
+  const checkIsTokenValid = useCallback(async () => {
     if (!token) return;
     setIsTokenValid(null); // Reset the state
     setIsLoading(true);
@@ -36,10 +36,11 @@ export const useCheckToken = ({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [token, checkService]);
+
   useEffect(() => {
     checkIsTokenValid();
-  }, [token]);
+  }, [token, checkIsTokenValid]);
 
   return { isLoading, error, isTokenValid };
 };
