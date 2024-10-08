@@ -107,7 +107,7 @@ export const profileService = {
       logger.info("Email change request successful");
     } catch (error: any) {
       logger.error("Email change request failed", { error });
-      throw error;
+      throw error.response.data.statusMessage;
     }
   },
 
@@ -116,13 +116,13 @@ export const profileService = {
       logger.info("Checking email change token");
       const response = await axiosInterceptor.post(
         config.endpoints.users.checkToken,
-          {token},
+        { token },
       );
       logger.info("Email change token is valid");
       return response.data;
     } catch (error: any) {
       logger.error("Email change token is invalid", { error });
-      return error.response.data;
+      return error.response.data.statusMessage;
     }
   },
 
@@ -135,7 +135,7 @@ export const profileService = {
       logger.info("Email change verification successful");
     } catch (error: any) {
       logger.error("Email change verification failed", { error });
-      throw error;
+      throw error.response.data.statusMessage;
     }
   },
 
@@ -146,7 +146,7 @@ export const profileService = {
       logger.info("Account deletion successful");
     } catch (error: any) {
       logger.error("Account deletion failed", { error });
-      throw error;
+      throw error.response.data.statusMessage;
     }
   },
 };

@@ -30,8 +30,8 @@ export const useCheckToken = ({
       const response = await checkService(token);
       setIsTokenValid(response.data);
     } catch (error: any) {
-      console.error(error.message);
-      setError(error.response.data.statusMessage);
+      console.error(error);
+      setError(error);
       setIsTokenValid(false);
     } finally {
       setIsLoading(false);
