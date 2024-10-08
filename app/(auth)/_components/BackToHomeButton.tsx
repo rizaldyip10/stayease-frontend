@@ -1,17 +1,23 @@
 import React from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { signOut } from "next-auth/react";
 
 const BackToHomeButton: React.FC = () => {
+  const router = useRouter();
+
+  const handleClick = async () => {
+    await signOut({ redirect: false });
+    router.push("/");
+  };
+
   return (
     <Button
       variant="link"
       className="text-blue-950 hover:underline font-light"
-      asChild
-      onClick={() => signOut()}
+      onClick={handleClick}
     >
-      <Link href="/">Back to Home</Link>
+      Back to Home
     </Button>
   );
 };
