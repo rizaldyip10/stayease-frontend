@@ -90,6 +90,13 @@ export const config = {
     },
     reports: {
       availabilityReports: "/properties/tenant/availability",
+      overviewReports: "/reports/overview",
+      monthlySales: "/reports/overview/monthly-sales",
+      recentTrx: "/reports/overview/recent-completed-transactions",
+      dailySales: "/reports/properties",
+      popularRooms: "/reports/properties/popular",
+      propertySales: "/reports/properties/sales",
+      userStats: "/reports/user-stats"
     },
   },
 };
