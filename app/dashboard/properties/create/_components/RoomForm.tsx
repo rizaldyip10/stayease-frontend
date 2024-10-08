@@ -7,19 +7,10 @@ import { Button } from "@/components/ui/button";
 
 interface RoomFormProps {
   index: number;
-  onImageUpload: (
-    file: File,
-    fieldName: string,
-    setFieldValue: (field: string, value: any) => void,
-  ) => Promise<void>;
   onRemove: () => void;
 }
 
-const RoomForm: React.FC<RoomFormProps> = ({
-  index,
-  onImageUpload,
-  onRemove,
-}) => {
+const RoomForm: React.FC<RoomFormProps> = ({ index, onRemove }) => {
   const { values, errors, touched, setFieldValue } =
     useFormikContext<FormikValues>();
 
@@ -55,8 +46,8 @@ const RoomForm: React.FC<RoomFormProps> = ({
       <div className="mt-4">
         <Label>Room Image</Label>
         <ImageUpload
-          name={`rooms.${index}.imageUrl`}
-          onImageUpload={onImageUpload}
+          fieldName={`rooms.${index}.imageUrl`}
+          uploadType="property"
         />
         {index > 0 && (
           <div className="grid md:grid-cols-7">

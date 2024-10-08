@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useChangeEmail } from "@/hooks/auth/useChangeEmail";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSearchParams } from "next/navigation";
@@ -17,9 +17,7 @@ const VerifyEmail: React.FC = () => {
     isLoading: isChangeEmailLoading,
     error: changeEmailError,
   } = useChangeEmail();
-  const [isVerified, setIsVerified] = useState(false);
-  const [initialized, setInitialized] = useState(false);
-
+  const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") || "";
 
@@ -32,6 +30,9 @@ const VerifyEmail: React.FC = () => {
     token: token,
   });
 
+  const [isVerified, setIsVerified] = useState(false);
+  const [initialized, setInitialized] = useState(false);
+
   if (isTokenValid === null || isTokenLoading) {
     return <GlobalLoading fullPage />;
   }
@@ -43,7 +44,6 @@ const VerifyEmail: React.FC = () => {
   }
 
   if (!token) {
-    const router = useRouter();
     router.push("/dashboard");
   }
 
@@ -83,7 +83,7 @@ const VerifyEmail: React.FC = () => {
                   onClick={handleSubmit}
                   className="bg-blue-950 text-white hover:text-blue-950"
                 >
-                  "Verify your new email address"
+                  Verify your new email address
                 </Button>
               )}
             </div>

@@ -1,9 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { usePropertyUtils } from "@/hooks/properties/usePropertyUtils";
-import {
-  FilterOptions,
-  usePropertyListings,
-} from "@/hooks/properties/usePropertyListings";
+import { usePropertyListings } from "@/hooks/properties/usePropertyListings";
 import SearchFilterCard from "@/app/(home)/properties/_components/SearchFilterCard";
 import { Button } from "@/components/ui/button";
 import { FilterIcon } from "lucide-react";
@@ -34,21 +31,7 @@ const PropertyListings: React.FC = () => {
 
   const handleLocationChange = useCallback((lat: number, lng: number) => {
     setMapCenter({ lat, lng });
-    // You might want to update filters or fetch new properties based on this location
   }, []);
-
-  const handleFilterChange = useCallback(
-    (newFilters: Partial<FilterOptions>) => {
-      updateFilters(newFilters);
-    },
-    [updateFilters],
-  );
-
-  const handleResetFilters = useCallback(() => {
-    resetFilters();
-  }, [resetFilters]);
-
-  if (error) return <div>Error: {error}</div>;
 
   const hasResults = properties && properties.length > 0;
 
@@ -62,8 +45,8 @@ const PropertyListings: React.FC = () => {
             cities={cities}
             categories={categories}
             filters={filters}
-            onFilterChange={handleFilterChange}
-            onResetFilters={handleResetFilters}
+            onFilterChange={updateFilters}
+            onResetFilters={resetFilters}
           />
         </div>
 
@@ -105,6 +88,7 @@ const PropertyListings: React.FC = () => {
                   <PropertyListingCard
                     key={property.propertyId}
                     property={property}
+                    currentFilters={filters}
                   />
                 ))}
               </div>

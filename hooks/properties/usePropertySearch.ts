@@ -1,85 +1,55 @@
-import { useSearchParams, useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
-import { FilterOptions } from "@/hooks/properties/usePropertyListings";
-import { parseISO, isValid, format } from "date-fns";
-import { useBookingValues } from "@/hooks/transactions/useBookingValues";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback } from "react";
+import {
+  FilterOptions,
+  initialFilters,
+} from "@/hooks/properties/usePropertyListings";
+import {
+  buildSearchParams,
+  buildUrl,
+  getFilterFromParams,
+} from "@/utils/urlBuilder";
 
 export const usePropertySearch = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [urlFilters, setUrlFilters] = useState<Partial<FilterOptions>>({});
-  const { bookingValues, setBookingInfo } = useBookingValues();
 
-  const initializeFiltersFromURL = useCallback(() => {
-    const newFilters: Partial<FilterOptions> = {};
-    const city = searchParams.get("city");
-    const minPrice = searchParams.get("minPrice");
-    const maxPrice = searchParams.get("maxPrice");
-    const startDate = searchParams.get("startDate");
-    const endDate = searchParams.get("endDate");
-    const categoryId = searchParams.get("categoryId");
-    const searchTerm = searchParams.get("searchTerm");
+  // Get filters from URL parameters
+  const getUrlFilters = useCallback(() => {
+    const filters = getFilterFromParams(searchParams);
+    return {
+      ...initialFilters,
+      ...Object.fromEntries(
+        Object.entries(filters).map(([key, value]) => [
+          key,
+          value ?? initialFilters[key as keyof FilterOptions],
+        ]),
+      ),
+    };
+  }, [searchParams]);
 
-    if (city) newFilters.city = city;
-    if (minPrice) newFilters.minPrice = parseInt(minPrice);
-    if (maxPrice) newFilters.maxPrice = parseInt(maxPrice);
-    if (startDate) {
-      const parsedStartDate = parseISO(startDate);
-      if (isValid(parsedStartDate)) {
-        newFilters.startDate = parsedStartDate;
-        setBookingInfo({ checkInDate: format(parsedStartDate, "yyyy-MM-dd") });
-      }
-    }
-    if (endDate) {
-      const parsedEndDate = parseISO(endDate);
-      if (isValid(parsedEndDate)) {
-        newFilters.endDate = parsedEndDate;
-        setBookingInfo({ checkOutDate: format(parsedEndDate, "yyyy-MM-dd") });
-      }
-    }
-    if (categoryId) newFilters.categoryId = categoryId;
-    if (searchTerm) newFilters.searchTerm = searchTerm;
-
-    setUrlFilters(newFilters);
-  }, [searchParams, setBookingInfo]);
-
-  useEffect(() => {
-    initializeFiltersFromURL();
-  }, [initializeFiltersFromURL]);
-
+  // Update URL parameters with new filters
   const updateSearchParams = useCallback(
     (filters: Partial<FilterOptions>) => {
-      const newSearchParams = new URLSearchParams();
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined && value !== "") {
-          if (value instanceof Date) {
-            const dateString = format(value, "yyyy-MM-dd");
-            newSearchParams.set(key, dateString);
-            if (key === "startDate") {
-              setBookingInfo({ checkInDate: dateString });
-            } else if (key === "endDate") {
-              setBookingInfo({ checkOutDate: dateString });
-            }
-          } else {
-            newSearchParams.set(key, value.toString());
-          }
-        }
-      });
-      return newSearchParams;
+      const newParams = buildSearchParams(filters);
+      router.replace(`/properties?${newParams.toString()}`, { scroll: false });
     },
-    [setBookingInfo],
+    [router],
   );
 
-  const handleSearch = useCallback(
-    (filters: Partial<FilterOptions>) => {
-      console.log("Search filters:", filters);
-      const newSearchParams = updateSearchParams(filters);
-      const newUrl = `/properties?${newSearchParams.toString()}`;
-      console.log("New URL:", newUrl);
+  // Handle redirect with filters and optional property/room IDs
+  const handleRedirect = useCallback(
+    (
+      filters: Partial<FilterOptions>,
+      basePath: string,
+      propertyId?: string,
+      roomId?: string,
+    ) => {
+      const newUrl = buildUrl(basePath, filters, { propertyId, roomId });
       router.push(newUrl);
     },
-    [updateSearchParams, router],
+    [router],
   );
 
-  return { urlFilters, updateSearchParams, bookingValues, handleSearch };
+  return { getUrlFilters, handleRedirect, updateSearchParams };
 };

@@ -15,11 +15,11 @@ const MiniHero = () => {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center">
         <div className="side-picture h-[500px] md:w-1/2 hidden md:block mb-8 md:mb-0">
           <div className="relative w-full h-full">
-            <div className="w-2/3 h-2/3">
+            <div className="relative w-2/3 h-2/3">
               <Image
                 src={`https://res.cloudinary.com/duxay6ujg/image/upload/v1726767340/Mask_group_1_wc5ilc.png`}
                 alt="Building"
-                layout="fill"
+                fill
                 objectFit="scale-down"
                 className=""
               />
@@ -28,7 +28,7 @@ const MiniHero = () => {
               <Image
                 src={`https://res.cloudinary.com/duxay6ujg/image/upload/v1726767340/catarina-carvalho-cqMwRNd0i7I-unsplash_aimgbo.png`}
                 alt="Door"
-                layout="fill"
+                fill
                 objectFit="scale-down"
                 className=""
               />
@@ -42,11 +42,11 @@ const MiniHero = () => {
             <span className="font-light tracking-wide">Ease</span>
           </h2>
           <p className="text-gray-600 mb-4">
-            At StayEase, we're all about helping you find the ideal room or
-            apartment, whether you're traveling for work, leisure, or just need
-            a temporary home. With a wide selection of comfortable and
-            affordable options, we've made it easier for you to find a place to
-            stay, hassle-free.
+            At StayEase, we&apos;re all about helping you find the ideal room or
+            apartment, whether you&apos;re traveling for work, leisure, or just
+            need a temporary home. With a wide selection of comfortable and
+            affordable options, we&apos;ve made it easier for you to find a
+            place to stay, hassle-free.
           </p>
           <p className="text-gray-600 mb-4">
             Our goal is to simplify the search for short-term accommodations,

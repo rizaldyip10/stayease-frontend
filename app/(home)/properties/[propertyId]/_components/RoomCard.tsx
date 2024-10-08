@@ -2,11 +2,14 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { AdjustedRatesType, UnavailableRoomType } from "@/constants/Property";
+import {
+  RoomWithAdjustedRatesType,
+  UnavailableRoomType,
+} from "@/constants/Property";
 import Image from "next/image";
 
 interface RoomCardProps {
-  room: AdjustedRatesType | UnavailableRoomType;
+  room: RoomWithAdjustedRatesType | UnavailableRoomType;
   bookingValues: Record<string, string>;
   isAvailable: boolean;
 }

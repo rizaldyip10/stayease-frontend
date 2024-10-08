@@ -55,11 +55,11 @@ export type CurrentAvailablePropertyType = {
   country: string;
   latitude: number;
   longitude: number;
-  rooms?: AdjustedRatesType[] | null;
+  rooms?: RoomWithAdjustedRatesType[] | null;
   unavailableRooms?: UnavailableRoomType[] | null;
 };
 
-export type AdjustedRatesType = {
+export type RoomWithAdjustedRatesType = {
   propertyId: number;
   propertyName: string;
   roomId: number;
@@ -121,6 +121,10 @@ export type RoomAvailabilityInfoType = {
 export type RoomAvailabilityType = {
   id: number;
   name: string;
-  propertySummary: { propertyId: number; propertyName: string, imageUrl: string };
+  propertySummary: {
+    propertyId: number;
+    propertyName: string;
+    imageUrl: string;
+  };
   roomAvailability: RoomAvailabilityInfoType[];
 };

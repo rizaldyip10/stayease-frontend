@@ -1,10 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import AuthFormSection from "@/app/(auth)/_components/AuthFormSection";
-import { AnimatePresence, motion } from "framer-motion";
-import SidePicture from "@/app/(auth)/_components/SidePicture";
-import { notFound, useSearchParams } from "next/navigation";
-import { authService } from "@/services/authService";
+import React from "react";
+import { useSearchParams } from "next/navigation";
 import AuthPage from "@/app/(auth)/_components/AuthPage";
 import ErrorComponent from "@/components/ErrorComponent";
 import GlobalLoading from "@/components/GlobalLoading";

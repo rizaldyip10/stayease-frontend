@@ -1,27 +1,22 @@
 import { useState } from "react";
-import {
-  availabilityService,
-  TenantRoomAvailabilityType,
-} from "@/services/availabilityService";
+import { TenantRoomAvailability } from "@/constants/RoomAvailability";
 import { useAlert } from "@/context/AlertContext";
 import { useFetchData } from "@/hooks/utils/useFetchData";
-import { useRouter } from "next/navigation";
+import { availabilityService } from "@/services/availabilityService";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const useRoomAvailability = () => {
   const [error, setError] = useState<string | null>(null);
   const { showAlert } = useAlert();
-  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const {
     data: availabilityData,
     error: dataError,
     isLoading: dataLoading,
-  } = useFetchData<TenantRoomAvailabilityType[]>(
-    "availabilityData",
-    async () => {
-      return availabilityService.getTenantRoomAvailability();
-    },
-  );
+  } = useFetchData<TenantRoomAvailability[]>("availabilityData", async () => {
+    return availabilityService.getTenantRoomAvailability();
+  });
 
   const setAvailability = async (
     roomId: number,
@@ -31,12 +26,12 @@ export const useRoomAvailability = () => {
     try {
       await availabilityService.setAvailability(roomId, { startDate, endDate });
       await availabilityService.getTenantRoomAvailability();
+      await queryClient.invalidateQueries({ queryKey: ["availabilityData"] });
       showAlert(
         "success",
         "Availability set successfully",
         "/dashboard/room-availability",
       );
-      router.refresh();
     } catch (err: any) {
       setError("Failed to set availability: " + err.message);
       showAlert("error", "Failed to set availability: " + err.message);
@@ -47,12 +42,12 @@ export const useRoomAvailability = () => {
     try {
       await availabilityService.removeAvailability(roomId, availabilityId);
       await availabilityService.getTenantRoomAvailability();
+      await queryClient.invalidateQueries({ queryKey: ["availabilityData"] });
       showAlert(
         "success",
         "Availability removed successfully",
         "/dashboard/room-availability",
       );
-      router.refresh();
     } catch (err: any) {
       setError("Failed to remove availability: " + err.message);
       showAlert("error", "Failed to remove availability: " + err.message);

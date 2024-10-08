@@ -18,7 +18,6 @@ const RoomEditForm: React.FC<RoomEditFormProps> = ({
   onRemove,
   propertyId,
 }) => {
-  const { handleImageUpload } = useImageUpload("property");
   const { values } = useFormikContext<any>();
   const room = values.rooms[index];
 
@@ -56,8 +55,8 @@ const RoomEditForm: React.FC<RoomEditFormProps> = ({
       <div className="mt-4">
         <Label>Room Image</Label>
         <ImageUpload
-          name={`rooms.${index}.imageUrl`}
-          onImageUpload={handleImageUpload}
+          fieldName={`rooms.${index}.imageUrl`}
+          uploadType="property"
         />
       </div>
       <div className="mt-4 flex justify-end space-x-2">

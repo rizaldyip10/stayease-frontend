@@ -11,13 +11,13 @@ const UnauthorizedPropertyAccess = () => {
         Unauthorized Access
       </h2>
       <p className="text-gray-700 text-center mb-4">
-        You don't have permission to view this property. It may belong to
+        You don&apos;t have permission to view this property. It may belong to
         another user.
       </p>
       <div className="w-full max-w-md bg-white p-6 rounded-md border-l-4 border-blue-950">
         <p className="text-sm text-gray-600">
           If you believe this is an error, please contact support or verify that
-          you're logged into the correct account.
+          you&apos;re logged into the correct account.
         </p>
       </div>
       <Link href="/dashboard/properties">

@@ -1,8 +1,9 @@
 import React from "react";
 import { AlertCircle, CheckCircle, X } from "lucide-react";
+import { AlertType } from "@/constants/Types";
 
 interface AlertProps {
-  type: "success" | "error" | "warn" | "info";
+  type: AlertType;
   message: string;
   onClose: () => void;
 }

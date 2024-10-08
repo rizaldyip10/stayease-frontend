@@ -20,7 +20,7 @@ export const useRatesManagement = (
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { showAlert } = useAlert();
-  const { createRate, updateRate, fetchRates } = usePeakSeasonRate();
+  const { createRate, updateRate } = usePeakSeasonRate();
   const { autoRateSetting, updateAutoRateSetting, deactivateAutoRateSetting } =
     useAutoRateSetting(selectedPropertyId || 0);
 
@@ -37,7 +37,6 @@ export const useRatesManagement = (
     if (onClose) {
       onClose();
     }
-    fetchRates();
   };
 
   const handleManualSubmit = useCallback(

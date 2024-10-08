@@ -37,6 +37,7 @@ const authCallbacks: AuthCallbacks = {
 };
 
 const nextAuthConfig: NextAuthConfig = {
+  trustHost: true,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -50,6 +51,7 @@ const nextAuthConfig: NextAuthConfig = {
       },
       async authorize(credentials) {
         try {
+          logger.info("Attempting login with:", { email: credentials?.email });
           const response = await axiosInterceptor.post(
             config.endpoints.auth.login,
             {
@@ -62,8 +64,7 @@ const nextAuthConfig: NextAuthConfig = {
           });
           return response.data.data;
         } catch (error: any) {
-          const errorMessage =
-            error.response?.data?.message || "An error occurred";
+          const errorMessage = error;
           logger.error("Credentials login failed", {
             error: errorMessage,
             email: credentials?.email,

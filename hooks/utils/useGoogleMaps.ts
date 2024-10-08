@@ -43,7 +43,7 @@ export const useGoogleMaps = ({
       setMapCenter(newLocation);
       onLocationChange(newLocation.lat, newLocation.lng);
     },
-    [onLocationChange],
+    [onLocationChange, setMapCenter, mapCenter],
   );
 
   // call the current location
@@ -62,7 +62,7 @@ export const useGoogleMaps = ({
   });
 
   // call the marker
-  const { markerRef, initMarker } = useMarker({
+  const { markerRef, initMarker, updateMarkerAndMap } = useMarker({
     mapRef,
     initialCenter: mapCenter,
     isEditable,
@@ -103,6 +103,7 @@ export const useGoogleMaps = ({
     libraries,
     mapCenter,
     handleLocationChange,
+    updateMarkerAndMap,
     getLocationLink,
     isEditable,
     viewOnly,

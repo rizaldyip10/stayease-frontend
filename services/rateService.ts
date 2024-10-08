@@ -1,6 +1,9 @@
 import axiosInterceptor from "@/utils/axiosInterceptor";
 import { config } from "@/constants/url";
-import { AdjustedRatesType, LowestDailyRateType } from "@/constants/Property";
+import {
+  RoomWithAdjustedRatesType,
+  LowestDailyRateType,
+} from "@/constants/Property";
 import { format } from "date-fns";
 import { formatDate } from "@/utils/dateFormatter";
 import logger from "@/utils/logger";
@@ -18,6 +21,10 @@ const rateService = {
       );
       return response.data.data;
     } catch (error: any) {
+      if (error.response.status === 404) {
+        return [];
+      }
+      logger.error("Error fetching tenant rates", error);
       throw error;
     }
   },
@@ -28,7 +35,7 @@ const rateService = {
   }: {
     propertyId: number;
     date: Date;
-  }): Promise<AdjustedRatesType> => {
+  }): Promise<RoomWithAdjustedRatesType> => {
     const url = config.endpoints.rates.baseRoute;
     try {
       const response = await axiosInterceptor.get(url, {

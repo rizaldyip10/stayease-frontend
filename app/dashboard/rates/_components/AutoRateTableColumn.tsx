@@ -86,26 +86,4 @@ export const AutoRateColumns: ColumnDef<RateResponseType>[] = [
     header: "Reason",
     cell: ({ row }) => <div>{row.getValue("reason")}</div>,
   },
-  // {
-  //   id: "actions",
-  //   header: "More",
-  //   enableHiding: false,
-  //   cell: ({ row }) => {
-  //     const rate = row.original;
-  //     return (
-  //       <div className="flex items-center gap-2">
-  //         <RateSettingDialog
-  //           isEditing={true}
-  //           selectedRate={rate}
-  //           trigger={
-  //             <Button variant="ghost" className="h-8 w-8 p-0">
-  //               <Edit className="h-4 w-4" />
-  //             </Button>
-  //           }
-  //         />
-  //         <RateDeleteDialog rateId={rate.rateId} />
-  //       </div>
-  //     );
-  //   },
-  // },
 ];

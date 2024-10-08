@@ -7,7 +7,6 @@ import { formatDate } from "@/utils/dateFormatter";
 import RateDeleteDialog from "@/app/dashboard/rates/_components/RateDeleteDialog";
 import { currencyFormatter } from "@/utils/CurrencyFormatter";
 import RateSettingDialog from "@/app/dashboard/rates/_components/setting/RateSettingDialog";
-import { useState } from "react";
 
 export const RateColumns: ColumnDef<RateResponseType>[] = [
   {
@@ -95,7 +94,6 @@ export const RateColumns: ColumnDef<RateResponseType>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const rate = row.original;
-      const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
       return (
         <div className="flex items-center gap-2">
           <RateSettingDialog
@@ -107,11 +105,7 @@ export const RateColumns: ColumnDef<RateResponseType>[] = [
               </Button>
             }
           />
-          <RateDeleteDialog
-            rateId={rate.rateId}
-            isOpen={isDeleteDialogOpen}
-            onOpenChange={setIsDeleteDialogOpen}
-          />
+          <RateDeleteDialog rateId={rate.rateId} />
         </div>
       );
     },
