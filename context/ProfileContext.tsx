@@ -4,9 +4,9 @@ import { useSession } from "next-auth/react";
 import { useImageUpload } from "@/hooks/utils/useImageUpload";
 import { useFetchData } from "@/hooks/utils/useFetchData";
 import { useEditData } from "@/hooks/utils/useEditData";
-import { queryClient } from "@/lib/queryClient";
 import { useAlert } from "./AlertContext";
 import { TenantProfile, UserProfile } from "@/constants/Users";
+import { useQueryClient } from "@tanstack/react-query";
 
 export interface ProfileContextType {
   profile: UserProfile | null;
@@ -33,6 +33,7 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({
   const { data: session, update } = useSession();
   const { showAlert } = useAlert();
   const { handleImageUpload } = useImageUpload("profile");
+  const queryClient = useQueryClient();
 
   const {
     data: profile,
@@ -91,6 +92,7 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({
         },
       );
       await profileService.setOrRemoveAvatar({ avatarUrl: imageUrl });
+      await queryClient.invalidateQueries({ queryKey: ["profile"] });
       update({ ...session, user: { ...session?.user, avatarUrl: imageUrl } });
       showAlert("success", "Avatar uploaded successfully", "/profile");
     } catch (error) {
@@ -107,6 +109,7 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({
           return oldData ? { ...oldData, avatarUrl: null } : null;
         },
       );
+      await queryClient.invalidateQueries({ queryKey: ["profile"] });
       update({ ...session, user: { ...session?.user, avatarUrl: null } });
       showAlert("success", "Avatar removed successfully");
     } catch (error) {

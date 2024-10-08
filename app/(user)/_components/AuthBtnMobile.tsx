@@ -20,7 +20,7 @@ const ProfileBtn = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center lg:hidden">
+      <DropdownMenuTrigger className="flex items-center md:hidden">
         <CircleUserRound className="w-7 h-7 rounded-full" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>

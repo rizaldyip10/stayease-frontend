@@ -45,7 +45,11 @@ axiosInterceptor.interceptors.request.use(
     }
 
     // Apply dynamic baseURL logic only in local environment
-    if (process.env.LOCAL_ENV) {
+    if (
+      process.env.LOCAL_ENV &&
+      process.env.NODE_ENV !== "production" &&
+      process.env.NODE_ENV !== "development"
+    ) {
       if (authStrings.some((str) => config.url?.includes(str))) {
         config.baseURL = process.env.NEXT_PUBLIC_LOGIN_URL;
       } else {

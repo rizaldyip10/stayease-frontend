@@ -1,5 +1,6 @@
 import React from "react";
 import { Field } from "formik";
+import { useAlert } from "@/context/AlertContext";
 
 interface FormFieldProps {
   label: string;
@@ -8,7 +9,7 @@ interface FormFieldProps {
   name: string;
   disabled: boolean;
   values: { [key: string]: any };
-  onClick?: () => void;
+  isEditing: boolean;
 }
 
 const ProfileFormField: React.FC<FormFieldProps> = ({
@@ -17,29 +18,43 @@ const ProfileFormField: React.FC<FormFieldProps> = ({
   id,
   name,
   disabled,
-  onClick,
   values,
+  isEditing,
 }) => {
-  const handleClick = (e: React.MouseEvent<HTMLInputElement>) => {
-    if (disabled && onClick) {
+  const { showAlert } = useAlert();
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isEditing) {
       e.preventDefault();
-      onClick();
+      showAlert(
+        "info",
+        "Please go to settings page to request for email change.",
+      );
     }
   };
+
+  const isEmailField = type === "email";
 
   return (
     <div className="mb-4">
       <label htmlFor={id} className="block mb-2">
         {label}:
       </label>
-      <Field
-        type={type}
-        id={id}
-        name={name}
-        disabled={disabled}
-        className="w-full p-2 border rounded"
-        onClick={handleClick}
-      />
+      {isEmailField ? (
+        <div
+          onClick={handleClick}
+          className="w-full p-2 border rounded bg-gray-100 cursor-pointer"
+        >
+          {values[name]}
+        </div>
+      ) : (
+        <Field
+          type={type}
+          id={id}
+          name={name}
+          disabled={disabled}
+          className="w-full p-2 border rounded"
+        />
+      )}
     </div>
   );
 };

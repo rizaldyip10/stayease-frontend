@@ -2,6 +2,7 @@ import React from "react";
 import { Form, Formik } from "formik";
 import ProfileFormField from "@/app/(user)/profile/_components/ProfileFormField";
 import { TenantProfile } from "@/constants/Users";
+import { Button } from "@/components/ui/button";
 
 interface TenantProfileFormProps {
   tenantInfo: TenantProfile;
@@ -41,24 +42,25 @@ const TenantProfileForm: React.FC<TenantProfileFormProps> = ({
                 name={key}
                 disabled={key === "registeredDate" || !isEditing}
                 values={values}
+                isEditing={isEditing}
               />
             );
           })}
           <div className="flex justify-between">
-            <button
+            <Button
               type="button"
               onClick={toggleEditing}
               className={`${isEditing ? "bg-appcancel hover:text-appcancel hover:bg-[#FAFAFA]" : "bg-blue-950"} hover:bg-[#FAFAFA] hover:text-blue-950 text-white font-bold px-4 py-2 rounded`}
             >
               {isEditing ? "Cancel" : "Edit"}
-            </button>
+            </Button>
             {isEditing && (
-              <button
+              <Button
                 type="submit"
                 className="bg-green-800 hover:bg-[#FAFAFA] hover:text-green-800 font-bold text-white px-4 py-2 rounded"
               >
                 Save Changes
-              </button>
+              </Button>
             )}
           </div>
         </Form>
