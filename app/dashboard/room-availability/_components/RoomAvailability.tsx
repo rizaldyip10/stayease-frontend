@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useRoomAvailability } from "@/hooks/reports/useRoomAvailability";
 import AvailabilityDialog from "./AvailabilityDialog";
 import { Button } from "@/components/ui/button";
-import NoResultsFound from "@/components/NoResultsFound";
 import RoomAvailabilityCalendar from "@/app/dashboard/room-availability/_components/RoomAvailabilityCalendar";
 import ConfirmationDialog from "@/app/dashboard/room-availability/_components/ConfirmationDialog";
 import { useAlert } from "@/context/AlertContext";

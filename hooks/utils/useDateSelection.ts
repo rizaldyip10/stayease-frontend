@@ -1,6 +1,7 @@
 import { useBookingValues } from "@/hooks/transactions/useBookingValues";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { format, isValid } from "date-fns";
+import { usePropertySearch } from "@/hooks/properties/usePropertySearch";
 
 export const useDateSelection = ({
   startDate,
@@ -9,7 +10,9 @@ export const useDateSelection = ({
   startDate?: string;
   endDate?: string;
 }) => {
+  const { updateSearchParams, resetFilters } = usePropertySearch();
   const { bookingValues, setBookingInfo } = useBookingValues();
+
   const [checkInDate, setCheckInDate] = useState<Date | undefined>(() =>
     startDate ? new Date(startDate) : undefined,
   );
@@ -37,6 +40,7 @@ export const useDateSelection = ({
           setCheckOutDate(undefined);
           setIsSelectingCheckOut(false);
           setBookingInfo({ checkInDate: null, checkOutDate: undefined });
+          updateSearchParams({ startDate: undefined, endDate: undefined });
         } else {
           setCheckInDate(date);
           setCheckOutDate(undefined);
@@ -47,6 +51,7 @@ export const useDateSelection = ({
               checkInDate: formattedDate,
               checkOutDate: undefined,
             });
+            updateSearchParams({ startDate: date });
           }
         }
       } else {
@@ -55,6 +60,7 @@ export const useDateSelection = ({
         if (date && isValid(date)) {
           const formattedDate = format(date, "yyyy-MM-dd");
           setBookingInfo({ checkOutDate: formattedDate });
+          updateSearchParams({ startDate: checkInDate, endDate: date });
         }
       }
     },
@@ -66,6 +72,7 @@ export const useDateSelection = ({
     setCheckOutDate(undefined);
     setIsSelectingCheckOut(false);
     setBookingInfo({ checkInDate: null, checkOutDate: undefined });
+    resetFilters();
   }, [setBookingInfo]);
 
   return {

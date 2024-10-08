@@ -65,11 +65,6 @@ const RoomAvailabilityCalendar: React.FC<RoomAvailabilityCalendarProps> = ({
       height="auto"
       eventContent={renderEventContent}
       dayCellClassNames={dayCellClassNames}
-      views={{
-        dayGridMonth: {
-          eventLimit: 3,
-        },
-      }}
     />
   );
 };

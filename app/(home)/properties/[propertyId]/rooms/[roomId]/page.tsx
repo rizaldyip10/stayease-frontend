@@ -1,9 +1,8 @@
 "use client";
 import React from "react";
-import { notFound } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import RoomDetails from "@/app/(home)/properties/[propertyId]/rooms/[roomId]/_components/RoomDetails";
 import { usePropertyCurrentDetails } from "@/hooks/properties/usePropertyCurrentDetails";
-import { useSearchParams } from "next/navigation";
 import PropertyDetailsSkeleton from "@/app/(home)/properties/[propertyId]/_components/PropertyDetailsSkeleton";
 import ErrorComponent from "@/components/ErrorComponent";
 
@@ -17,7 +16,7 @@ export default function RoomDetailsPage({
   const roomId = parseInt(params.roomId, 10);
 
   // Extract the date from the URL, defaulting to today if not present
-  const checkInDate = searchParams.get("checkInDate");
+  const checkInDate = searchParams.get("startDate");
   const date = checkInDate ? new Date(checkInDate) : new Date();
 
   const { currentProperty, isLoading, error } = usePropertyCurrentDetails(
@@ -28,7 +27,7 @@ export default function RoomDetailsPage({
 
   const room = currentProperty?.rooms?.find((room) => room.roomId === roomId);
 
-  if (isLoading) {
+  if (isLoading || !room) {
     return <PropertyDetailsSkeleton type="room" />;
   }
 
@@ -37,7 +36,12 @@ export default function RoomDetailsPage({
   }
 
   if (!room) {
-    return notFound();
+    return (
+      <ErrorComponent
+        message="Room isn't available on this date. Please select another date."
+        fullPage
+      />
+    );
   }
 
   return <RoomDetails room={room} />;

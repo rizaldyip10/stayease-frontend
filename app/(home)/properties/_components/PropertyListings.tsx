@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from "react";
-import { usePropertyUtils } from "@/hooks/properties/usePropertyUtils";
 import { usePropertyListings } from "@/hooks/properties/usePropertyListings";
 import SearchFilterCard from "@/app/(home)/properties/_components/SearchFilterCard";
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,6 @@ import NoResultsFound from "@/components/NoResultsFound";
 import MapComponent from "@/components/MapComponent";
 
 const PropertyListings: React.FC = () => {
-  const { categories, cities } = usePropertyUtils();
   const {
     properties,
     isLoading,
@@ -42,8 +40,6 @@ const PropertyListings: React.FC = () => {
           className={`lg:col-span-1 ${showFilters ? "block" : "hidden lg:block"}`}
         >
           <SearchFilterCard
-            cities={cities}
-            categories={categories}
             filters={filters}
             onFilterChange={updateFilters}
             onResetFilters={resetFilters}

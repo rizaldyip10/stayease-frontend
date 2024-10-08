@@ -7,7 +7,6 @@ import { RateResponseType } from "@/constants/Rates";
 import { useTenantProperties } from "@/hooks/properties/useTenantProperties";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRatesManagement } from "@/hooks/rates/useRatesManagement";
-import GlobalLoading from "@/components/GlobalLoading";
 
 interface RatesManagementProps {
   isEditing: boolean;
