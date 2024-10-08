@@ -64,9 +64,7 @@ export const usePropertyCreation = () => {
         "Property and rooms created successfully",
         "/dashboard/properties",
       );
-      await queryClient.invalidateQueries({
-        queryKey: ["get-tenant-properties", "get-tenant-room"],
-      });
+      await queryClient.invalidateQueries();
     } catch (error) {
       setError("Failed to create property and rooms");
       console.error("Error submitting form:", error);
