@@ -7,18 +7,15 @@ import AvatarUploadModal from "@/app/(user)/profile/_components/AvatarUploadModa
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useProfile } from "@/context/ProfileContext";
 import { useSession } from "next-auth/react";
+import UserMenuSkeleton from "@/app/(user)/profile/_components/UserMenuSkeleton";
 
 const UserMenu = () => {
   const { profile, isLoading, error } = useProfile();
   const { data: session } = useSession();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading || !profile) return <UserMenuSkeleton />;
   if (error) return <div>Error: {error.message}</div>;
-  if (!profile) return <div>No profile data available</div>;
-  if (profile) {
-    console.log(profile);
-  }
 
   const fullName = profile.firstName + " " + (profile.lastName ?? "");
   const joinedAt = new Date(profile.joinedAt).toLocaleDateString();

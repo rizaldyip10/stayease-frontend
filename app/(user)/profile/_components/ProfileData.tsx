@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import TenantProfileForm from "@/app/(user)/profile/_components/TenantProfileForm";
 import { useProfile } from "@/context/ProfileContext";
 import ErrorComponent from "@/components/ErrorComponent";
-import GlobalLoading from "@/components/GlobalLoading";
+import ProfilePageSkeleton from "@/app/(user)/profile/_components/ProfilePageSkeleton";
 
 const ProfilePage: React.FC = () => {
   const {
@@ -22,7 +22,7 @@ const ProfilePage: React.FC = () => {
   const { data: sessions, status } = useSession();
   const isUser = sessions?.user?.userType === "USER";
 
-  if (isLoading || !profile) return <GlobalLoading fullPage />;
+  if (isLoading || !profile) return <ProfilePageSkeleton />;
   if (error) return <ErrorComponent message={error.message} fullPage />;
 
   return (
