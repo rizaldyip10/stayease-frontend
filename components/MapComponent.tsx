@@ -8,7 +8,13 @@ import ErrorComponent from "@/components/ErrorComponent";
 
 interface MapComponentProps {
   initialCenter: { lat: number; lng: number };
-  onLocationChange: (lat: number, lng: number) => void;
+  onLocationChange: (
+    lat: number,
+    lng: number,
+    address?: string,
+    city?: string,
+    country?: string,
+  ) => void;
   isEditable?: boolean;
   viewOnly?: boolean;
   properties?: AvailablePropertyType[];

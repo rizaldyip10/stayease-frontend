@@ -7,6 +7,7 @@ import ImageUpload from "@/app/dashboard/properties/create/_components/ImageUplo
 import CategoryDropdown from "@/app/dashboard/properties/create/_components/CategoryDropdown";
 import MapComponent from "@/components/MapComponent";
 import logger from "@/utils/logger";
+import { InfoIcon } from "lucide-react";
 
 export interface PropertyFormValues {
   property: {
@@ -26,18 +27,44 @@ const propertyFields = [
   { name: "name", label: "Name", type: "text" },
   { name: "description", label: "Description", type: "text" },
   { name: "address", label: "Address", type: "text" },
-  { name: "city", label: "City", type: "text" },
-  { name: "country", label: "Country", type: "text" },
+  { name: "city", label: "City", type: "text", disabled: true },
+  { name: "country", label: "Country", type: "text", disabled: true },
 ];
+
+const MapInstructions: React.FC = () => {
+  return (
+    <div className="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 mb-4 mt-4 text-sm">
+      <p className="font-bold">How to set the address:</p>
+      <ul className="list-disc list-inside">
+        <li>Click on the map to place a marker</li>
+        <li>Drag the marker to adjust the location</li>
+        <li>The address fields will update automatically</li>
+        <li>
+          You may edit the &quot;Address&quot; field if address from map is not
+          accurate.
+        </li>
+      </ul>
+    </div>
+  );
+};
 
 const PropertyForm: React.FC = () => {
   const { values, setFieldValue } = useFormikContext<PropertyFormValues>();
 
   const handleLocationChange = useCallback(
-    (lat: number, lng: number) => {
+    (
+      lat: number,
+      lng: number,
+      address?: string,
+      city?: string,
+      country?: string,
+    ) => {
       setFieldValue("property.latitude", lat);
       setFieldValue("property.longitude", lng);
-      logger.info("Location changed to:", { lat, lng });
+      if (address) setFieldValue("property.address", address);
+      if (city) setFieldValue("property.city", city);
+      if (country) setFieldValue("property.country", country);
+      logger.info("Location changed to:", { lat, lng, address, city, country });
     },
     [setFieldValue],
   );
@@ -53,7 +80,14 @@ const PropertyForm: React.FC = () => {
               name={`property.${field.name}`}
               as={Input}
               type={field.type}
+              disabled={field.disabled}
             />
+            {field.disabled && (
+              <p className="text-sm text-gray-500 mt-1 flex items-center">
+                <InfoIcon size={14} className="mr-1" />
+                Use the map to set this field
+              </p>
+            )}
             <ErrorMessage
               name={`property.${field.name}`}
               component="div"
@@ -65,6 +99,7 @@ const PropertyForm: React.FC = () => {
       </div>
       <div className="mt-4 mb-10">
         <Label>Location</Label>
+        <MapInstructions />
         <div style={{ height: "400px", width: "100%" }}>
           <MapComponent
             initialCenter={{
@@ -76,9 +111,6 @@ const PropertyForm: React.FC = () => {
             viewOnly={false}
           />
         </div>
-        <p className="text-yellow-600 text-xs mt-2">
-          *Please make sure you have selected the correct location on the map
-        </p>
         <ErrorMessage
           name="property.latitude"
           component="div"

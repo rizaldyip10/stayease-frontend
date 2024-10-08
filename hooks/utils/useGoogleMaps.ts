@@ -15,7 +15,13 @@ interface MapCenter {
 
 interface MapConfig {
   initialCenter: MapCenter;
-  onLocationChange: (lat: number, lng: number) => void;
+  onLocationChange: (
+    lat: number,
+    lng: number,
+    address?: string,
+    city?: string,
+    country?: string,
+  ) => void;
   isEditable: boolean;
   viewOnly: boolean;
   properties?: AvailablePropertyType[];
@@ -39,13 +45,23 @@ export const useGoogleMaps = ({
   const [mapCenter, setMapCenter] = useState<MapCenter>(initialCenter);
 
   const handleLocationChange = useCallback(
-    (newLocation: MapCenter) => {
+    (
+      newLocation: google.maps.LatLngLiteral,
+      address?: string,
+      city?: string,
+      country?: string,
+    ) => {
       setMapCenter(newLocation);
-      onLocationChange(newLocation.lat, newLocation.lng);
+      onLocationChange(
+        newLocation.lat,
+        newLocation.lng,
+        address,
+        city,
+        country,
+      );
     },
-    [onLocationChange, setMapCenter, mapCenter],
+    [onLocationChange],
   );
-
   // call the current location
   const { getCurrentLocation } = useCurrentLocation({
     onLocationChange: handleLocationChange,
