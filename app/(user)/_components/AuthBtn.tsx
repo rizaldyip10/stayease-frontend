@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const AuthBtn = () => {
   return (
-    <div className="items-center gap-2 hidden lg:flex">
+    <div className="items-center gap-2 flex">
       <Link href="/login">
         <Button variant="outline" className="text-blue-950 border-blue-950">
           Login/Register

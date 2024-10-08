@@ -1,5 +1,7 @@
 import ReportTabs from "@/app/dashboard/reports/_components/ReportTabs";
 
+export const dynamic = "force-dynamic";
+
 const ReportsPage = () => {
     return (
         <div className="w-full flex flex-col gap-5">
