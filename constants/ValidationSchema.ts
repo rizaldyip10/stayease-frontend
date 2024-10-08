@@ -107,7 +107,10 @@ export const createPropValidationSchema = yup.object().shape({
     imageUrl: yup.string().required("Required"),
     address: yup.string().required("Required"),
     city: yup.string().required("Required"),
-    country: yup.string().required("Required"),
+    country: yup
+      .string()
+      .oneOf(["Indonesia"], "Must be in Indonesia")
+      .required("Required"),
     longitude: yup.number().required("Required"),
     latitude: yup.number().required("Required"),
     categoryId: yup.string().required("Required"),
