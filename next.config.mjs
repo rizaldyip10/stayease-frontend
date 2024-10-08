@@ -30,10 +30,6 @@ const nextConfig = {
                 pathname: '/api/portraits/**'
             }
         ],
-    },
-    output: 'standalone',
-    experimental: {
-        outputFileTracingRoot: path.join(__dirname, '../../'),
     }
 };
 

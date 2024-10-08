@@ -40,6 +40,7 @@ const routeHandlers = new Map<string, RouteHandler>([
       session.user.isNewUser ||
       NextResponse.redirect(new URL("/", request.url)),
   ],
+  ["/book", (session) => session.user.userType === "USER"],
 ]);
 
 export function isPublicRoute(path: string): boolean {
