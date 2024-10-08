@@ -6,6 +6,7 @@ const __dirname = path.dirname(__filename);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    output: "standalone",   
     images: {
         domains: ['res.cloudinary.com', 'randomuser.me', 'ui-avatars.com', 'lh3.googleusercontent.com'],
         remotePatterns: [

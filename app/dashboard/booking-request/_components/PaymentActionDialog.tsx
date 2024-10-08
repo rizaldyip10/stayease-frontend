@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import {transactionService} from "@/services/transactionService";
-import {getAccessToken, setAccessToken} from "@/utils/axiosInterceptor";
+import {useQueryClient} from "@tanstack/react-query";
 
 interface PaymentActionDialogProps {
     bookingId: string;
@@ -18,6 +18,7 @@ interface PaymentActionDialogProps {
 }
 
 const PaymentActionDialog: FC<PaymentActionDialogProps> = ({ bookingId, isApproval }) => {
+    const client = useQueryClient();
     const handleAction = async () => {
         try {
             if (isApproval) {
@@ -25,14 +26,11 @@ const PaymentActionDialog: FC<PaymentActionDialogProps> = ({ bookingId, isApprov
             } else {
                 await transactionService.tenantRejectTrx(bookingId);
             }
+            await client.invalidateQueries({queryKey: ["get-tenant-bookings"]});
         } catch (error) {
             console.log(error);
         }
     };
-
-    useEffect(() => {
-        setAccessToken(getAccessToken());
-    }, []);
 
     return (
         <Dialog>
