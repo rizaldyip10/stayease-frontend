@@ -44,7 +44,11 @@ export const PropertyColumns: ColumnDef<PropertyAndRoomType>[] = [
   {
     accessorKey: "address",
     header: "Address",
-    cell: ({ row }) => <div>{row.getValue("address")}</div>,
+    cell: ({ row }) => (
+      <div className="max-w-[250px] whitespace-normal break-words">
+        {row.getValue("address")}
+      </div>
+    ),
   },
   {
     accessorKey: "city",
@@ -65,7 +69,7 @@ export const PropertyColumns: ColumnDef<PropertyAndRoomType>[] = [
               <Edit className="w-4 h-4" />
             </Button>
           </Link>
-          <DeleteDialog isProperty propertyId={propertyId} />
+          <DeleteDialog propertyId={propertyId} />
         </div>
       );
     },

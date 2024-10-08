@@ -73,12 +73,7 @@ export const RoomColumns: ColumnDef<RoomType>[] = [
       const propertyId = row.original.propertySummary.propertyId;
       return (
         <div className="flex items-center gap-2">
-          <DeleteDialog
-            propertyId={propertyId}
-            roomId={roomId}
-            isProperty={false}
-          />
-          {/*Edit room route button or dialog here*/}
+          <DeleteDialog propertyId={propertyId} roomId={roomId} />
         </div>
       );
     },

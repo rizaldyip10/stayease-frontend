@@ -15,7 +15,7 @@ import ProfileCard from "@/app/dashboard/(user)/_components/ProfileCard";
 import { DashboardRatesSummary } from "@/app/dashboard/(tenant)/_components/RatesSummary";
 import GlobalLoading from "@/components/GlobalLoading";
 import ErrorComponent from "@/components/ErrorComponent";
-import {useReportStats} from "@/hooks/reports/useReportStats";
+import { useReportStats } from "@/hooks/reports/useReportStats";
 
 const TenantDashboard: React.FC = () => {
   const { profile, isLoading, error } = useProfile();
@@ -31,8 +31,6 @@ const TenantDashboard: React.FC = () => {
   if (error) {
     return <ErrorComponent message={error.message} fullPage />;
   }
-
-  const fullName = profile?.firstName + " " + (profile?.lastName ?? "");
 
   // TODO : Replace with real data
   const actions = [

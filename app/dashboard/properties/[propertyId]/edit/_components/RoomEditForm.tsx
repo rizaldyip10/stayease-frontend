@@ -61,7 +61,6 @@ const RoomEditForm: React.FC<RoomEditFormProps> = ({
       <div className="mt-4 flex justify-end space-x-2">
         {isExistingRoom ? (
           <DeleteDialog
-            isProperty={false}
             propertyId={propertyId}
             roomId={room.id}
             onConfirm={onRemove}
