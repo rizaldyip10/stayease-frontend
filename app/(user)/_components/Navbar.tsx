@@ -54,7 +54,7 @@ const Navbar: React.FC<NavbarProps> = ({ isDashboard }) => {
         <NavRoutes />
         <div className={pathname.startsWith("/book") ? "hidden" : "block"}>
           {session ? <ProfileBtn /> : <AuthBtn />}
-          <AuthBtnMobile />
+          {/*<AuthBtnMobile />*/}
         </div>
       </div>
     </motion.nav>
