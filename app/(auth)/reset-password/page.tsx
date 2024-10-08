@@ -15,11 +15,11 @@ const Page = () => {
     token: token,
   });
 
-  if (isTokenValid === null) {
+  if (isTokenValid === null || isLoading) {
     return <GlobalLoading fullPage />;
   }
 
-  if (!isTokenValid) {
+  if (!isTokenValid || error) {
     return (
       <ErrorComponent message="Invalid token. Please make sure you follow the correct link sent to your email!" />
     );
