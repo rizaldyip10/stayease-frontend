@@ -64,7 +64,12 @@ const nextAuthConfig: NextAuthConfig = {
           });
           return response.data.data;
         } catch (error: any) {
-          const errorMessage = error;
+          let errorMessage = "An unknown error occurred";
+          if (error.response?.status === 500) {
+            errorMessage = "Invalid email or password";
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
           logger.error("Credentials login failed", {
             error: errorMessage,
             email: credentials?.email,

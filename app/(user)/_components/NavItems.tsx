@@ -1,14 +1,14 @@
 "use client";
 
-import {Button} from "@/components/ui/button";
-import {RouteType} from "@/constants/Routes";
-import {FC} from "react";
-import {usePathname} from "next/navigation";
-import {cn} from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { RouteType } from "@/constants/Routes";
+import { FC } from "react";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 interface NavItemsProps {
-    route: RouteType;
-    onClick?: () => void;
+  route: RouteType;
+  onClick?: () => void;
 }
 
 const NavItems: FC<NavItemsProps> = ({ route, onClick }) => {
