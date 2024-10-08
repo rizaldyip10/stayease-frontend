@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "docker:dev": "cross-env NODE_ENV=development COMMAND=\"yarn dev\" docker-compose up --build",
+    "docker:prod": "docker-compose up --build"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.15",

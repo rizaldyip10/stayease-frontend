@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { RateRequestType, RateResponseType } from "@/constants/Rates";
 import { useAlert } from "@/context/AlertContext";
 import logger from "@/utils/logger";

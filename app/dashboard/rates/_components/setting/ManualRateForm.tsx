@@ -9,7 +9,6 @@ import { manualRateValidationSchema } from "@/constants/ValidationSchema";
 import { formatDate } from "@/utils/dateFormatter";
 import TypeSelect from "@/app/dashboard/rates/_components/setting/TypeSelect";
 import { typeItems } from "@/app/dashboard/rates/_components/setting/AutomaticRateForm";
-import GlobalLoading from "@/components/GlobalLoading";
 import LoadingButton from "@/components/LoadingButton";
 
 interface ManualRateFormProps {

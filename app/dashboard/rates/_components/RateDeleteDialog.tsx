@@ -12,10 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 import React, { FC, useEffect, useState } from "react";
-import { useAlert } from "@/context/AlertContext";
 import { usePeakSeasonRate } from "@/hooks/rates/usePeakSeasonRate";
-import { useRoomAvailability } from "@/hooks/reports/useRoomAvailability";
-import { isConfigOption } from "jackspeak";
 import { useAutoRateSetting } from "@/hooks/rates/useAutoRateSetting";
 import LoadingButton from "@/components/LoadingButton";
 

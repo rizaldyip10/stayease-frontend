@@ -2,28 +2,25 @@ import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import CustomSelect from "@/components/CustomSelect";
-import { CategoryType } from "@/constants/Property";
 import BudgetInput from "@/app/(home)/properties/_components/BudgetInput";
 import { CustomDatePicker } from "@/components/CustomDatePicker";
 import { FilterOptions } from "@/hooks/properties/usePropertyListings";
 import { Button } from "@/components/ui/button";
 import { addDays } from "date-fns";
+import { usePropertyUtils } from "@/hooks/properties/usePropertyUtils";
 
 interface SearchFilterCardProps {
-  cities: string[] | undefined;
-  categories: CategoryType[] | undefined;
   filters: FilterOptions;
   onFilterChange: (filters: Partial<FilterOptions>) => void;
   onResetFilters: () => void;
 }
 
 const SearchFilterCard: React.FC<SearchFilterCardProps> = ({
-  cities,
-  categories,
   filters,
   onFilterChange,
   onResetFilters,
 }) => {
+  const { cities, categories } = usePropertyUtils();
   const [checkInOpen, setCheckInOpen] = useState(false);
   const [checkOutOpen, setCheckOutOpen] = useState(false);
 

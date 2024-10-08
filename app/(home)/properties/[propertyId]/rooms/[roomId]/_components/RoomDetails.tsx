@@ -1,42 +1,67 @@
 "use client";
 
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
 import { format, isValid, parseISO } from "date-fns";
 import { useBookingValues } from "@/hooks/transactions/useBookingValues";
 import { RoomWithAdjustedRatesType } from "@/constants/Property";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
+import { usePropertySearch } from "@/hooks/properties/usePropertySearch";
+import CheckInCalendar from "@/app/(home)/properties/[propertyId]/rooms/[roomId]/_components/CheckInCalendar";
+import { currencyFormatter } from "@/utils/CurrencyFormatter";
 
 interface RoomDetailsProps {
   room: RoomWithAdjustedRatesType;
 }
 
 const RoomDetailsComponent: React.FC<RoomDetailsProps> = ({ room }) => {
+  const searchParams = useSearchParams();
+  const { updateSearchParams, resetFilters } = usePropertySearch();
   const { bookingValues, setBookingInfo } = useBookingValues();
   const router = useRouter();
 
-  const formatDate = useCallback((dateString: string | null) => {
-    if (!dateString) return null;
-    const date = parseISO(dateString);
-    return isValid(date) ? format(date, "PPP") : null;
-  }, []);
+  useEffect(() => {
+    const startDate = searchParams.get("startDate") || undefined;
+    const endDate = searchParams.get("endDate") || undefined;
+    if (startDate || endDate) {
+      setBookingInfo({
+        checkInDate: startDate,
+        checkOutDate: endDate,
+      });
+    }
+  }, [searchParams, setBookingInfo]);
 
   const handleDateSelect = useCallback(
     (field: "checkInDate" | "checkOutDate") => (date: Date | undefined) => {
       if (date && isValid(date)) {
-        setBookingInfo({ [field]: format(date, "yyyy-MM-dd") });
+        const formattedDate = format(date, "yyyy-MM-dd");
+        setBookingInfo({ [field]: formattedDate });
+
+        const startDate =
+          field === "checkInDate"
+            ? date
+            : bookingValues.checkInDate
+              ? parseISO(bookingValues.checkInDate)
+              : undefined;
+        const endDate =
+          field === "checkOutDate"
+            ? date
+            : bookingValues.checkOutDate
+              ? parseISO(bookingValues.checkOutDate)
+              : undefined;
+
+        updateSearchParams({ startDate, endDate });
       }
     },
-    [setBookingInfo],
+    [
+      setBookingInfo,
+      updateSearchParams,
+      bookingValues.checkInDate,
+      bookingValues.checkOutDate,
+    ],
   );
 
   const handleBookNow = useCallback(async () => {
@@ -51,18 +76,12 @@ const RoomDetailsComponent: React.FC<RoomDetailsProps> = ({ room }) => {
     );
   }, [room.roomId, bookingValues, router]);
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(price);
-  };
-
-  const priceChange = room.adjustedPrice - room.basePrice;
-  const percentageChange = ((priceChange / room.basePrice) * 100).toFixed(1);
-  const isIncrease = priceChange > 0;
+  const priceInfo = useMemo(() => {
+    const priceChange = room.adjustedPrice - room.basePrice;
+    const percentageChange = ((priceChange / room.basePrice) * 100).toFixed(1);
+    const isIncrease = priceChange > 0;
+    return { priceChange, percentageChange, isIncrease };
+  }, [room.adjustedPrice, room.basePrice]);
 
   return (
     <div className="container mx-auto p-4">
@@ -104,70 +123,29 @@ const RoomDetailsComponent: React.FC<RoomDetailsProps> = ({ room }) => {
                   Estimated price per night:
                 </p>
                 <h2 className="text-3xl font-bold mb-2">
-                  {formatPrice(room.adjustedPrice)}
+                  {currencyFormatter(room.adjustedPrice)}
                 </h2>
-                {priceChange !== 0 && (
+                {priceInfo.priceChange !== 0 && (
                   <div>
                     <p className="text-sm text-gray-500 line-through">
-                      {formatPrice(room.basePrice)}
+                      {currencyFormatter(room.basePrice)}
                     </p>
                     <p
-                      className={`text-sm ${isIncrease ? "text-red-600" : "text-green-600"}`}
+                      className={`text-sm ${priceInfo.isIncrease ? "text-red-600" : "text-green-600"}`}
                     >
-                      {isIncrease ? "Increased" : "Decreased"} by{" "}
-                      {Math.abs(Number(percentageChange))}%
+                      {priceInfo.isIncrease ? "Increased" : "Decreased"} by{" "}
+                      {Math.abs(Number(priceInfo.percentageChange))}%
                     </p>
                   </div>
                 )}
               </div>
-              <div className="space-y-4 mb-6">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start">
-                      <span className="mr-auto">
-                        {formatDate(bookingValues.checkInDate) ||
-                          "Check-in Date"}
-                      </span>
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={
-                        bookingValues.checkInDate
-                          ? parseISO(bookingValues.checkInDate)
-                          : undefined
-                      }
-                      onSelect={handleDateSelect("checkInDate")}
-                      initialFocus
-                      disabled={(date) => date < new Date()}
-                    />
-                  </PopoverContent>
-                </Popover>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start">
-                      <span className="mr-auto">
-                        {formatDate(bookingValues.checkOutDate) ||
-                          "Check-out Date"}
-                      </span>
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={
-                        bookingValues.checkOutDate
-                          ? parseISO(bookingValues.checkOutDate)
-                          : undefined
-                      }
-                      onSelect={handleDateSelect("checkOutDate")}
-                      initialFocus
-                      disabled={(date) => date < new Date()}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
+
+              <CheckInCalendar
+                bookingValues={bookingValues}
+                handleDateSelect={handleDateSelect}
+                resetFilters={resetFilters}
+              />
+
               <Button
                 className="w-full"
                 onClick={handleBookNow}
@@ -175,6 +153,7 @@ const RoomDetailsComponent: React.FC<RoomDetailsProps> = ({ room }) => {
               >
                 {room.isAvailable ? "Book Now" : "Not Available"}
               </Button>
+
               {!room.isAvailable && (
                 <p className="text-red-500 mt-2 text-sm text-center">
                   This room is not available for the selected date.

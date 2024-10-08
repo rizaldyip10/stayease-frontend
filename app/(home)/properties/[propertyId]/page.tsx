@@ -2,7 +2,7 @@
 import React from "react";
 import PropertyDetails from "@/app/(home)/properties/[propertyId]/_components/PropertyDetails";
 import { usePropertyCurrentDetails } from "@/hooks/properties/usePropertyCurrentDetails";
-import { notFound, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import PropertyDetailsSkeleton from "@/app/(home)/properties/[propertyId]/_components/PropertyDetailsSkeleton";
 import ErrorComponent from "@/components/ErrorComponent";
 
@@ -15,7 +15,6 @@ export default function PropertyDetailsPage({
 
   const startDate = searchParams.get("startDate");
   const date = startDate ? new Date(startDate) : new Date();
-  const timezone = date.getTimezoneOffset();
 
   const propertyId = parseInt(params.propertyId, 10);
 
@@ -31,8 +30,8 @@ export default function PropertyDetailsPage({
     return <ErrorComponent message={error.message} fullPage />;
   }
   if (!currentProperty) {
-    return notFound();
+    return <ErrorComponent message="Property not found" fullPage />;
   }
 
-  return <PropertyDetails property={currentProperty} propertyId={propertyId} />;
+  return <PropertyDetails currentProperty={currentProperty} />;
 }

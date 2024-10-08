@@ -1,9 +1,8 @@
 import React from "react";
-import { Field, ErrorMessage, useFormikContext } from "formik";
+import { ErrorMessage, Field, useFormikContext } from "formik";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { useImageUpload } from "@/hooks/utils/useImageUpload";
 import ImageUpload from "@/app/dashboard/properties/create/_components/ImageUpload";
 import DeleteDialog from "@/app/dashboard/properties/_components/DeleteDialog";
 

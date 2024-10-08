@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useAlert } from "@/context/AlertContext";
 import { usePeakSeasonRate } from "./usePeakSeasonRate";
 import { useAutoRateSetting } from "@/hooks/rates/useAutoRateSetting";
 import { AutoRateRequestType, RateRequestType } from "@/constants/Rates";
-import { h } from "preact";
 
 interface RatesManagementProps {
   onClose?: () => void;
