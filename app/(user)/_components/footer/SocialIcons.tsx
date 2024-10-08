@@ -1,5 +1,5 @@
 import React from "react";
-import { FaTiktok, FaInstagram, FaFacebook, FaLinkedin } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaLinkedin, FaTiktok } from "react-icons/fa";
 
 import Link from "next/link";
 

@@ -4,6 +4,7 @@ import * as yup from "yup";
 import authService from "@/services/authService";
 import logger from "@/utils/logger";
 import { useAlert } from "@/context/AlertContext";
+import { oAuth2Service } from "@/services/oAuth2Service";
 
 export type UserType = "USER" | "TENANT";
 
@@ -44,7 +45,7 @@ export const useSelectUserType = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await authService.registerOAuth2({
+        const response = await oAuth2Service.registerOAuth2({
           googleToken: session?.user.googleToken,
           userType: values.userType as UserType,
           businessName:

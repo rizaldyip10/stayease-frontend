@@ -11,29 +11,32 @@ export const useCredentialSubmission = (userType: UserType) => {
   const { showAlert } = useAlert();
 
   const handleLogin = async (values: FormikValues) => {
-    const result = await signIn("credentials", {
-      redirect: false,
-      email: values.email,
-      password: values.password,
-    });
-
-    if (result?.error) {
-      throw new Error(result.error);
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: values.email,
+        password: values.password,
+      });
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+      showAlert("success", "Login successful!", "/dashboard");
+    } catch (error: any) {
+      const errorMessage = "An error occurred, please try logging in again";
+      setError(errorMessage);
+      showAlert("error", errorMessage);
+      console.error("Error details:", error);
     }
-    showAlert("success", "Login successful!", "/dashboard");
   };
 
   const handleRegister = async (email: string) => {
-    setIsLoading(true);
-    setError(null);
     try {
       const result = await authService.register(email, userType);
       showAlert("success", result.message, "/");
     } catch (error: any) {
       setError(error.message);
       showAlert("error", error.message);
-    } finally {
-      setIsLoading(false);
+      console.error("Error details:", error.response?.data);
     }
   };
 
@@ -46,20 +49,14 @@ export const useCredentialSubmission = (userType: UserType) => {
     setError(null);
     actions.setSubmitting(true);
 
-    try {
-      if (formType === "login") {
-        await handleLogin(values);
-      } else if (formType === "register") {
-        await handleRegister(values.email);
-      }
-    } catch (error: any) {
-      setError("An error occurred");
-      showAlert("error", error.message);
-      console.error("Error details:", error);
-    } finally {
-      setIsLoading(false);
-      actions.setSubmitting(false);
+    if (formType === "login") {
+      await handleLogin(values);
+    } else if (formType === "register") {
+      await handleRegister(values.email);
     }
+
+    setIsLoading(false);
+    actions.setSubmitting(false);
   };
 
   return { isLoading, error, handleSubmit };

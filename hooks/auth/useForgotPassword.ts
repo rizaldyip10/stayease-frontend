@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAlert } from "@/context/AlertContext";
 import authService from "@/services/authService";
 import { ForgotPasswordValues } from "@/constants/Auth";
+import { passwordService } from "@/services/passwordService";
 
 export const useForgotPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,7 +16,7 @@ export const useForgotPassword = () => {
     setIsSuccess(false);
 
     try {
-      const response = await authService.forgotPassword(email);
+      const response = await passwordService.forgotPassword(email);
       setIsSuccess(true);
       showAlert(
         "success",
@@ -39,7 +40,10 @@ export const useForgotPassword = () => {
     setIsSuccess(false);
 
     try {
-      const response = await authService.resetPassword(token, passwordValues);
+      const response = await passwordService.resetPassword(
+        token,
+        passwordValues,
+      );
       setIsSuccess(true);
       showAlert(
         "success",

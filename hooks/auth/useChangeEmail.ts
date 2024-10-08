@@ -25,7 +25,7 @@ export const useChangeEmail = () => {
         "Failed to send reset link. Please try again.",
         setError,
       );
-      showAlert("error", err.message);
+      setError(err);
     } finally {
       setIsLoading(false);
     }
@@ -44,7 +44,7 @@ export const useChangeEmail = () => {
         "Failed to send reset link. Please try again.",
         setError,
       );
-      showAlert("error", err.message);
+      showAlert("error", err);
     } finally {
       setIsLoading(false);
     }

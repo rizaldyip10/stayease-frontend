@@ -17,7 +17,7 @@ export const useDeleteAccount = () => {
       await profileService.deleteAccount();
       showAlert("success", "Account deleted successfully");
     } catch (error: any) {
-      showAlert("error", error.message);
+      showAlert("error", error);
       setError(error);
     } finally {
       setIsLoading(false);

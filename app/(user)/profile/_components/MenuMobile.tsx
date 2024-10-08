@@ -1,13 +1,13 @@
 "use client";
 
-import {userMenuRoutes as routes} from "@/constants/Routes";
-import {useRouter} from "next/navigation";
+import { userMenuRoutes as routes } from "@/constants/Routes";
+import { useRouter } from "next/navigation";
 import MenuItems from "@/app/(user)/profile/_components/MenuItems";
-import {FC} from "react";
-import {cn} from "@/lib/utils";
+import { FC } from "react";
+import { cn } from "@/lib/utils";
 
 interface MenuMobileProps {
-    isOpen: boolean;
+  isOpen: boolean;
 }
 
 const MenuMobile: FC<MenuMobileProps> = ({ isOpen }) => {

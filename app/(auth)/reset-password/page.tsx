@@ -1,8 +1,5 @@
 "use client";
 import React from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import SidePicture from "@/app/(auth)/_components/SidePicture";
-import AuthFormSection from "@/app/(auth)/_components/AuthFormSection";
 import AuthPage from "@/app/(auth)/_components/AuthPage";
 import { useSearchParams } from "next/navigation";
 import { useCheckToken } from "@/hooks/auth/useCheckToken";
@@ -18,11 +15,11 @@ const Page = () => {
     token: token,
   });
 
-  if (isTokenValid === null) {
+  if (isTokenValid === null || isLoading) {
     return <GlobalLoading fullPage />;
   }
 
-  if (!isTokenValid) {
+  if (!isTokenValid || error) {
     return (
       <ErrorComponent message="Invalid token. Please make sure you follow the correct link sent to your email!" />
     );

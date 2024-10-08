@@ -1,9 +1,9 @@
 "use client";
 
-import {routes} from "@/constants/Routes";
-import {usePathname, useRouter} from "next/navigation";
+import { routes } from "@/constants/Routes";
+import { usePathname, useRouter } from "next/navigation";
 import NavItems from "@/app/(user)/_components/NavItems";
-import {cn} from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 const NavRoutes = () => {
     const router = useRouter();
