@@ -3,18 +3,20 @@ import { ErrorMessage, Field, useFormikContext } from "formik";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import ImageUpload from "@/app/dashboard/properties/create/_components/ImageUpload";
 import DeleteDialog from "@/app/dashboard/properties/_components/DeleteDialog";
+import ImageUpload from "@/app/dashboard/properties/create/_components/property-forms/ImageUpload";
 
-interface RoomEditFormProps {
+interface RoomFormProps {
   index: number;
   onRemove: () => void;
-  propertyId: number;
+  isEditing: boolean;
+  propertyId?: number;
 }
 
-const RoomEditForm: React.FC<RoomEditFormProps> = ({
+const RoomForm: React.FC<RoomFormProps> = ({
   index,
   onRemove,
+  isEditing,
   propertyId,
 }) => {
   const { values } = useFormikContext<any>();
@@ -59,9 +61,9 @@ const RoomEditForm: React.FC<RoomEditFormProps> = ({
         />
       </div>
       <div className="mt-4 flex justify-end space-x-2">
-        {isExistingRoom ? (
+        {isEditing && isExistingRoom ? (
           <DeleteDialog
-            propertyId={propertyId}
+            propertyId={propertyId!}
             roomId={room.id}
             onConfirm={onRemove}
             title="Delete Room"
@@ -82,4 +84,4 @@ const RoomEditForm: React.FC<RoomEditFormProps> = ({
   );
 };
 
-export default RoomEditForm;
+export default RoomForm;
