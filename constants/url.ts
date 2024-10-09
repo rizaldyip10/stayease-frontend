@@ -98,5 +98,20 @@ export const config = {
       propertySales: "/reports/properties/sales",
       userStats: "/reports/user-stats"
     },
+    reviews: {
+      userReviews: "/reviews/user",
+      tenantReviews: "/reviews/tenant",
+      propertyReviews: "/reviews/properties/",
+      propertyRating: "/reviews/rating/",
+      postUserReviews: "/reviews/",
+      updateUserReviews: "/reviews/",
+      deleteUserReviews: "/reviews/",
+      reviewDetail: "/reviews/",
+    },
+    replies: {
+      replyReview: "/replies/{reviewId}",
+      crudReply: "/replies/",
+      reviewReplies: "/replies/list/{reviewId}",
+    }
   },
 };
