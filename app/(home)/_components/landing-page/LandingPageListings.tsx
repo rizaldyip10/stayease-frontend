@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import { usePropertyListings } from "@/hooks/properties/usePropertyListings";
-import PropertyListingSkeleton from "@/components/PropertyListingSkeleton";
-import PropertyListingCard from "@/components/PropertyListingCard";
+import PropertyListingSkeleton from "@/app/(home)/properties/_components/PropertyListingSkeleton";
+import PropertyListingCard from "@/app/(home)/properties/_components/PropertyListingCard";
 import NoResultsFound from "@/components/NoResultsFound";
 
 const LandingPageListings = () => {

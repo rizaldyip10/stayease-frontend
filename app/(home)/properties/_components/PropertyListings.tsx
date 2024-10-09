@@ -4,8 +4,8 @@ import SearchFilterCard from "@/app/(home)/properties/_components/SearchFilterCa
 import { Button } from "@/components/ui/button";
 import { FilterIcon } from "lucide-react";
 import SortSelect from "@/app/(home)/properties/_components/SortSelect";
-import PropertyListingSkeleton from "@/components/PropertyListingSkeleton";
-import PropertyListingCard from "@/components/PropertyListingCard";
+import PropertyListingSkeleton from "@/app/(home)/properties/_components/PropertyListingSkeleton";
+import PropertyListingCard from "@/app/(home)/properties/_components/PropertyListingCard";
 import CustomPagination from "@/app/(home)/properties/_components/CustomPagination";
 import NoResultsFound from "@/components/NoResultsFound";
 import MapComponent from "@/components/MapComponent";
