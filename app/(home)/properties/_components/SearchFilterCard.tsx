@@ -6,7 +6,7 @@ import BudgetInput from "@/app/(home)/properties/_components/BudgetInput";
 import { CustomDatePicker } from "@/components/CustomDatePicker";
 import { FilterOptions } from "@/hooks/properties/usePropertyListings";
 import { Button } from "@/components/ui/button";
-import { addDays } from "date-fns";
+import { addDays, startOfDay } from "date-fns";
 import { usePropertyUtils } from "@/hooks/properties/usePropertyUtils";
 
 interface SearchFilterCardProps {
@@ -28,8 +28,7 @@ const SearchFilterCard: React.FC<SearchFilterCardProps> = ({
     onFilterChange({ ...filters, [field]: value });
   };
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const today = startOfDay(new Date());
 
   const handleStartDateChange = (date?: Date) => {
     handleInputChange("startDate", date);
