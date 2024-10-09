@@ -3,19 +3,23 @@ import { ErrorMessage, Field, useFormikContext } from "formik";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import ImageUpload from "@/app/dashboard/properties/create/_components/ImageUpload";
 import DeleteDialog from "@/app/dashboard/properties/_components/DeleteDialog";
+import ImageUpload from "@/app/dashboard/properties/create/_components/property-forms/ImageUpload";
 
-interface RoomEditFormProps {
+interface RoomFormProps {
   index: number;
   onRemove: () => void;
-  propertyId: number;
+  isEditing: boolean;
+  propertyId?: number;
+  isOnlyRoom: boolean;
 }
 
-const RoomEditForm: React.FC<RoomEditFormProps> = ({
+const RoomForm: React.FC<RoomFormProps> = ({
   index,
   onRemove,
+  isEditing,
   propertyId,
+  isOnlyRoom,
 }) => {
   const { values } = useFormikContext<any>();
   const room = values.rooms[index];
@@ -58,29 +62,30 @@ const RoomEditForm: React.FC<RoomEditFormProps> = ({
           uploadType="property"
         />
       </div>
-      <div className="mt-4 flex justify-end space-x-2">
-        {isExistingRoom ? (
-          <DeleteDialog
-            isProperty={false}
-            propertyId={propertyId}
-            roomId={room.id}
-            onConfirm={onRemove}
-            title="Delete Room"
-            description="Are you sure you want to delete this room? This action cannot be undone."
-          />
-        ) : (
-          <Button
-            type="button"
-            variant="destructive"
-            onClick={onRemove}
-            className="bg-red-500 text-white hover:bg-red-600"
-          >
-            Remove
-          </Button>
-        )}
-      </div>
+      {!isOnlyRoom && (
+        <div className="mt-4 flex justify-end space-x-2">
+          {isEditing && isExistingRoom ? (
+            <DeleteDialog
+              propertyId={propertyId!}
+              roomId={room.id}
+              onConfirm={onRemove}
+              title="Delete Room"
+              description="Are you sure you want to delete this room? This action cannot be undone."
+            />
+          ) : (
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={onRemove}
+              className="bg-red-500 text-white hover:bg-red-600"
+            >
+              Remove
+            </Button>
+          )}
+        </div>
+      )}
     </div>
   );
 };
 
-export default RoomEditForm;
+export default RoomForm;

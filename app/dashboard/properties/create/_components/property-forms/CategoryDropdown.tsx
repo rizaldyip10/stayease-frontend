@@ -50,7 +50,7 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
           <select
             value={selectedCategory?.id || ""}
             onChange={onSelectChange}
-            className="h-full p-2 border rounded-lg"
+            className="h-full p-2.5 border rounded-lg text-sm"
           >
             <option value="">Select a category</option>
             <option value="new">Create new category</option>

@@ -1,12 +1,7 @@
 import React, { useCallback, useState } from "react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { addDays, format, isValid, parseISO } from "date-fns";
+import { isValid, parseISO, startOfDay } from "date-fns";
+import { CustomDatePicker } from "@/components/CustomDatePicker";
 
 interface CheckInCalendarProps {
   bookingValues: {
@@ -37,65 +32,40 @@ const CheckInCalendar: React.FC<CheckInCalendarProps> = ({
     handleDateSelect("checkOutDate")(date);
     setIsCheckOutOpen(false);
   };
-  const formatDate = useCallback((dateString: string | null) => {
-    if (!dateString) return null;
-    const date = parseISO(dateString);
-    return isValid(date) ? format(date, "PPP") : null;
-  }, []);
 
-  const minDate = new Date();
-  minDate.setHours(0, 0, 0, 0);
+  const parseDate = useCallback(
+    (dateString: string | null): Date | undefined => {
+      if (!dateString) return undefined;
+      const date = parseISO(dateString);
+      return isValid(date) ? date : undefined;
+    },
+    [],
+  );
 
+  const minDate = startOfDay(new Date());
   const endMinDate = new Date(bookingValues.checkInDate || minDate);
-  console.log("endMinDate", endMinDate);
-
-  const buttonTitle = (date: string | null, title: string) => {
-    return date ? formatDate(date) : title;
-  };
+  const checkInDate = parseDate(bookingValues.checkInDate);
+  const checkOutDate = parseDate(bookingValues.checkOutDate);
 
   return (
     <>
       <div className="space-y-4 mb-4">
-        <Popover open={isCheckInOpen} onOpenChange={setIsCheckInOpen}>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="w-full justify-start">
-              <span className="mr-auto">
-                {buttonTitle(bookingValues.checkInDate, "Check-in Date")}
-              </span>
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={
-                bookingValues.checkInDate
-                  ? parseISO(bookingValues.checkInDate)
-                  : undefined
-              }
-              onSelect={handleCheckInSelect}
-              initialFocus
-              disabled={(date) => date < minDate}
-            />
-          </PopoverContent>
-        </Popover>
-        <Popover open={isCheckOutOpen} onOpenChange={setIsCheckOutOpen}>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="w-full justify-start">
-              <span className="mr-auto">
-                {buttonTitle(bookingValues.checkOutDate, "Check-out Date")}
-              </span>
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={addDays(endMinDate, 1)}
-              onSelect={handleCheckOutSelect}
-              initialFocus
-              disabled={(date) => date < endMinDate}
-            />
-          </PopoverContent>
-        </Popover>
+        <CustomDatePicker
+          title="Check-in Date"
+          date={checkInDate}
+          onDateChange={handleCheckInSelect}
+          minDate={minDate}
+          open={isCheckInOpen}
+          setOpen={setIsCheckInOpen}
+        />
+        <CustomDatePicker
+          title="Check-out Date"
+          date={checkOutDate}
+          onDateChange={handleCheckOutSelect}
+          minDate={endMinDate}
+          open={isCheckOutOpen}
+          setOpen={setIsCheckOutOpen}
+        />
       </div>
       <div className="flex justify-end">
         <Button

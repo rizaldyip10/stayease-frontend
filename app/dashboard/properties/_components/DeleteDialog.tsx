@@ -19,14 +19,12 @@ import ErrorComponent from "@/components/ErrorComponent";
 interface DeleteDialogProps {
   propertyId: number;
   roomId?: number;
-  isProperty: boolean;
   onConfirm?: () => void;
   title?: string;
   description?: string;
 }
 
 const DeleteDialog: FC<DeleteDialogProps> = ({
-  isProperty,
   propertyId,
   roomId,
   onConfirm,
@@ -43,6 +41,7 @@ const DeleteDialog: FC<DeleteDialogProps> = ({
     } else {
       await deleteProperty();
     }
+    setIsOpen(false);
   };
 
   return (

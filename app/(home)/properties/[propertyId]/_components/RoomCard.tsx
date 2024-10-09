@@ -25,12 +25,11 @@ const RoomCard: React.FC<RoomCardProps> = ({ room, isAvailable }) => {
     >
       <CardContent className="p-0">
         <div className="flex flex-col md:flex-row">
-          <div className="w-full md:w-1/3 relative">
+          <div className="w-full md:w-2/5 relative aspect-[4/3]">
             <Image
               src={`${room.imageUrl ? room.imageUrl : "/images/room-placeholder.jpg"}`}
               alt={room.roomName}
-              width={400}
-              height={300}
+              fill
               className={`w-full h-48 md:h-full object-cover ${!isAvailable ? "grayscale" : ""}`}
             />
           </div>

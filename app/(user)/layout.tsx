@@ -10,7 +10,7 @@ const RoutesLayout = ({ children }: { children: React.ReactNode }) => {
     <AlertProvider>
       <ProfileProvider>
         <div className="w-full flex flex-col items-center min-h-screen relative bg-[#FAFAFA]">
-          <Navbar isDashboard={false} />
+          <Navbar />
           <div className="w-full 2xl:w-[1400px] px-6 md:px-14 py-6">
             {children}
           </div>

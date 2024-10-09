@@ -388,28 +388,33 @@ const propertyService = {
     sortBy?: string,
     sortDirection?: string,
   ): Promise<PropertyListingType> => {
-    const formattedStartDate = startDate ? formatDate(startDate) : undefined;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const formattedStartDate = startDate
+      ? formatDate(startDate)
+      : formatDate(today);
     const formattedEndDate = endDate ? formatDate(endDate) : undefined;
-    const formattedCity = city ? city.replace(/ /g, "%") : undefined;
-    const formattedSearchTerm = searchTerm
-      ? searchTerm.replace(/ /g, "%")
-      : undefined;
+
+    // omit params that are empty or undefined in the request
+    const params: any = {
+      ...(formattedStartDate && { startDate: formattedStartDate }),
+      ...(formattedEndDate && { endDate: formattedEndDate }),
+      ...(city && { city }),
+      ...(categoryId && { categoryId }),
+      ...(searchTerm && { searchTerm }),
+      ...(minPrice !== undefined && { minPrice }),
+      ...(maxPrice !== undefined && { maxPrice }),
+      ...(page !== undefined && { page }),
+      ...(size !== undefined && { size }),
+      ...(sortBy && { sortBy }),
+      ...(sortDirection && { sortDirection }),
+    };
+
     const url = config.endpoints.propertyListings.sortAndFilter;
     try {
       const response = await axiosInterceptor.get(url, {
-        params: {
-          startDate: formattedStartDate,
-          endDate: formattedEndDate,
-          city: formattedCity,
-          categoryId,
-          searchTerm: formattedSearchTerm,
-          minPrice,
-          maxPrice,
-          page,
-          size,
-          sortBy,
-          sortDirection,
-        },
+        params,
       });
       return response.data.data;
     } catch (error: any) {

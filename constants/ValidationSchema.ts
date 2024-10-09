@@ -2,26 +2,35 @@ import * as yup from "yup";
 import { whiteSpaceRegex } from "@/constants/WhiteSpaceRegex";
 import { FormType } from "@/constants/Types";
 import { UserType } from "@/hooks/auth/useSelectUserType";
-export const getValidationSchema = (formType: FormType) => {
-  switch (formType) {
-    case "login":
-      return loginSchema;
-    case "register":
-      return registerSchema;
-    case "userType":
-      return userTypeSelectSchema;
-    case "forgotPassword":
-      return passwordSchema;
-    default:
-      return registerSchema;
-  }
-};
 
-export const loginSchema = yup.object().shape({
-  email: yup
+// Common validation schemas
+const emailSchema = yup
+  .string()
+  .email("Please enter a valid email")
+  .required("Please enter your email");
+
+const passwordSchema = yup.object().shape({
+  password: yup
     .string()
-    .email("Please enter a valid email")
-    .required("Please enter your email"),
+    .min(8, "Password must be at least 8 characters long")
+    .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .matches(/[0-9]/, "Password must contain at least one number")
+    .matches(
+      /[!@#$%^&*(),.?":{}|<>]/,
+      "Password must contain at least one special character",
+    )
+    .matches(whiteSpaceRegex, "Please enter a valid password")
+    .required("Password is required"),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password")], "Passwords must match")
+    .required("Password confirmation is required"),
+});
+
+// Authentication related schemas
+export const loginSchema = yup.object().shape({
+  email: emailSchema,
   password: yup
     .string()
     .min(8, "Please enter a valid password")
@@ -30,31 +39,11 @@ export const loginSchema = yup.object().shape({
 });
 
 export const registerSchema = yup.object().shape({
-  email: yup
-    .string()
-    .email("Please enter a valid email")
-    .required("Please enter your email"),
+  email: emailSchema,
 });
 
 export const verifyValidationSchema = (userType: UserType) => [
-  yup.object().shape({
-    password: yup
-      .string()
-      .min(8, "Password must be at least 8 characters long")
-      .matches(/[a-z]/, "Password must contain at least one lowercase letter")
-      .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-      .matches(/[0-9]/, "Password must contain at least one number")
-      .matches(
-        /[!@#$%^&*(),.?":{}|<>]/,
-        "Password must contain at least one special character",
-      )
-      .matches(whiteSpaceRegex, "Please enter a valid password")
-      .required("Password is required"),
-    confirmPassword: yup
-      .string()
-      .oneOf([yup.ref("password")], "Passwords must match")
-      .required("Password confirmation is required"),
-  }),
+  yup.object().shape({ ...passwordSchema.fields }),
   yup.object({
     firstName: yup.string().required("Required"),
     lastName: yup.string().required("Required"),
@@ -81,25 +70,7 @@ export const userTypeSelectSchema = yup.object().shape({
   taxId: yup.string().nullable(),
 });
 
-export const passwordSchema = yup.object().shape({
-  password: yup
-    .string()
-    .min(8, "Password must be at least 8 characters long")
-    .matches(/[a-z]/, "Password must contain at least one lowercase letter")
-    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .matches(/[0-9]/, "Password must contain at least one number")
-    .matches(
-      /[!@#$%^&*(),.?":{}|<>]/,
-      "Password must contain at least one special character",
-    )
-    .matches(whiteSpaceRegex, "Please enter a valid password")
-    .required("Password is required"),
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref("password")], "Passwords must match")
-    .required("Password confirmation is required"),
-});
-
+// Property related schemas
 export const createPropValidationSchema = yup.object().shape({
   property: yup.object().shape({
     name: yup.string().required("Required"),
@@ -107,7 +78,10 @@ export const createPropValidationSchema = yup.object().shape({
     imageUrl: yup.string().required("Required"),
     address: yup.string().required("Required"),
     city: yup.string().required("Required"),
-    country: yup.string().required("Required"),
+    country: yup
+      .string()
+      .oneOf(["Indonesia"], "Must be in Indonesia")
+      .required("Required"),
     longitude: yup.number().required("Required"),
     latitude: yup.number().required("Required"),
     categoryId: yup.string().required("Required"),
@@ -130,16 +104,14 @@ export const createPropValidationSchema = yup.object().shape({
   }),
 });
 
+// Contact form schema
 export const contactFormValidationSchema = yup.object().shape({
   fullName: yup
     .string()
     .required("Full name is required")
     .min(2, "Name must be at least 2 characters")
     .max(50, "Name must not exceed 50 characters"),
-  email: yup
-    .string()
-    .email("Invalid email format")
-    .required("Email is required"),
+  email: emailSchema,
   message: yup
     .string()
     .required("Message is required")
@@ -147,6 +119,7 @@ export const contactFormValidationSchema = yup.object().shape({
     .max(1000, "Message must not exceed 1000 characters"),
 });
 
+// Rate related schemas
 export const manualRateValidationSchema = yup.object().shape({
   startDate: yup
     .date()
@@ -234,3 +207,19 @@ export const autoRateSettingValidationSchema = yup
       return true;
     },
   );
+
+// Helper function to get validation schema based on form type
+export const getValidationSchema = (formType: FormType) => {
+  switch (formType) {
+    case "login":
+      return loginSchema;
+    case "register":
+      return registerSchema;
+    case "userType":
+      return userTypeSelectSchema;
+    case "forgotPassword":
+      return passwordSchema;
+    default:
+      return registerSchema;
+  }
+};

@@ -95,10 +95,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
                 viewOnly={false}
               />
             </div>
-            <p>
-              {currentProperty?.address}, {currentProperty?.city},{" "}
-              {currentProperty?.country}
-            </p>
+            <p>{currentProperty?.address}</p>
           </div>
         </div>
 

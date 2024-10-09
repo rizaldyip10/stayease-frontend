@@ -1,9 +1,9 @@
 "use client";
 import React, { useMemo } from "react";
-import UnauthorizedPropertyAccess from "@/app/dashboard/properties/[propertyId]/edit/_components/UnauthorizedProperty";
-import PropertyEdit from "@/app/dashboard/properties/[propertyId]/edit/_components/PropertyEdit";
+import UnauthorizedPropertyAccess from "@/app/dashboard/properties/create/_components/property-forms/UnauthorizedProperty";
 import GlobalLoading from "@/components/GlobalLoading";
 import { usePropertyData } from "@/hooks/properties/usePropertyData";
+import PropertyEdit from "@/app/dashboard/properties/[propertyId]/edit/_components/PropertyEdit";
 
 export default function PropertyEditPage({
   params,

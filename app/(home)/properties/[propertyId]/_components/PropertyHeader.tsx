@@ -14,9 +14,7 @@ const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
       <div className="flex items-center mb-4">
         <div className="flex items-center mb-2 text-sm text-gray-500">
           <MapPin className="mr-2" size={16} />
-          <span>
-            {property.address}, {property.city}, {property.country}
-          </span>
+          <span>{property.address}</span>
         </div>
       </div>
       <Image
