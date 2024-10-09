@@ -11,6 +11,7 @@ interface RoomFormProps {
   onRemove: () => void;
   isEditing: boolean;
   propertyId?: number;
+  isOnlyRoom: boolean;
 }
 
 const RoomForm: React.FC<RoomFormProps> = ({
@@ -18,6 +19,7 @@ const RoomForm: React.FC<RoomFormProps> = ({
   onRemove,
   isEditing,
   propertyId,
+  isOnlyRoom,
 }) => {
   const { values } = useFormikContext<any>();
   const room = values.rooms[index];
@@ -60,26 +62,28 @@ const RoomForm: React.FC<RoomFormProps> = ({
           uploadType="property"
         />
       </div>
-      <div className="mt-4 flex justify-end space-x-2">
-        {isEditing && isExistingRoom ? (
-          <DeleteDialog
-            propertyId={propertyId!}
-            roomId={room.id}
-            onConfirm={onRemove}
-            title="Delete Room"
-            description="Are you sure you want to delete this room? This action cannot be undone."
-          />
-        ) : (
-          <Button
-            type="button"
-            variant="destructive"
-            onClick={onRemove}
-            className="bg-red-500 text-white hover:bg-red-600"
-          >
-            Remove
-          </Button>
-        )}
-      </div>
+      {!isOnlyRoom && (
+        <div className="mt-4 flex justify-end space-x-2">
+          {isEditing && isExistingRoom ? (
+            <DeleteDialog
+              propertyId={propertyId!}
+              roomId={room.id}
+              onConfirm={onRemove}
+              title="Delete Room"
+              description="Are you sure you want to delete this room? This action cannot be undone."
+            />
+          ) : (
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={onRemove}
+              className="bg-red-500 text-white hover:bg-red-600"
+            >
+              Remove
+            </Button>
+          )}
+        </div>
+      )}
     </div>
   );
 };

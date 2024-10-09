@@ -67,6 +67,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
                     onRemove={() => remove(index)}
                     isEditing={isEditing}
                     propertyId={isEditing ? propertyId : undefined}
+                    isOnlyRoom={values.rooms.length === 1}
                   />
                 ))}
                 <Button
