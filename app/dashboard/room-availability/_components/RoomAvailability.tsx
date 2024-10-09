@@ -8,6 +8,7 @@ import ConfirmationDialog from "@/app/dashboard/room-availability/_components/Co
 import { useAlert } from "@/context/AlertContext";
 import GlobalLoading from "@/components/GlobalLoading";
 import ErrorComponent from "@/components/ErrorComponent";
+import InstructionPopover from "@/app/dashboard/room-availability/_components/CalendarInstruction";
 
 const RoomAvailability: React.FC = () => {
   const {
@@ -79,24 +80,18 @@ const RoomAvailability: React.FC = () => {
     );
   }
 
-  if (error) {
-    return <ErrorComponent message={error.toString()} fullPage />;
-  }
-
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4 text-blue-950">
-        Room Availability
-      </h1>
+      <div className="flex items-center mb-4">
+        <h1 className="text-2xl font-bold text-blue-950">Room Availability</h1>
+        <InstructionPopover />
+      </div>
       <Button
         onClick={handleOpenDialog}
-        className="bg-blue-950 text-appgray hover:bg-gray-400 hover:text-blue-950 mt-5"
+        className="bg-blue-950 text-appgray hover:bg-gray-400 hover:text-blue-950 my-5"
       >
         Set Availability
       </Button>
-      <p className="text-red-500 font-semibold text-sm mb-4">
-        *Unavailabilities marked as (Booked) cannot be manually removed.
-      </p>
       <RoomAvailabilityCalendar
         availabilityData={availabilityData}
         onDateSelect={handleDateSelect}

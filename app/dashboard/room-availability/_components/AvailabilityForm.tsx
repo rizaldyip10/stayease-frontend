@@ -8,21 +8,12 @@ import CustomSelect from "@/components/CustomSelect";
 import { usePropertyData } from "@/hooks/properties/usePropertyData";
 import { CustomDatePicker } from "@/components/CustomDatePicker";
 import { useTenantProperties } from "@/hooks/properties/useTenantProperties";
+import { roomAvailabilityValidationSchema } from "@/constants/PropertyValidationSchema";
 
 interface AvailabilityFormProps {
   onSubmit: (roomId: number, startDate: Date, endDate: Date) => void;
   preSelectedDates?: { start: Date; end: Date } | null;
 }
-
-const validationSchema = yup.object().shape({
-  propertyId: yup.string().required("Property is required"),
-  roomId: yup.string().required("Room is required"),
-  startDate: yup.date().required("Start date is required"),
-  endDate: yup
-    .date()
-    .min(yup.ref("startDate"), "End date must be after start date")
-    .required("End date is required"),
-});
 
 const AvailabilityForm: React.FC<AvailabilityFormProps> = ({
   onSubmit,
@@ -90,7 +81,7 @@ const AvailabilityForm: React.FC<AvailabilityFormProps> = ({
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={validationSchema}
+      validationSchema={roomAvailabilityValidationSchema}
       onSubmit={(values) => {
         onSubmit(
           parseInt(values.roomId),
