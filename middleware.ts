@@ -3,11 +3,12 @@ import type { NextRequest } from "next/server";
 import { auth } from "./auth";
 import { isPublicRoute, getRouteHandler } from "./utils/routeHandlers";
 import propertyService from "@/services/propertyService";
+import logger from "@/utils/logger";
 
 export default async function middleware(request: NextRequest) {
   const session = await auth();
   const path = request.nextUrl.pathname;
-  console.log("session from middleware:", session);
+  logger.info("session from middleware:", { session });
 
   if (isPublicOrHomePage(path)) {
     return NextResponse.next();
