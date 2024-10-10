@@ -96,7 +96,8 @@ export const config = {
       dailySales: "/reports/properties",
       popularRooms: "/reports/properties/popular",
       propertySales: "/reports/properties/sales",
-      userStats: "/reports/user-stats"
+      userStats: "/reports/user-stats",
+      tenantRatings: "/reviews/rating/tenant"
     },
     reviews: {
       userReviews: "/reviews/user",
@@ -111,7 +112,7 @@ export const config = {
     replies: {
       replyReview: "/replies/{reviewId}",
       crudReply: "/replies/",
-      reviewReplies: "/replies/list/{reviewId}",
+      reviewReplies: "/replies/list/",
     }
   },
 };

@@ -5,13 +5,14 @@ import SortDirectionFilter from "@/app/(user)/profile/reviews/_components/SortDi
 import {useReviewParams} from "@/hooks/reviews/useReviewParams";
 
 const ReviewsFilter = () => {
-    const {handleParamsChange} = useReviewParams();
+    const {reviewParams, handleParamsChange} = useReviewParams();
     return (
         <div className="w-full flex flex-col md:flex-row gap-2">
             <Input
                 placeholder="Serch your review"
                 className="max-w-64"
                 onChange={(e) => handleParamsChange({search: e.target.value})}
+                value={reviewParams.search ? reviewParams.search : ""}
             />
             <SortDirectionFilter handleSortChange={handleParamsChange} />
         </div>

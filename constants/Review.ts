@@ -21,12 +21,13 @@ export type ReviewType = {
     rating: number | null | undefined;
     user: UserReviewSummary
     booking: BookingReviewSummary;
-    isPublished: boolean;
+    published: boolean;
+    createdAt: string;
 };
 
 export type PropertyRatingType = {
     propertyName: string;
-    avgRating: number;
+    avgRating: number | null;
     totalReviewers: number;
 };
 

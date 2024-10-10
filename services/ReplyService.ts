@@ -3,9 +3,9 @@ import {config} from "@/constants/url";
 import {ReplyInputType} from "@/constants/Replies";
 
 export const replyService = {
-    adminReplyReview: async (value: ReplyInputType) => {
+    adminReplyReview: async (value: ReplyInputType, reviewId: number) => {
         try {
-            const {data} = await axiosInterceptor.post(config.endpoints.replies.reviewReplies, value);
+            const {data} = await axiosInterceptor.post(config.endpoints.replies.crudReply + reviewId, value);
             return data.data;
         } catch (error) {
             console.log(error);
@@ -39,10 +39,10 @@ export const replyService = {
             throw error;
         }
     },
-    getReviewReplies: async () => {
+    getReviewReplies: async (reviewId: number, page: number) => {
         try {
-            const {data} = await axiosInterceptor.get(config.endpoints.replies.reviewReplies, {
-                params: {}
+            const {data} = await axiosInterceptor.get(config.endpoints.replies.reviewReplies + reviewId, {
+                params: {page}
             });
             return data.data;
         } catch (error) {

@@ -28,8 +28,8 @@ const SortDirectionFilter: FC<SortDirectionFilterProps> = ({ handleSortChange })
             <SelectContent>
                 <SelectGroup>
                     <SelectLabel className="text-blue-950" >Sort Direction</SelectLabel>
-                    <SelectItem value={"ASC"}>Later to Recent</SelectItem>
-                    <SelectItem value={"DESC"}>Recent to Later</SelectItem>
+                    <SelectItem value={"ASC"}>Newest Reviews</SelectItem>
+                    <SelectItem value={"DESC"}>Oldest Reviews</SelectItem>
                 </SelectGroup>
             </SelectContent>
         </Select>

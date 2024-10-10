@@ -45,7 +45,7 @@ export const reviewService = {
             throw error;
         }
     },
-    createUserReview: async (reviewId: number, value: ReviewsInputType) => {
+    createUserReview: async (reviewId: number, value: any) => {
         try {
             const { data } = await axiosInterceptor.post(config.endpoints.reviews.postUserReviews + reviewId, value);
             return data.data;
