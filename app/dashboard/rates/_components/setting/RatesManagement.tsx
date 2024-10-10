@@ -82,6 +82,7 @@ export const RatesManagement: React.FC<RatesManagementProps> = ({
                     : undefined
                 }
                 isLoading={isLoading}
+                isEditing={isEditing}
               />
             </TabsContent>
             <TabsContent value="auto">
