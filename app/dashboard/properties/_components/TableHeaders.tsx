@@ -21,12 +21,6 @@ const TableHeaders: FC<TableHeaderProps> = ({ value, onChange }) => {
         >
           Add Property
         </Button>
-        <Button
-          className="bg-blue-950"
-          onClick={() => router.push("/dashboard/properties/create")}
-        >
-          Add Room
-        </Button>
       </div>
       <Input
         placeholder="Search..."
