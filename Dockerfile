@@ -24,18 +24,20 @@ RUN yarn build
 FROM base AS runner
 ENV NODE_ENV=production
 
-# Install curl and other necessary packages for debugging purposes
-RUN apk add --no-cache libc6-compat vips-dev gcc g++ make python3 curl
+# Install only necessary system dependencies
+RUN apk add --no-cache libc6-compat
 
 # Copy necessary files
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/yarn.lock ./yarn.lock
+COPY --from=builder /app/next.config.mjs ./
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/ ./.next/
-COPY next.config.mjs ./next.config.mjs
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
-# Install only production dependencies
-RUN yarn install --production --frozen-lockfile
+# Ensure node user has the right permissions
+RUN chown -R node:node .
+
+# Switch to non-root user for security
+USER node
 
 # Expose the port the app runs on
 EXPOSE 3000
@@ -47,4 +49,4 @@ RUN chown -R node:node .
 USER node
 
 # Set the command to run the app
-CMD ["yarn", "start"]
+CMD ["node", "server.js"]
