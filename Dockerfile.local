@@ -40,5 +40,11 @@ RUN yarn install --production --frozen-lockfile
 # Expose the port the app runs on
 EXPOSE 3000
 
+# Ensure node user has the right permissions
+RUN chown -R node:node .
+
+# Switch to non-root user for security
+USER node
+
 # Set the command to run the app
 CMD ["yarn", "start"]
