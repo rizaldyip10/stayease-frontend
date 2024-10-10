@@ -3,11 +3,21 @@ import type { NextRequest } from "next/server";
 import { auth } from "./auth";
 import { isPublicRoute, getRouteHandler } from "./utils/routeHandlers";
 import propertyService from "@/services/propertyService";
+import logger from "@/utils/logger";
 
 export default async function middleware(request: NextRequest) {
   const session = await auth();
   const path = request.nextUrl.pathname;
-  console.log("session from middleware:", session);
+  logger.info("session from middleware:", { session });
+
+  // ! only for debugging, delete when done
+  if (typeof window === "undefined") {
+    console.log("Server-side Environment Variables:");
+    console.log("GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID);
+    console.log("GOOGLE_CLIENT_SECRET:", process.env.GOOGLE_CLIENT_SECRET);
+    console.log("NEXTAUTH_SECRET:", process.env.NEXTAUTH_SECRET);
+    console.log("NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
+  }
 
   if (isPublicOrHomePage(path)) {
     return NextResponse.next();
