@@ -48,7 +48,11 @@ const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
           {isDesktop ? (
             <>
               <div style={{ flex: "2 1 0%" }}>
-                <Combobox choices={choices} onSelect={setSelectedCity} />
+                <Combobox
+                  placeholder="Select your destination..."
+                  choices={choices}
+                  onSelect={setSelectedCity}
+                />
               </div>
               <div style={{ flex: "2 1 0%" }}>
                 <Input
@@ -79,7 +83,11 @@ const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
           ) : (
             <>
               <div>
-                <Combobox choices={choices} onSelect={setSelectedCity} />
+                <Combobox
+                  placeholder="Select your destination..."
+                  choices={choices}
+                  onSelect={setSelectedCity}
+                />
               </div>
               <div>
                 <Input

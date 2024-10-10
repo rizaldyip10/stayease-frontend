@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/popover";
 
 interface ComboboxProps {
+  placeholder: string;
   choices: {
     value: string;
     label: string;
@@ -27,6 +28,7 @@ interface ComboboxProps {
 }
 
 const Combobox: React.FC<ComboboxProps> = ({
+  placeholder,
   choices,
   onSelect,
   value: externalValue,
@@ -54,11 +56,11 @@ const Combobox: React.FC<ComboboxProps> = ({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full text-left font-normal flex justify-between"
+          className="w-full text-left font-normal flex justify-between text-muted-foreground"
         >
           {internalValue
             ? choices.find((choice) => choice.value === internalValue)?.label
-            : "Select choice..."}
+            : placeholder}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
