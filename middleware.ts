@@ -10,15 +10,6 @@ export default async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   logger.info("session from middleware:", { session });
 
-  // ! only for debugging, delete when done
-  if (typeof window === "undefined") {
-    console.log("Server-side Environment Variables:");
-    console.log("GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID);
-    console.log("GOOGLE_CLIENT_SECRET:", process.env.GOOGLE_CLIENT_SECRET);
-    console.log("NEXTAUTH_SECRET:", process.env.NEXTAUTH_SECRET);
-    console.log("NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
-  }
-
   if (isPublicOrHomePage(path)) {
     return NextResponse.next();
   }
