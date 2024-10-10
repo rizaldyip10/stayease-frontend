@@ -45,6 +45,7 @@ export const getFilterFromParams = (
 ): Partial<FilterOptions> => {
   const newFilters: Partial<FilterOptions> = {};
   const city = searchParams.get("city");
+  const guestCount = searchParams.get("guestCount");
   const minPrice = searchParams.get("minPrice");
   const maxPrice = searchParams.get("maxPrice");
   const startDate = searchParams.get("startDate");
@@ -53,6 +54,7 @@ export const getFilterFromParams = (
   const searchTerm = searchParams.get("searchTerm");
 
   if (city) newFilters.city = city;
+  if (guestCount) newFilters.guestCount = parseInt(guestCount);
   if (minPrice) newFilters.minPrice = parseInt(minPrice);
   if (maxPrice) newFilters.maxPrice = parseInt(maxPrice);
   newFilters.startDate = parseDate(startDate);

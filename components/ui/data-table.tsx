@@ -106,7 +106,7 @@ function DataTable<TData, TValue>({
                     <TableHead
                       key={header.id}
                       style={{
-                        // minWidth: isMobile && index === 0 ? "150px" : "auto",
+                        minWidth: isMobile && index === 0 ? "150px" : "auto",
                         position: isMobile && index === 0 ? "sticky" : "static",
                         left: isMobile && index === 0 ? 0 : "auto",
                         zIndex: isMobile && index === 0 ? 1 : "auto",

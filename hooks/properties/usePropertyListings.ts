@@ -8,6 +8,7 @@ import _ from "lodash";
 
 export interface FilterOptions {
   city?: string;
+  guestCount?: number;
   minPrice: number;
   maxPrice?: number;
   startDate?: Date;
@@ -23,6 +24,7 @@ export interface SortOption {
 
 export const initialFilters: FilterOptions = {
   city: "",
+  guestCount: 0,
   minPrice: 0,
   maxPrice: undefined,
   startDate: undefined,
@@ -81,6 +83,7 @@ export const usePropertyListings = () => {
         filters.searchTerm,
         filters.minPrice,
         filters.maxPrice,
+        filters.guestCount ? Number(filters.guestCount) : undefined,
         pagination.currentPage,
         pagination.size,
         sort.sortBy,

@@ -55,13 +55,13 @@ export const useRoomAvailabilityCalendarConfig = (
       // One day added to the end date to ensure it is included in the range
       const endDate = new Date(availability.endDate);
       endDate.setDate(endDate.getDate() + 1); // Move to the next day
-      endDate.setHours(23, 59, 59, 999); // Set time to end of day
 
       return {
         id: availability.id.toString(),
         title: `${room.propertySummary.propertyName} - ${room.name} Room`,
         start: availability.startDate,
         end: endDate.toISOString(),
+        allDay: true,
         color: !availability.isManual
           ? "#808080"
           : colorPalette[index % colorPalette.length],

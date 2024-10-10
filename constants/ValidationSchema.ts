@@ -119,38 +119,6 @@ export const contactFormValidationSchema = yup.object().shape({
     .max(1000, "Message must not exceed 1000 characters"),
 });
 
-// Rate related schemas
-export const manualRateValidationSchema = yup.object().shape({
-  startDate: yup
-    .date()
-    .required("Start date is required")
-    .min(new Date(), "Start date must be after today"),
-  endDate: yup
-    .date()
-    .required("End date is required")
-    .min(yup.ref("startDate"), "End date must be after start date"),
-  adjustmentRate: yup
-    .number()
-    .required("Adjustment rate is required")
-    .moreThan(0, "Must be more than 0"),
-  adjustmentType: yup
-    .string()
-    .oneOf(["PERCENTAGE", "FIXED"], "Invalid adjustment type")
-    .required("Adjustment type is required"),
-  reason: yup
-    .string()
-    .required("Reason is required")
-    .min(3, "Reason must be at least 5 characters")
-    .test(
-      "not-including-automatic",
-      `Reason cannot include the word "Automatic"`,
-      function (value) {
-        const forbiddenReasons = /\bautomatic\b/i;
-        return !forbiddenReasons.test(value);
-      },
-    ),
-});
-
 export const autoRateSettingValidationSchema = yup
   .object()
   .shape({

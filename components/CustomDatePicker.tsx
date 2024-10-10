@@ -17,6 +17,7 @@ interface CustomDatePickerProps {
   minDate?: Date;
   open?: boolean;
   setOpen?: (open: boolean) => void;
+  disabled?: boolean;
 }
 
 export function CustomDatePicker({
@@ -26,6 +27,7 @@ export function CustomDatePicker({
   minDate,
   open,
   setOpen,
+  disabled,
 }: CustomDatePickerProps) {
   const handleSelect = (newDate: Date | undefined) => {
     onDateChange(newDate);
@@ -42,7 +44,9 @@ export function CustomDatePicker({
           className={cn(
             "w-full justify-start text-left font-normal",
             !date && "text-muted-foreground",
+            disabled && "opacity-50 cursor-not-allowed",
           )}
+          disabled={disabled}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date ? format(date, "PPP") : <span>{title}</span>}

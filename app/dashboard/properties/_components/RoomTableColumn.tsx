@@ -1,11 +1,12 @@
 import { ColumnDef } from "@tanstack/table-core";
 import { RoomType } from "@/constants/Property";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import * as React from "react";
 import Image from "next/image";
 import { currencyFormatter } from "@/utils/CurrencyFormatter";
 import DeleteDialog from "@/app/dashboard/properties/_components/DeleteDialog";
+import Link from "next/link";
 
 export const RoomColumns: ColumnDef<RoomType>[] = [
   {
@@ -73,6 +74,11 @@ export const RoomColumns: ColumnDef<RoomType>[] = [
       const propertyId = row.original.propertySummary.propertyId;
       return (
         <div className="flex items-center gap-2">
+          <Link href={`/dashboard/properties/${propertyId}/edit`}>
+            <Button variant="ghost" className="w-10 h-10 p-0">
+              <Edit className="w-4 h-4" />
+            </Button>
+          </Link>
           <DeleteDialog propertyId={propertyId} roomId={roomId} />
         </div>
       );
