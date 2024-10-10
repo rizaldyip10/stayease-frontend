@@ -57,7 +57,7 @@ export function CustomDatePicker({
           mode="single"
           selected={date}
           onSelect={handleSelect}
-          initialFocus
+          // initialFocus
           disabled={(date) => (minDate ? date < minDate : false)}
         />
       </PopoverContent>

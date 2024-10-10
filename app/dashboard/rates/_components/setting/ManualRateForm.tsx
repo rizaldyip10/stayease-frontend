@@ -48,7 +48,7 @@ export const ManualRateForm: React.FC<ManualRateFormProps> = ({
         setMinStartDate(startDate);
       }
     }
-  }, [isEditing, initialData]);
+  }, [isEditing, initialData, today]);
 
   const handleStartDateChange = (
     date: Date | undefined,
@@ -86,23 +86,23 @@ export const ManualRateForm: React.FC<ManualRateFormProps> = ({
     (startDate: Date, isEditing: boolean) => {
       const today = new Date();
 
-      // Disable if editing or if startDate is today or in the past
-      return isEditing || isBefore(startDate, today) || isToday(startDate);
+      // Disable if editing and if startDate is today or in the past
+      return isEditing && (isBefore(startDate, today) || isToday(startDate));
     },
     [],
   );
 
+  const initialValues: RateRequestType = initialData || {
+    startDate: null as unknown as Date,
+    endDate: null as unknown as Date,
+    adjustmentRate: 0,
+    adjustmentType: "PERCENTAGE",
+    reason: "",
+  };
+
   return (
     <Formik
-      initialValues={
-        initialData || {
-          startDate: tomorrow,
-          endDate: tomorrow,
-          adjustmentRate: 0,
-          adjustmentType: "PERCENTAGE",
-          reason: "",
-        }
-      }
+      initialValues={initialValues}
       validationSchema={
         isEditing ? editManualRateValidationSchema : manualRateValidationSchema
       }
@@ -127,22 +127,24 @@ export const ManualRateForm: React.FC<ManualRateFormProps> = ({
                         title="Select start date"
                         date={field.value}
                         onDateChange={(date) =>
-                          form.setFieldValue("startDate", date)
+                          handleStartDateChange(date, setFieldValue)
                         }
                         minDate={minStartDate}
                         open={isStartDateOpen}
                         setOpen={setIsStartDateOpen}
                         disabled={disabled}
                       />
-                      {disabled && (
-                        <div className="ml-1 mt-1 text-gray text-xs items-center flex">
-                          <InfoIcon className="text-gray w-3 h-3 mr-1" />
+                      <div className="ml-1 mt-1 text-gray text-xs items-center flex">
+                        <InfoIcon className="text-gray w-3 h-3 mr-1" />
+                        {disabled && isEditing ? (
                           <p>
                             Rate is currently in effect, cannot change start
                             date
                           </p>
-                        </div>
-                      )}
+                        ) : (
+                          <p>Minimum start date is tomorrow</p>
+                        )}
+                      </div>
                     </>
                   );
                 }}
