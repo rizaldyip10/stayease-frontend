@@ -74,6 +74,22 @@ const SearchFilterCard: React.FC<SearchFilterCardProps> = ({
         </div>
 
         <div>
+          <h3 className="font-semibold mb-2 text-blue-950">Guests</h3>
+          <Input
+            type="number"
+            placeholder="Number of guests"
+            value={filters.guestCount || ""}
+            onChange={(e) =>
+              handleInputChange(
+                "guestCount",
+                e.target.value ? parseInt(e.target.value, 10) : undefined,
+              )
+            }
+            min="1"
+          />
+        </div>
+
+        <div>
           <h3 className="font-semibold mb-2 text-blue-950">Budget</h3>
           <BudgetInput
             minPrice={filters.minPrice}

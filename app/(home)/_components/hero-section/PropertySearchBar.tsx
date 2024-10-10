@@ -13,12 +13,12 @@ interface HeroSearchBarProps {
 }
 
 const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
-  const isDesktop: boolean = useMediaQuery("(min-width: 768px)");
   const { cities, isLoading, error } = usePropertyUtils();
   const { handleRedirect } = usePropertySearch();
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [budget, setBudget] = useState<string>("");
   const [date, setDate] = useState<Date | undefined>(undefined);
+  const [guestCount, setGuestCount] = useState<string>(""); // New state for guest count
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,6 +27,7 @@ const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
         city: selectedCity,
         maxPrice: budget ? parseInt(budget, 10) : undefined,
         startDate: date,
+        guestCount: guestCount ? parseInt(guestCount, 10) : undefined, // Include guest count in search params
       },
       "/properties",
     );
@@ -38,6 +39,53 @@ const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
       label: city,
     })) || [];
 
+  const renderSearchInputs = () => (
+    <>
+      <div style={{ flex: "2 1 0%" }}>
+        <Combobox
+          placeholder="Select your destination..."
+          choices={choices}
+          onSelect={setSelectedCity}
+        />
+      </div>
+      <div style={{ flex: "2 1 0%" }}>
+        <Input
+          type="number"
+          placeholder="Budget"
+          className="p-2 border rounded-lg"
+          value={budget}
+          onChange={(e) => setBudget(e.target.value)}
+        />
+      </div>
+      <div style={{ flex: "2 1 0%" }}>
+        <CustomDatePicker
+          title="Pick a date"
+          date={date}
+          onDateChange={setDate}
+          minDate={new Date(new Date().setHours(0, 0, 0, 0))}
+        />
+      </div>
+      <div style={{ flex: "2 1 0%" }}>
+        <Input
+          type="number"
+          placeholder="Number of guests"
+          className="p-2 border rounded-lg"
+          value={guestCount}
+          onChange={(e) => setGuestCount(e.target.value)}
+          min="1"
+        />
+      </div>
+      <div style={{ flex: "1 1 0%" }}>
+        <Button
+          type="submit"
+          className="bg-blue-950 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
+        >
+          Search
+        </Button>
+      </div>
+    </>
+  );
+
   return (
     <form onSubmit={onSubmit}>
       <div className={`property-search-bar ${className}`}>
@@ -45,77 +93,7 @@ const PropertySearchBar: React.FC<HeroSearchBarProps> = ({ className }) => {
           Search for available rooms
         </h2>
         <div className="flex md:flex-row flex-col gap-4 md:w-full m-0">
-          {isDesktop ? (
-            <>
-              <div style={{ flex: "2 1 0%" }}>
-                <Combobox
-                  placeholder="Select your destination..."
-                  choices={choices}
-                  onSelect={setSelectedCity}
-                />
-              </div>
-              <div style={{ flex: "2 1 0%" }}>
-                <Input
-                  type="number"
-                  placeholder="Budget"
-                  className="p-2 border rounded-lg"
-                  value={budget}
-                  onChange={(e) => setBudget(e.target.value)}
-                />
-              </div>
-              <div style={{ flex: "2 1 0%" }}>
-                <CustomDatePicker
-                  title="Pick a date"
-                  date={date}
-                  onDateChange={setDate}
-                  minDate={new Date(new Date().setHours(0, 0, 0, 0))}
-                />
-              </div>
-              <div style={{ flex: "1 1 0%" }}>
-                <Button
-                  type="submit"
-                  className="bg-blue-950 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
-                >
-                  Search
-                </Button>
-              </div>
-            </>
-          ) : (
-            <>
-              <div>
-                <Combobox
-                  placeholder="Select your destination..."
-                  choices={choices}
-                  onSelect={setSelectedCity}
-                />
-              </div>
-              <div>
-                <Input
-                  type="number"
-                  placeholder="Budget"
-                  className="p-2 border rounded-lg"
-                  value={budget}
-                  onChange={(e) => setBudget(e.target.value)}
-                />
-              </div>
-              <div>
-                <CustomDatePicker
-                  title="Pick a date"
-                  date={date}
-                  onDateChange={setDate}
-                  minDate={new Date(new Date().setHours(0, 0, 0, 0))}
-                />
-              </div>
-              <div>
-                <Button
-                  type="submit"
-                  className="bg-blue-950 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
-                >
-                  Search
-                </Button>
-              </div>
-            </>
-          )}
+          {renderSearchInputs()}
         </div>
       </div>
     </form>
