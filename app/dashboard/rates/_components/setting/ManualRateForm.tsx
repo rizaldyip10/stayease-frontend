@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ErrorMessage, Field, FieldProps, Form, Formik } from "formik";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -31,10 +31,13 @@ export const ManualRateForm: React.FC<ManualRateFormProps> = ({
   const [isStartDateOpen, setIsStartDateOpen] = useState(false);
   const [isEndDateOpen, setIsEndDateOpen] = useState(false);
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
+  const { today, tomorrow } = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return { today, tomorrow };
+  }, []);
 
   const [minStartDate, setMinStartDate] = useState(tomorrow);
   const [minEndDate, setMinEndDate] = useState(
@@ -48,7 +51,7 @@ export const ManualRateForm: React.FC<ManualRateFormProps> = ({
         setMinStartDate(startDate);
       }
     }
-  }, [isEditing, initialData, today]);
+  }, [isEditing, initialData, today, tomorrow]);
 
   const handleStartDateChange = (
     date: Date | undefined,
