@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import LandingPage from "@/app/(home)/_components/landing-page/LandingPage";
 import PageWrapper from "@/components/PageWrapper";
 

@@ -122,69 +122,102 @@ export const editManualRateValidationSchema = yup.object().shape({
     ),
 });
 
-export const autoRateSettingValidationSchema = yup
-  .object()
-  .shape({
-    useAutoRates: yup.boolean(),
-    holidayAdjustmentRate: yup
-      .number()
-      .nullable()
-      .when("useAutoRates", {
-        is: true,
-        then: (schema) => schema.min(0, "Must be a positive number or empty"),
-        otherwise: (schema) => schema.strip(),
-      })
-      // Adjusting the condition for percentage cap if adjustmentType is PERCENTAGE
-      .when("holidayAdjustmentType", {
-        is: "PERCENTAGE",
-        then: (schema) => schema.max(100, "Percentage cannot exceed 100"),
-      }),
-    holidayAdjustmentType: yup
-      .string()
-      .nullable()
-      .when("holidayAdjustmentRate", {
-        is: (val: number | null) => val !== null && val > 0,
-        then: (schema) =>
-          schema.required(
-            "Holiday adjustment rate type is required when rate is set",
+export const autoRateSettingValidationSchema = yup.object().shape({
+  useAutoRates: yup.boolean(),
+
+  // Holiday Adjustment Rate
+  holidayAdjustmentRate: yup
+    .number()
+    .nullable()
+    .when("useAutoRates", {
+      is: true,
+      then: (schema) =>
+        schema
+          .min(0, "Must be a positive number or empty")
+          .test(
+            "rate-required",
+            "At least one of Holiday or Long Weekend rate is required",
+            function (value) {
+              const { longWeekendAdjustmentRate } = this.parent;
+              return value != null || longWeekendAdjustmentRate != null;
+            },
           ),
-        otherwise: (schema) => schema.nullable(),
-      }),
-    longWeekendAdjustmentRate: yup
-      .number()
-      .nullable()
-      .when("useAutoRates", {
-        is: true,
-        then: (schema) => schema.min(0, "Must be a positive number or empty"),
-        otherwise: (schema) => schema.strip(),
-      })
-      // Adjusting the condition for percentage cap if adjustmentType is PERCENTAGE
-      .when("longWeekendAdjustmentType", {
-        is: "PERCENTAGE",
-        then: (schema) => schema.max(100, "Percentage cannot exceed 100"),
-      }),
-    longWeekendAdjustmentType: yup
-      .string()
-      .nullable()
-      .when("longWeekendAdjustmentRate", {
-        is: (val: number | null) => val !== null && val > 0,
-        then: (schema) =>
-          schema.required(
-            "Long weekend adjustment rate type is required when rate is set",
+      otherwise: (schema) => schema.strip(),
+    })
+    .test("percentage-limit", "Percentage cannot exceed 100", function (value) {
+      const { holidayAdjustmentType } = this.parent;
+      return !(
+        holidayAdjustmentType === "PERCENTAGE" &&
+        value != null &&
+        value > 100
+      );
+    }),
+
+  // Holiday Adjustment Type
+  holidayAdjustmentType: yup
+    .string()
+    .nullable()
+    .when("holidayAdjustmentRate", {
+      is: (val: number | null) => val !== null && val > 0,
+      then: (schema) =>
+        schema.required("Holiday adjustment type is required when rate is set"),
+      otherwise: (schema) => schema.nullable(),
+    }),
+
+  // Long Weekend Adjustment Rate
+  longWeekendAdjustmentRate: yup
+    .number()
+    .nullable()
+    .when("useAutoRates", {
+      is: true,
+      then: (schema) =>
+        schema
+          .min(0, "Must be a positive number or empty")
+          .test(
+            "rate-required",
+            "At least one of Holiday or Long Weekend rate is required",
+            function (value) {
+              const { holidayAdjustmentRate } = this.parent;
+              return value != null || holidayAdjustmentRate != null;
+            },
           ),
-        otherwise: (schema) => schema.nullable(),
-      }),
-  })
-  .test(
-    "at-least-one-rate",
-    "At least one of Holiday or Long Weekend rate must be set when auto rate is enabled",
-    function (values) {
-      if (values.useAutoRates) {
-        return (
-          (values.holidayAdjustmentRate ?? 0) > 0 ||
-          (values.longWeekendAdjustmentRate ?? 0) > 0
-        );
-      }
-      return true;
-    },
-  );
+      otherwise: (schema) => schema.strip(),
+    })
+    .test("percentage-limit", "Percentage cannot exceed 100", function (value) {
+      const { longWeekendAdjustmentType } = this.parent;
+      return !(
+        longWeekendAdjustmentType === "PERCENTAGE" &&
+        value != null &&
+        value > 100
+      );
+    }),
+
+  // Long Weekend Adjustment Type
+  longWeekendAdjustmentType: yup
+    .string()
+    .nullable()
+    .when("longWeekendAdjustmentRate", {
+      is: (val: number | null) => val !== null && val > 0,
+      then: (schema) =>
+        schema.required(
+          "Long weekend adjustment type is required when rate is set",
+        ),
+      otherwise: (schema) => schema.nullable(),
+    }),
+});
+
+// Custom test to ensure at least one of the rates is set
+autoRateSettingValidationSchema.test(
+  "at-least-one-rate-required",
+  "At least one of Holiday or Long Weekend rate must be set when auto rate is enabled",
+  function (values) {
+    if (values.useAutoRates) {
+      const holidayRate = values.holidayAdjustmentRate ?? 0;
+      const longWeekendRate = values.longWeekendAdjustmentRate ?? 0;
+
+      // If both rates are 0 or null, return false
+      return holidayRate > 0 || longWeekendRate > 0;
+    }
+    return true; // If useAutoRates is false, this test passes
+  },
+);
